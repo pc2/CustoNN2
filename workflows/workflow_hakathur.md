@@ -1,5 +1,5 @@
 # SSH vs XRDP
-I am able to edit files  and browse the file systems quite seamlessly using Win 10 Remote Desktop Connection . Both in lab and from home (over VPN).
+I am able to edit files  and browse the file systems quite seamlessly using Win 10 Remote Desktop Connection . Both in lab and from home (over VPN). Even SSH is working superbly.
 
 # Cloned Versions of the repo
 
