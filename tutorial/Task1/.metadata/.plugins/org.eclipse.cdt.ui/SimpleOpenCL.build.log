@@ -1,0 +1,6 @@
+19:16:50 **** Incremental Build of configuration Debug for project SimpleOpenCL ****
+make all 
+make: Nothing to be done for `all'.
+
+19:16:50 Build Finished (took 150ms)
+

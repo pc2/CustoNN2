@@ -1,0 +1,63 @@
+19:16:43 **** Build of configuration Debug for project SimpleOpenCL ****
+make all 
+Building file: ../main.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -I/opt/intelFPGA_pro/17.1/hld/host/include -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.o" -o "main.o" "../main.cpp"
+In file included from /opt/intelFPGA_pro/17.1/hld/host/include/CL/cl_ext.h:42:0,
+                 from /opt/intelFPGA_pro/17.1/hld/host/include/CL/opencl.h:45,
+                 from /opt/intelFPGA_pro/17.1/hld/host/include/CL/cl.hpp:166,
+                 from ../main.cpp:7:
+/opt/intelFPGA_pro/17.1/hld/host/include/CL/cl_ext_intelfpga.h:442:0: warning: ignoring #pragma warning  [-Wunknown-pragmas]
+ #pragma warning( push )
+ ^
+/opt/intelFPGA_pro/17.1/hld/host/include/CL/cl_ext_intelfpga.h:443:0: warning: ignoring #pragma warning  [-Wunknown-pragmas]
+ #pragma warning( disable:4201 )
+ ^
+/opt/intelFPGA_pro/17.1/hld/host/include/CL/cl_ext_intelfpga.h:459:0: warning: ignoring #pragma warning  [-Wunknown-pragmas]
+ #pragma warning( pop )
+ ^
+Finished building: ../main.cpp
+ 
+Building file: ../utility.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -I/opt/intelFPGA_pro/17.1/hld/host/include -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"utility.d" -MT"utility.o" -o "utility.o" "../utility.cpp"
+In file included from /opt/intelFPGA_pro/17.1/hld/host/include/CL/cl_ext.h:42:0,
+                 from /opt/intelFPGA_pro/17.1/hld/host/include/CL/opencl.h:45,
+                 from /opt/intelFPGA_pro/17.1/hld/host/include/CL/cl.hpp:166,
+                 from ../utility.h:4,
+                 from ../utility.cpp:2:
+/opt/intelFPGA_pro/17.1/hld/host/include/CL/cl_ext_intelfpga.h:442:0: warning: ignoring #pragma warning  [-Wunknown-pragmas]
+ #pragma warning( push )
+ ^
+/opt/intelFPGA_pro/17.1/hld/host/include/CL/cl_ext_intelfpga.h:443:0: warning: ignoring #pragma warning  [-Wunknown-pragmas]
+ #pragma warning( disable:4201 )
+ ^
+/opt/intelFPGA_pro/17.1/hld/host/include/CL/cl_ext_intelfpga.h:459:0: warning: ignoring #pragma warning  [-Wunknown-pragmas]
+ #pragma warning( pop )
+ ^
+../utility.cpp: In function 'void print_platform_info(std::vector<cl::Platform>*)':
+../utility.cpp:10:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i=0; i<PlatformList->size(); i++)
+                 ^
+../utility.cpp: In function 'void print_device_info(std::vector<cl::Device>*)':
+../utility.cpp:24:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i=0; i<DeviceList->size(); i++)
+                 ^
+../utility.cpp: In function 'void fill_generate(cl_float*, cl_float*, cl_float*, cl_float, cl_float, size_t)':
+../utility.cpp:43:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < vectorSize; ++i) {
+                    ^
+../utility.cpp: In function 'bool verification(float*, float*, float*, float*, size_t)':
+../utility.cpp:52:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i = 0; i < vectorSize-4; i++) {
+                   ^
+Finished building: ../utility.cpp
+ 
+Building target: SimpleOpenCL
+Invoking: GCC C++ Linker
+g++ -L/opt/intelFPGA_pro/17.1/hld/board/nalla_pcie/linux64/lib/ -L/opt/intelFPGA_pro/17.1/hld/host/linux64/lib -o "SimpleOpenCL"  ./main.o ./utility.o   -lalteracl -lnalla_pcie_mmd -lelf
+Finished building target: SimpleOpenCL
+ 
+19:16:50 **** Incremental Build of configuration Debug for project SimpleOpenCL ****
+make all 
+make: Nothing to be done for `all'.
