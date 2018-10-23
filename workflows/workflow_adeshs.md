@@ -1,6 +1,6 @@
-# CustoNN2 
+# CustoNN2
 
-## ssh or xrdp for your normal workflow? 
+## ssh or xrdp for your normal workflow?
 - I am okay with using either one of them.
 - xrdp seems to be a little slow compared to ssh.
 - For ssh, we need not use VPN when connecting from home.
@@ -9,10 +9,11 @@
 ## Cloned versions of the git repository
 - One in the cluster in directory - /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs
 - One more in the local machine.
-- How to sync between repo : **TODO**
+- How to sync between repo : Using `git pull` command.
 
-### Mount shared file system from the local system 
-**TODO**
+### Mount shared file system from the local system
+Mounted the shared file system on my windows local machine using CIFS .
+CIFS IMT Link : https://hilfe.uni-paderborn.de/Netzlaufwerk_einbinden_(Windows_7)
 
 ### Which documentation will you use frequently, how will you access it, do you need local copies of the relevant pdfs?
 **TODO**
@@ -36,14 +37,11 @@
 - `aoc -list-boards` will list down the available boards connected to the machine.
 - `aocl diagnose`  could not be executed since this check has to be done on FPGA Node.
 
-### What is the path to your mounted user home on this system? What is  your quota here 
-- /upb/departments/pc2/users/a/adeshs 
+### What is the path to your mounted user home on this system? What is  your quota here
+- /upb/departments/pc2/users/a/adeshs
 - Quota : 5GB
 
 ### Can you access and edit the .bashrc file there?
-- Yes, .bashrc file is owned by me and I can edit it. We usually add environment variables inside .bashrc file. I added 
+- Yes, .bashrc file is owned by me and I can edit it. We usually add environment variables inside .bashrc file. I added
 `export PG_HOME_ADESH=/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs` as a variable for easy access of the project directory.
 - Quota in Cluster is 15TB
-
-
-
