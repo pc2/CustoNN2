@@ -72,6 +72,13 @@ In this exercise you will practice writing and OpenCL host-side application incl
 ## Exercise 2
 - The displayed paths need to be adapted to `<path-to-your-repository>/tutorial/Task1`.
 - In Step 1.8, you need to use a different call to aoc, namely `aoc -march=emulator -board=p385a_sch_ax115 SimpleKernel.cl`. Again: can you explain the change to the original description?
+
+![Page 15.](Scan15.pdf)
+<object data="Scan15.pdf" type="application/pdf" width="700px" height="1000px">
+    <embed src="Scan15.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="Scan15.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
 ![Page 16.](Scan16.pdf)
 <object data="Scan16.pdf" type="application/pdf" width="700px" height="1000px">
     <embed src="Scan16.pdf">
