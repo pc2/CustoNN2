@@ -52,4 +52,5 @@ export SSH_AUTH_SOCK=0
     - Exercises 1+2 due to 29.10.2018 - Submission by Email
     - **Exercise 3 due to 05.11.2018 - Submission by Email**
 - 29./30.10.2018: [Presence Exercise](tutorial/ExampleKernels/README.md)
-- 30.10.2018: [Practical and Research Tasks](tutorial/Task2/README.md)
+- 30.10.2018: [Mixed Practical and Research Task 2](tutorial/Task2/README.md)
+    - **Due to 05.11.2018 - Submission through gitlab and with handwritten or digital/printed notes on the CNN lectures.**
