@@ -1,3 +1,5 @@
+## Getting Started
+
 ### Command line instructions
 On the cluster infrastructure of PC2, you will be using the command line interface to manage your git repository.
 
@@ -40,3 +42,14 @@ and adding the line
 export SSH_AUTH_SOCK=0
 ```
 
+## Tutorial tasks
+
+- 17.10.2018: [Lab setup, documentation, workflow](workflows/lab_instructions.md)
+    - Due to 23.10.2018
+    - [Individual Findings on workflows, to be kept up to date](workflows)
+    - [Summary of findings from documentation](workflows/lab_results.md)
+- 23.10.2018: [Programming Task 1](tutorial/Task1Instructions/Task1.md)
+    - Exercises 1+2 due to 29.10.2018 - Submission by Email
+    - **Exercise 3 due to 05.11.2018 - Submission by Email**
+- 29./30.10.2018: [Presence Exercise](tutorial/ExampleKernels/README.md)
+- 30.10.2018: [Practical and Research Tasks](tutorial/Task2/README.md)
