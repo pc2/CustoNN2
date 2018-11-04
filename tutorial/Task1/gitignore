@@ -1,0 +1,9 @@
+.metadata/*
+*.o
+*.aocx
+*.aoco
+*.aocr
+task2
+task_18
+SimpleKernel/*
+
