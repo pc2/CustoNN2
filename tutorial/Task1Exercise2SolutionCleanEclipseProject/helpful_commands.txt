@@ -1,0 +1,8 @@
+#initiazation script
+opencl_init.sh
+
+#compile for emulation
+aoc -march=emulator -board=p385a_sch_ax115 SimpleKernel.cl
+
+#compile for FPGA, stopping after the object file is generated
+aoc -board=p385a_sch_ax115 -c SimpleKernel_For.cl
