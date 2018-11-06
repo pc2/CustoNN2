@@ -18,6 +18,12 @@ git clone git@git.uni-paderborn.de:cs-hit/pg-custonn2-2018.git
 
 ### Trouble shooting
 
+#### Eclipse projects + git
+
+See [these instructions.](workflows/eclipse+git.md)
+
+#### xrdp + git
+
 Some combination of ssh keys and the **xrdp** desktop connection lead to problems accessing the remote repository. The corresponding error message contains 
 
 **Agent admitted failure to sign using the key.**
