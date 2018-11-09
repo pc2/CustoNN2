@@ -56,8 +56,14 @@ export SSH_AUTH_SOCK=0
     - [Summary of findings from documentation](workflows/lab_results.md)
 - 23.10.2018: [Programming Task 1](tutorial/Task1Instructions/Task1.md)
     - Exercises 1+2 due to 29.10.2018 - Submission by Email
-    - **Exercise 3 due to 05.11.2018 - Submission by Email**
+    - **Exercise 3 due to 05.11.2018 - Submission by Email. I have seen some solutions that have not been submitted by Email, please still submit!**
 - 29./30.10.2018: [Presence Exercise](tutorial/ExampleKernels/README.md)
 - 30.10.2018: [Mixed Practical and Research Task 2](tutorial/Task2/README.md)
-    - **Due to 05.11.2018 - Submission through gitlab and with handwritten or digital/printed notes on the CNN lectures.**
+    - Due to 05.11.2018 - Submission through gitlab and with handwritten or digital/printed notes on the CNN lectures.
+    - **Completion of all parts until 12.11.2018.**
 - 05.11.2018: [Practical Group Task 3](tutorial/Task3/README.md)
+	- **Goal: have functioning software and OpenCL kernel until 12.11.2018.**
+
+- 09.11.2018: [Documentation, Tooling and Research Task 4](tutorial/Task4/README.md)
+	- **Watching and taking notes of Stanford CNN lectures until 12.11.2018.**
+	- **Completion of all all other parts until 15.11.2018.**
