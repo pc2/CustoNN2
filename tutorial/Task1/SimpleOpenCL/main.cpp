@@ -12,6 +12,9 @@ static const cl_uint workSize = 256;
 
 #define EXERCISE1
 
+
+
+
 int main(void)
 {
 	cl_int err;
@@ -21,7 +24,7 @@ int main(void)
 	//Get Platform ID
 	std::vector<cl::Platform> PlatformList;
 	////////////// Exercise 1 Step 2.3
-	err =cl::Platform::get(&PlatformList);
+	err = cl::Platform::get(&PlatformList);
 	assert(err==CL_SUCCESS);
 	checkErr(PlatformList.size()==1 ? CL_SUCCESS : -1, "cl::Platform::get");
 	print_platform_info(&PlatformList);
@@ -30,26 +33,25 @@ int main(void)
 	//Get Device ID
 	std::vector<cl::Device> DeviceList;
 	////////////// Exercise 1 Step 2.5
-	err =PlatformList[0].getDevices(CL_DEVICE_TYPE_ACCELERATOR, &DeviceList);
+	err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList);
 	assert(err==CL_SUCCESS);
 	print_device_info(&DeviceList);
 	
 	//Create Context
 	////////////// Exercise 1 Step 2.6 
-
-	cl::Context mycontext (DeviceList);
+	cl::Context mycontext(DeviceList);
 	assert(err==CL_SUCCESS);
 	
 	//Create Command queue
 	////////////// Exercise 1 Step 2.7
-	cl::CommandQueue::CommandQueue(const Context& mycontext, const Device& DeviceList, cl_command_queue_properties properties=0, cl_int *errcode_ret=NULL)
+	cl::CommandQueue myqueue(mycontext,DeviceList[0]);
 	assert(err==CL_SUCCESS);
 
 	//Create Buffers for input and output
 	////////////// Exercise 1 Step 2.8
-	cl::Buffer
-	cl::Buffer
-	cl::Buffer
+	cl::Buffer Buffer_In(mycontext,CL_MEM_READ_ONLY,sizeof(cl_float)*vectorSize);
+	cl::Buffer Buffer_In2(mycontext,CL_MEM_READ_ONLY,sizeof(cl_float)*vectorSize);
+	cl::Buffer Buffer_Out(mycontext,CL_MEM_WRITE_ONLY,sizeof(cl_float)*vectorSize);
 
 	//Inputs and Outputs to Kernel, X and Y are inputs, Z is output
 	//The aligned attribute is used to ensure alignment
@@ -64,59 +66,60 @@ int main(void)
 
 	//Write data to device
 	////////////// Exercise 1 Step 2.9
-	err =
-	err =
+	err = myqueue.enqueueWriteBuffer(Buffer_In, CL_FALSE, 0, sizeof(cl_float)*vectorSize, X);
+	err = myqueue.enqueueWriteBuffer(Buffer_In2, CL_FALSE, 0, sizeof(cl_float)*vectorSize, Y);
 	assert(err==CL_SUCCESS);
 	myqueue.finish();
 
-#ifndef EXERCISE1
+//#ifndef EXERCISE1
 	// create the kernel
 	const char *kernel_name = "SimpleKernel";
 
 	//Read in binaries from file
-	std::ifstream aocx_stream("../SimpleKernel.aocx", std::ios::in|std::ios::binary);
-	checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, "SimpleKernel.aocx");
+	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/Anshul/pg-custonn2-2018/tutorial/Task1/SimpleKernel1.aocx", std::ios::in|std::ios::binary);
+	checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, "SimpleKernel1.aocx");
 	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 	cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
 
 	// Create the Program from the AOCX file.
 	////////////////////// Exercise 2 Step 2.3    ///////////////////
-	cl::Program
+	cl::Program program(mycontext,DeviceList,mybinaries);
 
 	// build the program
 	//////////////      Compile the Kernel.... For Intel FPGA, nothing is done here, but this comforms to the standard
 	//////////////       Exercise 2   Step 2.4    ///////////////////
-	err =
+	err = program.build(DeviceList);
 	assert(err==CL_SUCCESS);
 
 	// create the kernel
 	//////////////       Find Kernel in Program
 	//////////////       Exercise 2   Step 2.5    ///////////////////
-	cl::Kernel
+	cl::Kernel SimpleKernel(program,kernel_name);
 	assert(err==CL_SUCCESS);
 
 	//////////////     Set Arguments to the Kernels
 	//////////////       Exercise 2   Step 2.6    ///////////////////
-	err =
+	err = SimpleKernel.setArg(0, Buffer_In);
 	assert(err==CL_SUCCESS);
-	err =
+	err = SimpleKernel.setArg(1, Buffer_In2);
 	assert(err==CL_SUCCESS);
-	err =
+	err = SimpleKernel.setArg(2, Buffer_Out);
 	assert(err==CL_SUCCESS);
-	err =
-	assert(err==CL_SUCCESS);
+	//err = SimpleKernel.setArg(3, vectorSize);
+	//assert(err==CL_SUCCESS);
 
 
 	printf("\nLaunching the kernel...\n");
 	
 	// Launch Kernel
 	//////////////       Exercise 2   Step 2.7    ///////////////////
-	err =
+	//err = myqueue.enqueueTask(SimpleKernel);
+	err = myqueue.enqueueNDRangeKernel(SimpleKernel, cl::NullRange,vectorSize,workSize);
 	assert(err==CL_SUCCESS);
 
 	// read the output
 	//////////////       Exercise 2   Step 2.8    ///////////////////
-	err =
+	err = myqueue.enqueueReadBuffer(Buffer_Out,CL_TRUE, 0, vectorSize*sizeof(cl_float) , Z);
 	assert(err==CL_SUCCESS);
 
 	err=myqueue.finish();
@@ -128,14 +131,15 @@ int main(void)
 	{
 		//////////////  Equivalent Code runnign on CPUs
 		//////////////       Exercise 2   Step 2.9    ///////////////////
-		CalcZ[i] =
+		CalcZ[i] = X[i] + Y[i];
 				
 	}
 
 	//Print Performance Results
 	verification (X, Y, Z, CalcZ, vectorSize);
 
-#endif
+//#endif
 
     return 1;
 }
+
