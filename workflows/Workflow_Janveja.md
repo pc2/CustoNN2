@@ -48,6 +48,8 @@
 
 * In this exercise, we will convert the kernel from exercise 2 into the an NDRange kernel.  
 
+### Excercise 4
 
+* 
 
-# The End. 
+***---------------X---------------*** 
