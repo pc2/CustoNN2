@@ -1,1 +1,11 @@
-Compiler Command: aoc -march=emulator -board=p385a_sch_ax115 SimpleKernel.cl
+Compiler Command: aoc -march=emulator -board=a10gx SimpleKernel.cl
+/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/nikhitha/pg-custonn2-2018/tutorial/Task1/SimpleKernel.cl:3:44: warning: declaring kernel argument with no 'restrict' may lead to low kernel performance
+ __kernel void SimpleKernel (global float *a, __global float *b, __global float *c) 
+                                           ^
+/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/nikhitha/pg-custonn2-2018/tutorial/Task1/SimpleKernel.cl:3:63: warning: declaring kernel argument with no 'restrict' may lead to low kernel performance
+ __kernel void SimpleKernel (global float *a, __global float *b, __global float *c) 
+                                                              ^
+/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/nikhitha/pg-custonn2-2018/tutorial/Task1/SimpleKernel.cl:3:82: warning: declaring kernel argument with no 'restrict' may lead to low kernel performance
+ __kernel void SimpleKernel (global float *a, __global float *b, __global float *c) 
+                                                                                 ^
+3 warnings generated.
