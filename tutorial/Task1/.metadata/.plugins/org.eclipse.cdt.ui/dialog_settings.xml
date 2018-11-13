@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="/opt/intelFPGA_pro/17.1/hld/host/include" key="org.eclipse.cdt.utils.ui.controls.FileListControl"/>
+	<item value="libnalla_pcie_mmd.so" key="org.eclipse.cdt.utils.ui.controls.FileListControl"/>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration.internal">
 		<item value="162" key="size.height"/>
 		<item value="800" key="size.width"/>
