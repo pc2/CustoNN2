@@ -1,0 +1,1 @@
+Compiler Command: aoc -march=emulator -board=p385a_sch_ax115 SimpleKernel.cl

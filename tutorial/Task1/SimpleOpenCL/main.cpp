@@ -7,10 +7,10 @@
 #include "CL/cl.hpp"
 #include "utility.h"
 
-static const cl_uint vectorSize = 4096; //must be evenly disible by workSize
+static const cl_uint vectorSize = 4096; //must be evenly divisible by workSize
 static const cl_uint workSize = 256;
 
-#define EXERCISE1
+//#define EXERCISE1
 
 int main(void)
 {
@@ -23,7 +23,7 @@ int main(void)
 	////////////// Exercise 1 Step 2.3
 	err =cl::Platform::get(&PlatformList);
 	assert(err==CL_SUCCESS);
-	checkErr(PlatformList.size()==1 ? CL_SUCCESS : -1, "cl::Platform::get");
+	checkErr(PlatformList.size()=0 ? CL_SUCCESS : 1, "cl::Platform::get");
 	print_platform_info(&PlatformList);
 	
 	//Setup Device
@@ -35,8 +35,7 @@ int main(void)
 	print_device_info(&DeviceList);
 	
 	//Create Context
-	////////////// Exercise 1 Step 2.6 
-
+	////////////// Exercise 1 Step 2.6
 	cl::Context mycontext (DeviceList);
 	assert(err==CL_SUCCESS);
 	
@@ -47,9 +46,9 @@ int main(void)
 
 	//Create Buffers for input and output
 	////////////// Exercise 1 Step 2.8
-	cl::Buffer
-	cl::Buffer
-	cl::Buffer
+	cl::Buffer::Buffer_In(const context& mycontext, cl_mem_READ_ONLY, sizeof(float)*32, void *host_ptr=NULL, cl_int *err=NULL)
+	cl::Buffer::Buffer_In2(const context& mycontext, cl_mem_READ_ONLY, sizeof(float)*32, void *host_ptr=NULL, cl_int *err=NULL)
+	cl::Buffer::Buffer_Out(const context& mycontext, cl_mem_WRITE_ONLY, sizeof(float)*32, void *host_ptr=NULL, cl_int *err=NULL)
 
 	//Inputs and Outputs to Kernel, X and Y are inputs, Z is output
 	//The aligned attribute is used to ensure alignment
@@ -61,11 +60,10 @@ int main(void)
 	//Allocates memory with value from 0 to 1000
 	cl_float LO= 0;   cl_float HI=1000;
 	fill_generate(X, Y, Z, LO, HI, vectorSize);
-
 	//Write data to device
 	////////////// Exercise 1 Step 2.9
-	err =
-	err =
+	err =myq.enqueueWriteBuffer(Buffer_In, CL_FALSE, 0, sizeof(float)32, *X)
+	err =myq.enqueueWriteBuffer(Buffer_In, CL_FALSE, 0, sizeof(float)32, *Y)
 	assert(err==CL_SUCCESS);
 	myqueue.finish();
 
