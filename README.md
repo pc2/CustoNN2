@@ -67,3 +67,7 @@ export SSH_AUTH_SOCK=0
 - 09.11.2018: [Documentation, Tooling and Research Task 4](tutorial/Task4/README.md)
 	- **Watching and taking notes of Stanford CNN lectures until 12.11.2018.**
 	- **Completion of all all other parts until 15.11.2018.**
+
+- 13.11.2018:  [Applying Optimization Techniques Task 5](tutorial/Task5/README.md)
+    - **Completion until 19.11.2018.**
+	- **Submission via git**
