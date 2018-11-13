@@ -48,6 +48,11 @@ and adding the line
 export SSH_AUTH_SOCK=0
 ```
 
+#### Pulling or rebasing to master created merge conflicts
+
+- If the merge conflicts are in actual source files, you need to manually resolve them and commit the merged files. Never commit files with the `>>>>>>>>>>>`, `==========`, `<<<<<<<<<<` conflict markers.
+- If the merge conflicts are in eclipse .metadata files, you will just keep the state from the repository (functioning workspace). In that case you can use `git checkout --theirs .metadata`. (See also [this reference](http://gitready.com/advanced/2009/02/25/keep-either-file-in-merge-conflicts.html).)
+
 ## Tutorial tasks
 
 - 17.10.2018: [Lab setup, documentation, workflow](workflows/lab_instructions.md)
