@@ -2,7 +2,7 @@
 <section name="Workbench">
 	<item value="libnalla_pcie_mmd.so" key="org.eclipse.cdt.utils.ui.controls.FileListControl"/>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration.internal">
-		<item value="174" key="size.height"/>
+		<item value="162" key="size.height"/>
 		<item value="800" key="size.width"/>
 	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">
