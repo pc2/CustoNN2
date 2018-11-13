@@ -75,7 +75,7 @@ https://git-scm.com/docs/git-add
 
 I am not sure how the above sequence of commands help avoid problems while commiting changes.
 
-
+## Conflict resolution 
 
 
 
