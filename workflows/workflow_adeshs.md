@@ -55,16 +55,16 @@ CIFS IMT Link : https://hilfe.uni-paderborn.de/Netzlaufwerk_einbinden_(Windows_7
 - Pipes can have only a single read and a single write call.
 - Channel implemented file scope variable
 - Pipes are implemented as kernel arguments.
-
+  
 source:
 - Intel FPGA SDK OpenCL Programming Guide : https://www.intel.com/content/www/us/en/programmable/documentation/mwh1391807965224.html
-- Using Channels and Pipes with OpenCL™ on Intel® FPGAs : https://www.youtube.com/watch?v=_0RtAKeRl00
+- Using Channels and Pipes with OpenCL on Intel FPGAs : https://www.youtube.com/watch?v=_0RtAKeRl00
 
 ## aoc useful commands
--march = emulator Create kernels to be executed on x86
--list-boards = prints all available boards
--c -report = generates html report of the kernel for 17.1.2 tools
--rtl -report = generates html report of the kernel for 18.0.1 tools
+- -march = emulator Create kernels to be executed on x86
+- -list-boards = prints all available boards
+- -c -report = generates html report of the kernel for 17.1.2 tools
+- -rtl -report = generates html report of the kernel for 18.0.1 tools
 
 ## Task 4 :Git Best Practices
   
