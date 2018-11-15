@@ -20,3 +20,25 @@
 - Path to my mounted user name is **/upb/departments/pc2/users/n/nikhitha**
 - Able to edit and access .bashrc file from the CC Cluster.
 
+# Task 4
+## Documentation and Knowledge Base
+### **FPGAs and OpenCL SDK tool versions**
+- Worked with 2 tool versions: 17.1.2 and 18.0.1
+- Each version supports different boards
+- https://wiki.pc2.uni-paderborn.de/pages/viewpage.action?pageId=19562930.
+
+### **Gitlab merge request**
+- As a part of task 2, I created a new branch and pushed my changes on git. Then created a merge request.
+
+### **aoc command line options**
+- Used "-march=emulator" to create aocx file. We also specified the board with this command.
+
+### **Mounting university file systems**
+- 
+## Git best practices
+### **
+### **
+### **
+### **
+### **
+
