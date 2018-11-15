@@ -47,3 +47,13 @@
 - We are using the 17.1.2 and 18.0.1 version for the OpenCL SDK
 - For Documentation referring to the PC2 wiki website(link -  https://wiki.pc2.uni-paderborn.de/pages/viewpage.action?pageId=19562930)
 
+## Git Best Practices
+- Various commands that are used in the Git
+    - git status - give status of the files in the currently working directory as to which files are staged , but not added , along with the untracked files in the directory.
+    - git add -n - Gives the directory where the file would be added on the git repository.
+    - git reset - unstages the files that had to be committed on the repository.
+    - git commit -m "Message" - Commits the file on the repository with the Message
+    - git log - gives out the log the respective user as to when he added the file on the repository with the timestamp.
+- The order of adding the file on the git is to first add, then commit and then push on the respective branch.
+
+
