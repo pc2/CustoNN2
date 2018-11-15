@@ -35,10 +35,5 @@
 
 ### **Mounting university file systems**
 - 
-## Git best practices
-### **
-### **
-### **
-### **
-### **
+
 
