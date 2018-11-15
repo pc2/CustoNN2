@@ -24,3 +24,26 @@
 - User is mounted to the following path - **/upb/departments/pc2/users/a/anshul**
 - I am able to access and change the content of .bashrc file.
 
+## TASK 4 
+
+## Documentation
+
+## Channels
+- Uses Fifo mechanism for the buffers.
+- It is used to communicate between the kernels and kernels and I/O devices
+- It has a by default blocking behaviour but non blocking channels can also be implemented.
+- Usin the Intel FPGA SDK pro for implementation of Channels
+
+## Merge Request
+- Merge Request can directly be made from the GitLab website. I haven't created any merge request uptil now.
+
+## aoc Command Line options
+- aoc --help gives documention regarding aoc command line options
+    - aoc -version gives version name
+    - aoc -list-boards lists out all the available boards.
+    - aoc board=<board name> compiles for the specified boards.
+
+## FPGA and SDK
+- We are using the 17.1.2 and 18.0.1 version for the OpenCL SDK
+- For Documentation referring to the PC2 wiki website(link -  https://wiki.pc2.uni-paderborn.de/pages/viewpage.action?pageId=19562930)
+
