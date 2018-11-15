@@ -34,6 +34,22 @@
 - Used "-march=emulator" to create aocx file. We also specified the board with this command.
 
 ### **Mounting university file systems**
-- 
+
+## Git best practices
+### **git status**
+- to check the current state of the repository 
+- displays current branch
+- displays untracked files
+- displays uncommited changes
+- displays changes that are not staged
+
+### **git add -n**
+- git add: use to stage the changes
+- The "index" holds a snapshot of the content of the working tree, and it is this snapshot that is taken as the contents of the next commit. Thus after making any changes to the working tree, and before running the commit command, we must use the add command to add any new or modified files to the index.
+- "-n" is used as --dry-run : Doesn't actually add the file, just shows if it exists.
+
+### **git commit -m "message"**
+- commits the file on to the repository with the message
+
 
 
