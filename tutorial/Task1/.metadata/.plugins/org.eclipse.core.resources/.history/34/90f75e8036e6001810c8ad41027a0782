@@ -7,7 +7,7 @@
 #include "CL/cl.hpp"
 #include "utility.h"
 
-static const cl_uint vectorSize = 4096; //must be evenly disible by workSize
+static const cl_uint vectorSize = 4096; //must be evenly divisible by workSize
 static const cl_uint workSize = 256;
 
 #define EXERCISE1
@@ -23,7 +23,7 @@ int main(void)
 	////////////// Exercise 1 Step 2.3
 	err =cl::Platform::get(&PlatformList);
 	assert(err==CL_SUCCESS);
-	checkErr(PlatformList.size()==1 ? CL_SUCCESS : -1, "cl::Platform::get");
+	checkErr(PlatformList.size()=1 ? CL_SUCCESS : 1, "cl::Platform::get");
 	print_platform_info(&PlatformList);
 	
 	//Setup Device
