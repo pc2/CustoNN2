@@ -24,3 +24,49 @@
 - Available quota is 5Gb.
 - .bashrc file can be accessed and edited.
 
+## Resources
+
+- Git Reference 
+	- https://git-scm.com/docs
+
+- OpenCl Channels
+	- https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/opencl-sdk/aocl_programming_guide.pdf
+	- https://wiki.pc2.uni-paderborn.de/display/FPGAIn/Documentation+-+Intel-17.1
+	- https://www.youtube.com/watch?v=_0RtAKeRl00
+
+- AOC
+	- https://www.intel.com/content/dam/altera-www/global/ja_JP/pdfs/literature/hb/opencl-sdk/aocl_programming_guide.pdf
+
+## Task 4
+
+### AOC commands
+
+- `aoc -version` Gives version of the compiler.
+- `aoc -list-boards` Shows list of boards available .
+- `aoc --report` Generates html reports as well estimates hardware resource usage during compilation.
+- `aoc -v` Direct the aoc to report on the progress of a full compilation of the kernel.
+- `aoc -c <your_kernel_filename>.cl --report` To compile and generate report for the kernel.
+
+### Git Info
+
+- `git status` Shows us list of files to be committed, untraced files and status of commit with respect to remote branch.
+- `git add -n` It's a dry run for showing which all files will be committed .
+- `git add` Adds files to the commit to be made.
+- `git commit -m "message"` Makes a commit along with the message of the commit.
+- `git rm -r --cached some-directory` Removes unwanted files folder from remote branch.
+- `git reset --hard` Reset local repo Head to last remote pull.
+- `git rebase` Will apply commit on top of Master from branch.
+- `git merge` Will merge branch into master repository.
+
+### OpenCl Channels
+- The Intel FPGA SDK for OpenCL channels extension provides a mechanism for passing
+data between kernels and synchronizing kernels with high efficiency and low latency.
+- I/O to kernel communication done without the host.
+- Kernel to kernel communication done directly on-chip.
+- Host to kernel communication done without global Memory.
+
+- Features:
+	- Provides fifo like communication.
+
+- What is are the differences between channels and pipes? Why do both of them exist?
+_Solution_ - AOC implements pipes as a wrapper around channels. Pipes are compatible with other sdks.
