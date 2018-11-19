@@ -53,7 +53,7 @@
 
 ## Task 2: bashrc, makefile and Research part. 
 
-* 
+* Configured the bashrc file with alias, environment variables and noted the difference from bash_profile file. 
 
 
 
