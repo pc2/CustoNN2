@@ -66,9 +66,10 @@ export SSH_AUTH_SOCK=0
 - 30.10.2018: [Mixed Practical and Research Task 2](tutorial/Task2/README.md)
     - Due to 05.11.2018 - Submission through gitlab and with handwritten or digital/printed notes on the CNN lectures.
     - Completion of all parts until 12.11.2018.
-- 05.11.2018: [Practical Group Task 3](tutorial/Task3/README.md)
+- 05.11.2018: [Practical Group Task 3: Implementing Linear classifier for MNIST on FPGA](tutorial/Task3/README.md)
 	- Have functioning software and OpenCL kernel until 12.11.2018.
 	- **Complete task by 19.11.2018.**
+	- **Complete hardware measurements, prepare presentation by 26.11.2018.**
 
 - 09.11.2018: [Documentation, Tooling and Research Task 4](tutorial/Task4/README.md)
 	- Watching and taking notes of Stanford CNN lectures until 12.11.2018.
@@ -83,3 +84,14 @@ export SSH_AUTH_SOCK=0
     - **Prepare for a small test. You may use your notes and printouts, but no laptops or phones.**
 
 - 19.11.2018: [Practical implementation with Channels Task 6](tutorial/Task6/README.md)
+    - **Completion until 29.11.2018.**
+
+- 26.11.2018: [Practical implementation for local memory optimization Task 7]
+
+- 26.11.2018: [Practical Group Task 8: Implementing a small CNN on FPGA]
+ 
+- TBD: Completion and internal discussion of Stanford CNN lectures
+
+- TBD: Organize further group work
+    - Work during term break, coordination of vacations.
+    - Collect ideas for a project plan.
