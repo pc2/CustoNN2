@@ -81,3 +81,5 @@ export SSH_AUTH_SOCK=0
 - 13.11.2018: Watching and taking notes of Stanford CNN lectures 5+6
     - **Completion until 19.11.2018.**
     - **Prepare for a small test. You may use your notes and printouts, but no laptops or phones.**
+
+- 19.11.2018: [Practical implementation with Channels Task 6](tutorial/Task6/README.md)
