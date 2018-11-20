@@ -57,7 +57,7 @@ or not data was actually transferred.
 Source : https://www.youtube.com/watch?v=_0RtAKeRl00&t=809s
 
 ##### aoc command line options
-> 
+> Used "-march=emulator" to create aocx file.
 
 
 
