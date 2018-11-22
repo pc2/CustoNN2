@@ -10,9 +10,9 @@ void summation(
 
 {
 	double result = 0.0;
-	double shift_register[180];
+	double shift_register[10];
 	#pragma unroll
-	for(unsigned j=0; j < 180 ; j++){
+	for(unsigned j=0; j < 10 ; j++){
 		shift_register[j] = 0;
 	}
 
@@ -22,15 +22,15 @@ void summation(
         	for (unsigned di = 0; di < INNER; di++){
 			localtemp = (input[i+di]*0.5) + localtemp;	
         	}
-		double cur = localtemp + shift_register[179];
-		for(unsigned k = 180; k >= 1 ; k--){
+		double cur = localtemp + shift_register[9];
+		for(unsigned k = 10; k >= 1 ; k--){
 			shift_register[k] = shift_register[k-1];
 		}
 		shift_register[0]=cur;
 	}
 
 	#pragma unroll
-	for(unsigned j=0; j < 180 ; j++){
+	for(unsigned j=0; j < 10 ; j++){
 		result += shift_register[j];
 	}
 	*output = result;
