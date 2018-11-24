@@ -30,6 +30,9 @@
 
 # Task 4 Documentation and Knowledge Base
 
+## OpenCL Error Codes
+A useful place to get info about the error codes while coding in OpenCL : https://streamhpc.com/blog/2013-04-28/opencl-error-codes/
+
 ## Gitlab merge request
 - I use the browser to create merge requests. So far only one merge request was issued by me as a part of the task.
  
