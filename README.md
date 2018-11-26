@@ -80,18 +80,21 @@ export SSH_AUTH_SOCK=0
 	- **Submission via git**
 	
 - 13.11.2018: Watching and taking notes of Stanford CNN lectures 5+6
-    - **Completion until 19.11.2018.**
-    - **Prepare for a small test. You may use your notes and printouts, but no laptops or phones.**
+    - Completion until 19.11.2018.
+    - Prepare for a small test. You may use your notes and printouts, but no laptops or phones.
 
 - 19.11.2018: [Practical implementation with Channels Task 6](tutorial/Task6/README.md)
     - **Completion until 29.11.2018.**
 
-- 26.11.2018: [Practical implementation for local memory optimization Task 7]
-
-- 26.11.2018: [Practical Group Task 8: Implementing a small CNN on FPGA]
+- 26.11.2018: [Practical Group Task 7: Implementing a small CNN on FPGA](tutorial/Task7/README.md)
+    - **Completion of software reference until December 3**
+    - **Completion of OpenCL kernels and working hardware design until December 10**
+    - **Completion of optimized hardware and performance models until January 4**
+    - **Exploration of design alternatives with higher accuracy until January 4**
  
-- TBD: Completion and internal discussion of Stanford CNN lectures
+- 26.11.2018: Watching and taking notes of Stanford CNN lectures 7-9
+    - **Completion until December 10**
 
-- TBD: Organize further group work
+- background: Organize further group work
     - Work during term break, coordination of vacations.
     - Collect ideas for a project plan.
