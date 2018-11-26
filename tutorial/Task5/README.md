@@ -2,7 +2,7 @@
 
 ### Getting started
 - Inspect the contents of the Task 5 folder.
-- Create a separate folder for your solution Task5Solution<YourIMTName>, where you copy all the files from the `Task5` folder. Also work in a separate branch, push your solution to the remote repository and create a merge request.
+- Create a separate folder for your solution `Task5Solution<YourIMTName>`, where you copy all the files from the `Task5` folder. Also work in a separate branch, push your solution to the remote repository and create a merge request.
 - There is a host code `main.cpp` using also `utility.cpp` and `utility.h`, very similar to the previous examples. Refer to lines 84-89 to find out which argument this host code supplies to the kernel.
 - There is a `makefile` to build and run your code. Find about the different targets that you can invoke. The makefile uses targets with wildcards that allow you to execute different kernel variants with a single command. Execute `make run` and `make run-2nu` and find out how you execute different kernels here.
 
