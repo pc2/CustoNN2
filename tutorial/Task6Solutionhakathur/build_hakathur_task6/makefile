@@ -9,7 +9,7 @@ CC =g++ -std=c++11
 host_code=main
 host_code_dependency =utility
 
-kernel_name =SimpleKernel
+kernel_name =SimpleKernelN8
 
 #one directory above makefile`s directory - consider as  "parent directory"
 current_dir = $(shell cd .. && pwd)
@@ -18,7 +18,7 @@ current_dir = $(shell cd .. && pwd)
 host_code_directory =$(current_dir)/SimpleOpenCL
 
 
-#hack to choose between SDK 17 and 18. Could be made more elegent and more general. Future task.
+#hack to choose between SDK 17 and 18. Could be made more elegant and more general. Future task.
 version = 17
 ifeq  ($(version),17)
 board_name = p385a_sch_ax115
@@ -41,12 +41,12 @@ host_prog : host_prog.o $(host_code_dependency).o $(kernel_name).aocx
 	
 report : $(current_dir)/$(kernel_name).cl
 	@echo "Generating Report for the Kernel - ${kernel_name}"
-	aoc -c -report -board=p385a_sch_ax115 $(current_dir)/$(kernel_name).cl -const-cache-bytes=131072
+	aoc -c -report -board=p385a_sch_ax115 $(current_dir)/$(kernel_name).cl #-const-cache-bytes=131072
 
 
 #below code generates all the rquired files - report gets generated when -board=emulator is removed. Generalize this ? Future task
 $(kernel_name).aocx :  $(current_dir)/$(kernel_name).cl
-	aoc  -march=emulator -board=$(board_name)   -o $(current_dir)/$(kernel_name).aocx $(current_dir)/$(kernel_name).cl
+	aoc  -march=emulator -board=$(board_name)   -o $(current_dir)/$(kernel_name).aocx $(current_dir)/$(kernel_name).cl -emulator-channel-depth-model=default
 
 host_prog.o : $(host_code_directory)/$(host_code).cpp
 	$(CC) -c -o host_prog.o $(host_code_directory)/$(host_code).cpp $(AOCL_COMPILE_CONFIG)
@@ -59,6 +59,6 @@ utility.o : $(host_code_directory)/$(host_code_dependency).cpp
 
 #remove files created in build dir , parent dir and folder created in parent dir
 clean :
-	rm *.o ; rm $(current_dir)/*.aoc? ; rm -r $(current_dir)/$(kernel_name) ; rm host_prog ; rm *.aoco rm -r $(kernel_name)
+	rm *.o ; rm $(current_dir)/*.aoc? ; rm -r $(current_dir)/$(kernel_name) ; rm host_prog ; rm *.aoco ;rm -r $(kernel_name)
 
 
