@@ -68,16 +68,18 @@ export SSH_AUTH_SOCK=0
     - Completion of all parts until 12.11.2018.
 - 05.11.2018: [Practical Group Task 3: Implementing Linear classifier for MNIST on FPGA](tutorial/Task3/README.md)
 	- Have functioning software and OpenCL kernel until 12.11.2018.
-	- **Complete task by 19.11.2018.**
-	- **Complete hardware measurements, prepare presentation by 26.11.2018.**
+	- Complete task by 19.11.2018.
+	- Complete hardware measurements, prepare presentation by 26.11.2018.
+	- **More detailed analysis, hardware profiling, performance model until 14.01.2018**
 
 - 09.11.2018: [Documentation, Tooling and Research Task 4](tutorial/Task4/README.md)
 	- Watching and taking notes of Stanford CNN lectures until 12.11.2018.
-	- **Completion of all all other parts until 15.11.2018.**
+	- Completion of all all other parts until 15.11.2018.
+	- **Exentension of documentation until 03.12.2018**
 
 - 13.11.2018:  [Applying Optimization Techniques Task 5](tutorial/Task5/README.md)
-    - **Completion until 23.11.2018.**
-	- **Submission via git**
+    - Completion until 23.11.2018.
+	- **Submission of missing solutions via git, create a new merge request if the previous one was rejected.**
 	
 - 13.11.2018: Watching and taking notes of Stanford CNN lectures 5+6
     - Completion until 19.11.2018.
@@ -87,13 +89,13 @@ export SSH_AUTH_SOCK=0
     - **Completion until 29.11.2018.**
 
 - 26.11.2018: [Practical Group Task 7: Implementing a small CNN on FPGA](tutorial/Task7/README.md)
-    - **Completion of software reference until December 3**
-    - **Completion of OpenCL kernels and working hardware design until December 10**
-    - **Completion of optimized hardware and performance models until January 4**
-    - **Exploration of design alternatives with higher accuracy until January 4**
+    - **Completion of software reference until 03.12.2018**
+    - **Completion of OpenCL kernels and working hardware design until 10.12.2018**
+    - **Completion of optimized hardware and performance models until 14.01.2019**
+    - **Exploration of design alternatives with higher accuracy until 14.01.2019**
  
 - 26.11.2018: Watching and taking notes of Stanford CNN lectures 7-9
-    - **Completion until December 10**
+    - **Completion until 10.12.2018**
 
 - background: Organize further group work
     - Work during term break, coordination of vacations.
