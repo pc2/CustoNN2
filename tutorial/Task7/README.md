@@ -67,7 +67,7 @@
 	
 - In Tutorial session Tuesday December 11
 	- Present the findings of each subgroup to the entire group.
-	- Discuss bottlenecks and ideas for further optimizations for each subgroup. Each subgroup should optimize further up to a state that you consider the best obtainable design for the design decisions taken in Part II. If changes to the usage of local memory seem advisable, incorporate them. **To be completed and ready to present for tutorial session Monday January 6.**
+	- Discuss bottlenecks and ideas for further optimizations for each subgroup. Each subgroup should optimize further up to a state that you consider the best obtainable design for the design decisions taken in Part II. If changes to the usage of local memory seem advisable, incorporate them. **To be completed and ready to present for tutorial session Monday January 14.**
 	- Depending on the workload of the individual subgroups, have every group work on Part III, or form a task force to work in this direction.
 
 ## Part III
