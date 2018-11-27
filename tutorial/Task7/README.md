@@ -71,6 +71,6 @@
 	- Depending on the workload of the individual subgroups, have every group work on Part III, or form a task force to work in this direction.
 
 ## Part III
-- **To be completed and ready to present for tutorial session Monday January 6.**, use tutorial sessions on December 17 and 18.
+- **To be completed and ready to present for tutorial session Monday January 14.**, use tutorial sessions on December 17 and 18.
 - Use Tensorflow to train alternative CNN topologies.
 - Can you use the GPUs in Oculus for training, or do you rely on local resources.
