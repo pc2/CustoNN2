@@ -21,7 +21,7 @@ int main(void)
 	//Get Platform ID
 	std::vector<cl::Platform> PlatformList;
 	////////////// Exercise 1 Step 2.3
-	err =
+	err =cl::Platform::get(&PlatformList);
 	assert(err==CL_SUCCESS);
 	checkErr(PlatformList.size()==1 ? CL_SUCCESS : -1, "cl::Platform::get");
 	print_platform_info(&PlatformList);
@@ -30,18 +30,19 @@ int main(void)
 	//Get Device ID
 	std::vector<cl::Device> DeviceList;
 	////////////// Exercise 1 Step 2.5
-	err =
+	err =PlatformList[0].getDevices(CL_DEVICE_TYPE_ACCELERATOR, &DeviceList);
 	assert(err==CL_SUCCESS);
 	print_device_info(&DeviceList);
 	
 	//Create Context
 	////////////// Exercise 1 Step 2.6 
-	cl::Context
+
+	cl::Context mycontext (DeviceList);
 	assert(err==CL_SUCCESS);
 	
 	//Create Command queue
 	////////////// Exercise 1 Step 2.7
-	cl::CommandQueue
+	cl::CommandQueue::CommandQueue(const Context& mycontext, const Device& DeviceList, cl_command_queue_properties properties=0, cl_int *errcode_ret=NULL)
 	assert(err==CL_SUCCESS);
 
 	//Create Buffers for input and output

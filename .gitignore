@@ -1,0 +1,21 @@
+
+# General Eclipse gitignore files.
+
+*.log
+
+**/*.log
+
+**/*.aocx
+
+**/*.aoco
+
+**/.metadata
+
+**/.settings
+
+*.o
+
+*.d
+*.pdom
+
+

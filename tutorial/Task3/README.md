@@ -20,6 +20,7 @@
 - The dataset can be found at `/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/datasets/Tutorial_Task3_MNIST_files`. Please make sure to open these file for reading and don't overwrite them.
 - Instead of the the DE-series boards from the instructions, you will target the Nallatech 385A board with Arria 10 FPGA from the previous exercises (board name for aoc: `p385a_sch_ax115`). The host code will run on the x86 CPU of cc-7, so no byte reordering should be required in Part 1.
 - Be sure to first perform software emulation until you get a correct design, then generate `.html` reports while applying unrolling or other optimizations. Only when both emulation is successful and the `.html` report indicates < 100% utilization of all resources, start a  full synthesis process (only one at a time per group).
+- For the actual runtime measurements, synthesize one unrolled design with floating point operations and one with fixed point operations.
 - For every generated **hardware** `.aocx` file, create a separate folder under `/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs` and put a copy of
 	- the `.aocx` file
 	- the corresponding `.cl` sources
