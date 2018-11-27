@@ -8,9 +8,9 @@ void summation(
 
 {
 	double result = 0.0;
-	double sum_copies[20];
+	double sum_copies[176];
 	#pragma unroll 
-	for (unsigned i = 0; i<20; i++)
+	for (unsigned i = 0; i<176; i++)
 	{ 
 		sum_copies[i] = 0;
 	}
@@ -19,9 +19,9 @@ void summation(
 	for (unsigned i = 0; i < vectorSize; i++)
 	{
 		
-		double cur = (input[i]*0.5 + sum_copies[19]);
-		
-		for (unsigned k = 19; k>0; k--)
+		double cur = (input[i]*0.5 + sum_copies[175]);
+		#pragma unroll
+		for (unsigned k = 175; k>0; k--)
 		{
 			sum_copies[k]=sum_copies[k-1];
 
@@ -31,7 +31,7 @@ void summation(
 	
 	}
 	#pragma unroll 
-	for (unsigned j=0; j<20; j++)
+	for (unsigned j=0; j<176; j++)
 	{
 		result+=sum_copies[j];
 
