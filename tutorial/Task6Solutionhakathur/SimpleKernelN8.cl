@@ -28,6 +28,7 @@ __kernel void plusOne()
  write_channel_intel(chan_in2[compute_id+1], input );
 }
 
+
 __attribute__((max_global_work_dim(0)))
 __kernel void SimpleKernelN8(__global const float * restrict in,__global float * restrict out, uint N)
 {
