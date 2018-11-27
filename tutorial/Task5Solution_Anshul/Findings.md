@@ -14,6 +14,6 @@
 ## Parallelisation Take 2
 - The II of summation-2nu.cl is 177 with Latency=522 since the inner loop is fully unrolled along with  dependency on the variable result.
 - To apply the local Optimisation Technique we have used a variable result1 which computes local sum.After doing that the II of summation-2nu_lv.cl goes down to 10 with Latency=355.
-- To overcome the latency we apply the Shift Register Pattern the same way we did before with the same size(180). After doing this the II of summation-2nu_lv_sr.cl goes down to 1 with the Latency= 336.
-- The design of summation-2nu_lv_sr.cl is superior as compared to summation-bsr_u due to the fact that the latter one has the ALUTs usage of 90% whereas the one former one has the ALUTs usage of 70%.
+- To overcome the latency we apply the Shift Register Pattern the same way we did before with the size of 10. After doing this the II of summation-2nu_lv_sr.cl goes down to 1 with the Latency= 336.
+- The design of summation-2nu_lv_sr.cl is superior as compared to summation-bsr_u due to the fact that the latter one has the ALUTs usage of 90% whereas the one former one has the ALUTs usage of 18%.
 

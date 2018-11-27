@@ -10,9 +10,9 @@ void summation(
 
 {
 	double result = 0.0;
-	double result2[180];
+	double result2[10];
 	#pragma unroll
-	for ( int j=0; j<180;j++)
+	for ( int j=0; j<10;j++)
 	{
 		result2[j]=0;
 	}	
@@ -24,15 +24,15 @@ void summation(
 		{
             		result1 += (input[i+di]*0.5);
 	        }
-		double r = result1 + result2[179];
-		for (int k=180;k>0;k--)
+		double r = result1 + result2[9];
+		for (int k=10;k>0;k--)
 		{
 			result2[k]=result2[k-1];
 		}
 		result2[0]=r;
 	}
 	#pragma unroll
-	for ( int l=0;l<180;l++)
+	for ( int l=0;l<10;l++)
 	{
 		result += result2[l];
 	}
