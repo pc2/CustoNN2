@@ -70,11 +70,19 @@ int main(void)
 
 #ifndef EXERCISE1
 	// create the kernel
+	const char *kernel_name = "SimpleKernelN8";
+
+	//Read in binaries from file
+	std::ifstream aocx_stream("../SimpleKernelN8.aocx", std::ios::in|std::ios::binary);
+	checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, "SimpleKernelN8.aocx");
+/*
 	const char *kernel_name = "SimpleKernel";
 
 	//Read in binaries from file
 	std::ifstream aocx_stream("../SimpleKernel.aocx", std::ios::in|std::ios::binary);
 	checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, "SimpleKernel.aocx");
+*/
+
 	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 	cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
 
