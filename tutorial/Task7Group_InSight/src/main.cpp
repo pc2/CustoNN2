@@ -13,16 +13,16 @@ static const int NUMBER_OF_CLASSES = 10 ; //0 to 9
 static const int NUMBER_OF_FILTERS = 32 ;
 static const int NUMBER_OF_ROWS = 32; //Including zero padding
 static const int NUMBER_OF_COLS = 32; //Including zero padding
-static const int FILTER_ROWS = 5;
-static const int FILTER_COLS = 5;
-static const int ZERO_PADDING = 2;
-static const int CONV_LAYER_OUTPUT_ROWS = 28;
-static const int CONV_LAYER_OUTPUT_COLS = 28;
+static const int FILTER_ROWS = 5; // Number of rows in the conv Filter
+static const int FILTER_COLS = 5; // Number of rows in the conv Filter
+static const int ZERO_PADDING = 2; // Number of Zero Padding
+static const int CONV_LAYER_OUTPUT_ROWS = 28; // NUmber of Rows in the Output image from Conv Layer
+static const int CONV_LAYER_OUTPUT_COLS = 28; // NUmber of Cols in the Output image from Conv Layer
 
 int main(void)
 {
 
-
+  std::cout << "Reading 10k MNIST Dataset Images" << std::endl;
 	//Read Input Data from MNIST Database and store it in a 3D vector . ImageReader[NumberOfImages][NumberOfRows][NumberOfCols]
 	std::vector<std::vector<std::vector<unsigned char>>> ImageReader;
 	ReadMNIST_char(NUMBER_OF_IMAGES,NUMBER_OF_ROWS,NUMBER_OF_COLS,ZERO_PADDING,ImageReader);
@@ -37,6 +37,7 @@ int main(void)
 
     std::cout << "Finished Reading the MNIST Images" << std::endl;
 
+    std::cout << "Reading MNIST Dataset Weights" << std::endl;
     short Weights_2D[NUMBER_OF_CLASSES][NUMBER_OF_PIXELS];
     	char path_to_file_0[1024] = {"/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/datasets/Tutorial_Task7_MNIST_files/weights_fxp/fc_weights_0"};
     	char path_to_file_1[1024] = {"/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/datasets/Tutorial_Task7_MNIST_files/weights_fxp/fc_weights_1"};
@@ -64,27 +65,50 @@ int main(void)
       std::cout << "Finished Reading the Class Weights" << std::endl;
 
 
-      int CNN_Weights_1D[((FILTER_ROWS*FILTER_COLS)+1)*NUMBER_OF_FILTERS];
+
       std::vector<std::vector<std::vector<short>>> CNNWeights;
       std::vector<short> cnnbias;
       char path_to_cnn_weight[1024] = { "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/datasets/Tutorial_Task7_MNIST_files/weights_fxp/cnn_weights"};
       read_cnn_weights_file_char(path_to_cnn_weight, CNNWeights,cnnbias,FILTER_ROWS,FILTER_COLS,NUMBER_OF_FILTERS);
+      std::cout << "Finished Reading the CNN Weights" << std::endl;
 
       std::cout << "Sample Conv Filter Weights" << std::endl;
       for(int i=0;i<5;i++){
         for(int j=0;j<5;j++){
-          std::cout << CNNWeights[2][i][j]<< " ";
+          std::cout << CNNWeights[10][i][j]<< " ";
         }
         std::cout << std::endl;
       }
-      std::cout << "bias :"<<cnnbias[2] << std::endl;
-      std::cout << "Finished Reading the CNN Weights" << std::endl;
+      std::cout << "bias :"<<cnnbias[10] << std::endl;
 
 
-      std::vector<std::vector<std::vector<long>>> ConvOutput;
-      for(int i=0;i<1;i++)
-        for(int j=0;j<NUMBER_OF_FILTERS;j++)
-          convlutionLayer(ImageReader[i],CNNWeights[j],cnnbias[j],FILTER_ROWS,FILTER_COLS,NUMBER_OF_ROWS,NUMBER_OF_COLS,ConvOutput[j],CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS);
+      std::cout << "Starting Convolution for 10k images and 32 filters..." << std::endl;
+      std::vector<std::vector<long>> ConvOutput;
+      long ConvOutputFilters[NUMBER_OF_FILTERS][CONV_LAYER_OUTPUT_ROWS][CONV_LAYER_OUTPUT_COLS];
+      for(int i=0;i<NUMBER_OF_IMAGES;i++){
+        for(int j=0;j<NUMBER_OF_FILTERS;j++){
+          //Call Conv Layer
+          convlutionLayer(ImageReader[i],CNNWeights[j],cnnbias[j],FILTER_ROWS,FILTER_COLS,NUMBER_OF_ROWS,NUMBER_OF_COLS,ConvOutput,CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS);
+
+          // form 32 filter outputs of conv layer.
+          for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++)
+            for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++)
+              ConvOutputFilters[j][k][l]=ConvOutput[k][l];
+
+          //Call MaxPool
+
+          //Call FC
+        }
+      }
+        std::cout << "Test Convoluted result" << std::endl;
+        for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++){
+          for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++){
+            std::cout << ConvOutputFilters[0][k][l]<< " ";
+          }
+          std::cout << std::endl;
+        }
+
+
 
       std::cout << "Finished Convolution" << std::endl;
 	printf("\nDone.\n");

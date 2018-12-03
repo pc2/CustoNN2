@@ -326,8 +326,9 @@ void linearClassifier_fxp(unsigned char *img,int *weight,int *score,int numberOf
 		}
 
  }
-
-bool read_cnn_weights_file_char(char *filename , std::vector<std::vector<std::vector<short>>> &CNNWeights,std::vector<short> &cnnbias,int FILTER_ROWS,int FILTER_COLS,int NUMBER_OF_FILTERS)
+//Function to read CNN Conv Filter weights
+bool read_cnn_weights_file_char(char *filename , std::vector<std::vector<std::vector<short>>> &CNNWeights,
+  std::vector<short> &cnnbias,int FILTER_ROWS,int FILTER_COLS,int NUMBER_OF_FILTERS)
  {
       std::ifstream file(filename,std::ios::binary);
 
@@ -356,12 +357,40 @@ bool read_cnn_weights_file_char(char *filename , std::vector<std::vector<std::ve
  		return true;
  }
 
-void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::vector<std::vector<short>> &CNNWeights,short cnnbias,int FILTER_ROWS,int FILTER_COLS,int NUMBER_OF_ROWS,int NUMBER_OF_COLS,std::vector<std::vector<long>> &ConvOutput, int CONV_LAYER_OUTPUT_ROWS, int CONV_LAYER_OUTPUT_COLS){
+void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::vector<std::vector<short>> &CNNWeights,
+  short cnnbias,int FILTER_ROWS,int FILTER_COLS,int NUMBER_OF_ROWS,int NUMBER_OF_COLS,
+  std::vector<std::vector<long>> &ConvOutput, int CONV_LAYER_OUTPUT_ROWS, int CONV_LAYER_OUTPUT_COLS){
 
-  for(int i=0;i<NUMBER_OF_ROWS;i++){
-    for(int j=0;j<NUMBER_OF_COLS;j++){
-  std::cout << (int)ImageReader[i][j] << " ";
-  }
-  std::cout<< std::endl;
-}
+    //Resize the Conv Output matrix to 28*28
+    ConvOutput.resize(CONV_LAYER_OUTPUT_ROWS);
+    for(int i=0;i<CONV_LAYER_OUTPUT_ROWS;i++)
+      ConvOutput[i].resize(CONV_LAYER_OUTPUT_COLS);
+
+      int inX,inY=0;
+      long conv=0;
+      //Conv Logic
+      for(int outX=0;outX<CONV_LAYER_OUTPUT_ROWS;outX++){
+        for(int outY=0;outY<CONV_LAYER_OUTPUT_COLS;outY++){
+          //For Input indexing
+          inX = outX;
+          inY = outY;
+          conv=cnnbias;
+          //Filter
+          for(int filterX=0;filterX<FILTER_ROWS;filterX++){
+            for(int filterY=0;filterY<FILTER_COLS;filterY++){
+              conv+= CNNWeights[filterX][filterY] * (int)ImageReader[inX][inY];
+              inY++;
+
+            }
+            inX++;
+            //reset Cols
+            inY=outY;
+
+          }
+          // RELU :
+            conv = conv>0 ? conv :0;
+          ConvOutput[outX][outY]=conv;
+          conv=0;
+        }
+      }
 }
