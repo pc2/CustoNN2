@@ -30,7 +30,7 @@ int main(void)
 	std::vector<std::vector<std::vector<unsigned char>>> ImageReader;
 	ReadMNIST_char(NUMBER_OF_IMAGES,NUMBER_OF_ROWS,NUMBER_OF_COLS,ZERO_PADDING,ImageReader);
 
-/*
+
     std::cout << "Sample Image Pixel Value:"  << std::endl;
       for(int i=0;i<NUMBER_OF_ROWS;i++){
         for(int j=0;j<NUMBER_OF_COLS;j++){
@@ -38,7 +38,7 @@ int main(void)
       }
       std::cout<< std::endl;
     }
-*/
+
     std::cout << "Finished Reading the MNIST Images" << std::endl;
 
     std::cout << "Reading MNIST Dataset Weights" << std::endl;
@@ -80,17 +80,17 @@ int main(void)
       read_labels_file(available_labels);
 
 
-/*
+
       std::cout << "Sample Conv Filter Weights" << std::endl;
 
       for(int i=0;i<5;i++){
         for(int j=0;j<5;j++){
-          std::cout << CNNWeights[10][i][j]<< " ";
+          std::cout << CNNWeights[0][i][j]<< " ";
         }
         std::cout << std::endl;
       }
-      std::cout << "bias :"<<cnnbias[10] << std::endl;
-*/
+      std::cout << "bias :"<<cnnbias[0] << std::endl;
+
 
       std::cout << "Starting Convolution for 10k images and 32 filters..." << std::endl;
       std::vector<std::vector<int>> ConvOutput;
@@ -121,6 +121,8 @@ int main(void)
         }
 
 
+
+
         /*
          * Max Pool Layer
          * input : 32*28*28 Image
@@ -130,6 +132,7 @@ int main(void)
         int STRIDE=2;
         maxpoolLayer(ConvOutputFilters,MaxPoolOutput,NUMBER_OF_FILTERS,CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS,STRIDE);
       //  std::cout << "Finished Maxpool" << std::endl;
+
 
         //convert 2D Maxpool Output to 1D of 32*14*14 elements
         int MaxPoolOutput_1D[NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
@@ -158,6 +161,7 @@ int main(void)
               maxScore=score;
               neuron=weightIndex;
             }
+          //  std::cout << "score "<<weightIndex<<" :"<< score << '\n';
         }
         calculatedLabels[i]=neuron;
 
@@ -173,6 +177,7 @@ int main(void)
     	for(int zc = 0 ; zc < NUMBER_OF_IMAGES   ; zc++)
     	{
     		if(calculatedLabels[zc] == available_labels[zc])
+        //std::cout << "Label:" <<available_labels[0]<< '\n';
     			counter++;
     	}
       std::cout << "Number of Images correctly classified: " << counter <<std::endl;
@@ -180,28 +185,25 @@ int main(void)
 
     	printf("Accuracy is %f\n",Accuracy);
 
-/*
-        std::cout << "Test Convoluted result" << std::endl;
-        for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++){
-          for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++){
-            std::cout << ConvOutputFilters[5][k][l]<< "\t";
-          }
-          std::cout << std::endl;
-        }
-
-        std::cout << "Test MaxPool result" << std::endl;
-        for(int k=0;k<MAXPOOL_OUTPUT_ROWS;k++){
-          for(int l=0;l<MAXPOOL_OUTPUT_COLS;l++){
-            std::cout << MaxPoolOutput[5][k][l]<< "\t";
-          }
-          std::cout << std::endl;
-        }
-*/
-
-
-
 	printf("\nDone.\n");
+ /*
+ std::cout << "Test Convoluted result" << std::endl;
+ for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++){
+   for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++){
+     std::cout << ConvOutputFilters[0][k][l]<< "\t";
+   }
+   std::cout << std::endl;
+ }
 
+ std::cout << "Test MaxPool result" << std::endl;
+ for(int k=0;k<MAXPOOL_OUTPUT_ROWS;k++){
+   for(int l=0;l<MAXPOOL_OUTPUT_COLS;l++){
+     std::cout << MaxPoolOutput[0][k][l]<< "\t";
+   }
+   std::cout << std::endl;
+ }
+
+ */
 	return 0;
 
 

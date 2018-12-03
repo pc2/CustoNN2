@@ -402,15 +402,15 @@ void maxpoolLayer(std::vector<std::vector<std::vector<int>>> &ConvOutputFilters,
 int currvalue=0;
 for (int k = 0; k < NUMBER_OF_FILTERS; ++k)
 {
-    for (int y = 0; y < NUMBER_OF_ROWS; y=y+STRIDE)
+    for (int x = 0; x < NUMBER_OF_ROWS; x=x+STRIDE)
     {
-        for (int x = 0; x < NUMBER_OF_COLS; x=x+STRIDE)
+        for (int y = 0; y < NUMBER_OF_COLS; y=y+STRIDE)
         {
             for (int i = 0; i < STRIDE; ++i)
             {
                 for (int j = 0; j < STRIDE; ++j)
                 {
-                    int updatevalue = ConvOutputFilters[k][y + i][x + j];
+                    int updatevalue = ConvOutputFilters[k][x + i][y + j];
                     currvalue= std::max(currvalue, updatevalue);
                 }
             }
