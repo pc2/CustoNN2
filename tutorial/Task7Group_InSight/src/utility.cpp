@@ -357,6 +357,7 @@ bool read_cnn_weights_file_char(char *filename , std::vector<std::vector<std::ve
  		return true;
  }
 
+// fucntion to convolve one image with a filter and bias
 void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::vector<std::vector<short>> &CNNWeights,
   short cnnbias,int FILTER_ROWS,int FILTER_COLS,int NUMBER_OF_ROWS,int NUMBER_OF_COLS,
   std::vector<std::vector<long>> &ConvOutput, int CONV_LAYER_OUTPUT_ROWS, int CONV_LAYER_OUTPUT_COLS){
@@ -387,10 +388,36 @@ void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::v
             inY=outY;
 
           }
-          // RELU :
+          // RELU
             conv = conv>0 ? conv :0;
+
           ConvOutput[outX][outY]=conv;
           conv=0;
         }
       }
+}
+//MaxPooling Function
+void maxpoolLayer(std::vector<std::vector<std::vector<long>>> &ConvOutputFilters,std::vector<std::vector<std::vector<long>>> &MaxPoolOutput,
+  int NUMBER_OF_FILTERS,int NUMBER_OF_ROWS,int NUMBER_OF_COLS,int STRIDE){
+long currvalue=0;
+for (int k = 0; k < NUMBER_OF_FILTERS; ++k)
+{
+    for (int y = 0; y < NUMBER_OF_ROWS; y=y+STRIDE)
+    {
+        for (int x = 0; x < NUMBER_OF_COLS; x=x+STRIDE)
+        {
+            for (int i = 0; i < STRIDE; ++i)
+            {
+                for (int j = 0; j < STRIDE; ++j)
+                {
+                    long updatevalue = ConvOutputFilters[k][y + i][x + j];
+                    currvalue= std::max(currvalue, updatevalue);
+                }
+            }
+            MaxPoolOutput[k][((x-1)/2)][((y-1)/2)] = currvalue;
+            currvalue=0;
+        }
+    }
+}
+
 }

@@ -18,6 +18,8 @@ static const int FILTER_COLS = 5; // Number of rows in the conv Filter
 static const int ZERO_PADDING = 2; // Number of Zero Padding
 static const int CONV_LAYER_OUTPUT_ROWS = 28; // NUmber of Rows in the Output image from Conv Layer
 static const int CONV_LAYER_OUTPUT_COLS = 28; // NUmber of Cols in the Output image from Conv Layer
+static const int MAXPOOL_OUTPUT_ROWS = 14; // Number of Rows in the output image from Maxpool
+static const int MAXPOOL_OUTPUT_COLS = 14;  // Number of Cols in the output image from Maxpool
 
 int main(void)
 {
@@ -84,33 +86,47 @@ int main(void)
 
       std::cout << "Starting Convolution for 10k images and 32 filters..." << std::endl;
       std::vector<std::vector<long>> ConvOutput;
-      long ConvOutputFilters[NUMBER_OF_FILTERS][CONV_LAYER_OUTPUT_ROWS][CONV_LAYER_OUTPUT_COLS];
+      std::vector<std::vector<std::vector<long>>> ConvOutputFilters(NUMBER_OF_FILTERS,std::vector<std::vector<long>>(CONV_LAYER_OUTPUT_ROWS,std::vector <long>(CONV_LAYER_OUTPUT_COLS)));
+      std::vector<std::vector<std::vector<long>>> MaxPoolOutput(NUMBER_OF_FILTERS,std::vector<std::vector<long>>(MAXPOOL_OUTPUT_ROWS,std::vector <long>(MAXPOOL_OUTPUT_COLS)));
       for(int i=0;i<NUMBER_OF_IMAGES;i++){
         for(int j=0;j<NUMBER_OF_FILTERS;j++){
           //Call Conv Layer
           convlutionLayer(ImageReader[i],CNNWeights[j],cnnbias[j],FILTER_ROWS,FILTER_COLS,NUMBER_OF_ROWS,NUMBER_OF_COLS,ConvOutput,CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS);
+          std::cout << "Finished Convolution for image :"<<i <<" and Filter : "<<j << std::endl;
 
           // form 32 filter outputs of conv layer.
           for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++)
             for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++)
               ConvOutputFilters[j][k][l]=ConvOutput[k][l];
-
-          //Call MaxPool
-
-          //Call FC
         }
+        //Call MaxPool
+        std::cout << "Starting Maxpool for image :"<<i<<" and 32 filters..." << std::endl;
+        int STRIDE=2;
+        maxpoolLayer(ConvOutputFilters,MaxPoolOutput,NUMBER_OF_FILTERS,CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS,STRIDE);
+        std::cout << "Finished Maxpool" << std::endl;
+        //Call FC
       }
+
+      
         std::cout << "Test Convoluted result" << std::endl;
         for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++){
           for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++){
-            std::cout << ConvOutputFilters[0][k][l]<< " ";
+            std::cout << ConvOutputFilters[5][k][l]<< "\t";
+          }
+          std::cout << std::endl;
+        }
+
+        std::cout << "Test MaxPool result" << std::endl;
+        for(int k=0;k<MAXPOOL_OUTPUT_ROWS;k++){
+          for(int l=0;l<MAXPOOL_OUTPUT_COLS;l++){
+            std::cout << MaxPoolOutput[5][k][l]<< "\t";
           }
           std::cout << std::endl;
         }
 
 
 
-      std::cout << "Finished Convolution" << std::endl;
+
 	printf("\nDone.\n");
 
 	return 1;
