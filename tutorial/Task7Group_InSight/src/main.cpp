@@ -20,7 +20,8 @@ static const int CONV_LAYER_OUTPUT_ROWS = 28; // NUmber of Rows in the Output im
 static const int CONV_LAYER_OUTPUT_COLS = 28; // NUmber of Cols in the Output image from Conv Layer
 static const int MAXPOOL_OUTPUT_ROWS = 14; // Number of Rows in the output image from Maxpool
 static const int MAXPOOL_OUTPUT_COLS = 14;  // Number of Cols in the output image from Maxpool
-
+unsigned char calculatedLabels[NUMBER_OF_IMAGES]; // Classified Class after FC
+unsigned char available_labels[NUMBER_OF_IMAGES]; // Labels from the MNIST Dataset
 int main(void)
 {
 
@@ -40,7 +41,7 @@ int main(void)
     std::cout << "Finished Reading the MNIST Images" << std::endl;
 
     std::cout << "Reading MNIST Dataset Weights" << std::endl;
-    short Weights_2D[NUMBER_OF_CLASSES][NUMBER_OF_PIXELS];
+    short Weights_2D[NUMBER_OF_CLASSES][MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS*NUMBER_OF_FILTERS];
     	char path_to_file_0[1024] = {"/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/datasets/Tutorial_Task7_MNIST_files/weights_fxp/fc_weights_0"};
     	char path_to_file_1[1024] = {"/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/datasets/Tutorial_Task7_MNIST_files/weights_fxp/fc_weights_1"};
     	char path_to_file_2[1024] = {"/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/datasets/Tutorial_Task7_MNIST_files/weights_fxp/fc_weights_2"};
@@ -74,7 +75,13 @@ int main(void)
       read_cnn_weights_file_char(path_to_cnn_weight, CNNWeights,cnnbias,FILTER_ROWS,FILTER_COLS,NUMBER_OF_FILTERS);
       std::cout << "Finished Reading the CNN Weights" << std::endl;
 
+      //Read labels given in the shared location
+      read_labels_file(available_labels);
+
+
+
       std::cout << "Sample Conv Filter Weights" << std::endl;
+
       for(int i=0;i<5;i++){
         for(int j=0;j<5;j++){
           std::cout << CNNWeights[10][i][j]<< " ";
@@ -88,26 +95,85 @@ int main(void)
       std::vector<std::vector<long>> ConvOutput;
       std::vector<std::vector<std::vector<long>>> ConvOutputFilters(NUMBER_OF_FILTERS,std::vector<std::vector<long>>(CONV_LAYER_OUTPUT_ROWS,std::vector <long>(CONV_LAYER_OUTPUT_COLS)));
       std::vector<std::vector<std::vector<long>>> MaxPoolOutput(NUMBER_OF_FILTERS,std::vector<std::vector<long>>(MAXPOOL_OUTPUT_ROWS,std::vector <long>(MAXPOOL_OUTPUT_COLS)));
+
+
+      //Main Computation
       for(int i=0;i<NUMBER_OF_IMAGES;i++){
         for(int j=0;j<NUMBER_OF_FILTERS;j++){
-          //Call Conv Layer
+
+
+          /*
+           * Convolution Layer ( activation function: ReLU)
+           * input : 32*28*28 Image + 2 Zero Padding, 32 5*5 Conv Filter , 1 bias for each filter,1 stride
+           * Output : 32*28*28 Convoluted Image.
+           */
           convlutionLayer(ImageReader[i],CNNWeights[j],cnnbias[j],FILTER_ROWS,FILTER_COLS,NUMBER_OF_ROWS,NUMBER_OF_COLS,ConvOutput,CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS);
-          std::cout << "Finished Convolution for image :"<<i <<" and Filter : "<<j << std::endl;
+        //  std::cout << "Finished Convolution for image :"<<i <<" and Filter : "<<j << std::endl;
 
           // form 32 filter outputs of conv layer.
           for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++)
             for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++)
               ConvOutputFilters[j][k][l]=ConvOutput[k][l];
         }
-        //Call MaxPool
-        std::cout << "Starting Maxpool for image :"<<i<<" and 32 filters..." << std::endl;
+
+
+        /*
+         * Max Pool Layer
+         * input : 32*28*28 Image
+         * Output : 32*14*14 Image. This image will be converted to 1D of 6272 elements
+         */
+      //  std::cout << "Starting Maxpool for image :"<<i<<" and 32 filters..." << std::endl;
         int STRIDE=2;
         maxpoolLayer(ConvOutputFilters,MaxPoolOutput,NUMBER_OF_FILTERS,CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS,STRIDE);
-        std::cout << "Finished Maxpool" << std::endl;
-        //Call FC
-      }
+      //  std::cout << "Finished Maxpool" << std::endl;
 
-      
+        //convert 2D Maxpool Output to 1D of 32*14*14 elements
+        long MaxPoolOutput_1D[NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
+        int poolIndex= 0;
+        for(int m=0;m<NUMBER_OF_FILTERS;m++){
+          for(int n=0;n<MAXPOOL_OUTPUT_ROWS;n++){
+            for(int p=0;p<MAXPOOL_OUTPUT_COLS;p++){
+              MaxPoolOutput_1D[poolIndex] = MaxPoolOutput[m][n][p];
+              poolIndex++;
+            }
+          }
+        }
+
+        /*
+         * Fully Connected Layer
+         * input : Image[6272] and 10  Weights[6272]
+         * Output : Neuron having max score.
+         */
+        int maxScore=0;
+        int neuron=0;
+        int score=0;
+        int NUMBER_OF_FC_PIXELS =NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS;
+        for(int weightIndex=0;weightIndex<NUMBER_OF_CLASSES;weightIndex++){
+            score=fullyConnectedLayer(MaxPoolOutput_1D,Weights_2D[weightIndex],NUMBER_OF_FC_PIXELS);
+            if(score>maxScore){
+              maxScore=score;
+              neuron=weightIndex;
+            }
+        }
+        calculatedLabels[i]=neuron;
+
+      } //end of CNN
+
+
+
+      //Accuracy Calculation
+      float counter = 0;
+    	for(int zc = 0 ; zc < NUMBER_OF_IMAGES   ; zc++)
+    	{
+    		if(calculatedLabels[zc] == available_labels[zc])
+    			counter++;
+    	}
+      std::cout << "Number of Images correctly classified: " << counter <<std::endl;
+      float Accuracy = (counter/ NUMBER_OF_IMAGES) * 100 ;
+
+    	printf("Accuracy is %f\n",Accuracy);
+
+/*
         std::cout << "Test Convoluted result" << std::endl;
         for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++){
           for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++){
@@ -123,7 +189,7 @@ int main(void)
           }
           std::cout << std::endl;
         }
-
+*/
 
 
 

@@ -32,4 +32,5 @@ void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::v
   int NUMBER_OF_ROWS,int NUMBER_OF_COLS,std::vector<std::vector<long>> &ConvOutput, int CONV_LAYER_OUTPUT_ROWS, int CONV_LAYER_OUTPUT_COLS);
 
 void maxpoolLayer(std::vector<std::vector<std::vector<long>>> &ConvOutputFilters,std::vector<std::vector<std::vector<long>>> &MaxPoolOutput,int NUMBER_OF_FILTERS,int NUMBER_OF_ROWS,int NUMBER_OF_COLS,int STRIDE);
+int fullyConnectedLayer(long *MaxPoolOutput_1D,short *weight,int numberOfFCPixels);
 #endif

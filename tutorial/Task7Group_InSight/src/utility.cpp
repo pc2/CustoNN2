@@ -226,7 +226,7 @@ bool read_weights_file(char *filename , float *weights)
 
 bool read_weights_file_char(char *filename , short *weights)
 {
-	    int NUMBER_OF_PIXELS = 784 ;
+	    int NUMBER_OF_PIXELS = 6272 ;
 		FILE *f = fopen(filename, "r");
 		if (f == NULL){
 			printf("ERROR: Could not open %s\n", filename);
@@ -420,4 +420,12 @@ for (int k = 0; k < NUMBER_OF_FILTERS; ++k)
     }
 }
 
+}
+
+int fullyConnectedLayer(long *MaxPoolOutput_1D,short *weight,int numberOfFCPixels){
+  int sum=0;
+    for(int i=0;i<numberOfFCPixels;i++){
+      sum+=MaxPoolOutput_1D[i]*weight[i];
+    }
+  return sum;
 }
