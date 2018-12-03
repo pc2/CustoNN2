@@ -165,7 +165,7 @@ int main(void)
         std::cout << "Finished Convolution of 10k images and 32 filters..." << std::endl;
       auto endNew = std::chrono::high_resolution_clock::now();
 	    std::chrono::duration<double> elapsed = endNew - startTime;
-      std::cout << "Time Taken for Convolution of 10k images and 32 filters :" <<elapsed.count()<< std::endl;
+      std::cout << "Time Taken for Convolution of 10k images and 32 filters (in sec) :" <<elapsed.count()<< std::endl;
 
 
       //Accuracy Calculation
@@ -202,7 +202,7 @@ int main(void)
 
 	printf("\nDone.\n");
 
-	return 1;
+	return 0;
 
 
 }
