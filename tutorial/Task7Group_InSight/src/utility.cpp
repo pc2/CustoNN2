@@ -400,6 +400,7 @@ void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::v
 void maxpoolLayer(std::vector<std::vector<std::vector<int>>> &ConvOutputFilters,std::vector<std::vector<std::vector<int>>> &MaxPoolOutput,
   int NUMBER_OF_FILTERS,int NUMBER_OF_ROWS,int NUMBER_OF_COLS,int STRIDE){
 int currvalue=0;
+
 for (int k = 0; k < NUMBER_OF_FILTERS; ++k)
 {
     for (int x = 0; x < NUMBER_OF_ROWS; x=x+STRIDE)
@@ -414,9 +415,11 @@ for (int k = 0; k < NUMBER_OF_FILTERS; ++k)
                     currvalue= std::max(currvalue, updatevalue);
                 }
             }
-            MaxPoolOutput[k][((x-1)/2)][((y-1)/2)] = currvalue;
+            MaxPoolOutput[k][x/2][y/2] = currvalue;
             currvalue=0;
+            
         }
+
     }
 }
 

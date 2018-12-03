@@ -119,7 +119,13 @@ int main(void)
             for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++)
               ConvOutputFilters[j][k][l]=ConvOutput[k][l];
         }
-
+  /*      std::cout << "Test Convoluted result" << std::endl;
+        for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++){
+          for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++){
+            std::cout << ConvOutputFilters[0][k][l]<< "\t";
+          }
+          std::cout << std::endl;
+        } */
 
 
 
@@ -132,7 +138,13 @@ int main(void)
         int STRIDE=2;
         maxpoolLayer(ConvOutputFilters,MaxPoolOutput,NUMBER_OF_FILTERS,CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS,STRIDE);
       //  std::cout << "Finished Maxpool" << std::endl;
-
+  /*    std::cout << "Test MaxPool result" << std::endl;
+      for(int k=0;k<MAXPOOL_OUTPUT_ROWS;k++){
+        for(int l=0;l<MAXPOOL_OUTPUT_COLS;l++){
+          std::cout << MaxPoolOutput[0][k][l]<< "\t";
+        }
+        std::cout << std::endl;
+      } */
 
         //convert 2D Maxpool Output to 1D of 32*14*14 elements
         int MaxPoolOutput_1D[NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
