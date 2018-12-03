@@ -360,7 +360,7 @@ bool read_cnn_weights_file_char(char *filename , std::vector<std::vector<std::ve
 // fucntion to convolve one image with a filter and bias
 void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::vector<std::vector<short>> &CNNWeights,
   short cnnbias,int FILTER_ROWS,int FILTER_COLS,int NUMBER_OF_ROWS,int NUMBER_OF_COLS,
-  std::vector<std::vector<long>> &ConvOutput, int CONV_LAYER_OUTPUT_ROWS, int CONV_LAYER_OUTPUT_COLS){
+  std::vector<std::vector<int>> &ConvOutput, int CONV_LAYER_OUTPUT_ROWS, int CONV_LAYER_OUTPUT_COLS){
 
     //Resize the Conv Output matrix to 28*28
     ConvOutput.resize(CONV_LAYER_OUTPUT_ROWS);
@@ -368,7 +368,7 @@ void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::v
       ConvOutput[i].resize(CONV_LAYER_OUTPUT_COLS);
 
       int inX,inY=0;
-      long conv=0;
+      int conv=0;
       //Conv Logic
       for(int outX=0;outX<CONV_LAYER_OUTPUT_ROWS;outX++){
         for(int outY=0;outY<CONV_LAYER_OUTPUT_COLS;outY++){
@@ -397,9 +397,9 @@ void convlutionLayer(std::vector<std::vector<unsigned char>> &ImageReader,std::v
       }
 }
 //MaxPooling Function
-void maxpoolLayer(std::vector<std::vector<std::vector<long>>> &ConvOutputFilters,std::vector<std::vector<std::vector<long>>> &MaxPoolOutput,
+void maxpoolLayer(std::vector<std::vector<std::vector<int>>> &ConvOutputFilters,std::vector<std::vector<std::vector<int>>> &MaxPoolOutput,
   int NUMBER_OF_FILTERS,int NUMBER_OF_ROWS,int NUMBER_OF_COLS,int STRIDE){
-long currvalue=0;
+int currvalue=0;
 for (int k = 0; k < NUMBER_OF_FILTERS; ++k)
 {
     for (int y = 0; y < NUMBER_OF_ROWS; y=y+STRIDE)
@@ -410,7 +410,7 @@ for (int k = 0; k < NUMBER_OF_FILTERS; ++k)
             {
                 for (int j = 0; j < STRIDE; ++j)
                 {
-                    long updatevalue = ConvOutputFilters[k][y + i][x + j];
+                    int updatevalue = ConvOutputFilters[k][y + i][x + j];
                     currvalue= std::max(currvalue, updatevalue);
                 }
             }
@@ -422,7 +422,7 @@ for (int k = 0; k < NUMBER_OF_FILTERS; ++k)
 
 }
 
-int fullyConnectedLayer(long *MaxPoolOutput_1D,short *weight,int numberOfFCPixels){
+int fullyConnectedLayer(int *MaxPoolOutput_1D,short *weight,int numberOfFCPixels){
   int sum=0;
     for(int i=0;i<numberOfFCPixels;i++){
       sum+=MaxPoolOutput_1D[i]*weight[i];

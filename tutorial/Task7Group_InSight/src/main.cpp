@@ -30,6 +30,7 @@ int main(void)
 	std::vector<std::vector<std::vector<unsigned char>>> ImageReader;
 	ReadMNIST_char(NUMBER_OF_IMAGES,NUMBER_OF_ROWS,NUMBER_OF_COLS,ZERO_PADDING,ImageReader);
 
+/*
     std::cout << "Sample Image Pixel Value:"  << std::endl;
       for(int i=0;i<NUMBER_OF_ROWS;i++){
         for(int j=0;j<NUMBER_OF_COLS;j++){
@@ -37,7 +38,7 @@ int main(void)
       }
       std::cout<< std::endl;
     }
-
+*/
     std::cout << "Finished Reading the MNIST Images" << std::endl;
 
     std::cout << "Reading MNIST Dataset Weights" << std::endl;
@@ -79,7 +80,7 @@ int main(void)
       read_labels_file(available_labels);
 
 
-
+/*
       std::cout << "Sample Conv Filter Weights" << std::endl;
 
       for(int i=0;i<5;i++){
@@ -89,13 +90,16 @@ int main(void)
         std::cout << std::endl;
       }
       std::cout << "bias :"<<cnnbias[10] << std::endl;
-
+*/
 
       std::cout << "Starting Convolution for 10k images and 32 filters..." << std::endl;
-      std::vector<std::vector<long>> ConvOutput;
-      std::vector<std::vector<std::vector<long>>> ConvOutputFilters(NUMBER_OF_FILTERS,std::vector<std::vector<long>>(CONV_LAYER_OUTPUT_ROWS,std::vector <long>(CONV_LAYER_OUTPUT_COLS)));
-      std::vector<std::vector<std::vector<long>>> MaxPoolOutput(NUMBER_OF_FILTERS,std::vector<std::vector<long>>(MAXPOOL_OUTPUT_ROWS,std::vector <long>(MAXPOOL_OUTPUT_COLS)));
+      std::vector<std::vector<int>> ConvOutput;
+      std::vector<std::vector<std::vector<int>>> ConvOutputFilters(NUMBER_OF_FILTERS,std::vector<std::vector<int>>(CONV_LAYER_OUTPUT_ROWS,std::vector <int>(CONV_LAYER_OUTPUT_COLS)));
+      std::vector<std::vector<std::vector<int>>> MaxPoolOutput(NUMBER_OF_FILTERS,std::vector<std::vector<int>>(MAXPOOL_OUTPUT_ROWS,std::vector <int>(MAXPOOL_OUTPUT_COLS)));
 
+
+      //Start Time
+	     auto startTime = std::chrono::high_resolution_clock::now();
 
       //Main Computation
       for(int i=0;i<NUMBER_OF_IMAGES;i++){
@@ -128,7 +132,7 @@ int main(void)
       //  std::cout << "Finished Maxpool" << std::endl;
 
         //convert 2D Maxpool Output to 1D of 32*14*14 elements
-        long MaxPoolOutput_1D[NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
+        int MaxPoolOutput_1D[NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
         int poolIndex= 0;
         for(int m=0;m<NUMBER_OF_FILTERS;m++){
           for(int n=0;n<MAXPOOL_OUTPUT_ROWS;n++){
@@ -158,7 +162,10 @@ int main(void)
         calculatedLabels[i]=neuron;
 
       } //end of CNN
-
+        std::cout << "Finished Convolution of 10k images and 32 filters..." << std::endl;
+      auto endNew = std::chrono::high_resolution_clock::now();
+	    std::chrono::duration<double> elapsed = endNew - startTime;
+      std::cout << "Time Taken for Convolution of 10k images and 32 filters :" <<elapsed.count()<< std::endl;
 
 
       //Accuracy Calculation
