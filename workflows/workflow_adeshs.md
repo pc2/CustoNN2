@@ -58,6 +58,9 @@ CIFS IMT Link : https://hilfe.uni-paderborn.de/Netzlaufwerk_einbinden_(Windows_7
 6. Launch the Kernel using <queue>.enqueueTask
 7. Transfer the result buffer back
 
+## Sample Makefile for OpenCL kernels
+https://www.intel.com/content/www/us/en/programmable/documentation/mwh1391807965224.html#ewa1411396461611
+
 ## Channels & Pipes in OpenCL
 - Channels/Pipes are OpenCL extensions or functions which provide data transfer functionality between kernels with low latency and high efficiency.
 - FIFO mechanism communication and unidirectional
