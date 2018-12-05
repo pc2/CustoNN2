@@ -13,8 +13,10 @@
  * convOutCols : Number of Cols in the output image
  * Output : 32*28*28 image will be transferred to MaxPool using channel
  */
+ //Enable the channel extension
+ #pragma OPENCL EXTENSION cl_intel_channels : enable
 
-
+channel int convOutChannel __attribute__((depth(0)));
 __kernel void ConvLayer(__global unsigned char * restrict img,__global short * restrict cnnWeight,__global short * restrict cnnBias,__global int * restrict ConvOutput,
                         int numberOfImages,int numberOfFilters,int imgRows,int imgCols,int convFilterRows,int convFilterCols,int convOutRows,int convOutCols)
 {
@@ -49,11 +51,19 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
                                         // RELU
                                         conv = conv>0 ? conv : 0;
 
-                                        ConvOutput[(imgIndex*numberOfImages)+(filterNumber*numberOfFilters)+(outRowIndex*convOutRows)+outColIndex]=conv;
+                                        //ConvOutput[(imgIndex*numberOfImages)+(filterNumber*numberOfFilters)+(outRowIndex*convOutRows)+outColIndex]=conv;
+                                        write_channel_intel(convOutChannel,conv);
                                         conv=0;
                                 }
                         }
                 }
         }
 
+}
+// Dummy Maxpool Layer Code.
+__kernel void MaxPool(){
+  int dst;
+  for (int i = 0; i < 28*28*32; i++) {
+ dst = read_channel_intel(convOutChannel);
+ }
 }
