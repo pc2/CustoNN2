@@ -35,13 +35,15 @@ int main(void)
 	print_device_info(&DeviceList);
 
 	//Create Context
-	////////////// Exercise 1 Step 2.6 
+	////////////// Exercise 1 Step 2.6
 	cl::Context mycontext(DeviceList);
 	assert(err==CL_SUCCESS);
 
 	//Create Command queue
 	////////////// Exercise 1 Step 2.7
-	cl::CommandQueue myqueue(mycontext, DeviceList[0]); 
+	cl::CommandQueue myqueue(mycontext, DeviceList[0]);
+	assert(err==CL_SUCCESS);
+	cl::CommandQueue myqueue2(mycontext, DeviceList[0]);
 	assert(err==CL_SUCCESS);
 
 	//Create Buffers for input and output
@@ -64,9 +66,9 @@ int main(void)
 	//Write data to device
 	////////////// Exercise 1 Step 2.9
 	err = myqueue.enqueueWriteBuffer(Buffer_In, CL_FALSE, 0, sizeof(cl_float)*vectorSize, X);
-	err = myqueue.enqueueWriteBuffer(Buffer_In2, CL_FALSE, 0, sizeof(cl_float)*vectorSize, Y);
+	err = myqueue2.enqueueWriteBuffer(Buffer_In2, CL_FALSE, 0, sizeof(cl_float)*vectorSize, Y);
 	assert(err==CL_SUCCESS);
-	myqueue.finish();
+//	myqueue.finish();
 
 #ifndef EXERCISE1
 	// create the kernel
@@ -124,15 +126,15 @@ int main(void)
 	err=myqueue.enqueueTask(inputKernel);
 	assert(err==CL_SUCCESS);
 
-	err=myqueue.enqueueTask(kernel);
+	err=myqueue2.enqueueTask(kernel);
 	assert(err==CL_SUCCESS);
 
 	// read the output
 	//////////////       Exercise 2   Step 2.8    ///////////////////
-	err=myqueue.enqueueReadBuffer(Buffer_Out, CL_TRUE, 0, sizeof(cl_float)*vectorSize, Z);
+	err=myqueue2.enqueueReadBuffer(Buffer_Out, CL_TRUE, 0, sizeof(cl_float)*vectorSize, Z);
 	assert(err==CL_SUCCESS);
 
-	err=myqueue.finish();
+	err=myqueue2.finish();
 	assert(err==CL_SUCCESS);
 
 	float CalcZ[vectorSize];
@@ -141,7 +143,7 @@ int main(void)
 	{
 		//////////////  Equivalent Code runnign on CPUs
 		//////////////       Exercise 2   Step 2.9    ///////////////////
-		CalcZ[i] = X[i] * Y[i]; 
+		CalcZ[i] = X[i] * Y[i];
 
 	}
 
