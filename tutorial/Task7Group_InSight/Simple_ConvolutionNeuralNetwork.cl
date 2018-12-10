@@ -1,0 +1,69 @@
+/*
+ * Kernel for Convolution Layer in CNN
+ * img : 1D vector having 10k*32*32  elements
+ * cnnWeight : 1D vector having 32*28*28 elements
+ * cnnBias : Bias weight for 32 filters. 1D vector having 32 elements.
+ * numberOfImages : Number of images in the dataset =10k
+ * numberOfFilters : number of convolution filters = 32
+ * imgRows : Number of rows in the input image
+ * imgCols : NUmber of cols in the input images
+ * convFilterRows : NUmber of Rows in the Conv Filter
+ * convFilterCols : NUmber of Cols in the Conv Filter
+ * convOutRows : Number of rows in the output image
+ * convOutCols : Number of Cols in the output image
+ * Output : 32*28*28 image will be transferred to MaxPool using channel
+ */
+ //Enable the channel extension
+ #pragma OPENCL EXTENSION cl_intel_channels : enable
+
+channel int convOutChannel __attribute__((depth(0)));
+__kernel void ConvLayer(__global unsigned char * restrict img,__global short * restrict cnnWeight,__global short * restrict cnnBias,__global int * restrict ConvOutput,
+                        int numberOfImages,int numberOfFilters,int imgRows,int imgCols,int convFilterRows,int convFilterCols,int convOutRows,int convOutCols)
+{
+        int numberOfTotalPixels = numberOfImages*imgRows*imgCols;
+        int numberOfImagePixels = imgRows*imgCols;
+        //For 10k images
+        for(int imgIndex=0; imgIndex<numberOfImages; imgIndex++) {
+
+                int inX,inY=0;
+                int conv=0;
+                //for 32 filters
+                for(int filterNumber=0; filterNumber<numberOfFilters; filterNumber++) {
+                        //Conv Logic
+                        for(int outRowIndex=0; outRowIndex<convOutRows; outRowIndex++) {
+                                for(int outColIndex=0; outColIndex<convOutCols; outColIndex++) {
+                                        //For Input indexing
+                                        inX = outRowIndex;
+                                        inY = outColIndex;
+                                        conv = cnnBias[filterNumber]; //cnnBias
+                                        //Filter
+                                        for(int filterRowIndex=0; filterRowIndex<convFilterRows; filterRowIndex++) {
+                                                for(int filterColIndex=0; filterColIndex<convFilterCols; filterColIndex++) {
+                                                        conv+= cnnWeight[(filterNumber*numberOfFilters)+(filterRowIndex*convFilterRows)+filterColIndex] * img[(imgIndex*numberOfImages)+(inX*imgRows)+inY];
+                                                        inY++;
+                                                }
+                                        }
+                                        //Next Row
+                                        inX++;
+                                        //reset Cols
+                                        inY=outColIndex;
+
+                                        // RELU
+                                        conv = conv>0 ? conv : 0;
+
+                                        //ConvOutput[(imgIndex*numberOfImages)+(filterNumber*numberOfFilters)+(outRowIndex*convOutRows)+outColIndex]=conv;
+                                        write_channel_intel(convOutChannel,conv);
+                                        conv=0;
+                                }
+                        }
+                }
+        }
+
+}
+// Dummy Maxpool Layer Code.
+__kernel void MaxPool(){
+  int dst;
+  for (int i = 0; i < 28*28*32; i++) {
+ dst = read_channel_intel(convOutChannel);
+ }
+}
