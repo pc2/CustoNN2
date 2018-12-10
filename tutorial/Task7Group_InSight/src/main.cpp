@@ -22,8 +22,60 @@ static const int MAXPOOL_OUTPUT_ROWS = 14; // Number of Rows in the output image
 static const int MAXPOOL_OUTPUT_COLS = 14;  // Number of Cols in the output image from Maxpool
 unsigned char calculatedLabels[NUMBER_OF_IMAGES]; // Classified Class after FC
 unsigned char available_labels[NUMBER_OF_IMAGES]; // Labels from the MNIST Dataset
+static const int TOTAL_NUMBER_OF_IMAGE_PIXELS = NUMBER_OF_IMAGES*NUMBER_OF_ROWS*NUMBER_OF_COLS;
+static const int TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS = NUMBER_OF_FILTERS*FILTER_ROWS*FILTER_COLS;
+static const int TOTAL_NUMBER_OF_CONV_OUT_PIXELS=NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*CONV_LAYER_OUTPUT_ROWS*CONV_LAYER_OUTPUT_COLS;
+
+char Kernel_Img[TOTAL_NUMBER_OF_IMAGE_PIXELS] __attribute__ ((aligned (64)));
+short Kernel_CNN_WEIGHTS[TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS]  __attribute__ ((aligned (64)));
+short Kernel_CNN_BIAS[NUMBER_OF_FILTERS]  __attribute__ ((aligned (64)));
+int Kernel_Out[TOTAL_NUMBER_OF_CONV_OUT_PIXELS]  __attribute__ ((aligned (64)));
+
+
+
 int main(void)
 {
+        // FPGA Implementation
+        cl_int err;
+
+        //Setup Platform
+
+        //Get Platform ID
+        std::vector<cl::Platform> PlatformList;
+        ////////////// Exercise 1 Step 2.3
+        err = cl::Platform::get(&PlatformList);
+        assert(err==CL_SUCCESS);
+        checkErr(PlatformList.size()==1 ? CL_SUCCESS : -1, "cl::Platform::get");
+        print_platform_info(&PlatformList);
+
+        //Setup Device
+        //Get Device ID
+        std::vector<cl::Device> DeviceList;
+        err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList);
+        assert(err==CL_SUCCESS);
+        print_device_info(&DeviceList);
+
+        //Create Context
+        cl::Context mycontext(DeviceList);
+        assert(err==CL_SUCCESS);
+
+        //Create Command queue
+        cl::CommandQueue queueConvLayer(mycontext, DeviceList[0]);
+        assert(err==CL_SUCCESS);
+        cl::CommandQueue queueMaxPool(mycontext, DeviceList[0]);
+        assert(err==CL_SUCCESS);
+        cl::CommandQueue queueFCLayer(mycontext, DeviceList[0]);
+        assert(err==CL_SUCCESS);
+
+
+        //Create Buffers for input and output
+        cl::Buffer Buffer_Img(mycontext, CL_MEM_READ_ONLY, sizeof(char)*TOTAL_NUMBER_OF_IMAGE_PIXELS);
+        cl::Buffer Buffer_CNN_WEIGHTS(mycontext, CL_MEM_READ_ONLY, sizeof(short)*TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS);
+        cl::Buffer Buffer_CNN_BIAS(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_FILTERS);
+        cl::Buffer Buffer_Out(mycontext,CL_MEM_WRITE_ONLY,sizeof(int)*NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*CONV_LAYER_OUTPUT_COLS*CONV_LAYER_OUTPUT_ROWS);
+        //Inputs and Outputs to Kernel, X and Y are inputs, Z is output
+        //The aligned attribute is used to ensure alignment
+        //so that DMA could be used if we were working with a real FPGA board
 
         std::cout << "Reading 10k MNIST Dataset Images" << std::endl;
         //Read Input Data from MNIST Database and store it in a 3D vector . ImageReader[NumberOfImages][NumberOfRows][NumberOfCols]
@@ -31,6 +83,16 @@ int main(void)
         ReadMNIST_char(NUMBER_OF_IMAGES,NUMBER_OF_ROWS,NUMBER_OF_COLS,ZERO_PADDING,ImageReader);
 
 
+        //Convert 3D vector into 1 D Array - For Kernel
+        for(int i=0;i<NUMBER_OF_IMAGES;i++){
+          for(int j=0;j<NUMBER_OF_ROWS;j++){
+            for(int k=0;k<NUMBER_OF_COLS;k++){
+              Kernel_Img[(i*NUMBER_OF_ROWS*NUMBER_OF_ROWS)+(j*NUMBER_OF_ROWS)+k] = ImageReader[i][j][k];
+            }
+          }
+        }
+
+        /*
         std::cout << "Sample Image Pixel Value:"  << std::endl;
         for(int i=0; i<NUMBER_OF_ROWS; i++) {
                 for(int j=0; j<NUMBER_OF_COLS; j++) {
@@ -38,7 +100,7 @@ int main(void)
                 }
                 std::cout<< std::endl;
         }
-
+        */
         std::cout << "Finished Reading the MNIST Images" << std::endl;
 
         std::cout << "Reading MNIST Dataset Weights" << std::endl;
@@ -76,11 +138,23 @@ int main(void)
         read_cnn_weights_file_char(path_to_cnn_weight, CNNWeights,cnnbias,FILTER_ROWS,FILTER_COLS,NUMBER_OF_FILTERS);
         std::cout << "Finished Reading the CNN Weights" << std::endl;
 
+        // Convert 3D CNN Weights Vector to  1D array
+        for(int i=0;i<NUMBER_OF_FILTERS;i++){
+          for(int j=0;j<FILTER_ROWS;j++){
+            for(int k=0;k<FILTER_COLS;k++){
+              Kernel_CNN_WEIGHTS[(i*FILTER_ROWS*FILTER_COLS)+(j*FILTER_ROWS)+k]= CNNWeights[i][j][k];
+            }
+          }
+        }
+        //Bias Array
+        for(int i=0;i<NUMBER_OF_FILTERS;i++)
+          Kernel_CNN_BIAS[i]=cnnbias[i];
+
         //Read labels given in the shared location
         read_labels_file(available_labels);
 
 
-
+        /*
         std::cout << "Sample Conv Filter Weights" << std::endl;
 
         for(int i=0; i<5; i++) {
@@ -90,6 +164,85 @@ int main(void)
                 std::cout << std::endl;
         }
         std::cout << "bias :"<<cnnbias[0] << std::endl;
+        */
+
+
+                //Write data to device
+                err = queueConvLayer.enqueueWriteBuffer(Buffer_Img, CL_FALSE, 0, sizeof(char)*TOTAL_NUMBER_OF_IMAGE_PIXELS, Kernel_Img);
+                assert(err==CL_SUCCESS);
+                err = queueConvLayer.enqueueWriteBuffer(Buffer_CNN_WEIGHTS, CL_FALSE, 0, sizeof(short)*TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS, Kernel_CNN_WEIGHTS);
+                assert(err==CL_SUCCESS);
+                err = queueConvLayer.enqueueWriteBuffer(Buffer_CNN_BIAS, CL_FALSE, 0, sizeof(short)*NUMBER_OF_FILTERS, Kernel_CNN_BIAS);
+                assert(err==CL_SUCCESS);
+
+                // create the kernel
+                const char *CONV_kernel_name = "ConvLayer";
+
+                //Read in binaries from file
+                std::ifstream aocx_stream("../Simple_ConvolutionNeuralNetwork.aocx", std::ios::in|std::ios::binary);
+                checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
+                std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+                cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
+
+                // Create the Program from the AOCX file.
+                cl::Program program(mycontext, DeviceList, mybinaries);
+
+                // build the program
+                err=program.build(DeviceList);
+                assert(err==CL_SUCCESS);
+                // create the kernel
+                cl::Kernel kernel(program, CONV_kernel_name, &err);
+                assert(err==CL_SUCCESS);
+
+                cl::Kernel MaxPool(program, "MaxPool", &err);
+                assert(err==CL_SUCCESS);
+
+
+
+                //////////////     Set Arguments to the Kernels
+                err = kernel.setArg(0, Buffer_Img);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(1, Buffer_CNN_WEIGHTS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(2, Buffer_CNN_BIAS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(3, NUMBER_OF_IMAGES);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(4, NUMBER_OF_FILTERS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(5, NUMBER_OF_ROWS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(6, NUMBER_OF_COLS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(7, FILTER_ROWS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(8, FILTER_COLS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(9, CONV_LAYER_OUTPUT_ROWS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(10, CONV_LAYER_OUTPUT_COLS);
+                assert(err==CL_SUCCESS);
+                err = kernel.setArg(11, Buffer_Out);
+                assert(err==CL_SUCCESS);
+
+
+
+                printf("\nLaunching the kernel...\n");
+
+
+                // Launch Kernel
+                err=queueConvLayer.enqueueTask(kernel);
+                assert(err==CL_SUCCESS);
+
+                err=queueMaxPool.enqueueTask(MaxPool);
+                assert(err==CL_SUCCESS);
+                // read the output
+                err=queueConvLayer.enqueueReadBuffer(Buffer_Out, CL_TRUE, 0, sizeof(int)*TOTAL_NUMBER_OF_CONV_OUT_PIXELS,Kernel_Out);
+                assert(err==CL_SUCCESS);
+
+                err=queueConvLayer.finish();
+                assert(err==CL_SUCCESS);
+
 
 
         std::cout << "Starting Convolution for 10k images and 32 filters..." << std::endl;
@@ -197,7 +350,7 @@ int main(void)
 
         printf("Accuracy is %f\n",Accuracy);
 
-        printf("\nDone.\n");
+        printf("\nCPU Computation Done.\n");
         /*
            std::cout << "Test Convoluted result" << std::endl;
            for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++){
@@ -216,6 +369,12 @@ int main(void)
            }
 
          */
+
+
+
+
+
+
         return 0;
 
 

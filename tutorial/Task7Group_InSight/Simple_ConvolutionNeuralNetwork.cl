@@ -13,48 +13,58 @@
  * convOutCols : Number of Cols in the output image
  * Output : 32*28*28 image will be transferred to MaxPool using channel
  */
- //Enable the channel extension
+//Enable the channel extension
  #pragma OPENCL EXTENSION cl_intel_channels : enable
 
 channel int convOutChannel __attribute__((depth(0)));
-__kernel void ConvLayer(__global unsigned char * restrict img,__global short * restrict cnnWeight,__global short * restrict cnnBias,__global int * restrict ConvOutput,
-                        int numberOfImages,int numberOfFilters,int imgRows,int imgCols,int convFilterRows,int convFilterCols,int convOutRows,int convOutCols)
+__kernel void ConvLayer(__global unsigned char * restrict img,__global short * restrict cnnWeight,__global short * restrict cnnBias,
+                        int numberOfImages,int numberOfFilters,int imgRows,int imgCols,int convFilterRows,int convFilterCols,int convOutRows,int convOutCols,__global int * restrict ConvOutput)
 {
         int numberOfTotalPixels = numberOfImages*imgRows*imgCols;
         int numberOfImagePixels = imgRows*imgCols;
+
         //For 10k images
         for(int imgIndex=0; imgIndex<numberOfImages; imgIndex++) {
-
+                printf("For Image %d\n",imgIndex);
                 int inX,inY=0;
                 int conv=0;
                 //for 32 filters
                 for(int filterNumber=0; filterNumber<numberOfFilters; filterNumber++) {
+                        //printf("For Filter %d\n",filterNumber);
                         //Conv Logic
                         for(int outRowIndex=0; outRowIndex<convOutRows; outRowIndex++) {
+                                //printf("For outRowIndex %d\n",outRowIndex);
                                 for(int outColIndex=0; outColIndex<convOutCols; outColIndex++) {
+                                        //printf("For outColIndex %d\n",outColIndex);
                                         //For Input indexing
                                         inX = outRowIndex;
                                         inY = outColIndex;
                                         conv = cnnBias[filterNumber]; //cnnBias
                                         //Filter
                                         for(int filterRowIndex=0; filterRowIndex<convFilterRows; filterRowIndex++) {
+                                                //printf("\t For filterRowIndex %d\n",filterRowIndex);
                                                 for(int filterColIndex=0; filterColIndex<convFilterCols; filterColIndex++) {
-                                                        conv+= cnnWeight[(filterNumber*numberOfFilters)+(filterRowIndex*convFilterRows)+filterColIndex] * img[(imgIndex*numberOfImages)+(inX*imgRows)+inY];
+                                                        //printf("\t\t For filterColIndex %d\n",filterColIndex);
+                                                        //printf("Img:%d \n ",img[(imgIndex*numberOfImages)+(inX*imgRows)+inY]);
+                                                        //printf("Conv:%d \n", cnnWeight[(filterNumber*numberOfFilters)+(filterRowIndex*convFilterRows)+filterColIndex]);
+                                                        conv+= cnnWeight[(filterNumber*numberOfFilters)+(filterRowIndex*convFilterRows)+filterColIndex] * img[(imgIndex*imgRows*imgCols)+(inX*imgRows)+inY];
                                                         inY++;
                                                 }
+                                                //Next Row
+                                                inX++;
+                                                //reset Cols
+                                                inY=outColIndex;
                                         }
-                                        //Next Row
-                                        inX++;
-                                        //reset Cols
-                                        inY=outColIndex;
+
 
                                         // RELU
                                         conv = conv>0 ? conv : 0;
-
-                                        //ConvOutput[(imgIndex*numberOfImages)+(filterNumber*numberOfFilters)+(outRowIndex*convOutRows)+outColIndex]=conv;
+                                        //  printf("%d  ",conv);
+                                        ConvOutput[(imgIndex*numberOfFilters*convOutRows*convOutCols)+(filterNumber*convOutRows*convOutCols)+(outRowIndex*convOutRows)+outColIndex]=conv;
                                         write_channel_intel(convOutChannel,conv);
                                         conv=0;
                                 }
+                                //  printf("\n");
                         }
                 }
         }
@@ -62,8 +72,18 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
 }
 // Dummy Maxpool Layer Code.
 __kernel void MaxPool(){
-  int dst;
-  for (int i = 0; i < 28*28*32; i++) {
- dst = read_channel_intel(convOutChannel);
- }
+        int dst;
+        printf("Maxpool:\n" );
+        for(int img=0; img<10000; img++) {
+                for(int k=0; k<32; k++) {
+                        for (int i = 0; i < 28; i++) {
+                                for(int j=0; j<28; j++) {
+                                        dst = read_channel_intel(convOutChannel);
+                                        //    printf("%d ", dst);
+                                }
+                                //    printf("\n");
+                        }
+                        //printf("\n\n\n");
+                }
+        }
 }
