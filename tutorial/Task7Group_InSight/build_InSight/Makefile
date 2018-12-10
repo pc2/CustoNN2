@@ -2,6 +2,7 @@
 
 AOCL_COMPILE_CONFIG=$(shell aocl compile-config)
 AOCL_LINK_CONFIG=$(shell aocl link-config)
+AOCL_LINK_CONFIG_NALLATECH = -L/opt/intelFPGA_pro/17.1/hld/board/nalla_pcie/linux64/lib/ -lalteracl -lnalla_pcie_mmd -lelf
 
 CC =g++ -std=c++11
 
@@ -36,8 +37,7 @@ run: host_prog
 
 #creation of executable
 host_prog : host_prog.o $(host_code_dependency).o
-	$(CC) -o host_prog host_prog.o $(host_code_dependency).o $(AOCL_LINK_CONFIG)
-
+	$(CC) -L/opt/intelFPGA_pro/17.1/hld/board/nalla_pcie/linux64/lib/ -L/opt/intelFPGA_pro/17.1/hld/host/linux64/lib -lalteracl -lnalla_pcie_mmd -lelf -o host_prog host_prog.o $(host_code_dependency).o
 report : $(current_dir)/$(kernel_name).cl
 	@echo "Generating Report for the Kernel - ${kernel_name}"
 	aoc -c -report -board=$(board_name) $(current_dir)/$(kernel_name).cl
