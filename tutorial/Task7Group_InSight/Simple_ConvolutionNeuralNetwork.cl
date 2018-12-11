@@ -25,7 +25,9 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
 
         //For 10k images
         for(int imgIndex=0; imgIndex<numberOfImages; imgIndex++) {
-                printf("For Image %d\n",imgIndex);
+                if(imgIndex%1000==0 || imgIndex==numberOfImages-1)
+                        printf("Convolution for Image %d\n",imgIndex);
+
                 int inX,inY=0;
                 int conv=0;
                 //for 32 filters
