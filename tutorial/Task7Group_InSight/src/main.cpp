@@ -20,11 +20,14 @@ static const int CONV_LAYER_OUTPUT_ROWS = 28; // NUmber of Rows in the Output im
 static const int CONV_LAYER_OUTPUT_COLS = 28; // NUmber of Cols in the Output image from Conv Layer
 static const int MAXPOOL_OUTPUT_ROWS = 14; // Number of Rows in the output image from Maxpool
 static const int MAXPOOL_OUTPUT_COLS = 14;  // Number of Cols in the output image from Maxpool
-unsigned char calculatedLabels[NUMBER_OF_IMAGES]; // Classified Class after FC
+unsigned char calculatedLabels[NUMBER_OF_IMAGES];// Classified Class after FC
+unsigned char kernelcalculatedLabels[NUMBER_OF_IMAGES]; 
 unsigned char available_labels[NUMBER_OF_IMAGES]; // Labels from the MNIST Dataset
 static const int TOTAL_NUMBER_OF_IMAGE_PIXELS = NUMBER_OF_IMAGES*NUMBER_OF_ROWS*NUMBER_OF_COLS;
 static const int TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS = NUMBER_OF_FILTERS*FILTER_ROWS*FILTER_COLS;
 static const int TOTAL_NUMBER_OF_CONV_OUT_PIXELS=NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*CONV_LAYER_OUTPUT_ROWS*CONV_LAYER_OUTPUT_COLS;
+static const int NUMBER_OF_FC_PIXELS =NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS;
+static const int NUMBER_OF_FC_WEIGHTS =NUMBER_OF_FC_PIXELS*NUMBER_OF_CLASSES;
 
 char Kernel_Img[TOTAL_NUMBER_OF_IMAGE_PIXELS] __attribute__ ((aligned (64)));
 short Kernel_CNN_WEIGHTS[TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS]  __attribute__ ((aligned (64)));
@@ -73,6 +76,9 @@ int main(void)
         cl::Buffer Buffer_CNN_WEIGHTS(mycontext, CL_MEM_READ_ONLY, sizeof(short)*TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS);
         cl::Buffer Buffer_CNN_BIAS(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_FILTERS);
         cl::Buffer Buffer_Out(mycontext,CL_MEM_WRITE_ONLY,sizeof(int)*NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*CONV_LAYER_OUTPUT_COLS*CONV_LAYER_OUTPUT_ROWS);
+	cl::Buffer Buffer_digitWeights(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_FC_WEIGHTS);
+	cl::Buffer Buffer_kernelcalculatedLabels(mycontext,CL_MEM_WRITE_ONLY,sizeof(int)*NUMBER_OF_IMAGES);
+	
         //Inputs and Outputs to Kernel, X and Y are inputs, Z is output
         //The aligned attribute is used to ensure alignment
         //so that DMA could be used if we were working with a real FPGA board
@@ -153,6 +159,16 @@ int main(void)
         //Read labels given in the shared location
         read_labels_file(available_labels);
 
+	short digitWeights[NUMBER_OF_CLASSES*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS*NUMBER_OF_FILTERS];
+	// Convert 2D digit Weights Vector to  1D array
+        for(int i=0;i<NUMBER_OF_CLASSES;i++){
+          for(int j=0;j<MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS*NUMBER_OF_FILTERS;j++){
+           
+              digitWeights[(i*FILTER_ROWS*FILTER_COLS*NUMBER_OF_FILTERS)+j]= Weights_2D[i][j];
+           
+          }
+        }
+
 
         /*
         std::cout << "Sample Conv Filter Weights" << std::endl;
@@ -174,10 +190,13 @@ int main(void)
                 assert(err==CL_SUCCESS);
                 err = queueConvLayer.enqueueWriteBuffer(Buffer_CNN_BIAS, CL_FALSE, 0, sizeof(short)*NUMBER_OF_FILTERS, Kernel_CNN_BIAS);
                 assert(err==CL_SUCCESS);
+		err = queueFCLayer.enqueueWriteBuffer(Buffer_digitWeights, CL_FALSE, 0, sizeof(short)*NUMBER_OF_FC_WEIGHTS, digitWeights);
+                assert(err==CL_SUCCESS);
 
                 // create the kernel
                 const char *CONV_kernel_name = "ConvLayer";
 		const char *MP_kernel2_name = "MaxPool";
+		const char *FC_kernel3_name = "FCLayer";
                 //Read in binaries from file
                 std::ifstream aocx_stream("../Simple_ConvolutionNeuralNetwork.aocx", std::ios::in|std::ios::binary);
                 checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
@@ -197,6 +216,8 @@ int main(void)
                 cl::Kernel kernel2(program,MP_kernel2_name , &err);
                 assert(err==CL_SUCCESS);
 
+		 cl::Kernel kernel3(program,FC_kernel3_name, &err);
+                assert(err==CL_SUCCESS);
 
 
                 //////////////     Set Arguments to the Kernels
@@ -234,6 +255,17 @@ int main(void)
                 err = kernel2.setArg(3, CONV_LAYER_OUTPUT_COLS);
                 assert(err==CL_SUCCESS);
 
+		err = kernel3.setArg(0, Buffer_digitWeights);
+                assert(err==CL_SUCCESS);
+		err = kernel3.setArg(1, NUMBER_OF_FC_PIXELS);
+                assert(err==CL_SUCCESS);
+		err = kernel3.setArg(2, NUMBER_OF_CLASSES);
+                assert(err==CL_SUCCESS);
+		err = kernel3.setArg(3, NUMBER_OF_IMAGES);
+                assert(err==CL_SUCCESS);
+		err = kernel3.setArg(4, Buffer_kernelcalculatedLabels);
+                assert(err==CL_SUCCESS);
+
 
                 printf("\nLaunching the kernel...\n");
 
@@ -244,12 +276,22 @@ int main(void)
 
                 err=queueMaxPool.enqueueTask(kernel2);
                 assert(err==CL_SUCCESS);
+
+		err=queueFCLayer.enqueueTask(kernel3);
+                assert(err==CL_SUCCESS);
+
                 // read the output
                 err=queueConvLayer.enqueueReadBuffer(Buffer_Out, CL_TRUE, 0, sizeof(int)*TOTAL_NUMBER_OF_CONV_OUT_PIXELS,Kernel_Out);
+                assert(err==CL_SUCCESS);
+		
+		err=queueFCLayer.enqueueReadBuffer(Buffer_kernelcalculatedLabels, CL_TRUE, 0, sizeof(int)*NUMBER_OF_IMAGES, kernelcalculatedLabels);
                 assert(err==CL_SUCCESS);
 
                 err=queueConvLayer.finish();
                 assert(err==CL_SUCCESS);
+		err=queueFCLayer.finish();
+                assert(err==CL_SUCCESS);
+
                 auto endFPGA = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double> elapsedFPGA = endFPGA - startFPGA;
                 std::cout << "FPGA ==> Time Taken for Convolution of 10k images and 32 filters (in sec) :" <<elapsedFPGA.count()<< std::endl;
@@ -328,6 +370,7 @@ int main(void)
                 int maxScore=0;
                 int neuron=0;
                 int score=0;
+		int Labels[NUMBER_OF_IMAGES];
                 int NUMBER_OF_FC_PIXELS =NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS;
                 for(int weightIndex=0; weightIndex<NUMBER_OF_CLASSES; weightIndex++) {
                         score=fullyConnectedLayer(MaxPoolOutput_1D,Weights_2D[weightIndex],NUMBER_OF_FC_PIXELS);
@@ -337,7 +380,7 @@ int main(void)
                         }
                         //  std::cout << "score "<<weightIndex<<" :"<< score << '\n';
                 }
-                calculatedLabels[i]=neuron;
+                Labels[i]=neuron;
 
         } //end of CNN
         std::cout << "Finished Convolution of 10k images and 32 filters..." << std::endl;
@@ -358,6 +401,24 @@ int main(void)
         float Accuracy = (counter/ NUMBER_OF_IMAGES) * 100;
 
         printf("Accuracy is %f\n",Accuracy);
+
+	
+
+	float counterfpga = 0;
+	for(int zc = 0 ; zc < NUMBER_OF_IMAGES   ; zc++)
+	{
+		if((int)kernelcalculatedLabels[zc] == available_labels[zc])
+			counterfpga++;
+	}
+
+	printf("\n Number of images correctly classified = %d \n" , int(counter));
+
+
+
+	float p_f_Accuracy = (counterfpga/ NUMBER_OF_IMAGES) * 100 ;
+
+	printf("Accuracy by fpga is %f\n",p_f_Accuracy);
+
 
         printf("\nCPU Computation Done.\n");
         /*

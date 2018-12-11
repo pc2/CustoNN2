@@ -72,6 +72,7 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
         }
 
 }
+
 channel int MaxPoolOutChannel __attribute__((depth(0)));
 __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,int convOutCols)
 {
@@ -99,11 +100,55 @@ for ( int i =0 ; i < numberOfImages ; ++i)
 						m1 = max(p1,p2);
 						m2 = max(p3,p4);
                                                currvalue= max(m1,m2);
+					write_channel_intel(MaxPoolOutChannel,currvalue);
+                			currvalue=0;
                                 }
                          }
                              
 		}
-		write_channel_intel(MaxPoolOutChannel,currvalue);
-                currvalue=0;
+		
 }
 }
+
+
+__kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixels, int NUMBER_OF_CLASSES, int NUMBER_OF_IMAGES, __global int *  restrict kernelcalculatedLabels)                        
+{
+        
+        int maxScore=0;
+        int neuron=0;
+        int score;
+	
+        int maxpooldata[6272];
+	
+        
+        for(int count=0; count<NUMBER_OF_IMAGES; count++) 
+        {
+            
+            for(int i=0; i<numberOfFCPixels; i++) 
+            {
+                maxpooldata[i] = read_channel_intel(MaxPoolOutChannel);
+            }
+        
+            for(int weightIndex=0; weightIndex<NUMBER_OF_CLASSES; weightIndex++) 
+            {
+            
+                score=0;
+                int sum =0;
+                for(int i=0; i<numberOfFCPixels; i++) 
+                {
+                sum +=maxpooldata[i]*digitWeights[i];
+                }
+            
+                score=sum;
+            
+                if(score>maxScore) 
+                {
+                                maxScore=score;
+                                neuron=weightIndex;
+                }
+            }
+            kernelcalculatedLabels[count]=neuron;
+        }
+}
+    
+
