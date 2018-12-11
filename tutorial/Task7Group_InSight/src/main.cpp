@@ -177,7 +177,7 @@ int main(void)
 
                 // create the kernel
                 const char *CONV_kernel_name = "ConvLayer";
-
+		const char *MP_kernel2_name = "MaxPool";
                 //Read in binaries from file
                 std::ifstream aocx_stream("../Simple_ConvolutionNeuralNetwork.aocx", std::ios::in|std::ios::binary);
                 checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
@@ -194,7 +194,7 @@ int main(void)
                 cl::Kernel kernel(program, CONV_kernel_name, &err);
                 assert(err==CL_SUCCESS);
 
-                cl::Kernel MaxPool(program, "MaxPool", &err);
+                cl::Kernel kernel2(program,MP_kernel2_name , &err);
                 assert(err==CL_SUCCESS);
 
 
@@ -225,6 +225,14 @@ int main(void)
                 err = kernel.setArg(11, Buffer_Out);
                 assert(err==CL_SUCCESS);
 
+		err = kernel2.setArg(0, NUMBER_OF_IMAGES);
+                assert(err==CL_SUCCESS);
+                err = kernel2.setArg(1, NUMBER_OF_FILTERS);
+                assert(err==CL_SUCCESS);
+		err = kernel2.setArg(2, CONV_LAYER_OUTPUT_ROWS);
+                assert(err==CL_SUCCESS);
+                err = kernel2.setArg(3, CONV_LAYER_OUTPUT_COLS);
+                assert(err==CL_SUCCESS);
 
 
                 printf("\nLaunching the kernel...\n");
@@ -234,7 +242,7 @@ int main(void)
                 err=queueConvLayer.enqueueTask(kernel);
                 assert(err==CL_SUCCESS);
 
-                err=queueMaxPool.enqueueTask(MaxPool);
+                err=queueMaxPool.enqueueTask(kernel2);
                 assert(err==CL_SUCCESS);
                 // read the output
                 err=queueConvLayer.enqueueReadBuffer(Buffer_Out, CL_TRUE, 0, sizeof(int)*TOTAL_NUMBER_OF_CONV_OUT_PIXELS,Kernel_Out);
