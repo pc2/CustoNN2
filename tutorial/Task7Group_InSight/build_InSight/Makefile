@@ -10,7 +10,7 @@ CC =g++ -std=c++11
 host_code=main
 host_code_dependency =utility
 
-kernel_name =SimpleKernel
+kernel_name =Simple_ConvolutionNeuralNetwork
 
 #one directory above makefile`s directory - consider as  "parent directory"
 current_dir = $(shell cd .. && pwd)
@@ -36,7 +36,7 @@ run: host_prog
 
 
 #creation of executable
-host_prog : host_prog.o $(host_code_dependency).o
+host_prog : host_prog.o $(host_code_dependency).o kernel
 	$(CC) -L/opt/intelFPGA_pro/17.1/hld/board/nalla_pcie/linux64/lib/ -L/opt/intelFPGA_pro/17.1/hld/host/linux64/lib -lalteracl -lnalla_pcie_mmd -lelf -o host_prog host_prog.o $(host_code_dependency).o
 report : $(current_dir)/$(kernel_name).cl
 	@echo "Generating Report for the Kernel - ${kernel_name}"
@@ -44,7 +44,7 @@ report : $(current_dir)/$(kernel_name).cl
 
 
 #below code generates all the rquired files - report gets generated when -board=emulator is removed. Generalize this ? Future task
-$(kernel_name).aocx :  $(current_dir)/$(kernel_name).cl
+kernel :  $(current_dir)/$(kernel_name).cl
 	aoc  -march=emulator -board=$(board_name)   -o $(current_dir)/$(kernel_name).aocx $(current_dir)/$(kernel_name).cl
 
 host_prog.o : $(host_code_directory)/$(host_code).cpp
