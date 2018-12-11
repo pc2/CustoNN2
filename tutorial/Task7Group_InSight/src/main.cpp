@@ -229,7 +229,7 @@ int main(void)
 
                 printf("\nLaunching the kernel...\n");
 
-
+                auto startFPGA = std::chrono::high_resolution_clock::now();
                 // Launch Kernel
                 err=queueConvLayer.enqueueTask(kernel);
                 assert(err==CL_SUCCESS);
@@ -242,8 +242,9 @@ int main(void)
 
                 err=queueConvLayer.finish();
                 assert(err==CL_SUCCESS);
-
-
+                auto endFPGA = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double> elapsedFPGA = endFPGA - startFPGA;
+                std::cout << "FPGA ==> Time Taken for Convolution of 10k images and 32 filters (in sec) :" <<elapsedFPGA.count()<< std::endl;
 
         std::cout << "Starting Convolution for 10k images and 32 filters..." << std::endl;
         std::vector<std::vector<int> > ConvOutput;
@@ -334,7 +335,7 @@ int main(void)
         std::cout << "Finished Convolution of 10k images and 32 filters..." << std::endl;
         auto endNew = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = endNew - startTime;
-        std::cout << "Time Taken for Convolution of 10k images and 32 filters (in sec) :" <<elapsed.count()<< std::endl;
+        std::cout << "CPU Time Taken for Convolution of 10k images and 32 filters (in sec) :" <<elapsed.count()<< std::endl;
 
 
         //Accuracy Calculation
@@ -369,11 +370,6 @@ int main(void)
            }
 
          */
-
-
-
-
-
 
         return 0;
 
