@@ -72,20 +72,38 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
         }
 
 }
-// Dummy Maxpool Layer Code.
-__kernel void MaxPool(){
-        int dst;
-        printf("Maxpool:\n" );
-        for(int img=0; img<10000; img++) {
-                for(int k=0; k<32; k++) {
-                        for (int i = 0; i < 28; i++) {
-                                for(int j=0; j<28; j++) {
-                                        dst = read_channel_intel(convOutChannel);
-                                        //    printf("%d ", dst);
+channel int MaxPoolOutChannel __attribute__((depth(0)));
+__kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,int convOutCols)
+{
+int currvalue=0;
+int p1,p2,p3,p4,m1,m2;
+int img[26100];
+for ( int i =0 ; i < numberOfImages ; ++i)
+{
+	for ( int j = 0 ; j<numberOfFilters*convOutRows*convOutCols ; j++ )
+	{	
+		img[j] = read_channel_intel(convOutChannel);
+	
+         }
+		for (int k = 0; k <numberOfFilters ; ++k)
+        	{
+			for (int x = 0; x < convOutRows; x=x+2)
+                	{
+                        	for (int y = 0; y < convOutCols; y=y+2)
+                        	{
+         
+                                               p1 = img[(k*28*28)+(x*28)+(y)];
+					       p2 = img[(k*28*28)+(x*28)+(y+1)];
+						p3 = img[(k*28*28)+(x*28)+(y+28)];
+						p4 = img[(k*28*28)+(x*28)+(y+29)];
+						m1 = max(p1,p2);
+						m2 = max(p3,p4);
+                                               currvalue= max(m1,m2);
                                 }
-                                //    printf("\n");
-                        }
-                        //printf("\n\n\n");
-                }
-        }
+                         }
+                             
+		}
+		write_channel_intel(MaxPoolOutChannel,currvalue);
+                currvalue=0;
+}
 }
