@@ -17,8 +17,10 @@
  #pragma OPENCL EXTENSION cl_intel_channels : enable
 
 channel int convOutChannel __attribute__((depth(0)));
+channel int MaxPoolOutChannel __attribute__((depth(0)));
+
 __kernel void ConvLayer(__global unsigned char * restrict img,__global short * restrict cnnWeight,__global short * restrict cnnBias,
-                        int numberOfImages,int numberOfFilters,int imgRows,int imgCols,int convFilterRows,int convFilterCols,int convOutRows,int convOutCols,__global int * restrict ConvOutput)
+                        int numberOfImages,int numberOfFilters,int imgRows,int imgCols,int convFilterRows,int convFilterCols,int convOutRows,int convOutCols)
 {
         int numberOfTotalPixels = numberOfImages*imgRows*imgCols;
         int numberOfImagePixels = imgRows*imgCols;
@@ -62,7 +64,7 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
                                         // RELU
                                         conv = conv>0 ? conv : 0;
                                         //  printf("%d  ",conv);
-                                        ConvOutput[(imgIndex*numberOfFilters*convOutRows*convOutCols)+(filterNumber*convOutRows*convOutCols)+(outRowIndex*convOutRows)+outColIndex]=conv;
+                                        //ConvOutput[(imgIndex*numberOfFilters*convOutRows*convOutCols)+(filterNumber*convOutRows*convOutCols)+(outRowIndex*convOutRows)+outColIndex]=conv;
                                         write_channel_intel(convOutChannel,conv);
                                         conv=0;
                                 }
@@ -73,7 +75,7 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
 
 }
 
-channel int MaxPoolOutChannel __attribute__((depth(0)));
+
 __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,int convOutCols)
 {
 int currvalue=0;
@@ -82,9 +84,9 @@ int img[26100];
 for ( int i =0 ; i < numberOfImages ; ++i)
 {
 	for ( int j = 0 ; j<numberOfFilters*convOutRows*convOutCols ; j++ )
-	{	
+	{
 		img[j] = read_channel_intel(convOutChannel);
-	
+
          }
 		for (int k = 0; k <numberOfFilters ; ++k)
         	{
@@ -92,7 +94,7 @@ for ( int i =0 ; i < numberOfImages ; ++i)
                 	{
                         	for (int y = 0; y < convOutCols; y=y+2)
                         	{
-         
+
                                                p1 = img[(k*28*28)+(x*28)+(y)];
 					       p2 = img[(k*28*28)+(x*28)+(y+1)];
 						p3 = img[(k*28*28)+(x*28)+(y+28)];
@@ -104,44 +106,44 @@ for ( int i =0 ; i < numberOfImages ; ++i)
                 			currvalue=0;
                                 }
                          }
-                             
+
 		}
-		
+
 }
 }
 
 
-__kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixels, int NUMBER_OF_CLASSES, int NUMBER_OF_IMAGES, __global int *  restrict kernelcalculatedLabels)                        
+__kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixels, int NUMBER_OF_CLASSES, int NUMBER_OF_IMAGES, __global int *  restrict kernelcalculatedLabels)
 {
-        
+
         int maxScore=0;
         int neuron=0;
         int score;
-	
+
         int maxpooldata[6272];
-	
-        
-        for(int count=0; count<NUMBER_OF_IMAGES; count++) 
+
+
+        for(int count=0; count<NUMBER_OF_IMAGES; count++)
         {
-            
-            for(int i=0; i<numberOfFCPixels; i++) 
+
+            for(int i=0; i<numberOfFCPixels; i++)
             {
                 maxpooldata[i] = read_channel_intel(MaxPoolOutChannel);
             }
-        
-            for(int weightIndex=0; weightIndex<NUMBER_OF_CLASSES; weightIndex++) 
+
+            for(int weightIndex=0; weightIndex<NUMBER_OF_CLASSES; weightIndex++)
             {
-            
+
                 score=0;
                 int sum =0;
-                for(int i=0; i<numberOfFCPixels; i++) 
+                for(int i=0; i<numberOfFCPixels; i++)
                 {
                 sum +=maxpooldata[i]*digitWeights[i];
                 }
-            
+
                 score=sum;
-            
-                if(score>maxScore) 
+
+                if(score>maxScore)
                 {
                                 maxScore=score;
                                 neuron=weightIndex;
@@ -150,5 +152,3 @@ __kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixel
             kernelcalculatedLabels[count]=neuron;
         }
 }
-    
-
