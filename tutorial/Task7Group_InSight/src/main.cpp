@@ -16,6 +16,7 @@ static const int NUMBER_OF_COLS = 32; //Including zero padding
 static const int FILTER_ROWS = 5; // Number of rows in the conv Filter
 static const int FILTER_COLS = 5; // Number of rows in the conv Filter
 static const int ZERO_PADDING = 2; // Number of Zero Padding
+static const int STRIDE=2; // Stride
 static const int CONV_LAYER_OUTPUT_ROWS = 28; // NUmber of Rows in the Output image from Conv Layer
 static const int CONV_LAYER_OUTPUT_COLS = 28; // NUmber of Cols in the Output image from Conv Layer
 static const int MAXPOOL_OUTPUT_ROWS = 14; // Number of Rows in the output image from Maxpool
@@ -135,7 +136,8 @@ int main(void)
 
         std::cout << "Finished Reading the Class Weights" << std::endl;
 
-
+        //Read labels given in the shared location
+        read_labels_file(available_labels);
 
         std::vector<std::vector<std::vector<short> > > CNNWeights;
         std::vector<short> cnnbias;
@@ -155,15 +157,14 @@ int main(void)
         for(int i=0; i<NUMBER_OF_FILTERS; i++)
                 Kernel_CNN_BIAS[i]=cnnbias[i];
 
-        //Read labels given in the shared location
-        read_labels_file(available_labels);
+
 
         short digitWeights[NUMBER_OF_CLASSES*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS*NUMBER_OF_FILTERS];
         // Convert 2D digit Weights Vector to  1D array
         for(int i=0; i<NUMBER_OF_CLASSES; i++) {
-                for(int j=0; j<MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS*NUMBER_OF_FILTERS; j++) {
+                for(int j=0; j<(MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS*NUMBER_OF_FILTERS); j++) {
 
-                        digitWeights[(i*FILTER_ROWS*FILTER_COLS*NUMBER_OF_FILTERS)+j]= Weights_2D[i][j];
+                        digitWeights[(i*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS*NUMBER_OF_FILTERS)+j]= Weights_2D[i][j];
 
                 }
         }
@@ -251,6 +252,8 @@ int main(void)
         assert(err==CL_SUCCESS);
         err = kernel2.setArg(3, CONV_LAYER_OUTPUT_COLS);
         assert(err==CL_SUCCESS);
+        err= kernel2.setArg(4,STRIDE);
+        assert(err==CL_SUCCESS);
 
         err = kernel3.setArg(0, Buffer_digitWeights);
         assert(err==CL_SUCCESS);
@@ -293,8 +296,11 @@ int main(void)
         float counterfpga = 0;
         for(int zc = 0; zc < NUMBER_OF_IMAGES; zc++)
         {
-                if(kernelcalculatedLabels[zc] == available_labels[zc])
+                if(kernelcalculatedLabels[zc] == (int)available_labels[zc])
                         counterfpga++;
+
+                //if(zc<100)
+                  //      std::cout << "FPGA Value :" <<kernelcalculatedLabels[zc] << " ,Label"<<(int)available_labels[zc] << '\n';
         }
 
         std::cout << "Number of Images correctly classified: " << counterfpga <<std::endl;
@@ -328,14 +334,19 @@ int main(void)
                         for(int k=0; k<CONV_LAYER_OUTPUT_ROWS; k++)
                                 for(int l=0; l<CONV_LAYER_OUTPUT_COLS; l++)
                                         ConvOutputFilters[j][k][l]=ConvOutput[k][l];
+                        /*
+                           if(i==0) {
+                                  std::cout << "Test Convoluted result :"<<j << std::endl;
+                                  for(int k=0; k<CONV_LAYER_OUTPUT_ROWS; k++) {
+                                          for(int l=0; l<CONV_LAYER_OUTPUT_COLS; l++) {
+                                                  std::cout << ConvOutputFilters[j][k][l]<< " ";
+                                          }
+                                          std::cout << std::endl;
+                                  }
+                           }
+                         */
                 }
-                /*      std::cout << "Test Convoluted result" << std::endl;
-                      for(int k=0;k<CONV_LAYER_OUTPUT_ROWS;k++){
-                        for(int l=0;l<CONV_LAYER_OUTPUT_COLS;l++){
-                          std::cout << ConvOutputFilters[0][k][l]<< "\t";
-                        }
-                        std::cout << std::endl;
-                      } */
+
 
 
 
@@ -345,7 +356,7 @@ int main(void)
                  * Output : 32*14*14 Image. This image will be converted to 1D of 6272 elements
                  */
                 //  std::cout << "Starting Maxpool for image :"<<i<<" and 32 filters..." << std::endl;
-                int STRIDE=2;
+
                 maxpoolLayer(ConvOutputFilters,MaxPoolOutput,NUMBER_OF_FILTERS,CONV_LAYER_OUTPUT_ROWS,CONV_LAYER_OUTPUT_COLS,STRIDE);
                 //  std::cout << "Finished Maxpool" << std::endl;
                 /*    std::cout << "Test MaxPool result" << std::endl;
@@ -398,9 +409,11 @@ int main(void)
         float counter = 0;
         for(int zc = 0; zc < NUMBER_OF_IMAGES; zc++)
         {
-                if(calculatedLabels[zc] == available_labels[zc])
-                        //std::cout << "Label:" <<available_labels[0]<< '\n';
+                if(calculatedLabels[zc] == (int)available_labels[zc])
                         counter++;
+
+                //if(zc<100)
+                //std::cout << "CPU Value :" <<calculatedLabels[zc] << " ,Label"<<(int)available_labels[zc] << '\n';
         }
         std::cout << "Number of Images correctly classified: " << counter <<std::endl;
         float Accuracy = (counter/ NUMBER_OF_IMAGES) * 100;
