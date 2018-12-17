@@ -77,11 +77,11 @@ https://git-scm.com/docs/git-add
 
 
 
-## Channels and Pipes
+## Channels and Pipes 
 - [The Intel FPGA SDK for OpenCL channels extension provides a mechanism for passing data between kernels and synchronizing kernels with high efficiency and low latency](https://www.intel.com/content/www/us/en/programmable/documentation/mwh1391807965224/ewa1411503895045.html#ewa1411747396740)
 - Channels are used to exchange data between kernels. This communication between kernels happens through FIFO buffers.
 - Channels are better understood if we work in terms of Producer and Consumer. Producer "produces" data which is written to  channel and consumer makes use of the data i.e. consumer reads the data from the channel.
-- If consumer does not read faster than the rate the producer writes to the channel  _stalls_ occur .We can use Intel® FPGA Dynamic Profiler for OpenCL™ to check for channel stalls.
+- If consumer does not read faster than the rate the producer writes to the channel  _stalls_ occur .We can use Intel FPGA Dynamic Profiler for OpenCL to check for channel stalls.
 - If consumer reads faster than the rate the producer writes to the channel , consumer stalls. Because consumer has nothing to work on.
 - A kernel can read from the same channel multiple times. However, multiple kernels cannot read from the same channel. Similarly, a kernel can write to the same channel multiple times but multiple kernels cannot write to the same channel.
 - In Intel FPGA SDK ,  channels in kernel are enabled using :
@@ -94,6 +94,9 @@ https://git-scm.com/docs/git-add
 - Pipes are similar to Channels . The main difference I could see from the documentation is that Channels are wholly supported by Interl FPGA SDKs. When working with other SDKs, it is better to work with Pipes.
 - Intel FPGA SDK implementation of OpenCL pipes is partially conformant to the OpenCL Specification version 2.0
 - By default, pipes exhibit nonblocking behavior. If you want the pipes in your kernel to exhibit blocking behavior, specify the blocking attribute (__attribute__((blocking))) when you declare the read and write pipes.
+
+
+
 
 
 
