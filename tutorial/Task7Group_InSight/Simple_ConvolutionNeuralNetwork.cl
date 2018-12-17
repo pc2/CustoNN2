@@ -25,7 +25,7 @@
 #define G_NUMBER_OF_CONV_OUT_ROWS 28
 #define G_NUMBER_OF_CONV_OUT_COLS 28
 #define G_MAXPOOL_OUT_ROWS 14
-#define G_MAXPOOL_OUT_COLS 14
+#define G_MAXPOOL_OUT_COLS 14 
 
 channel int convOutChannel __attribute__((depth(0)));
 channel int MaxPoolOutChannel __attribute__((depth(0)));
@@ -100,6 +100,7 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
                         //printf("\n\n");
                 }
         }
+
 
 }
 
