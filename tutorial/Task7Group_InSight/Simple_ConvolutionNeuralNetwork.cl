@@ -16,26 +16,50 @@
 //Enable the channel extension
  #pragma OPENCL EXTENSION cl_intel_channels : enable
 
+#define G_NUMBER_OF_IMAGES 10000
+#define G_NUMBER_OF_FILERS 32
+#define G_NUMBER_OF_IMAGE_ROWS 32
+#define G_NUMBER_OF_IMAGE_COLS 32
+#define G_NUMBER_OF_FILTER_ROWS 5
+#define G_NUMBER_OF_FILTER_COLS 5
+#define G_NUMBER_OF_CONV_OUT_ROWS 28
+#define G_NUMBER_OF_CONV_OUT_COLS 28
+#define G_MAXPOOL_OUT_ROWS 14
+#define G_MAXPOOL_OUT_COLS 14
+
 channel int convOutChannel __attribute__((depth(0)));
 channel int MaxPoolOutChannel __attribute__((depth(0)));
 
-__kernel void ConvLayer(__global unsigned char * restrict img,__global short * restrict cnnWeight,__global short * restrict cnnBias,
-                        int numberOfImages,int numberOfFilters,int imgRows,int imgCols,int convFilterRows,int convFilterCols,int convOutRows,int convOutCols)
+__kernel void ConvLayer(__global unsigned char * restrict img,__constant short * restrict cnnWeight,__constant short * restrict cnnBias,
+                        const int numberOfImages,const int numberOfFilters,const int imgRows,const int imgCols,const int convFilterRows,const int convFilterCols,const int convOutRows,const int convOutCols)
 {
+        __local short cnnWeightLocal[G_NUMBER_OF_FILTER_ROWS*G_NUMBER_OF_FILTER_COLS*G_NUMBER_OF_FILERS];
+        __local short cnnBiasLocal[G_NUMBER_OF_FILERS];
+
+        //Load the weights into local memory
+        #pragma unroll G_NUMBER_OF_FILERS
+        for(int i=0; i<G_NUMBER_OF_FILTER_ROWS*G_NUMBER_OF_FILTER_COLS*G_NUMBER_OF_FILERS; i++)
+                cnnWeightLocal[i]=cnnWeight[i];
+
+        //Load the weights into local memory
+        #pragma unroll
+        for(int i=0; i<G_NUMBER_OF_FILERS; i++)
+                cnnBiasLocal[i]=cnnBias[i];
+
         int numberOfTotalPixels = numberOfImages*imgRows*imgCols;
         int numberOfImagePixels = imgRows*imgCols;
         //printf("Conv Output\n");
         //For 10k images
         for(int imgIndex=0; imgIndex<numberOfImages; imgIndex++) {
                 //if(imgIndex%1000==0 || imgIndex==numberOfImages-1)
-                        //printf("Convolution for Image %d\n",imgIndex);
+                //printf("Convolution for Image %d\n",imgIndex);
 
                 int inX,inY=0;
                 int conv=0;
                 //for 32 filters
                 for(int filterNumber=0; filterNumber<numberOfFilters; filterNumber++) {
-                  //  if(imgIndex==0)
-                      //printf("For Filter %d\n",filterNumber);
+                        //  if(imgIndex==0)
+                        //printf("For Filter %d\n",filterNumber);
                         //Conv Logic
                         for(int outRowIndex=0; outRowIndex<convOutRows; outRowIndex++) {
                                 //printf("For outRowIndex %d\n",outRowIndex);
@@ -44,34 +68,33 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
                                         //For Input indexing
                                         inX = outRowIndex;
                                         inY = outColIndex;
-                                        conv = cnnBias[filterNumber]; //cnnBias
+                                        conv = cnnBiasLocal[filterNumber]; //cnnBias
                                         //Filter
-                                        for(int filterRowIndex=0; filterRowIndex<convFilterRows; filterRowIndex++) {
-                                                //printf("\t For filterRowIndex %d\n",filterRowIndex);
-                                                for(int filterColIndex=0; filterColIndex<convFilterCols; filterColIndex++) {
-                                                        //printf("\t\t For filterColIndex %d\n",filterColIndex);
-                                                        //printf("Img:%d \n ",img[(imgIndex*numberOfImages)+(inX*imgRows)+inY]);
-                                                        //printf("Conv:%d \n", cnnWeight[(filterNumber*numberOfFilters)+(filterRowIndex*convFilterRows)+filterColIndex]);
-                                                        conv+= cnnWeight[(filterNumber*convFilterRows*convFilterCols)+(filterRowIndex*convFilterRows)+filterColIndex] * img[(imgIndex*imgRows*imgCols)+(inX*imgRows)+inY];
-                                                        inY++;
-                                                }
-                                                //Next Row
-                                                inX++;
-                                                //reset Cols
-                                                inY=outColIndex;
-                                        }
-
+                                          for(int filterRowIndex=0; filterRowIndex<convFilterRows; filterRowIndex++) {
+                                                  //printf("\t For filterRowIndex %d\n",filterRowIndex);
+                                                  for(int filterColIndex=0; filterColIndex<convFilterCols; filterColIndex++) {
+                                                          //printf("\t\t For filterColIndex %d\n",filterColIndex);
+                                                          //printf("Img:%d \n ",img[(imgIndex*numberOfImages)+(inX*imgRows)+inY]);
+                                                          //printf("Conv:%d \n", cnnWeight[(filterNumber*numberOfFilters)+(filterRowIndex*convFilterRows)+filterColIndex]);
+                                                          conv+= cnnWeightLocal[(filterNumber*convFilterRows*convFilterCols)+(filterRowIndex*convFilterRows)+filterColIndex] * img[(imgIndex*imgRows*imgCols)+(inX*imgRows)+inY];
+                                                          inY++;
+                                                  }
+                                                  //Next Row
+                                                  inX++;
+                                                  //reset Cols
+                                                  inY=outColIndex;
+                                           }
 
                                         // RELU
                                         conv = conv>0 ? conv : 0;
                                         //if(imgIndex==0)
-                                          //  printf("%d  ",conv);
+                                        //  printf("%d  ",conv);
                                         //ConvOutput[(imgIndex*numberOfFilters*convOutRows*convOutCols)+(filterNumber*convOutRows*convOutCols)+(outRowIndex*convOutRows)+outColIndex]=conv;
                                         write_channel_intel(convOutChannel,conv);
                                         conv=0;
                                 }
-                                  //if(imgIndex==0)
-                                  //printf("\n");
+                                //if(imgIndex==0)
+                                //printf("\n");
                         }
                         //if(imgIndex==0)
                         //printf("\n\n");
@@ -91,7 +114,7 @@ __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,in
 {
         int currvalue=0;
         int p1,p2,p3,p4,m1,m2;
-        int img[30000];
+        __local int __attribute__((numbanks(4),bandwidth(4))) img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
         //  printf("Maxpool Output\n");
         for ( int i =0; i < numberOfImages; ++i)
         {
@@ -133,7 +156,7 @@ __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,in
  * Input : 14*14*32 pixels for 1 Digit/Class. 10 Classes in Total.
  * Output : 1 class for each 10K images
  */
-__kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixels, int NUMBER_OF_CLASSES, int NUMBER_OF_IMAGES, __global int *  restrict kernelcalculatedLabels)
+__kernel void FCLayer(__constant short * restrict digitWeights,const int numberOfFCPixels,const int NUMBER_OF_CLASSES,const int NUMBER_OF_IMAGES, __global int *  restrict kernelcalculatedLabels)
 {
 
         int maxScore=0;
@@ -141,6 +164,12 @@ __kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixel
         int score=0;
 
         int maxpooldata[6272];
+
+        __local short digitWeightsLocal[G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS];
+
+        //Load weights into local memory
+        for(int i=0; i<G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS; i++)
+                digitWeightsLocal[i]=digitWeights[i];
 
         //printf("FC Output\n");
         for(int count=0; count<NUMBER_OF_IMAGES; count++)
@@ -159,12 +188,12 @@ __kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixel
                         int sum =0;
                         for(int i=0; i<numberOfFCPixels; i++)
                         {
-                                sum +=maxpooldata[i]*digitWeights[(weightIndex*numberOfFCPixels)+i];
+                                sum +=maxpooldata[i]*digitWeightsLocal[(weightIndex*numberOfFCPixels)+i];
                         }
 
                         score=sum;
                         //if(count==0)
-                          //printf("%d -- %d\n  ",weightIndex,score);
+                        //printf("%d -- %d\n  ",weightIndex,score);
 
                         // Max Score logic
                         if(score>maxScore)
