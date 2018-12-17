@@ -76,9 +76,24 @@ https://git-scm.com/docs/git-add
     __git commit `filename` -m "Message"__	 _Commits the file with a message Message_    
 
 
-I am not sure how the above sequence of commands help avoid problems while commiting changes.
 
-## Conflict resolution 
+## Channels and Pipes
+- [The Intel FPGA SDK for OpenCL channels extension provides a mechanism for passing data between kernels and synchronizing kernels with high efficiency and low latency](https://www.intel.com/content/www/us/en/programmable/documentation/mwh1391807965224/ewa1411503895045.html#ewa1411747396740)
+- Channels are used to exchange data between kernels. This communication between kernels happens through FIFO buffers.
+- Channels are better understood if we work in terms of Producer and Consumer. Producer "produces" data which is written to  channel and consumer makes use of the data i.e. consumer reads the data from the channel.
+- If consumer does not read faster than the rate the producer writes to the channel  _stalls_ occur .We can use Intel® FPGA Dynamic Profiler for OpenCL™ to check for channel stalls.
+- If consumer reads faster than the rate the producer writes to the channel , consumer stalls. Because consumer has nothing to work on.
+- A kernel can read from the same channel multiple times. However, multiple kernels cannot read from the same channel. Similarly, a kernel can write to the same channel multiple times but multiple kernels cannot write to the same channel.
+- In Intel FPGA SDK ,  channels in kernel are enabled using :
+  > #pragma OPENCL EXTENSION cl_intel_channels : enable
+- Blocking writes to a channel is done using the signature _kernel_write_channel_ 
+- Non-blocking writes are done using  _write_channel_nb_intel_ . This returns a boolean value using which the programmer can write a logic to write to a different channel (or use some other logic to keep the kernels from stalling)
+- Similarly , we can have a blocking read and a non-blocking read . In blocking read , the consumer kernel stalls if there is nothing in the channel.Using nin blocking read function , the programmer gets a flag which tells if the data read from the channel is valid or not ( valid in case the channel had some data ; invalid in case the channel is empty)
+- The blocking read function`s signature is : _read_channel_intel(channel <type> channel_id)_
+- The non blocking read function`s signature is : _read_channel_nb_intel(channel <type> channel_id, bool * valid)_
+- Pipes are similar to Channels . The main difference I could see from the documentation is that Channels are wholly supported by Interl FPGA SDKs. When working with other SDKs, it is better to work with Pipes.
+- Intel FPGA SDK implementation of OpenCL pipes is partially conformant to the OpenCL Specification version 2.0
+- By default, pipes exhibit nonblocking behavior. If you want the pipes in your kernel to exhibit blocking behavior, specify the blocking attribute (__attribute__((blocking))) when you declare the read and write pipes.
 
 
 
