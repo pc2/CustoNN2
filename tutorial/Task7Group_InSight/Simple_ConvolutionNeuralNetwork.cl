@@ -46,8 +46,10 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__global short * r
                                         inY = outColIndex;
                                         conv = cnnBias[filterNumber]; //cnnBias
                                         //Filter
+					//#pragma unroll 5
                                         for(int filterRowIndex=0; filterRowIndex<convFilterRows; filterRowIndex++) {
                                                 //printf("\t For filterRowIndex %d\n",filterRowIndex);
+						//#pragma unroll 5
                                                 for(int filterColIndex=0; filterColIndex<convFilterCols; filterColIndex++) {
                                                         //printf("\t\t For filterColIndex %d\n",filterColIndex);
                                                         //printf("Img:%d \n ",img[(imgIndex*numberOfImages)+(inX*imgRows)+inY]);
@@ -103,7 +105,7 @@ __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,in
                 for (int k = 0; k <numberOfFilters; ++k)
                 {
                         for (int x = 0; x < convOutRows; x=x+stride)
-                        {
+                        {	
                                 for (int y = 0; y < convOutCols; y=y+stride)
                                 {
 
@@ -139,14 +141,18 @@ __kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixel
         int maxScore=0;
         int neuron=0;
         int score=0;
+	int sumo[34];
 
         int maxpooldata[6272];
+	
+	
 
         //printf("FC Output\n");
         for(int count=0; count<NUMBER_OF_IMAGES; count++)
         {
                 neuron=100;
                 maxScore=0;
+		
                 //Store the Channels data of 1 Image in a linear array.
                 for(int i=0; i<numberOfFCPixels; i++)
                         maxpooldata[i] = read_channel_intel(MaxPoolOutChannel);
@@ -154,13 +160,30 @@ __kernel void FCLayer(__global short * restrict digitWeights,int numberOfFCPixel
 
                 for(int weightIndex=0; weightIndex<NUMBER_OF_CLASSES; weightIndex++)
                 {
+			for(int j=0;j<34;j++)
+		{
+			sumo[j]=0;
+		}
+		
 
                         score=0;
                         int sum =0;
+			#pragma unroll 64
                         for(int i=0; i<numberOfFCPixels; i++)
                         {
-                                sum +=maxpooldata[i]*digitWeights[(weightIndex*numberOfFCPixels)+i];
+				int temp;
+                                //sum +=maxpooldata[i]*digitWeights[(weightIndex*numberOfFCPixels)+i];
+				temp =sumo[33]+ (maxpooldata[i]*digitWeights[(weightIndex*numberOfFCPixels)+i]);
+				for(int k=34;k>0;k--)
+				{
+					sumo[k]=sumo[k-1];
+				}
+			sumo[0]=temp;
                         }
+			for(int l=0;l<34;l++)
+				{
+					sum+=sumo[l];
+				}
 
                         score=sum;
                         //if(count==0)
