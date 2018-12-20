@@ -25,10 +25,10 @@
 #define G_NUMBER_OF_CONV_OUT_ROWS 28
 #define G_NUMBER_OF_CONV_OUT_COLS 28
 #define G_MAXPOOL_OUT_ROWS 14
-#define G_MAXPOOL_OUT_COLS 14 
+#define G_MAXPOOL_OUT_COLS 14
 
-channel int convOutChannel __attribute__((depth(0)));
-channel int MaxPoolOutChannel __attribute__((depth(0)));
+channel int convOutChannel __attribute__((depth(32*32)));
+channel int MaxPoolOutChannel __attribute__((depth(14*14)));
 
 __kernel void ConvLayer(__global unsigned char * restrict img,__constant short * restrict cnnWeight,__constant short * restrict cnnBias,
                         const int numberOfImages,const int numberOfFilters,const int imgRows,const int imgCols,const int convFilterRows,const int convFilterCols,const int convOutRows,const int convOutCols)
@@ -50,40 +50,46 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
         int numberOfImagePixels = imgRows*imgCols;
         //printf("Conv Output\n");
         //For 10k images
-        for(int imgIndex=0; imgIndex<numberOfImages; imgIndex++) {
+        for(int imgIndex=0; imgIndex<G_NUMBER_OF_IMAGES; imgIndex++) {
                 //if(imgIndex%1000==0 || imgIndex==numberOfImages-1)
                 //printf("Convolution for Image %d\n",imgIndex);
 
                 int inX,inY=0;
-                int conv=0;
+
                 //for 32 filters
-                for(int filterNumber=0; filterNumber<numberOfFilters; filterNumber++) {
-                        //  if(imgIndex==0)
+                for(int filterNumber=0; filterNumber<G_NUMBER_OF_FILERS; filterNumber++) {
+                        //if(imgIndex==0)
                         //printf("For Filter %d\n",filterNumber);
+
                         //Conv Logic
-                        for(int outRowIndex=0; outRowIndex<convOutRows; outRowIndex++) {
+                        for(int outRowIndex=0; outRowIndex<G_NUMBER_OF_CONV_OUT_ROWS; outRowIndex++) {
                                 //printf("For outRowIndex %d\n",outRowIndex);
-                                for(int outColIndex=0; outColIndex<convOutCols; outColIndex++) {
+                                for(int outColIndex=0; outColIndex<G_NUMBER_OF_CONV_OUT_COLS; outColIndex++) {
                                         //printf("For outColIndex %d\n",outColIndex);
                                         //For Input indexing
+                                        int conv=0;
                                         inX = outRowIndex;
                                         inY = outColIndex;
                                         conv = cnnBiasLocal[filterNumber]; //cnnBias
                                         //Filter
-                                          for(int filterRowIndex=0; filterRowIndex<convFilterRows; filterRowIndex++) {
-                                                  //printf("\t For filterRowIndex %d\n",filterRowIndex);
-                                                  for(int filterColIndex=0; filterColIndex<convFilterCols; filterColIndex++) {
-                                                          //printf("\t\t For filterColIndex %d\n",filterColIndex);
-                                                          //printf("Img:%d \n ",img[(imgIndex*numberOfImages)+(inX*imgRows)+inY]);
-                                                          //printf("Conv:%d \n", cnnWeight[(filterNumber*numberOfFilters)+(filterRowIndex*convFilterRows)+filterColIndex]);
-                                                          conv+= cnnWeightLocal[(filterNumber*convFilterRows*convFilterCols)+(filterRowIndex*convFilterRows)+filterColIndex] * img[(imgIndex*imgRows*imgCols)+(inX*imgRows)+inY];
-                                                          inY++;
-                                                  }
-                                                  //Next Row
-                                                  inX++;
-                                                  //reset Cols
-                                                  inY=outColIndex;
-                                           }
+                                        #pragma unroll
+                                        for(int filterRowIndex=0; filterRowIndex<G_NUMBER_OF_FILTER_ROWS; filterRowIndex++) {
+                                                //Index for the Conv Filter
+                                                int ConvFilterRowIndex = (filterNumber*G_NUMBER_OF_FILTER_ROWS*G_NUMBER_OF_FILTER_COLS)+(filterRowIndex*G_NUMBER_OF_FILTER_COLS);
+                                                //Index for the Image
+                                                int ConvImgRowIndex = (imgIndex*G_NUMBER_OF_IMAGE_ROWS*G_NUMBER_OF_IMAGE_COLS)+(inX*G_NUMBER_OF_IMAGE_COLS)+inY;
+
+
+                                                conv+=cnnWeightLocal[ConvFilterRowIndex] * img[ConvImgRowIndex]
+                                                       + cnnWeightLocal[ConvFilterRowIndex+1] * img[ConvImgRowIndex+1]
+                                                       + cnnWeightLocal[ConvFilterRowIndex+2] * img[ConvImgRowIndex+2]
+                                                       + cnnWeightLocal[ConvFilterRowIndex+3] * img[ConvImgRowIndex+3]
+                                                       + cnnWeightLocal[ConvFilterRowIndex+4] * img[ConvImgRowIndex+4];
+                                                //Next Row
+                                                inX++;
+                                                //reset Cols
+                                                inY=outColIndex;
+                                        }
 
                                         // RELU
                                         conv = conv>0 ? conv : 0;
@@ -115,7 +121,7 @@ __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,in
 {
         int currvalue=0;
         int p1,p2,p3,p4,m1,m2;
-        __local int __attribute__((numbanks(4),bandwidth(4))) img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
+        __local int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
         //  printf("Maxpool Output\n");
         for ( int i =0; i < numberOfImages; ++i)
         {
@@ -126,26 +132,31 @@ __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,in
 
                 for (int k = 0; k <numberOfFilters; ++k)
                 {
+
                         for (int x = 0; x < convOutRows; x=x+stride)
                         {
+
                                 for (int y = 0; y < convOutCols; y=y+stride)
                                 {
 
-                                        p1 = img[(k*convOutRows*convOutCols)+(x*convOutCols)+(y)];
-                                        p2 = img[(k*convOutRows*convOutCols)+(x*convOutCols)+(y+1)];
-                                        p3 = img[(k*convOutRows*convOutCols)+(x*convOutCols)+(y+convOutCols)];
-                                        p4 = img[(k*convOutRows*convOutCols)+(x*convOutCols)+(y+convOutCols+1)];
+                                        p1 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y)];
+                                        p2 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+1)];
+                                        p3 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols)];
+                                        p4 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols+1)];
                                         m1 = max(p1,p2);
                                         m2 = max(p3,p4);
                                         currvalue= max(m1,m2);
                                         //Insert the max value in the channel
                                         write_channel_intel(MaxPoolOutChannel,currvalue);
+                                        //  if(i==0)
                                         //  printf("%d  ",currvalue);
                                         currvalue=0;
                                 }
-                                //    printf("\n ");
+                                //  if(i==0)
+                                //  printf("\n ");
                         }
-
+                        //  if(i==0)
+                        //  printf("\n\n\n ");
                 }
 
         }
@@ -163,8 +174,9 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
         int maxScore=0;
         int neuron=0;
         int score=0;
+        int sumo[34];
 
-        int maxpooldata[6272];
+        __local int maxpooldata[6272];
 
         __local short digitWeightsLocal[G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS];
 
@@ -173,7 +185,7 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
                 digitWeightsLocal[i]=digitWeights[i];
 
         //printf("FC Output\n");
-        for(int count=0; count<NUMBER_OF_IMAGES; count++)
+        for(int count=0; count<G_NUMBER_OF_IMAGES; count++)
         {
                 neuron=100;
                 maxScore=0;
@@ -184,12 +196,28 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
 
                 for(int weightIndex=0; weightIndex<NUMBER_OF_CLASSES; weightIndex++)
                 {
+                        for(int j=0; j<34; j++)
+                        {
+                                sumo[j]=0;
+                        }
 
                         score=0;
                         int sum =0;
+                        #pragma unroll 64
                         for(int i=0; i<numberOfFCPixels; i++)
                         {
-                                sum +=maxpooldata[i]*digitWeightsLocal[(weightIndex*numberOfFCPixels)+i];
+                                int temp;
+                                //sum +=maxpooldata[i]*digitWeights[(weightIndex*numberOfFCPixels)+i];
+                                temp =sumo[33]+ (maxpooldata[i]*digitWeights[(weightIndex*numberOfFCPixels)+i]);
+                                for(int k=34; k>0; k--)
+                                {
+                                        sumo[k]=sumo[k-1];
+                                }
+                                sumo[0]=temp;
+                        }
+                        for(int l=0; l<34; l++)
+                        {
+                                sum+=sumo[l];
                         }
 
                         score=sum;
