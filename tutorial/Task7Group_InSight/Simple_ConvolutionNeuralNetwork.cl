@@ -26,6 +26,7 @@
 #define G_NUMBER_OF_CONV_OUT_COLS 28
 #define G_MAXPOOL_OUT_ROWS 14
 #define G_MAXPOOL_OUT_COLS 14
+#define SR 8
 
 channel int convOutChannel __attribute__((depth(32*32)));
 channel int MaxPoolOutChannel __attribute__((depth(14*14)));
@@ -51,8 +52,8 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
         //printf("Conv Output\n");
         //For 10k images
         for(int imgIndex=0; imgIndex<G_NUMBER_OF_IMAGES; imgIndex++) {
-                //if(imgIndex%1000==0 || imgIndex==numberOfImages-1)
-                //printf("Convolution for Image %d\n",imgIndex);
+              //  if(imgIndex%1000==0 || imgIndex==numberOfImages-1)
+                    //    printf("Convolution for Image %d\n",imgIndex);
 
                 int inX,inY=0;
 
@@ -135,7 +136,6 @@ __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,in
 
                         for (int x = 0; x < convOutRows; x=x+stride)
                         {
-
                                 for (int y = 0; y < convOutCols; y=y+stride)
                                 {
 
@@ -174,21 +174,22 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
         int maxScore=0;
         int neuron=0;
         int score=0;
-        int sumo[34];
+        int sumo[SR];
 
         __local int maxpooldata[6272];
 
-        __local short digitWeightsLocal[G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS];
+        __local short digitWeightsLocal[G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS*10];
 
         //Load weights into local memory
-        for(int i=0; i<G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS; i++)
+        for(int i=0; i<G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS*10; i++)
                 digitWeightsLocal[i]=digitWeights[i];
 
         //printf("FC Output\n");
         for(int count=0; count<G_NUMBER_OF_IMAGES; count++)
         {
-                neuron=100;
+                neuron=100; // Assigning some dummy digit class
                 maxScore=0;
+
                 //Store the Channels data of 1 Image in a linear array.
                 for(int i=0; i<numberOfFCPixels; i++)
                         maxpooldata[i] = read_channel_intel(MaxPoolOutChannel);
@@ -196,29 +197,31 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
 
                 for(int weightIndex=0; weightIndex<NUMBER_OF_CLASSES; weightIndex++)
                 {
-                        for(int j=0; j<34; j++)
-                        {
+                        #pragma unroll
+                        for(int j=0; j<SR; j++)
                                 sumo[j]=0;
-                        }
+
 
                         score=0;
                         int sum =0;
-                        #pragma unroll 64
+                        #pragma unroll 32
                         for(int i=0; i<numberOfFCPixels; i++)
                         {
                                 int temp;
-                                //sum +=maxpooldata[i]*digitWeights[(weightIndex*numberOfFCPixels)+i];
-                                temp =sumo[33]+ (maxpooldata[i]*digitWeights[(weightIndex*numberOfFCPixels)+i]);
-                                for(int k=34; k>0; k--)
-                                {
+                                //sum +=maxpooldata[i]*digitWeightsLocal[(weightIndex*numberOfFCPixels)+i];
+                                temp =sumo[SR-1]+ (maxpooldata[i]*digitWeightsLocal[(weightIndex*numberOfFCPixels)+i]);
+                                #pragma unroll
+                                for(int k=SR-1; k>0; k--)
                                         sumo[k]=sumo[k-1];
-                                }
+
                                 sumo[0]=temp;
+
                         }
-                        for(int l=0; l<34; l++)
-                        {
+                        #pragma unroll
+                        for(int l=0; l<SR; l++)
                                 sum+=sumo[l];
-                        }
+
+
 
                         score=sum;
                         //if(count==0)
