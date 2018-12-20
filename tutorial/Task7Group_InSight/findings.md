@@ -20,7 +20,7 @@ In this task, we implemented a convolutional neural network based classifier on 
 - **Kernel Design :**
  - Global Memory used for weights and images
  - No Pragma Unroll used for the loops
- - 3 kernels and data transfer using 1 element(32 bit width) channel.  
-- Obtained Accuracy in CPU and FPGA : 97%
+ - 3 kernels for each layer and data transfer using 1 element(32 bit width) channel.  
+- Obtained Accuracy in CPU and FPGA : 97.07%
 - Kernel Execution time on FPGA : 29.4 seconds
 - Kernel Execution time in CPU (CC-7) : 71 seconds
