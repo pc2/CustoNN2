@@ -120,12 +120,13 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
  */
 __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,int convOutCols,int stride)
 {
-        int currvalue=0;
-        int p1,p2,p3,p4,m1,m2;
-        __local int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
+        
+       
         //  printf("Maxpool Output\n");
         for ( int i =0; i < numberOfImages; ++i)
         {
+		 int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
+       		int currvalue=0;
                 //Store the Channels data of 1 Image in a linear array.
                 for ( int j = 0; j<numberOfFilters*convOutRows*convOutCols; j++ )
                         img[j] = read_channel_intel(convOutChannel);
@@ -138,7 +139,7 @@ __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,in
                         {
                                 for (int y = 0; y < convOutCols; y=y+stride)
                                 {
-
+					 int p1,p2,p3,p4,m1,m2;
                                         p1 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y)];
                                         p2 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+1)];
                                         p3 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols)];
@@ -171,12 +172,12 @@ __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,in
 __kernel void FCLayer(__constant short * restrict digitWeights,const int numberOfFCPixels,const int NUMBER_OF_CLASSES,const int NUMBER_OF_IMAGES, __global int *  restrict kernelcalculatedLabels)
 {
 
-        int maxScore=0;
-        int neuron=0;
-        int score=0;
+        // int maxScore=0;
+        // int neuron=0;
+        // int score=0;
         int sumo[SR];
 
-        __local int maxpooldata[6272];
+       //__local int maxpooldata[6272];
 
         __local short digitWeightsLocal[G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS*10];
 
@@ -187,9 +188,9 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
         //printf("FC Output\n");
         for(int count=0; count<G_NUMBER_OF_IMAGES; count++)
         {
-                neuron=100; // Assigning some dummy digit class
-                maxScore=0;
-
+                int neuron=100; // Assigning some dummy digit class
+                int maxScore=0;
+		 int maxpooldata[6272];	
                 //Store the Channels data of 1 Image in a linear array.
                 for(int i=0; i<numberOfFCPixels; i++)
                         maxpooldata[i] = read_channel_intel(MaxPoolOutChannel);
@@ -202,7 +203,7 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
                                 sumo[j]=0;
 
 
-                        score=0;
+                        int score=0;
                         int sum =0;
                         #pragma unroll 32
                         for(int i=0; i<numberOfFCPixels; i++)
