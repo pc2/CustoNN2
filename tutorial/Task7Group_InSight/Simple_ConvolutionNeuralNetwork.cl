@@ -28,8 +28,18 @@
 #define G_MAXPOOL_OUT_COLS 14
 #define SR 8
 
-channel int convOutChannel __attribute__((depth(32*32)));
-channel int MaxPoolOutChannel __attribute__((depth(14*14)));
+typedef struct conv_buffer {
+        int temp_buffer[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS];
+}co;
+
+typedef struct max_buffer {
+        int maxPool_buffer[G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS];
+}maxStruct;
+
+channel co convOutChannel __attribute__((depth(32*32)));
+channel maxStruct MaxPoolOutChannel __attribute__((depth(14*14)));
+
+
 
 __kernel void ConvLayer(__global unsigned char * restrict img,__constant short * restrict cnnWeight,__constant short * restrict cnnBias,
                         const int numberOfImages,const int numberOfFilters,const int imgRows,const int imgCols,const int convFilterRows,const int convFilterCols,const int convOutRows,const int convOutCols)
@@ -52,13 +62,14 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
         //printf("Conv Output\n");
         //For 10k images
         for(int imgIndex=0; imgIndex<G_NUMBER_OF_IMAGES; imgIndex++) {
-              //  if(imgIndex%1000==0 || imgIndex==numberOfImages-1)
-                    //    printf("Convolution for Image %d\n",imgIndex);
+                //if(imgIndex%1000==0 || imgIndex==numberOfImages-1)
+                  //      printf("Convolution for Image %d\n",imgIndex);
 
                 int inX,inY=0;
 
                 //for 32 filters
                 for(int filterNumber=0; filterNumber<G_NUMBER_OF_FILERS; filterNumber++) {
+                        struct conv_buffer co1;
                         //if(imgIndex==0)
                         //printf("For Filter %d\n",filterNumber);
 
@@ -94,17 +105,22 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
 
                                         // RELU
                                         conv = conv>0 ? conv : 0;
+
+                                        co1.temp_buffer[(outRowIndex*G_NUMBER_OF_CONV_OUT_ROWS)+outColIndex] = conv;
                                         //if(imgIndex==0)
                                         //  printf("%d  ",conv);
                                         //ConvOutput[(imgIndex*numberOfFilters*convOutRows*convOutCols)+(filterNumber*convOutRows*convOutCols)+(outRowIndex*convOutRows)+outColIndex]=conv;
-                                        write_channel_intel(convOutChannel,conv);
+                                        //write_channel_intel(convOutChannel,conv);
                                         conv=0;
                                 }
                                 //if(imgIndex==0)
-                                //printf("\n");
+                                //  printf("\n");
+
                         }
-                        //if(imgIndex==0)
+                        //  if(imgIndex==0)
                         //printf("\n\n");
+                        write_channel_intel(convOutChannel,co1);
+
                 }
         }
 
@@ -120,44 +136,57 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
  */
 __kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,int convOutCols,int stride)
 {
-        
-       
+
+
         //  printf("Maxpool Output\n");
         for ( int i =0; i < numberOfImages; ++i)
         {
-		 int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
-       		int currvalue=0;
+                int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
+                int currvalue=0;
+
                 //Store the Channels data of 1 Image in a linear array.
-                for ( int j = 0; j<numberOfFilters*convOutRows*convOutCols; j++ )
-                        img[j] = read_channel_intel(convOutChannel);
+                //  for ( int j = 0; j<numberOfFilters*convOutRows*convOutCols; j++ )
+                //        img[j] = read_channel_intel(convOutChannel);
 
 
                 for (int k = 0; k <numberOfFilters; ++k)
                 {
+                        struct conv_buffer conv1=read_channel_intel(convOutChannel);
+                        struct max_buffer max1;
 
+                        int n=0;
                         for (int x = 0; x < convOutRows; x=x+stride)
                         {
+                                int m=0;
                                 for (int y = 0; y < convOutCols; y=y+stride)
                                 {
-					 int p1,p2,p3,p4,m1,m2;
-                                        p1 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y)];
-                                        p2 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+1)];
-                                        p3 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols)];
-                                        p4 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols+1)];
+
+
+                                        int p1,p2,p3,p4,m1,m2;
+                                        p1 = conv1.temp_buffer[(x*G_NUMBER_OF_CONV_OUT_COLS)+(y)];
+                                        p2 = conv1.temp_buffer[(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+1)];
+                                        p3 = conv1.temp_buffer[(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols)];
+                                        p4 = conv1.temp_buffer[(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols+1)];
                                         m1 = max(p1,p2);
                                         m2 = max(p3,p4);
                                         currvalue= max(m1,m2);
                                         //Insert the max value in the channel
-                                        write_channel_intel(MaxPoolOutChannel,currvalue);
-                                        //  if(i==0)
-                                        //  printf("%d  ",currvalue);
+                                        //write_channel_intel(MaxPoolOutChannel,currvalue);
+                                        max1.maxPool_buffer[n*G_MAXPOOL_OUT_ROWS+m]=currvalue;
+                                        m++;
+                                        //    if(i==0 && k==0)
+                                        //  printf("%d  ",max1.maxPool_buffer[x*G_MAXPOOL_OUT_ROWS+y]);
+
                                         currvalue=0;
                                 }
-                                //  if(i==0)
+                                n++;
+                                // if(i==0 && k==0 )
                                 //  printf("\n ");
                         }
-                        //  if(i==0)
-                        //  printf("\n\n\n ");
+                        //if(i==0)
+                        //printf("\n\n\n ");
+
+                        write_channel_intel(MaxPoolOutChannel,max1);
                 }
 
         }
@@ -177,7 +206,7 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
         // int score=0;
         int sumo[SR];
 
-       //__local int maxpooldata[6272];
+        //__local int maxpooldata[6272];
 
         __local short digitWeightsLocal[G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS*G_NUMBER_OF_FILERS*10];
 
@@ -190,10 +219,14 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
         {
                 int neuron=100; // Assigning some dummy digit class
                 int maxScore=0;
-		 int maxpooldata[6272];	
+                int maxpooldata[6272];
                 //Store the Channels data of 1 Image in a linear array.
-                for(int i=0; i<numberOfFCPixels; i++)
-                        maxpooldata[i] = read_channel_intel(MaxPoolOutChannel);
+                for(int i=0; i<32; i++) {
+                        struct max_buffer max1= read_channel_intel(MaxPoolOutChannel);
+                        for(int q=0; q<14*14; q++) {
+                                maxpooldata[(i*14*14)+q] = max1.maxPool_buffer[q];
+                        }
+                }
 
 
                 for(int weightIndex=0; weightIndex<NUMBER_OF_CLASSES; weightIndex++)
@@ -222,11 +255,9 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
                         for(int l=0; l<SR; l++)
                                 sum+=sumo[l];
 
-
-
                         score=sum;
-                        //if(count==0)
-                        //printf("%d -- %d\n  ",weightIndex,score);
+                        //if(count==4500)
+                        //printf(" 45 --  %d -- %d\n  ",weightIndex,score);
 
                         // Max Score logic
                         if(score>maxScore)
@@ -235,6 +266,7 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
                                 neuron=weightIndex;
                         }
                 }
+
                 kernelcalculatedLabels[count]=neuron;
 
         }
