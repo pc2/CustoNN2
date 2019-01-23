@@ -50,6 +50,7 @@
 
 #### Surveys
 - [Survey of Academic Publications on Frameworks](https://arxiv.org/pdf/1803.05900.pdf)
+- [Very Good Survey on Approximation for Custom Hardware](https://arxiv.org/abs/1901.06955)
 
 ### Research
 
