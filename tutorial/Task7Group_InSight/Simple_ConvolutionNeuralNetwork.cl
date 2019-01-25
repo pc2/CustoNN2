@@ -16,6 +16,8 @@
 //Enable the channel extension
  #pragma OPENCL EXTENSION cl_intel_channels : enable
 
+
+//PreProcessor Statements
 #define G_NUMBER_OF_IMAGES 10000
 #define G_NUMBER_OF_FILERS 32
 #define G_NUMBER_OF_IMAGE_ROWS 32
@@ -26,23 +28,27 @@
 #define G_NUMBER_OF_CONV_OUT_COLS 28
 #define G_MAXPOOL_OUT_ROWS 14
 #define G_MAXPOOL_OUT_COLS 14
+#define G_MAXPOOL_STRIDE 2
 #define SR 8
 
+//Struct to hold 1 Row Output of the Conv Layer
 typedef struct conv_buffer {
-        int temp_buffer[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS];
+        int temp_buffer[G_NUMBER_OF_CONV_OUT_COLS];
 }co;
 
+//Struct to hold 1 row Output of Maxpool Layer
 typedef struct max_buffer {
-        int maxPool_buffer[G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS];
+        int maxPool_buffer[G_MAXPOOL_OUT_COLS];
 }maxStruct;
 
-channel co convOutChannel __attribute__((depth(32*32)));
-channel maxStruct MaxPoolOutChannel __attribute__((depth(14*14)));
+//Channel Between Conv Layer and Maxpool
+channel co convOutChannel __attribute__((depth(32)));
+//Channel Between Maxpool and FC Layer
+channel maxStruct MaxPoolOutChannel __attribute__((depth(32)));
 
 
 
-__kernel void ConvLayer(__global unsigned char * restrict img,__constant short * restrict cnnWeight,__constant short * restrict cnnBias,
-                        const int numberOfImages,const int numberOfFilters,const int imgRows,const int imgCols,const int convFilterRows,const int convFilterCols,const int convOutRows,const int convOutCols)
+__kernel void ConvLayer(__global unsigned char * restrict img,__constant short * restrict cnnWeight,__constant short * restrict cnnBias)
 {
         __local short cnnWeightLocal[G_NUMBER_OF_FILTER_ROWS*G_NUMBER_OF_FILTER_COLS*G_NUMBER_OF_FILERS];
         __local short cnnBiasLocal[G_NUMBER_OF_FILERS];
@@ -57,26 +63,29 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
         for(int i=0; i<G_NUMBER_OF_FILERS; i++)
                 cnnBiasLocal[i]=cnnBias[i];
 
-        int numberOfTotalPixels = numberOfImages*imgRows*imgCols;
-        int numberOfImagePixels = imgRows*imgCols;
+        int numberOfTotalPixels = G_NUMBER_OF_IMAGES*G_NUMBER_OF_IMAGE_ROWS*G_NUMBER_OF_IMAGE_COLS;
+        int numberOfImagePixels = G_NUMBER_OF_IMAGE_ROWS*G_NUMBER_OF_IMAGE_COLS;
         //printf("Conv Output\n");
         //For 10k images
         for(int imgIndex=0; imgIndex<G_NUMBER_OF_IMAGES; imgIndex++) {
-                //if(imgIndex%1000==0 || imgIndex==numberOfImages-1)
-                  //      printf("Convolution for Image %d\n",imgIndex);
+                //if(imgIndex%1000==0 || imgIndex==G_NUMBER_OF_IMAGES-1)
+                      //  printf("Convolution for Image %d\n",imgIndex);
 
                 int inX,inY=0;
 
                 //for 32 filters
                 for(int filterNumber=0; filterNumber<G_NUMBER_OF_FILERS; filterNumber++) {
-                        struct conv_buffer co1;
+
                         //if(imgIndex==0)
                         //printf("For Filter %d\n",filterNumber);
 
                         //Conv Logic
                         for(int outRowIndex=0; outRowIndex<G_NUMBER_OF_CONV_OUT_ROWS; outRowIndex++) {
                                 //printf("For outRowIndex %d\n",outRowIndex);
+                                struct conv_buffer co1;
+                                #pragma unroll
                                 for(int outColIndex=0; outColIndex<G_NUMBER_OF_CONV_OUT_COLS; outColIndex++) {
+
                                         //printf("For outColIndex %d\n",outColIndex);
                                         //For Input indexing
                                         int conv=0;
@@ -106,7 +115,7 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
                                         // RELU
                                         conv = conv>0 ? conv : 0;
 
-                                        co1.temp_buffer[(outRowIndex*G_NUMBER_OF_CONV_OUT_ROWS)+outColIndex] = conv;
+                                        co1.temp_buffer[outColIndex] = conv;
                                         //if(imgIndex==0)
                                         //  printf("%d  ",conv);
                                         //ConvOutput[(imgIndex*numberOfFilters*convOutRows*convOutCols)+(filterNumber*convOutRows*convOutCols)+(outRowIndex*convOutRows)+outColIndex]=conv;
@@ -115,12 +124,10 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
                                 }
                                 //if(imgIndex==0)
                                 //  printf("\n");
-
+                                write_channel_intel(convOutChannel,co1);
                         }
                         //  if(imgIndex==0)
                         //printf("\n\n");
-                        write_channel_intel(convOutChannel,co1);
-
                 }
         }
 
@@ -134,59 +141,68 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
  * Input : 28*28*32 Pixels for 1 Image. 10k Images in total
  * Output : 14*14*32 Pixels for 1 Image, 10K Images in total sent through Channel to FC.
  */
-__kernel void MaxPool(int numberOfImages, int numberOfFilters,int convOutRows,int convOutCols,int stride)
+__kernel void MaxPool()
 {
 
-
+        //struct conv_buffer conv1;
         //  printf("Maxpool Output\n");
-        for ( int i =0; i < numberOfImages; ++i)
+        for ( int i =0; i < G_NUMBER_OF_IMAGES; ++i)
         {
-                int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
+
                 int currvalue=0;
 
-                //Store the Channels data of 1 Image in a linear array.
-                //  for ( int j = 0; j<numberOfFilters*convOutRows*convOutCols; j++ )
-                //        img[j] = read_channel_intel(convOutChannel);
 
 
-                for (int k = 0; k <numberOfFilters; ++k)
+                for (int k = 0; k <G_NUMBER_OF_FILERS; ++k)
                 {
-                        struct conv_buffer conv1=read_channel_intel(convOutChannel);
+                  int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
+                        //Store the Channels data of 1 Image in a linear array.
+                        #pragma unroll
+                        for ( int j = 0; j<G_NUMBER_OF_CONV_OUT_ROWS; j++ ) {
+                                struct conv_buffer conv1 = read_channel_intel(convOutChannel);
+                                #pragma unroll
+                                for(int l=0; l<G_NUMBER_OF_CONV_OUT_COLS; l++) {
+                                        img[(k*G_NUMBER_OF_CONV_OUT_COLS*G_NUMBER_OF_CONV_OUT_ROWS)+(j*G_NUMBER_OF_CONV_OUT_COLS)+l]=conv1.temp_buffer[l];
+                                }
+                        }
+
+                        //conv1=read_channel_intel(convOutChannel);
                         struct max_buffer max1;
 
-                        int n=0;
-                        for (int x = 0; x < convOutRows; x=x+stride)
+
+                        for (int x = 0; x < G_NUMBER_OF_CONV_OUT_ROWS; x=x+G_MAXPOOL_STRIDE)
                         {
                                 int m=0;
-                                for (int y = 0; y < convOutCols; y=y+stride)
+                                for (int y = 0; y < G_NUMBER_OF_CONV_OUT_COLS; y=y+G_MAXPOOL_STRIDE)
                                 {
 
 
                                         int p1,p2,p3,p4,m1,m2;
-                                        p1 = conv1.temp_buffer[(x*G_NUMBER_OF_CONV_OUT_COLS)+(y)];
-                                        p2 = conv1.temp_buffer[(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+1)];
-                                        p3 = conv1.temp_buffer[(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols)];
-                                        p4 = conv1.temp_buffer[(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+convOutCols+1)];
+                                        p1 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y)];
+                                        p2 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+1)];
+                                        p3 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+G_NUMBER_OF_CONV_OUT_COLS)];
+                                        p4 = img[(k*G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_CONV_OUT_COLS)+(x*G_NUMBER_OF_CONV_OUT_COLS)+(y+G_NUMBER_OF_CONV_OUT_COLS+1)];
                                         m1 = max(p1,p2);
                                         m2 = max(p3,p4);
                                         currvalue= max(m1,m2);
                                         //Insert the max value in the channel
                                         //write_channel_intel(MaxPoolOutChannel,currvalue);
-                                        max1.maxPool_buffer[n*G_MAXPOOL_OUT_ROWS+m]=currvalue;
+                                        max1.maxPool_buffer[m]=currvalue;
                                         m++;
-                                        //    if(i==0 && k==0)
-                                        //  printf("%d  ",max1.maxPool_buffer[x*G_MAXPOOL_OUT_ROWS+y]);
+                                        //if(i==0 )
+                                        //printf("%d  ",currvalue);
 
                                         currvalue=0;
                                 }
-                                n++;
-                                // if(i==0 && k==0 )
+
+                                //if(i==0 )
                                 //  printf("\n ");
+                                write_channel_intel(MaxPoolOutChannel,max1);
                         }
                         //if(i==0)
-                        //printf("\n\n\n ");
+                        //("\n\n\n ");
 
-                        write_channel_intel(MaxPoolOutChannel,max1);
+
                 }
 
         }
@@ -221,10 +237,13 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
                 int maxScore=0;
                 int maxpooldata[6272];
                 //Store the Channels data of 1 Image in a linear array.
-                for(int i=0; i<32; i++) {
-                        struct max_buffer max1= read_channel_intel(MaxPoolOutChannel);
-                        for(int q=0; q<14*14; q++) {
-                                maxpooldata[(i*14*14)+q] = max1.maxPool_buffer[q];
+                for(int i=0; i<G_NUMBER_OF_FILERS; i++) {
+
+                        for(int q=0; q<G_MAXPOOL_OUT_ROWS; q++) {
+                          struct max_buffer max1= read_channel_intel(MaxPoolOutChannel);
+                          #pragma unroll
+                            for(int l=0;l<G_MAXPOOL_OUT_COLS;l++)
+                                maxpooldata[(i*G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS)+(q*G_MAXPOOL_OUT_ROWS)+l] = max1.maxPool_buffer[l];
                         }
                 }
 
