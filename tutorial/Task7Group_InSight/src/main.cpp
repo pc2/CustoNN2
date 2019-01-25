@@ -227,33 +227,8 @@ int main(void)
         assert(err==CL_SUCCESS);
         err = kernel.setArg(2, Buffer_CNN_BIAS);
         assert(err==CL_SUCCESS);
-        err = kernel.setArg(3, NUMBER_OF_IMAGES);
-        assert(err==CL_SUCCESS);
-        err = kernel.setArg(4, NUMBER_OF_FILTERS);
-        assert(err==CL_SUCCESS);
-        err = kernel.setArg(5, NUMBER_OF_ROWS);
-        assert(err==CL_SUCCESS);
-        err = kernel.setArg(6, NUMBER_OF_COLS);
-        assert(err==CL_SUCCESS);
-        err = kernel.setArg(7, FILTER_ROWS);
-        assert(err==CL_SUCCESS);
-        err = kernel.setArg(8, FILTER_COLS);
-        assert(err==CL_SUCCESS);
-        err = kernel.setArg(9, CONV_LAYER_OUTPUT_ROWS);
-        assert(err==CL_SUCCESS);
-        err = kernel.setArg(10, CONV_LAYER_OUTPUT_COLS);
-        assert(err==CL_SUCCESS);
 
-        err = kernel2.setArg(0, NUMBER_OF_IMAGES);
-        assert(err==CL_SUCCESS);
-        err = kernel2.setArg(1, NUMBER_OF_FILTERS);
-        assert(err==CL_SUCCESS);
-        err = kernel2.setArg(2, CONV_LAYER_OUTPUT_ROWS);
-        assert(err==CL_SUCCESS);
-        err = kernel2.setArg(3, CONV_LAYER_OUTPUT_COLS);
-        assert(err==CL_SUCCESS);
-        err= kernel2.setArg(4,STRIDE);
-        assert(err==CL_SUCCESS);
+
 
         err = kernel3.setArg(0, Buffer_digitWeights);
         assert(err==CL_SUCCESS);
