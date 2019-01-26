@@ -157,7 +157,7 @@ __kernel void MaxPool()
                 {
                   int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
                         //Store the Channels data of 1 Image in a linear array.
-                        #pragma unroll
+
                         for ( int j = 0; j<G_NUMBER_OF_CONV_OUT_ROWS; j++ ) {
                                 struct conv_buffer conv1 = read_channel_intel(convOutChannel);
                                 #pragma unroll
@@ -169,10 +169,11 @@ __kernel void MaxPool()
                         //conv1=read_channel_intel(convOutChannel);
                         struct max_buffer max1;
 
-
+                        
                         for (int x = 0; x < G_NUMBER_OF_CONV_OUT_ROWS; x=x+G_MAXPOOL_STRIDE)
                         {
                                 int m=0;
+                                #pragma unroll
                                 for (int y = 0; y < G_NUMBER_OF_CONV_OUT_COLS; y=y+G_MAXPOOL_STRIDE)
                                 {
 
