@@ -28,33 +28,33 @@
 
 ### Ecosystems and Frameworks
 
-#### Intel OpenVINO
+#### Intel OpenVINO (Nikhitha and Rushikesh)
 - [Intel OpenVINO Website](https://software.intel.com/en-us/openvino-toolkit)
 - [Dell Success Story using OpenVINO](https://www.nextplatform.com/2018/10/15/where-the-fpga-hits-the-server-road-for-inference-acceleration/)
 
-#### Xilinx
+#### Xilinx (Amay and Suprajith)
 - [Overview of Xilinx Activities](http://www.ispd.cc/slides/2018/s2_3.pdf)
 - [Xilinx ML Suite](https://github.com/Xilinx/ml-suite)
 - [Deephi - Embedded Counterpart to Xilinx xfDNN](https://www.xilinx.com/publications/events/developer-forum/2018-frankfurt/xilinx-machine-learning-strategies-with-deephi-tech.pdf)
 - [Omnitek - Success Story using Xilinx HW with a Custom Architecture](https://www.nextplatform.com/2018/10/01/boosting-the-clock-for-high-performance-fpga-inference/)
 
-#### tvm
+#### tvm (Alina and Arathy)
 - [TVM Website](https://tvm.ai/)
 - [TVM Github Page](https://github.com/dmlc/tvm/)
 - [VTA Announcement](https://tvm.ai/2018/07/12/vta-release-announcement.html)
 
-#### Microsoft
+#### Microsoft (Adesh and Chiranjeevi)
 - [Microsoft Project Brainwave Homepage](https://www.microsoft.com/en-us/research/project/project-brainwave/)
 - [Microsoft Project Brainwave Background](https://www.microsoft.com/en-us/research/blog/microsoft-unveils-project-brainwave/)
 - [Using Project Brainwave on Azure Cloud](https://docs.microsoft.com/en-us/azure/machine-learning/service/concept-accelerate-with-fpgas)
 
-#### Surveys
+#### Surveys (Anshul and Ayush)
 - [Survey of Academic Publications on Frameworks](https://arxiv.org/pdf/1803.05900.pdf)
 - [Very Good Survey on Approximation for Custom Hardware](https://arxiv.org/abs/1901.06955)
 
 ### Research
 
-#### Reusable Architecture Design
+#### Reusable Architecture Design 
 - [Xilinx GEMX](https://github.com/xilinx/gemx)
 
 #### Custom Precision
