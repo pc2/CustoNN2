@@ -42,6 +42,7 @@
 - [TVM Website](https://tvm.ai/)
 - [TVM Github Page](https://github.com/dmlc/tvm/)
 - [VTA Announcement](https://tvm.ai/2018/07/12/vta-release-announcement.html)
+- [TVM: An Automated End-to-End Optimizing Compiler for Deep Learning](https://arxiv.org/pdf/1802.04799.pdf)
 
 #### Microsoft (Adesh and Chiranjeevi)
 - [Microsoft Project Brainwave Homepage](https://www.microsoft.com/en-us/research/project/project-brainwave/)
