@@ -7,11 +7,9 @@
 
 ### Architecture 
 - Convolution Layer.
-    - **img** : 1D vector having 10k * 32 * 32  elements (Zero Padded).
-    - **cnnWeight** : 1D (local) vector having 5 * 5 * 32 elements.
-    - **cnnBias** : Bias weight for 32 filters. 1D (local) vector having 32 elements.
-    - **numberOfImages** : Number of images in the dataset =10k.
-    - **numberOfFilters** : number of convolution filters = 32
+    - **Image Input ** : 1D vector having 10k * 32 * 32  elements (Zero Padded).
+    - **CNN Weights Input ** : 1D (local) vector having 5 * 5 * 32 elements. This is copied to local memory.
+    - **CNN Bias Input** : Bias weight for 32 filters. 1D (local) vector having 32 elements. . This is copied to local memory.
     - **Output** : 28 * 28 * 32 image will be transferred to MaxPool using channel.
 - Maxpool Layer.
     - **Stride** : 2.
@@ -95,18 +93,6 @@
 - **Estimated Time : 0.16second**
 - **Measured Total Operations / cycle = 3.56**
 
-### Global Memory Usage
-- Total Image Reads: 32 * 32 * 10K * 1 Byte = 10.24MB.
-- CNN Filter Weights Read:5 * 5 * 32 * 2 Bytes = 1.6KB.
-- CNN Filter Bias Read:32 * 2 Bytes = 64B.
-- FC Digit Weights Read: 14 * 14 * 32 * 10 * 2 Bytes = 125.44KB.
-- Classified Output Write:10K * 4 Bytes = 40 KB.
-- Total Global Memory Reads = 10.367 MB.
-- Total Global Memory Writes = 40KB.
-- Estimated Global Memory Bandwidth = 7.237MB/s.
-- Measured Global Memory Bandwidth  (Profiler):-
-    - Conv Kernel : 2 Mem banks 8.2MB/s each = 16.4MB/s.
-    - FC Kernel : 2 Mem banks 8.2MB/s each = 16.4MB/s
 
 ### Performance Model
 | Conv.Layer | Time in (ms) | Ops/Cycle  |
