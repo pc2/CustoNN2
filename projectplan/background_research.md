@@ -79,3 +79,6 @@
 - How can we exploit the unique scaling capabilities at PC2 with 32 FPGAs and custom point-to-point channels between several FPGAs?
 	- Which essential limitations can that architecture overcome?
 	- In which workloads / scenarios do these limitations show up?
+
+# Project Calendar
+- [Calendar Link](https://calendar.google.com/calendar?cid=dTZsaTI3N2JlYjZna3M3aGZqaGxwbzN1a29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
