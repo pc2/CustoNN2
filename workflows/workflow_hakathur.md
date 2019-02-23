@@ -97,7 +97,9 @@ https://git-scm.com/docs/git-add
 
 
 
-
+## Interesting reads
+- https://www.nextplatform.com/2018/08/27/xilinx-unveils-xdnn-fpga-architecture-for-ai-inference/
+- https://www.nextplatform.com/2018/08/23/a-mythic-approach-to-deep-learning-inference/
 
 
 
