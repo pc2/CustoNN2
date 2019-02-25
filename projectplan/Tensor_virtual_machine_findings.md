@@ -29,5 +29,5 @@ including embedded CPUs, GPUs, FPGAs, and ASICs.
 >3. VTA JIT runtime: Complies VTA instruction stream and microkernels.
 
 **Members**
->Alina Egorova
+>Alina Egorova </br>
 >Arathy Ajaya Kumar
