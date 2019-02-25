@@ -1,3 +1,4 @@
+
 # Microsoft Project Brainwave
 - Microsoft's Project Brainwave is the deep learning platform for real time Artificial Intelligence applications.
 - Project Brainwave is the first of its kind to prove the value of FPGAs for Cloud Computing, It has specialized hardware and algorithms for High throughput and Ultra-low latency accelerated serving of DNNs.
@@ -43,6 +44,28 @@ Brainwave is built using three layers:
 - 1 Azure Box contains 24 CPU Cores + 4 Arria 10 FPGAs
 - Provides Limited and Standard DNNs : ResNet 50,ResNet 152,VGG-16,SSD-VGG, and DenseNet-121
 
+## Deploying trained DNN models to FPGAs in the Azure cloud
+###Prerequisites
+  - Azure subscription
+  - Azure Machine Learning service workspace
+  - Azure Machine Learning SDK for Python
+  - tensorflow version<=1.10 
+  - Python 3.6
+  - Anaconda  
+
+###Design
+  - Dataset : ImageNet
+  - CNN Used : ResNet50
+  - Input :JPEG Images
+ 
+###Steps
+    - Preprocess the Image and produce a Tensor
+    - Use ResNet50 as a featurizer
+    - Classify the output of ResNet50 into top 5 classes 
+    - Create a service defintion (this contains a pipeline of stages that are required to deploy the model on FPGA)
+    - Create and Use a service 
+    - Clean Up the service
+
 ## Results
 - Brainwave successfully exploits FPGAs on a datacenter-scale fabric for real-time serving of state-of-the-art DNNs.
 -Designing a scalable, end-to-end system architecture for deep learning is as critical as optimizing for single chip performance
@@ -51,6 +74,8 @@ Brainwave is built using three layers:
 ## References
 - https://www.microsoft.com/en-us/research/uploads/prod/2018/03/mi0218_Chung-2018Mar25.pdf
 - https://www.microsoft.com/en-us/research/project/project-brainwave/
+- https://github.com/Azure/aml-real-time-ai
+- https://docs.microsoft.com/en-us/azure/machine-learning/service/how-to-deploy-fpga-web-service
 
 ## Members:
 - Adesh Shambhu (adeshs@main.uni-paderborn.de)
