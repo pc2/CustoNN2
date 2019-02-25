@@ -3,6 +3,7 @@
 including embedded CPUs, GPUs, FPGAs, and ASICs.
 
 >TVM is a compiler that takes deep learning frameworks and generates low-level optimized code for a diverse set of hardware back-ends.
+>>The goal of TVM stack is to provide a reusable toolchain to compile high-level neural network descriptions from deep learning framework frontends down to low-level machine code for multiple hardware backends.
 
 >TVM was developed lie a research project at the Paul G. Allen School of Computer Science & Engineering, University of Washington.
 
