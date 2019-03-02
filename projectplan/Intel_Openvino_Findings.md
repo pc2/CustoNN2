@@ -12,24 +12,24 @@ https://github.com/opencv/dldt
 
 ## Findings
 - Inference Engine source code for FGPA processing wasn't found in the repository.
-- Supports only ARRIA 10, we need check for possibilities to run on Stratix 10 FPGAs
-- When installed locally,
-	- Case1:
-dataset: ImageNet
-Model: Inception V4 model
-Accuracy: Great
-Average processing time on CPU per Image: 100+ms
-Average processing time on CPU for a batch of 9images: 750+ms
+- Supports only ARRIA 10, we need to check for possibilities to run on Stratix 10 FPGAs
+- Findings when installed locally are,
+- Case1:
+    - dataset: ImageNet
+    - Model: Inception V4 model
+    - Accuracy: Great
+    - Average processing time on CPU per Image: 100+ms
+    - Average processing time on CPU for a batch of 9images: 750+ms
 
-	- Case2:
- dataset: ImageNet
-Model: Resnet 101
-Accuracy: poor
-Average processing time on CPU per Image: 100+ms
-Average processing time on CPU for a batch of 7images: 588+ms
+- Case2:
+    - dataset: ImageNet
+    - Model: Resnet 101
+    - Accuracy: poor
+    - Average processing time on CPU per Image: 100+ms
+    - Average processing time on CPU for a batch of 7images: 588+ms
 
 ## Members
-- Nikhitha Shiwaswamy
+- Nikhitha Shivaswamy
 - Rushikesh Nagle
 
 
