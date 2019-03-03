@@ -36,9 +36,13 @@ including embedded CPUs, GPUs, FPGAs, and ASICs.
 >>We can also save the graph, lib and parameters into files and load them back in deploy environment.
 
 > TVM also supports AOCL backend. This feature is still experimental. We cannot use AOCL to deploy an end to end neural networks for now.
+
 > Need to rebuild the whole project again to change the target: cpu, gpu or OpenCL.
+
 > Operator Fusion - 	The idea is to combine multiple operators together into a single kernel without saving the intermediate results back into global memory
+
 > TVM plan to support different quantization scheme (Symmetric, Asymmetric, Channel-wise Scale) for different bits(i8->i32, i16->i32, i8->i24, i5->i16)
+
 > TVM supports creating a new datatypes.
 
 
