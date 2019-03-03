@@ -61,6 +61,7 @@ TOPI(TVM operator inventory):  define operators and schedules and help optimizat
 **Design concepts of TVM**
 >  TVM PackedFunc: Type-erased function
 >> useful interface to call generated functions <br/>
+
 >  TVM runtime device API: for memory management
 >> OpenCL can be used for the implementation of device API's using functions such as SetDevice, SetStream, AllocWorkspace/Freeworkspac.
 
