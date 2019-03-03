@@ -23,11 +23,24 @@ including embedded CPUs, GPUs, FPGAs, and ASICs.
 
 >So here we have VTA(versatile tensor accelerator), which is a complete deep learning system with TVM.
 
-**VTA stack**
 
->1. NNVM: Acts as graph optimizer
->2. TVM IR: Provides portability across divergent hardware backends
->3. VTA JIT runtime: Complies VTA instruction stream and microkernels.
+**NNVM -> TOPI -> TVM -> VTA**
+
+> 1. NNVM (Neural Network Virtual Machine) - Acts as graph optimizer
+> 2. TOPI (functions are instructions) - Defines the tensor computation, schedules space for each NN operator (e.g. conv2d)
+> 3. TVM - Uses TOPI isntructions and generates code for several backends, like LLVM, or CUDA etc.
+> 4. VTA JIT runtime: Complies VTA instruction stream and microkernels.
+
+> NNVM
+>> `nnvm.compiler.build` returns three components: the execution graph(.json), the TVM module library(.so, .aocl) of compiled functions specifically for this graph on the target hardware, and the parameter(.param) blobs of the model.
+>>We can also save the graph, lib and parameters into files and load them back in deploy environment.
+
+> TVM also supports AOCL backend. This feature is still experimental. We cannot use AOCL to deploy an end to end neural networks for now.
+> Need to rebuild the whole project again to change the target: cpu, gpu or OpenCL.
+> Operator Fusion - 	The idea is to combine multiple operators together into a single kernel without saving the intermediate results back into global memory
+> TVM plan to support different quantization scheme (Symmetric, Asymmetric, Channel-wise Scale) for different bits(i8->i32, i16->i32, i8->i24, i5->i16)
+> TVM supports creating a new datatypes.
+
 
 **Members**
 >Alina Egorova <br/>
