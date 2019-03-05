@@ -38,7 +38,7 @@ typedef struct conv_buffer {
 
 //Struct to hold 1 row Output of Maxpool Layer
 typedef struct max_buffer {
-        int maxPool_buffer[G_MAXPOOL_OUT_COLS];
+        int maxPool_buffer[8];
 }maxStruct;
 
 //Channel Between Conv Layer and Maxpool
@@ -50,7 +50,7 @@ channel co MaxPoolInChannel __attribute__((depth(64)))
 */
 channel co ConvOutChannel __attribute__((depth(64)));                        
 //Channel Between Maxpool and FC Layer
-channel maxStruct MaxPoolOutChannel __attribute__((depth(0))) __attribute__((io("kernel_input_ch0"))); // Channel Tx
+channel maxStruct MaxPoolOutChannel __attribute__((depth(0))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
 channel maxStruct FCInChannel __attribute__((depth(0))) __attribute__((io("kernel_input_ch0")));  // Channel Rx
 
 
@@ -75,7 +75,7 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
         //For 10k images
         for(int imgIndex=0; imgIndex<G_NUMBER_OF_IMAGES; imgIndex++) {
                 //if(imgIndex%1000==0 || imgIndex>G_NUMBER_OF_IMAGES-100)
-                //        printf("Convolution for Image %d\n",imgIndex);
+                 //       printf("Convolution for Image %d\n",imgIndex);
 
                 int inX,inY=0;
 
@@ -180,7 +180,8 @@ __kernel void MaxPool()
                         for (int x = 0; x < G_NUMBER_OF_CONV_OUT_ROWS; x=x+G_MAXPOOL_STRIDE)
                         {
                                 int m=0;
-                                struct max_buffer max1;
+                                struct max_buffer max1; // 1st half of row ( 7 Pixels)
+                                struct max_buffer max2; // 2st half of row ( 7 Pixels)
                                 #pragma unroll
                                 for (int y = 0; y < G_NUMBER_OF_CONV_OUT_COLS; y=y+G_MAXPOOL_STRIDE)
                                 {
@@ -196,8 +197,13 @@ __kernel void MaxPool()
                                         currvalue= max(m1,m2);
                                         //Insert the max value in the channel
                                         //write_channel_intel(MaxPoolOutChannel,currvalue);
-                                        max1.maxPool_buffer[m]=currvalue;
+                                        max1.maxPool_buffer[m]=currvalue;     
                                         m++;
+                                       
+                                        if( m==G_MAXPOOL_OUT_COLS/2){
+                                                m=0;
+                                                write_channel_intel(MaxPoolOutChannel,max1);
+                                        }        
                                         //if(i==0 )
                                         //printf("%d  ",currvalue);
 
@@ -206,7 +212,8 @@ __kernel void MaxPool()
 
                                 //if(i==0 )
                                 //  printf("\n ");
-                                write_channel_intel(MaxPoolOutChannel,max1);
+                                //write_channel_intel(MaxPoolOutChannel,max1);
+                               // write_channel_intel(MaxPoolOutChannel,max2);
                               //  bufferCount++;
                         }
                         //if(i==0)
@@ -251,10 +258,15 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
                 for(int i=0; i<G_NUMBER_OF_FILERS; i++) {
 
                         for(int q=0; q<G_MAXPOOL_OUT_ROWS; q++) {
-                          struct max_buffer max1= read_channel_intel(FCInChannel);
-                          #pragma unroll
-                            for(int l=0;l<G_MAXPOOL_OUT_COLS;l++)
-                                maxpooldata[(i*G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS)+(q*G_MAXPOOL_OUT_ROWS)+l] = max1.maxPool_buffer[l];
+                                for(int colData=0;colData<2;colData++){                                
+                                 struct max_buffer max1= read_channel_intel(FCInChannel);
+
+                                        #pragma unroll
+                                        for(int l=0;l<=G_MAXPOOL_OUT_COLS/2;l++){
+                                               
+                                                        maxpooldata[(i*G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS)+(q*G_MAXPOOL_OUT_ROWS)+(colData*(G_MAXPOOL_OUT_COLS/2))+l] = max1.maxPool_buffer[l];
+                                       }
+                                }
                         }
                 }
 
