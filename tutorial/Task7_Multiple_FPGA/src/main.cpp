@@ -54,31 +54,33 @@ int main(void)
         std::cout << "Done Initializing Platform" << std::endl;
         //Setup Device
         //Get Device ID
-        std::vector<cl::Device> DeviceList;
+        std::vector<cl::Device> DeviceList,Device1,Device2;
         err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList);
         assert(err==CL_SUCCESS);
         print_device_info(&DeviceList);
 
-        std::vector<cl::Device> DeviceList2;
+        //Copy the Devices into another List having only 1 device.
+        Device1.push_back(DeviceList[0]); 
+        Device2.push_back(DeviceList[1]);
+       /* std::vector<cl::Device> DeviceList2;
         err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList2);
         print_device_info(&DeviceList2);
-        
+        */
 
         //Create Context
-        cl::Context mycontext(DeviceList);
+        cl::Context mycontext(Device1);
         assert(err==CL_SUCCESS);
 
-        cl::Context mycontext2(DeviceList2);
+        cl::Context mycontext2(Device2);
         assert(err==CL_SUCCESS);
 
         //Create Command queue
-        cl::CommandQueue queueConvLayer(mycontext, DeviceList[0]);
+        cl::CommandQueue queueConvLayer(mycontext, Device1[0]);
         assert(err==CL_SUCCESS);
-        cl::CommandQueue queueMaxPool(mycontext, DeviceList[0]);
+        cl::CommandQueue queueMaxPool(mycontext, Device1[0]);
         assert(err==CL_SUCCESS);
-        cl::CommandQueue queueFCLayer(mycontext2, DeviceList2[0]);
+        cl::CommandQueue queueFCLayer(mycontext2, Device2[0]);
         assert(err==CL_SUCCESS);
-
 
         //Create Buffers for input and output
         cl::Buffer Buffer_Img(mycontext, CL_MEM_READ_ONLY, sizeof(char)*TOTAL_NUMBER_OF_IMAGE_PIXELS);
@@ -86,6 +88,7 @@ int main(void)
         cl::Buffer Buffer_CNN_BIAS(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_FILTERS);
         cl::Buffer Buffer_digitWeights(mycontext2, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_FC_WEIGHTS);
         cl::Buffer Buffer_kernelcalculatedLabels(mycontext2,CL_MEM_WRITE_ONLY,sizeof(int)*NUMBER_OF_IMAGES);
+     
 
         //Inputs and Outputs to Kernel, X and Y are inputs, Z is output
         //The aligned attribute is used to ensure alignment
@@ -214,23 +217,23 @@ int main(void)
 
 
         std::ifstream aocx_stream2("../Simple_ConvolutionNeuralNetwork.aocx", std::ios::in|std::ios::binary);
-        checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
+        checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
         std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
         cl::Program::Binaries mybinaries2 (1, std::make_pair(prog2.c_str(), prog2.length()+1));
 
 
         // Create the Program from the AOCX file.
-        cl::Program program(mycontext, DeviceList, mybinaries);
+        cl::Program program(mycontext, Device1, mybinaries);
 
         // Create the Program from the AOCX file.
-        cl::Program program2(mycontext2, DeviceList2, mybinaries2);
+        cl::Program program2(mycontext2, Device2, mybinaries2);
 
         // build the program
-        err=program.build(DeviceList);
+        err=program.build(Device1);
         std::cout << err<<std::endl;
         assert(err==CL_SUCCESS);
 
-        err=program2.build(DeviceList);
+        err=program2.build(Device2);
         std::cout << err<<std::endl;
         assert(err==CL_SUCCESS);
 
@@ -266,8 +269,7 @@ int main(void)
         err = kernel3.setArg(4, Buffer_kernelcalculatedLabels);
         assert(err==CL_SUCCESS);
 
-
-        printf("\nLaunching the kernel...\n");
+        printf("\nLaunching the kernels...\n");
 
         auto startFPGA = std::chrono::high_resolution_clock::now();
         // Launch Kernel
