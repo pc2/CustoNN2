@@ -1,14 +1,8 @@
 ## Researched Architecture
 
-### AlexNet
-### ZFNet
-### VGGNet
-### GoogLeNet
-### ResNet
-
 ## AlexNet
 
-- Contains 5 convolution layers and 3 fully connected layer.
+- Contains 5 convolution layers and 3 fully connected layer (8 Layers).
 - RelU activation function applied after every convolution and fully connected layer.
 - First and second convolution layer is followed by overlapping max pooling layer.
 - Third, fourth and fifth convolution layers are connected to each other.
@@ -22,13 +16,27 @@ of the pooling unit. If we set s = z, we obtain traditional local pooling as com
 pooling find it slightly more difficult to overfit.
 
 ### Reducing overfitting
-- Data augmentation :
--- by mirroring
--- by random crops
+#### Data augmentation :
+- by mirroring
+- by random crops
 
-- Drop out
+#### Drop out
 In dropout, a neuron is dropped from the network with a probability of 0.5. When a neuron is dropped, it does not contribute to either forward or backward propagation. So every input goes through a different network architecture
 
 ### Source
 - [Understanding Alexnet](https://www.learnopencv.com/understanding-alexnet/ "Ubderstanding Alexnet")  
-- [Imagenet classification] (https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)
+- [Imagenet classification](https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)
+
+## ZFNet
+- ZFNet is a variant of AlexNet but:
+- CONV1: change from (11x11 stride 4) to (7x7 stride 2)
+- CONV3,4,5: instead of 384, 384, 256 filters use 512, 1024, 512
+
+### Source
+- [Stanford Lecture 9](http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture9.pdf)
+
+
+## VGGNet
+
+- It is a variant of AlexNet but uses more layers and has smaller filters.
+- VGG16 and VGG19 has 16 and 19 layers respectively.
