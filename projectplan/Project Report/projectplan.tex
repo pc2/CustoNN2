@@ -200,8 +200,39 @@ The Model Optimizer is a python based tool which takes as input a pre-trained mo
 \lipsum[3]
 
 \section{Xilinx}
-% Remove below lipsum command before posting your work
-\lipsum[3]
+Xilinx Machine Learning Suite toolchain provides us tools to develop and deploy machine Learning applications in Real-time Inference. It provides machine learning inference with low-latency and high throughput. The suite also provides support for widely used machine learning frameworks such as Caffe, Tensorflow, MXNet.
+
+The functionality of ML-Suite is divided among its components: Machine Learning Framework, xfDNN Middleware, and xDNN IP.
+
+\subsection{Machine Learning Framework}
+Xilinx ML Suite supports various frameworks such as Caffe, Tensorflow, Keras, MXNet, Darknet. Support for various other frameworks can also be provided with help of \textit{Open Neural Network Exchange} (ONNX).
+
+\subsection{xfDNN Middleware}
+It is a high-performance software library and provides API which works as a bridge between xDNN IP which runs on FPGAs and ML frameworks such as Caffe, Tensorflow. xfDNN requires SDAccel reconfigurable acceleration environment and currently is the only middleware available for programming ML frameworks on Xilinx FPGAs. xfDNN middleware has the following components:
+
+\subsubsection{Compiler}
+
+It provides tools for network optimization such as layer fusions, memory dependency optimization, removing CPU host control bottlenecks with network pre-scheduling. It creates a "one-shot" execution flow for the network to run on FPGA.
+
+\subsubsection{xfDNN Quantizer} 
+
+xfDNN Quantizer enables fast, high-precision calibration to lower precision deployments to INT8 and INT16. It performs a quantization technique known as a recalibration.
+
+\subsection{xDNN IP}
+Xilinx xDNN IP cores are high-performance general CNN processing engines. Various different types of CNN networks and models can be executed on these engines. They have two DSP Array configurations available (28x32 and 56x32). 28x32 configuration provides higher throughput whereas 56x32 can fit larger models at low latency.
+xDNN provides Overlay to combine various xDNN IP kernels.
+
+\subsection{Advantages and Disadvantages}
+  
+ \begin{itemize}
+ \item Supports model optimization and weights quantization.
+ \item Delivers high throughput and low latency.
+ \item Compiler and Quantizer can be used separately and does not require a Xilinx environment.
+ \item Does not support fully connected and softmax layers.
+ 
+ \end{itemize}
+
+
 
 %End of the chapter
 
