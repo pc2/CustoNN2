@@ -2,6 +2,8 @@
 
 \usepackage{titlesec}
 \usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{wrapfig}
 
 %setting for chapter font
 \titleformat{\chapter}[display]
@@ -63,16 +65,60 @@ In this project we are using the Intel Stratix 10 F1760 NF43 package with 520N S
 \lipsum[3]
 
 \subsection{Inception v4}
-% Remove below lipsum command before posting your work
-\lipsum[3]
+Inception-V4 is a deep neural network (DNN) released by Google. Inception-V4 is a fourth version of inception module and includes all techniques from Inception-V1, Inception-V2, and Inception-V3. Google devised inception module and it was a key idea for Inception-V1. The naïve version of the first inception module included 1×1, 3×3 and 5×5 convs and max-pooling as input and the result of concatenated them together as output. \\
+\pagebreak
+\begin{wrapfigure}{l}{0.5\textwidth}
+\centering
+\includegraphics[scale=0.3]{inception_v4}
+\caption{Inception-V4}
+\label{fig:inception_v4}
+\end{wrapfigure}
+
+The contribution from Inception-V2 is batch normalization. They use ReLU as activation function in order to avoid the saturation problem and vanishing gradients. They had to use a higher learning rate for regularization because the output became more irregular. Last changes was reducing dimension by replacing   5×5 conv to two 3×3 convs. 
+
+Inception-V4 also used the factorization from the Inception-V3. They reduce the dimensionality and it helped to decrease the overfitting problem. For example, if you have a 3×3 filter then you need 9 parameters, but the factorization idea proposes to operate  3×1 and  1×3 filters and use only 6 parameters. 
+
+Inception-V4 have 3.1\% in Top-5 error rate and this result is better than winner of 2015 year ResNet (3.57\%) and  Inception-V3 (3.58\%). 
+
+Inception architecture has a relatively low computation cost. Google try to make the inception module more efficient that's why they made it deeper and wider then Inception-V3 and they also simplify the architecture of this DNN.
+
+Figure \ref{fig:inception_v4} shows the whole scheme for Inception-V4.
 
 \subsection{GoogleNet}
 % Remove below lipsum command before posting your work
 \lipsum[3]
 
 \subsection{Resnet50}
-% Remove below lipsum command before posting your work
-\lipsum[3]
+ResNet is another deep neural network released by Microsoft and, also, a winner of ILSVRG 2015 in image classification, detection, and localization. ResNet is a series of DNN with different numbers of layers from 18 to 152. The base idea is applying the residual connections which are described as learning the residual representation of functions instead of signal representation. One of the conceptual ideas of ResNet is using the skip connection. Skip connection makes the network deeper.  
+
+Many convolution DNNs run into a problem with vanishing or exploding gradients because, during backpropagation, we derive error function with respect to the current weight and get multiplying of small or large numbers. The product of small numbers will be zero (vanished) and the product of large numbers will be too large (exploded). Developers of ResNet solved this problem by using a skip connection. In the skip connections for the next layer, they use the input from the previous layer without any modification. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.4]{resnet_1}
+    \caption{Skip connection}
+\end{figure}
+
+\begin{wrapfigure}{l}{0.5\textwidth}
+\centering
+\includegraphics[scale=0.8]{resnet_2}
+\caption{ResNet-50}
+\label{fig:resnet_50}
+\end{wrapfigure}
+
+The output of skip connection is  F(x) + x and the weight layers actually are to learn a kind of residual mapping: output minus identity x. If we have a vanishing gradient we always have an identity x to send it back to previous layers. 
+
+After each convolution layer ResNet use the batch normalization from Inception-V2. 
+
+The main concepts of construction ResNet:
+\begin{itemize}
+  \item avoiding representational bottlenecks by not abruptly reduce the dimension of data,but smoothly from the beginning of the network to the classifier at the output;
+  \item factorization of convolution layer into smaller pieces because this will save resources and help to increase the count of layers;
+  \item supporting a balance between the depth and width of the network. You should increase or decrease both dimensions.
+\end{itemize}
+
+Figure \ref{fig:resnet_50} shows the whole scheme for ResNet-50.
+
 
 \section{Datasets}
 % Remove below lipsum command before posting your work
