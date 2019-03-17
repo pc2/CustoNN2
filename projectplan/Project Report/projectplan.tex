@@ -313,8 +313,25 @@ xDNN provides Overlay to combine various xDNN IP kernels.
 
 \chapter{Related Work}
 % Remove below lipsum command before posting your work
-\lipsum[3]
+\textbf [1]. Deep Neural Network Approximation for Custom Hardware: Where We've Been, Where We're Going 
 
+Need of DNN Approximation
+\begin{itemize}
+    \item Reduce computational and storage cost.
+    \item Increases throughput.
+    \item Decreases latency.
+\end{itemize}
+
+\subsection{Quantization}
+Reducing Precision of Weights. Different techniques are:-
+\begin{itemize}
+\item  Block Floating Point - Dynamic fixed points.
+\item Adaptive Quantization - Each filter has independent precision.
+\item Binarization - Quantization of parameters into two values {1,-1}.
+\item Ternarization - Quantization of parameters into three values {1,0,-1}.
+\item Fine Grained Quantization - Ternarization of FP32 into groups and then ternarizing each group independently.
+\item Logarithmic Quantization - Parameters are quantized in the powers of two with scaling factor associated with each filter.
+\end{itemize}
 
 %End of the chapter
 
