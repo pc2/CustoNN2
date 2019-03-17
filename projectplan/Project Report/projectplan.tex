@@ -176,25 +176,30 @@ Figure \ref{fig:resnet_50} shows the whole scheme for ResNet-50.
 \section{OpenVINO}
 % Remove below lipsum command before posting your work
 Intel OPENVINO is an open source toolkit from Intel that allows the deployment of pre-trained deep neural networks on different hardware platforms such as CPU, GPU, FPGA etc. The toolkit is available for installation for the Windows operating system as well as selected Linux distributions. All of the tool's libraries and plugins except the FPGA plugin are a part of the open source github repository.
-The functionality of OPENVINO is divided among its components, Model Optimizer and Inference Engine.
+The functionality of OPENVINO is divided among its components, Model Optimizer, Calibration Tool,  Inference Engine. This is shown in Fig 5.1 and explained below. 
 
 \subsection{Model Optimizer}
-The Model Optimizer is a python based tool which takes as input a pre-trained model. It supports many popular deep learning frameworks such as TensorFlow, Caffe, PyTorch, MXnet etc. This model is then converted to a common intermediate format (IR), thereby making the inference engine independent of the training framework. The IR contains a .xml file which represents the computational graph of the CNN and a .bin file containing the weights. The graph is optimized by fusing different layers of the original topology wherever possible. The weights are accordingly adjusted. 
+The Model Optimizer is a python based tool which takes as input a pre-trained model. It supports many popular deep learning frameworks such as TensorFlow, Caffe, PyTorch, MXnet etc. This model is then converted to a common intermediate format (IR), thereby making the inference engine independent of the training framework. The IR contains a .xml file which represents the computational graph of the CNN and a .bin file containing the weights. The graph is optimized by fusing different layers of the original topology wherever possible. The weights are accordingly adjusted. The toolkit comes with a model downloader which can download various openly available pre-trained models for different frameworks.
+ 
+\subsection{Calibration Tool}
+ The Calibration Tool, added in the recent release of the toolkit, performs post training quantization to int8 before the IR is passed on to the inference engine.  The tool is open source. 
  
  \subsection{Inference Engine}
  The Inference Engine is responsible for the execution of the model on the selected hardware. For this purpose, it provides a C++ API which can be integrated in an application. The main task performed by the inference engine is to read the Intermediate Representation of the model, select the hardware for deployment such as CPU or FPGA and call the appropriate plugin which defines all necessary data structures and functions required to perform inference and return the output along with performance statistics. 
  The toolkit comes with pre-compiled bitstreams (.aocx files) for a few supported FPGA boards. These bitstreams implement various popular network topologies such as GoogleNet, ResNet etc. as well as generic layers which are used to program the FPGAs as per the requirement of the given model topology. 
- 
- \subsection{Advantages and Disadvantages}
+ \subsection{Advantages}
   
  \begin{itemize}
  \item Supports optimization of models and quantization of weights.
  \item A CNN model can be deployed on hardware with minimal programming effort and independent of the training framework.
  \item For FPGAs, the use of pre-compiled bitstreams eliminate the time needed for synthesis of kernel codes.
- \item The only disadvantage is the compatibility of FPGA boards. Development and synthesis of kernel codes along with a plugin for FPGAs may be required to make OPENVINO work with unsupported boards. 
- 
  \end{itemize}
-
+ 
+ \subsection{Disadvantages}
+ \begin{itemize}
+ \item The main disadvantage is the compatibility of FPGA boards. Development and synthesis of kernel codes along with a plugin for FPGAs may be required to make OPENVINO work with unsupported boards. 
+ \item Scaling to multiple FPGAs, which is one of the goals of this project is non-trivial as it would require development of overlays for external I/O channels. 
+ \end{itemize}
 \section{TVM}
 % Remove below lipsum command before posting your work
 \lipsum[3]
