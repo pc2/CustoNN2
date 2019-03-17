@@ -206,8 +206,27 @@ The Model Optimizer is a python based tool which takes as input a pre-trained mo
  \item Scaling to multiple FPGAs, which is one of the goals of this project is non-trivial as it would require development of overlays for external I/O channels. 
  \end{itemize}
 \section{TVM}
-% Remove below lipsum command before posting your work
-\lipsum[3]
+
+Today we have a lot of different deep learning frameworks such as TensorFlow, Cafee2, MXNet and PyTorch and hardware targets: CPUs, GPUs, FPGAs, and ASICs. During mapping one of frameworks to a device, we run into the problem with a variety of hardware characteristics such as memory organization (implicitly managed, mixed, explicitly managed) or compute primitives (scalar, vector, tensor).
+
+TVM takes a model from different learning frameworks and generates optimized code for devices. TVM was a research project at the Paul G. Allen School of Computer Science & Engineering, University of Washington.
+
+TVM includes a computational graph rewriter, tensor expression language and new features for GPU accelerators. 
+
+The system has the stack of implementation: NNVM $\to$ TOPI $\to$ TVM $\to$ VTA. NNVM acts like a graph optimizer by taking the model from the existing framework and converting it into “TVM” graph. For these operations, we use the TOPI language. TOPI is a library at which functions operate as instructions for further work. For example, TOPI defines the tensor computation, schedules space for each NN operator (e.g. conv2d). The next step is applying the TVM functions. TVM uses the TOPI instructions and generates code for several backends, like LLVM, or CUDA etc. The final step is the Versatile Tensor Accelerator which is responsible for stream and microkernels.    
+For changing hardware targets ( CPU, GPU or TPU) we need to rebuild TVM libraries again.  
+ 
+ \subsection{Advantages}
+ \begin{itemize}
+ \item TVM is a open-source product;
+ \item TVM also supports AOCL backend, but this option is still experimental. Information was updated in October 2018 year;
+  \item TVM plan to support different quantization scheme (Symmetric, Asymmetric, Channel-wise Scale) for different bits(i8 $\to$ i32, i16 $\to$ i32, i8 $\to$ i24, i5 $\to$ i16);
+ \end{itemize}
+
+ \subsection{Disadvantages}
+ \begin{itemize}
+ \item we do not know anything about with which FPGA boards TVM works.
+ \end{itemize}
 
 \section{Xilinx}
 Xilinx Machine Learning Suite toolchain provides us tools to develop and deploy machine Learning applications in Real-time Inference. It provides machine learning inference with low-latency and high throughput. The suite also provides support for widely used machine learning frameworks such as Caffe, Tensorflow, MXNet.
