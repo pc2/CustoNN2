@@ -12,8 +12,8 @@
   
 \author{ALL Author Names}
 \title{\textbf{CustoNN2: Customizing Neural Networks on FPGAs}}  
-  
-  
+
+
 \begin{document}
 
 \maketitle
@@ -41,20 +41,21 @@ In this project we are using the Intel Stratix 10 F1760 NF43 package with 520N S
 %End of the chapter
 
 \chapter{Goals}
-
+Convolution Neural Networks (CNNs) are the type of Deep Neural Networks used in the field of Image Processing and Image Analyzing.
+CNNs are most widely used for extracting valuable features from the Input Images.
+The primary Goal of our project is to implement the state of the art CNNs on the FPGAs which acts as an accelerator for compute-heavy Neural Networks. \linebreak 
+We have the following sub-goals:
 \section{Scaling over multiple FPGAs}
-
-% Remove below lipsum command before posting your work
-\lipsum[3]
+An FPGA is made up of finite and limited resources and implementing these large CNNs model can often result in running out of resources and cannot be fit into a single FPGA. 
+Hence in this project, we will use the FPGA Infrastructure in the Noctua Cluster.The Noctua Cluster is the high-performance computing system equipped with 32 Intel Startix 10 FPGAs with the point to point connections. 
+We will be Scaling our CNNs Model on the Noctua Cluster by partitioning the model into smaller submodules and these submodules can be executed in parallel on Multiple FPGAs to provide Low Latency computation. 
+By scaling our application on multiple FPGAs we hope that our design will perform as good as the Microsoft's Project Brainwave Architecture. Since we are developing an ensemble of 3 CNN Models, all 3 can be executed in parallel on different FPGAs and results can be aggregated at the end.
 
 \section{Performance Optimization}
-% Remove below lipsum command before posting your work
-\lipsum[3]
+Heterogeneous Computing Systems provides gain performance by using specialized capabilities of different types of Processors(CPU+FPGA in our project). OpenCL is a framework for heterogeneous computing which provides software-centric development flow for FPGAs and obtains performance and power advantages with hardware acceleration. Designing CNN Models using OpenCL Kernels will offer developers to get better performance and higher capabilities by automatically parallelize loops using Intel FPGA OpenCL Offline Compiler. The Kernels will be further optimized by the user using several OpenCL Optimization techniques learned during the tutorial phase eg: Loop unrolling, Removing Memory dependencies, etc. Performance Modelling is applied to each OpenCL kernels to identify the bottlenecks in the design and resolve the issues to obtain a high throughput and high utilization.
 
-\section{Quantization / Pruning}
-% Remove below lipsum command before posting your work
-\lipsum[3]
-
+\section{Quantization }
+CNN implementation is often complex due to the number of parameters and computations, which makes it difficult to be implemented on a resource-constrained FPGA. The floating point operations are computationally too expensive and have higher latencies, Hence quantization can be applied to the deep networks to convert the floating point weights into a fixed point. Fixed point computation is typically faster and consumes fewer hardware resources than floating point operations. Quantization will help in reducing the power consumption, memory footprint and resources utilization. In our project, we rely on the Machine Learning Suite to Optimize and Quantize the CNN Model so that the accuracy is not drastically dropped in the quantized model. We will also distinguish the Models with quantized weights and floating point weights.
 
 %End of the chapter
 
