@@ -29,7 +29,7 @@
 #define G_MAXPOOL_OUT_ROWS 14
 #define G_MAXPOOL_OUT_COLS 14
 #define G_MAXPOOL_STRIDE 2
-#define SR 130
+#define SR 66
 
 //Struct to hold 1 Row Output of the Conv Layer
 typedef struct conv_buffer {
@@ -164,7 +164,7 @@ __kernel void MaxPool()
                 {
                   int img[G_NUMBER_OF_CONV_OUT_ROWS*G_NUMBER_OF_IMAGE_COLS*G_NUMBER_OF_FILERS];
                         //Store the Channels data 5of 1 Image in a linear array.
-                        #pragma unroll
+                        
                         for ( int j = 0; j<G_NUMBER_OF_CONV_OUT_ROWS; j++ ) {
                                 struct conv_buffer conv1 = read_channel_intel(ConvOutChannel);
                                 #pragma unroll
@@ -176,13 +176,12 @@ __kernel void MaxPool()
                         //conv1=read_channel_intel(convOutChannel);
                         //struct max_buffer max1[G_NUMBER_OF_CONV_OUT_ROWS/G_MAXPOOL_STRIDE];
                         int bufferCount=0;
-                        #pragma unroll
+                        
                         for (int x = 0; x < G_NUMBER_OF_CONV_OUT_ROWS; x=x+G_MAXPOOL_STRIDE)
                         {
                                 int m=0;
                                 struct max_buffer max1; // 1st half of row ( 7 Pixels)
-                                struct max_buffer max2; // 2st half of row ( 7 Pixels)
-                                #pragma unroll
+                                
                                 for (int y = 0; y < G_NUMBER_OF_CONV_OUT_COLS; y=y+G_MAXPOOL_STRIDE)
                                 {
 
@@ -255,18 +254,22 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
                 int maxScore=0;
                 int maxpooldata[6272];
                 //Store the Channels data of 1 Image in a linear array.
+                
                 for(int i=0; i<G_NUMBER_OF_FILERS; i++) {
-
+                        
                         for(int q=0; q<G_MAXPOOL_OUT_ROWS; q++) {
+                                struct max_buffer max1[2];
                                 for(int colData=0;colData<2;colData++){                                
-                                 struct max_buffer max1= read_channel_intel(FCInChannel);
-
+                                        max1[colData]= read_channel_intel(FCInChannel);
+                                }
+                                #pragma unroll
+                                for(int colData=0;colData<2;colData++){
                                         #pragma unroll
                                         for(int l=0;l<=G_MAXPOOL_OUT_COLS/2;l++){
-                                               
-                                                        maxpooldata[(i*G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS)+(q*G_MAXPOOL_OUT_ROWS)+(colData*(G_MAXPOOL_OUT_COLS/2))+l] = max1.maxPool_buffer[l];
+                                                maxpooldata[(i*G_MAXPOOL_OUT_ROWS*G_MAXPOOL_OUT_COLS)+(q*G_MAXPOOL_OUT_ROWS)+(colData*(G_MAXPOOL_OUT_COLS/2))+l] = max1[colData].maxPool_buffer[l];
                                        }
                                 }
+                                
                         }
                 }
 
@@ -280,7 +283,7 @@ __kernel void FCLayer(__constant short * restrict digitWeights,const int numberO
 
                         int score=0;
                         int sum =0;
-                        #pragma unroll 128
+                        #pragma unroll 64
                         for(int i=0; i<numberOfFCPixels; i++)
                         {
                                 int temp;

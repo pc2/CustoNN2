@@ -61,7 +61,7 @@ int main(void)
 
         //Copy the Devices into another List having only 1 device.
         Device1.push_back(DeviceList[0]); 
-        Device2.push_back(DeviceList[1]);
+        Device2.push_back(DeviceList[1]); 
        /* std::vector<cl::Device> DeviceList2;
         err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList2);
         print_device_info(&DeviceList2);
