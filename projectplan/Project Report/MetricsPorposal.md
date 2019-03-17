@@ -28,10 +28,10 @@ Latency captures the time it takes to load  data ,preprocess it, send said data 
 Latencies can be measured for just a single image or over a batch of images. We can expect to have different latencies based on how we measure it(single image vs batch of images).
 [{1}][1]
 
-### Throughtput
+### Throughput
 Throughput is  a measure of amount of information processed per unit time. In our case , we define it as the number of bytes processed per second.  
-There are well known techniques to improve throughtput like batch processing where a number of images is batched together and sent for inference job. 
-But as the batch size goes up , latencies also tend to go up. So there is a trade off involved here between through put and latency.[{1}][1]
+There are well known techniques to improve throughput like batch processing where a number of images is batched together and sent for inference job. 
+But as the batch size goes up , latencies also tend to go up. So there is a trade off involved here between throughput and latency.[{1}][1]
 
 
 ### Accuracy
