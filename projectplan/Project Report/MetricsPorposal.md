@@ -26,12 +26,12 @@ The way to measure Operations per cycle is similar to the way we find FLOPS.
 Latency is generally defined as the time delay between initial input to a system and the output from the system.  
 Latency captures the time it takes to load  data ,preprocess it, send said data over a network to the Inference Engine ,time needed for inference , and time needed to send the classified data back to the user. 
 Latencies can be measured for just a single image or over a batch of images. We can expect to have different latencies based on how we measure it(single image vs batch of images).
-[J Hanhirova et al][1]
+[{1}][1]
 
 ### Throughtput
 Throughput is  a measure of amount of information processed per unit time. In our case , we define it as the number of bytes processed per second.  
 There are well known techniques to improve throughtput like batch processing where a number of images is batched together and sent for inference job. 
-But as the batch size goes up , latencies also tend to go up. So there is a trade off involved here between through put and latency.[J Hanhirova et al][1]
+But as the batch size goes up , latencies also tend to go up. So there is a trade off involved here between through put and latency.[{1}][1]
 
 
 ### Accuracy
@@ -40,7 +40,7 @@ In our context, accuracy depends on CNN topology used , nature of weights , trai
 
 
 ### Rate Correct Score
-Taking inspiration from the field of Memory and  Cognitive research , we can combine accuracy and latency by considering Rate Correct Score[André Vandierendonck][2] 
+Taking inspiration from the field of Memory and  Cognitive research , we can combine accuracy and latency by considering Rate Correct Score[{2}}][2]   
 It is defined as   
 
 RCS= c/(∑Rt)
@@ -52,6 +52,9 @@ where c is the accuracy and Rt is the latency.
 
 
 
-
+## References
+[[1]] J Hanhirova et al , Latency and Throughput Characterization of Convolutional Neural Networks for Mobile Computer Vision   
+[[2]] André Vandierendonck , A comparison of methods to combine speed and accuracy measures of performance: A rejoinder on the binning procedure
+  
 [1]: https://arxiv.org/pdf/1803.09492.pdf
 [2]: https://rdcu.be/brvnb
