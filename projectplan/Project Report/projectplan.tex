@@ -30,12 +30,7 @@ There are multiple hardware avaliable in the market such as CPU, GPU , ASIC and 
 In this project we are using the Intel Stratix 10 F1760 NF43 package with 520N Scalable FPGA Network Accelerator Card for our CNN inference on Image classification . Paderborn Center for Parallel Computing (PC2) has 32 of this FPGA and our task is to scale our CNN architecture using all 32 FPGAs. We will be using three pre-trained model namely GoogleNet, ResNet-52 and Inception V4 in a model ensemble architecture where majority voting is used. The workload will be divided among all the 32 FPGAs and the layers will be distributed to each of these FPGAs in a streaming architecture fashion. Atlast we will measure the performance of our system using some performance metrics.
 
 % Remove below lipsum command before posting your work
-\lipsum[3]
 
-\section{CNNs}
-
-% Remove below lipsum command before posting your work
-\lipsum[3]
 
 
 %End of the chapter
@@ -111,9 +106,9 @@ Many convolution DNNs run into a problem with vanishing or exploding gradients b
     \caption{Skip connection}
 \end{figure}
 
-\begin{wrapfigure}{l}{0.5\textwidth}
+\begin{wrapfigure}{l}{0.4\textwidth}
 \centering
-\includegraphics[scale=0.8]{resnet_2}
+\includegraphics[scale=0.85]{resnet_2}
 \caption{ResNet-50}
 \label{fig:resnet_50}
 \end{wrapfigure}
@@ -124,12 +119,13 @@ After each convolution layer ResNet use the batch normalization from Inception-V
 
 The main concepts of construction ResNet:
 \begin{itemize}
-  \item avoiding representational bottlenecks by not abruptly reduce the dimension of data,but smoothly from the beginning of the network to the classifier at the output;
-  \item factorization of convolution layer into smaller pieces because this will save resources and help to increase the count of layers;
-  \item supporting a balance between the depth and width of the network. You should increase or decrease both dimensions.
+\item avoiding representational bottlenecks by not abruptly reduce the dimension of data,but smoothly from the beginning of the network to the classifier at the output;
+\item factorization of convolution layer into smaller pieces because this will save resources and help to increase the count of layers;
+\item supporting a balance between the depth and width of the network. You should increase or decrease both dimensions.
 \end{itemize}
 
 Figure \ref{fig:resnet_50} shows the whole scheme for ResNet-50.
+\pagebreak
 
 
 \section{Datasets}
@@ -390,22 +386,10 @@ Final Project Report and Presentation        &            &             &       
 \end{table}
 %End of the chapter
 
-
-\chapter{Expected Results}
-% Remove below lipsum command before posting your work
-
-
-\section{Final OutPuts}
-
-% Remove below lipsum command before posting your work
-
-
-%End of the chapter
-
 \chapter{Conclusion}
 
 % Remove below lipsum command before posting your work
-
+To recap the project plan, we are trying to build a system which performs as good as or better than State of the art inference systems by leveraging the infrastructure available in PC2. Currently we have finalized on the Datatset we are going to use(ImageNet), and the CNN Topology (GoogleNet, Inception V4 and Resnet52). The next challenge is to divide the work of developing a plugin for Intel OpenVINO and meanwhile implement a simple model in TVM. For the future phase, We will use TVM to generate OpenCL kernels on our model. Later, we will transfer these decisions to a small talk before the research group before starting the project.
 
 %End of the chapter
 
