@@ -315,19 +315,19 @@ xDNN provides Overlay to combine various xDNN IP kernels.
 
 \chapter{Related Work}
 % Remove below lipsum command before posting your work
-\textbf{Deep Neural Network Approximation for Custom Hardware: Where We've Been, Where We're Going}
+\textbf{[1]Deep Neural Network Approximation for Custom Hardware: Where We've Been, Where We're Going}
 
-We know that FPGA's and ASIc's increase the speed of inference, while GPU still excelling at floating point operations. The need of the hour is to have high throughput and high efficiency which can be achieved with the help of cutom hardware and low precision quantization. Hence a lot of research and work is goin on in the field of DNN approximation techniques based for custom hardware. One of the most prominent and ongoing research field in approximation of DNN is the technique of quantization. Jacob et al. Used 8.bit quantization in implementation of MobileNet CNN which saw 50 percent
- decrease in inference latency. From there on several papers have been published which show implementation of various quantization techniques and their effects on throughput and how they were able to achieve various compression ratio factors but along with that there were accuracy loss that incurred at the cost of quantization. To cite a few Courbariaux et al, Qiu et al. and Shin et al.(2015) implemented block floating point and there CNN gave a 1.0 pp accuracy loss. Jing Li et al, proposed Adaptive quantization in (2018), Do-Re-Fa Net uses a very similar approach as to the one proposed by Jing Li et al. Ma.hieu Courbariaux and Yoshua Bengio.  Proposed binarization technique in Binary Connect, which able to achieve less than 1 pp accuracy losses(2016). Similarly other techniques like ternarization , Fine grained quantization and Logarithmic quantization were also implemented and these techniques showed better performance than the standard CNN which used FP32 bit representation. 
+We know that FPGA's and ASIC's increase the speed of inference, while GPU still excel at floating point operations. The need of the hour is to have high throughput and high efficiency which can be achieved with the help of custom hardware and low precision quantization. Hence a lot of research and work is going on in the field of DNN approximation techniques based for custom hardware. One of the most prominent and ongoing research field in the approximation of DNN is the technique of quantization. Jacob et al. used 8-bit quantization in implementation of MobileNet CNN which saw 50 percent
+ decrease in inference latency. From there on several papers have been published which show implementation of various quantization techniques and their effects on throughput and how they were able to achieve various compression ratio factors but along with that there were accuracy loss that incurred at the cost of quantization. To cite a few Courbariaux et al, Qiu et al. and Shin et al.(2015) implemented block floating point and there CNN gave a 1.0 pp accuracy loss. Jing Li et al, proposed Adaptive quantization in (2018), Do-Re-Fa Net uses a very similar approach as to the one proposed by Jing Li et al. Ma.hieu Courbariaux and Yoshua Bengio.  Proposed binarization technique in Binary Connect, which was able to achieve less than 1 pp accuracy losses(2016). Similarly other techniques like ternarization , Fine grained quantization and Logarithmic quantization were also implemented and these techniques showed better performance than the standard CNN which used FP32 bit representation. 
 
-\textbf{Toolflows for Mapping Convolutional Neural Networks on FPGAs:A Survey and Future Directions}
+\textbf{[2]Toolflows for Mapping Convolutional Neural Networks on FPGA's : A Survey and Future Directions}
 
-In this paper, the authors have presented a survey on the existing CNN-to-FPGA toolflows which are
+In this paper, the authors have presented a survey on the existing CNN-to-FPGA tool-flows which are
 evaluated on the basis of different parameters and performance metrics. This paper also gives an insight
 on different Design and Space Exploration Strategies and architectural decisions. At last all of the
-discussed toolflows are tested against state-of-the art Neural Network models such as GoogleNet ,
+discussed tool-flows are tested against state-of-the art Neural Network models such as GoogleNet ,
 VGG16, ResNet-152 etc.
-One of the key sections of the survey was about the architecture that each of the toolflows adhere to.
+One of the key sections of the survey was about the architecture that each of the tool-flows adhere to.
 There are two types:
 \begin{itemize}
 \item Streaming Architecture : In this type of architecture we assign a hardware block to each layer. These
