@@ -153,6 +153,7 @@ Reasons for selecting ImageNet
 \begin{itemize}
     \item The MNIST and CIFAR 10 dataset are preliminary and intermediate dataset and does not pose a significant challenge in testing and training the complex CNN’s . also the topologies that are going to be used in the project are well optimised for a different dataset. Hence these are not being considered.
     \item On the other hand ImageNet provide a greater challenge and also the topologies that are going used have already used ImageNet dataset. Hence their result can be used as a benchmarking performance for the implementation in the project.
+\end{itemize}
 
 %End of the chapter
 
@@ -209,15 +210,16 @@ Our aim would be to maximize RCS (either by increasng the accuracy or by decreas
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.65]{open_vino_flowchart.jpg}
-    \caption{Open Vino Flowchart}
+    \includegraphics[scale=0.19]{TVM_Flowchart.jpg}
+    \caption{TVM Flowchart}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.15]{TVM_Flowchart.jpg}
-    \caption{TVM Flowchart}
+    \includegraphics[scale=0.55]{open_vino_flowchart.jpg}
+    \caption{Open Vino Flowchart}
 \end{figure}
+
 
 %End of the chapter
 
@@ -336,41 +338,70 @@ Reducing Precision of Weights. Different techniques are:-
 %End of the chapter
 
 \chapter{Time plan}
+In this section we describe how we plan to plan and monitor our project. Since the tutorial phase and research phase were well managed and organized by our mentor Tobias, the scope of this section is limited to second phase of the project. This section is divided into several parts and each part explains project’s organizational decisions. 
 
-\section{Design}
+\section{Project Meetings}
 % Remove below lipsum command before posting your work
-\lipsum[3]
+: Project meetings will be held twice in a week. Currently it is being held on Mondays (1pm to 4pm) and Wednesdays (9am to 12pm). In these meetings, all the project members gather and discuss the current updates in the project. It covers mainly three things. Firstly, the general project updates. Secondly individual task updates where each participant updates about his/her work to the team. Lastly, the issues being faced. 
+After each meeting, the minutes of the meeting will be prepared by one of the team member’s. The assignment of this task is based on round robin fashion. All MoMs will be uploaded to project’s Git repository.
 
-\section{Implementation}
+
+\section{Project Phases}
+\subsection{Project Planning}
 % Remove below lipsum command before posting your work
-\lipsum[3]
+In this phase, we decide on the goals, feasibilities of achieving these goals, prioritizing and the overall organization of the project which will be followed till the completion of the project. This involves defining the scope, dividing the project into subgroups, assigning roles and responsibilities (such as project lead, Git master). Here we define the phases and also estimate the time required. 
 
-\section{Report and Presentation}
+\subsection{Finalizing the Plan and Mini Presentation}
 % Remove below lipsum command before posting your work
-\lipsum[3]
+During this phase, we finalize the tools, organizations and present a talk on how our final project will look like using a PowerPoint presentation or a diagram on board. It will be a simple visualization of the entire idea. This will portray a clear picture before the mentor and the team members before going to the upcoming phases which highly depend on this plan. Outcome of this phase will be a final Project Plan document reviewed by Tobias. 
 
-\section{Organization}
-% Remove below lipsum command before posting your work
-\lipsum[3]
+\subsection{Design}
+The whole architecture of the project will be designed via a Flow chart. Before we start to implement, this will show us HOW we will achieve the goals defined earlier. Outcome of this phase will be a final design document. 
 
+\subsection{Implementation and Testing}
+The most important phase of our project is this phase and arguably the lengthiest phase. We assume the best case scenario that all our requirements are fixed but in case of additional requirement or change in requirement, we will meet and discuss to accommodate them. 
+
+In this phase we start coding by keeping the goals in mind and start implementing the tasks assigned to us. This phase will also include testing and fixing bugs therefore coding and testing will go hand in hand. At the end of this phase, we will have a working application that meets the goals we defined. 
+
+\subsection{Result collection and Performance Evaluation}
+Since one of main goals of the project is performance optimization, we will run the application to collect the result. After collecting, we will look into whether we are doing best in terms of first – our set goals, secondly – results in comparison with state of the art benchmarks. If we find deviation or find there is a room for improvement, we go back to the previous phase.
+
+\subsection{Final project report and Presentation}
+After achieving the desired results, we will prepare a final project report that covers all the aspects of our project in detail. At the end, we will present the implementation via a demo and show experimental results. 
+
+The Below picture shows the time plan for each phases. Some of these phases will overlap based on dependability.
+
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+                                             & \multicolumn{13}{c|}{TIME}                                                                                                                                             \\ \hline
+Project Phases                               & \multicolumn{2}{l|}{Mar} & \multicolumn{2}{l|}{Apr} & \multicolumn{2}{l|}{May} & \multicolumn{2}{l|}{Jun} & \multicolumn{2}{l|}{July} & \multicolumn{2}{l|}{Aug} & Sep \\ \hline
+Project Planning                             &            & x           &             &            &             &            &             &            &             &             &             &            &     \\ \hline
+Finalizing the plan and mini-presentation    &            & x           & x           &            &             &            &             &            &             &             &             &            &     \\ \hline
+Design Phase                                 &            &             & x           & x          &             &            &             &            &             &             &             &            &     \\ \hline
+Implementation and Testing                   &            &             &             & x          & x           & x          & x           & x          &             &             &             &            &     \\ \hline
+Result collection and Performance Evaluation &            &             &             &            &             &            & x           & x          & x           & x           &             &            &     \\ \hline
+Final Project Report and Presentation        &            &             &             &            &             &            &             &            &             & x           & x           & x          & x   \\ \hline
+\end{tabular}
+\end{table}
 %End of the chapter
 
 
 \chapter{Expected Results}
 % Remove below lipsum command before posting your work
-\lipsum[3]
+
 
 \section{Final OutPuts}
 
 % Remove below lipsum command before posting your work
-\lipsum[3]
+
 
 %End of the chapter
 
 \chapter{Conclusion}
 
 % Remove below lipsum command before posting your work
-\lipsum[2]
+
 
 %End of the chapter
 
