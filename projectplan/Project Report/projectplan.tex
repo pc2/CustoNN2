@@ -315,26 +315,9 @@ xDNN provides Overlay to combine various xDNN IP kernels.
 
 \chapter{Related Work}
 % Remove below lipsum command before posting your work
-\textbf {[1]. Deep Neural Network Approximation for Custom Hardware: Where We've Been, Where We're Going} 
 
-Need of DNN Approximation
-\begin{itemize}
-    \item Reduce computational and storage cost.
-    \item Increases throughput.
-    \item Decreases latency.
-\end{itemize}
-
-\subsection{Quantization}
-Reducing Precision of Weights. Different techniques are:-
-\begin{itemize}
-\item  Block Floating Point - Dynamic fixed points.
-\item Adaptive Quantization - Each filter has independent precision.
-\item Binarization - Quantization of parameters into two values {1,-1}.
-\item Ternarization - Quantization of parameters into three values {1,0,-1}.
-\item Fine Grained Quantization - Ternarization of FP32 into groups and then ternarizing each group independently.
-\item Logarithmic Quantization - Parameters are quantized in the powers of two with scaling factor associated with each filter.
-\end{itemize}
-
+We know that FPGA's and ASIc's increase the speed of inference, while GPU still excelling at floating point operations. The need of the hour is to have high throughput and high efficiency which can be achieved with the help of cutom hardware and low precision quantization. Hence a lot of research and work is goin on in the field of DNN approximation techniques based for custom hardware. One of the most prominent and ongoing research field in approximation of DNN is the technique of quantization. Jacob et al. Used 8.bit quantization in implementation of MobileNet CNN which saw 50 percent
+ decrease in inference latency. From there on several papers have been published which show implementation of various quantization techniques and their effects on throughput and how they were able to achieve various compression ratio factors but along with that there were accuracy loss that incurred at the cost of quantization. To cite a few Courbariaux et al, Qiu et al. and Shin et al.(2015) implemented block floating point and there CNN gave a 1.0 pp accuracy loss. Jing Li et al, proposed Adaptive quantization in (2018), Do-Re-Fa Net uses a very similar approach as to the one proposed by Jing Li et al. Ma.hieu Courbariaux and Yoshua Bengio.  Proposed binarization technique in Binary Connect, which able to achieve less than 1 pp accuracy losses(2016). Similarly other techniques like ternarization , Fine grained quantization and Logarithmic quantization were also implemented and these techniques showed better performance than the standard CNN which used FP32 bit representation. 
 %End of the chapter
 
 \chapter{Time plan}
