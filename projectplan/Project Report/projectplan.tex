@@ -281,8 +281,7 @@ The functionality of ML-Suite is divided among its components: Machine Learning 
 Xilinx ML Suite supports various frameworks such as Caffe, Tensorflow, Keras, MXNet, Darknet. Support for various other frameworks can also be provided with help of \textit{Open Neural Network Exchange} (ONNX).
 
 \subsection{xfDNN Middleware}
-It is a high-performance software library and provides API which works as a bridge between xDNN IP which runs on FPGAs and ML frameworks such as Caffe, Tensorflow. xfDNN requires SDAccel reconfigurable acceleration environment and currently is the only middleware available for programming ML frameworks on Xilinx FPGAs. xfDNN middleware has the following components:
-
+It is a high-performance software library and provides API which works as a bridge between xDNN IP which runs on FPGAs and ML frameworks such as Caffe, Tensorflow. xfDNN requires SDAccel reconfigurable acceleration environment for running it on Xilinx FPGAs and currently is the only middleware available for programming ML frameworks on Xilinx FPGAs. xfDNN middleware has the following components:
 \subsubsection{Compiler}
 
 It provides tools for network optimization such as layer fusions, memory dependency optimization, removing CPU host control bottlenecks with network pre-scheduling. It creates a "one-shot" execution flow for the network to run on FPGA.
