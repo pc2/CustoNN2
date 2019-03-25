@@ -204,11 +204,7 @@ Our aim would be to maximize RCS (either by increasng the accuracy or by decreas
 \chapter{Flowcharts}
 % Remove below lipsum command before posting your work
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[scale=0.19]{TVM_Flowchart.jpg}
-    \caption{TVM Flowchart}
-\end{figure}
+
 
 \begin{figure}[h!]
     \centering
@@ -259,6 +255,12 @@ TVM includes a computational graph rewriter, tensor expression language and new 
 The system has the stack of implementation: NNVM $\to$ TOPI $\to$ TVM $\to$ VTA. NNVM acts as a graph optimizer by taking the model from an existing framework  and converting it into “TVM” graph. For these operations, we use the TOPI language. TOPI is a library where functions operate as instructions for further work. For example, TOPI defines a tensor computation, schedules space for each NN operator (e.g. conv2d). The next step is the application of the TVM functions. TVM uses the TOPI instructions and generates code for several backends, such as LLVM, or CUDA etc. The final step is the Versatile Tensor Accelerator (VTA) which is responsible for the stream and microkernels. 
 
 In order to change a hardware target ( CPU, GPU or TPU) we need to rebuild TVM libraries again.  
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.19]{TVM_Flowchart.jpg}
+    \caption{TVM Flowchart}
+\end{figure}
  
  \subsection{Advantages}
  \begin{itemize}
