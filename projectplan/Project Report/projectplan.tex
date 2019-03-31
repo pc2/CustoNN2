@@ -60,26 +60,6 @@ CNN implementation is often complex due to the number of parameters and computat
 % Remove below lipsum command before posting your work
 We have considered three topologies for our project. The details of those topologies are described below.
 
-\subsection{Inception v4}
-Inception-V4 is a deep neural network (DNN) released by Google. Inception-V4 is a fourth version of inception module and includes all techniques from Inception-V1, Inception-V2, and Inception-V3. Google devised inception module and it was a key idea for Inception-V1. The naïve version of the first inception module included 1×1, 3×3 and 5×5 convs and max-pooling as input and the result of concatenated them together as output. \\
-\pagebreak
-\begin{wrapfigure}{l}{0.5\textwidth}
-\centering
-\includegraphics[scale=0.3]{inception_v4}
-\caption{Inception-V4}
-\label{fig:inception_v4}
-\end{wrapfigure}
-
-The contribution from Inception-V2 is batch normalization. They use ReLU as activation function in order to avoid the saturation problem and vanishing gradients. They had to use a higher learning rate for regularization because the output became more irregular. Last changes was reducing dimension by replacing   5×5 conv to two 3×3 convs. 
-
-Inception-V4 also used the factorization from the Inception-V3. They reduce the dimensionality and it helped to decrease the overfitting problem. For example, if you have a 3×3 filter then you need 9 parameters, but the factorization idea proposes to operate  3×1 and  1×3 filters and use only 6 parameters. 
-
-Inception-V4 have 3.1\% in Top-5 error rate and this result is better than winner of 2015 year ResNet (3.57\%) and  Inception-V3 (3.58\%). 
-
-Inception architecture has a relatively low computation cost. Google try to make the inception module more efficient that's why they made it deeper and wider then Inception-V3 and they also simplify the architecture of this DNN.
-
-Figure \ref{fig:inception_v4} shows the whole scheme for Inception-V4.
-
 \subsection{GoogleNet}
 GoogLeNet is a deep convolutional neural network and is also known as Inception-v1. The architecture based on \textit{Hebbian principle} with the intuition of multi-scale processing. Googlenet is 22 Layers deep network and used for object detection and classification. It has modules known as Inception which are a network within a network. GoogLeNet does not have any fully connected layers but uses global average pooling which keeps the model from overfitting the data.
 It was able to achieve a top-5 error rate of 6.67\% and requires only 4 million parameters, whereas AlexNet requires up to 60 million parameters.
@@ -96,15 +76,15 @@ The output from the last Inception module is forwarded to global average pooling
 \end{figure}
 
 \subsection{Resnet50}
-ResNet is another deep neural network released by Microsoft and, also, a winner of ILSVRG 2015 in image classification, detection, and localization. ResNet is a series of DNN with different numbers of layers from 18 to 152. The base idea is applying the residual connections which are described as learning the residual representation of functions instead of signal representation. One of the conceptual ideas of ResNet is using the skip connection. Skip connection makes the network deeper.  
-
-Many convolution DNNs run into a problem with vanishing or exploding gradients because, during backpropagation, we derive error function with respect to the current weight and get multiplying of small or large numbers. The product of small numbers will be zero (vanished) and the product of large numbers will be too large (exploded). Developers of ResNet solved this problem by using a skip connection. In the skip connections for the next layer, they use the input from the previous layer without any modification. 
-
+ResNet is deep neural network released by Microsoft and, also, a winner of ILSVRG 2015 in image classification, detection, and localization. ResNet is a series of DNN with different numbers of layers from 18 to 152. The base idea is applying the residual connections which are described as learning the residual representation of functions instead of signal representation. One of the conceptual ideas of ResNet is using the skip connection. Skip connection makes the network deeper.  
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.4]{resnet_1}
     \caption{Skip connection}
 \end{figure}
+
+Many convolution DNNs run into a problem with vanishing or exploding gradients because, during backpropagation, we derive error function with respect to the current weight and get multiplying of small or large numbers. The product of small numbers will be zero (vanished) and the product of large numbers will be too large (exploded). Developers of ResNet solved this problem by using a skip connection. In the skip connections for the next layer, they use the input from the previous layer without any modification. 
+
 
 \begin{wrapfigure}{l}{0.4\textwidth}
 \centering
@@ -125,12 +105,32 @@ The main concepts of construction ResNet:
 \end{itemize}
 
 Figure \ref{fig:resnet_50} shows the whole scheme for ResNet-50.
+
+\subsection{Inception v4}
+Inception-V4 is a deep neural network (DNN) released by Google. Inception-V4 is a fourth version of inception module and includes all techniques from Inception-V1, Inception-V2, and Inception-V3. Google devised inception module and it was a key idea for Inception-V1. The naïve version of the first inception module included 1×1, 3×3 and 5×5 convs and max-pooling as input and the result of concatenated them together as output. \\
+
+The contribution from Inception-V2 is batch normalization. They use ReLU as activation function in order to avoid the saturation problem and vanishing gradients. They had to use a higher learning rate for regularization because the output became more irregular. Last changes was reducing dimension by replacing   5×5 conv to two 3×3 convs. 
+
+Inception-V4 also used the factorization from the Inception-V3. They reduce the dimensionality and it helped to decrease the overfitting problem. For example, if you have a 3×3 filter then you need 9 parameters, but the factorization idea proposes to operate  3×1 and  1×3 filters and use only 6 parameters. 
+
+Inception-V4 have 3.1\% in Top-5 error rate and this result is better than winner of 2015 year ResNet (3.57\%) and  Inception-V3 (3.58\%). 
+
+Inception architecture has a relatively low computation cost. Google try to make the inception module more efficient that's why they made it deeper and wider then Inception-V3 and they also simplify the architecture of this DNN.
+
+Figure \ref{fig:inception_v4} shows the whole scheme for Inception-V4.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.3]{inception_v4}
+    \caption{Inception-V4}
+    \label{fig:inception_v4}
+\end{figure}
+
 \pagebreak
 
 
 \section{Datasets}
 % Remove below lipsum command before posting your work
-\lipsum[3]
 
 \subsection{Imagenet}
 % Remove below lipsum command before posting your work
