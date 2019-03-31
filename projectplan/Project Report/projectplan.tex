@@ -52,6 +52,31 @@ CNN implementation is often complex due to the number of parameters and computat
 
 \chapter{Topologies, datasets. Architecture comparision}
 
+\section{Datasets}
+% Remove below lipsum command before posting your work
+
+\subsection{Imagenet}
+% Remove below lipsum command before posting your work
+It is one of the most prominent datasets used in the field of visual object recognition. In 2009 this dataset was first introduced to the world in the Conference on Computer Vision and Pattern Recognition by the computer science department from the Princeton University. It has over 14 million images and over 20000 categories. A large portion of the images have been hand annotated as well which can be helpful in the task of image captioning as well. Every year ImageNet runs a challenge called the ImageNet Large Scale Visual Recognition Challenge (ILSVRC), where different software architectures and algorithms take part in order to classify images of the dataset correctly. By 2017 most of the algorithms working on ImageNet have already achieved accuracy of more than 95%.
+
+\subsection{CIFAR10}
+% Remove below lipsum command before posting your work
+Canadian Institute For Advanced Research is a widely used dataset in machine learning paradigm which is used in training various machine learning models. It is used in visual object recognition, It consist of 60000 images in total. The 10 stands for 10 classes in the dataset and each class has 6000 images which results into 60000 images of the dataset. Each image in the dataset is of 32*32 pixels coloured images. The 10 classes in the data set are air-planes, cars, birds, cats, deer, dogs, frogs, horses, ships, and trucks. Being only 32*32 pixel due to its low resolution it is one of the favourites for researchers to train their algorithms. 
+
+\subsection{MNIST}
+% Remove below lipsum command before posting your work
+Modified National Institute of Standards and Technology is a database consisting of handwritten digits. This database is commonly used in the field of machine learning . It is a derived dataset from NSIT dataset. It consist of images which are 28*28 pixel size and greyscale nature. This dataset has been divided into 2 sets. To say in total in has 60000 training images and 10000 testing images. NSIT’s testing dataset contributes to one half of the training and testing database of the MNIST and the other half is filled by NSIT’s training dataset. The lowest possible error rate on MNIST achieved is 0.23% which was done by implementing a system of CNN’s.
+
+\subsection{Selection of Dataset}
+Reasons for selecting ImageNet
+\begin{itemize}
+    \item The MNIST and CIFAR 10 dataset are preliminary and intermediate dataset and does not pose a significant challenge in testing and training the complex CNN’s . also the topologies that are going to be used in the project are well optimised for a different dataset. Hence these are not being considered.
+    \item On the other hand ImageNet provide a greater challenge and also the topologies that are going used have already used ImageNet dataset. Hence their result can be used as a benchmarking performance for the implementation in the project.
+\end{itemize}
+
+%End of the chapter
+
+
 \section{Topologies}
 % Remove below lipsum command before posting your work
 We have considered three topologies for our project. The details of those topologies are described below.
@@ -125,29 +150,6 @@ Figure \ref{fig:inception_v4} shows the whole scheme for Inception-V4.
 \pagebreak
 
 
-\section{Datasets}
-% Remove below lipsum command before posting your work
-
-\subsection{Imagenet}
-% Remove below lipsum command before posting your work
-It is one of the most prominent datasets used in the field of visual object recognition. In 2009 this dataset was first introduced to the world in the Conference on Computer Vision and Pattern Recognition by the computer science department from the Princeton University. It has over 14 million images and over 20000 categories. A large portion of the images have been hand annotated as well which can be helpful in the task of image captioning as well. Every year ImageNet runs a challenge called the ImageNet Large Scale Visual Recognition Challenge (ILSVRC), where different software architectures and algorithms take part in order to classify images of the dataset correctly. By 2017 most of the algorithms working on ImageNet have already achieved accuracy of more than 95%.
-
-\subsection{CIFAR10}
-% Remove below lipsum command before posting your work
-Canadian Institute For Advanced Research is a widely used dataset in machine learning paradigm which is used in training various machine learning models. It is used in visual object recognition, It consist of 60000 images in total. The 10 stands for 10 classes in the dataset and each class has 6000 images which results into 60000 images of the dataset. Each image in the dataset is of 32*32 pixels coloured images. The 10 classes in the data set are air-planes, cars, birds, cats, deer, dogs, frogs, horses, ships, and trucks. Being only 32*32 pixel due to its low resolution it is one of the favourites for researchers to train their algorithms. 
-
-\subsection{MNIST}
-% Remove below lipsum command before posting your work
-Modified National Institute of Standards and Technology is a database consisting of handwritten digits. This database is commonly used in the field of machine learning . It is a derived dataset from NSIT dataset. It consist of images which are 28*28 pixel size and greyscale nature. This dataset has been divided into 2 sets. To say in total in has 60000 training images and 10000 testing images. NSIT’s testing dataset contributes to one half of the training and testing database of the MNIST and the other half is filled by NSIT’s training dataset. The lowest possible error rate on MNIST achieved is 0.23% which was done by implementing a system of CNN’s.
-
-\subsection{Selection of Dataset}
-Reasons for selecting ImageNet
-\begin{itemize}
-    \item The MNIST and CIFAR 10 dataset are preliminary and intermediate dataset and does not pose a significant challenge in testing and training the complex CNN’s . also the topologies that are going to be used in the project are well optimised for a different dataset. Hence these are not being considered.
-    \item On the other hand ImageNet provide a greater challenge and also the topologies that are going used have already used ImageNet dataset. Hence their result can be used as a benchmarking performance for the implementation in the project.
-\end{itemize}
-
-%End of the chapter
 
 
 
