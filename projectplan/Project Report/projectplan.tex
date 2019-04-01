@@ -153,38 +153,52 @@ Figure \ref{fig:inception_v4} shows the whole scheme for Inception-V4.
 
 
 \chapter{Metrics}
+Our objective is to leverage the infrastructure available at Paderborn Centre for Parallel Computing (PC2) to build an inference accelerator system. We plan to evaluate the effectiveness of our inference accelerator system by considering two classes of metrics - performance metrics and quality metrics.  
 
-\section{FLOPS}
-Floating point operations per second (FLOPS) is a  unit of measure for the numerical computing performance of a computer. FLOPS is technically the right term to use when the data being worked upon is of floating point type.
-In our case , with the quantization of weights from floating points  to integer type , we may have to refer to this unit of measurement as Integer Operations per Second (IOPS).
-But the computing  industry and/or academia refers to ``just integer'' operations as MIPS (Millions of instructions per second). So depending on the eventual nature of the weights and the operational units on the FPGA,
-we have to decide whether to report this performance measure in FLOPS or MIPS.  
+Performance metrics just account for the arithmetic operations performed on the FPGA. It does not tell whether the operations being performed are functionally correct or not. To account for the quality of the operations being performed, we also have to consider  Accuracy, which is defined  a little further down in this chapter. Since we will be using existing, pretrained network topologies, our aim would be to attain (or reach as close as possible to) the accuracies mentioned in literature.
 
-To calculate FLOPS (and/or MIPS) , we look at the source code and the final profiler report from the executed code.
-From the source code, we calculate the number of operations sans the overheads (loop index calculations, loop increment operations etc). And from the profiler report, we get a concrete idea of the clock frequency of the FPGA and the run time -– the execution time. Combining these two allows us to calculate  FLOPS/MIPS.
+\section{Performance Metrics}
 
+\subsection{Operations per cycle}
+Operations per cycle is a unit of measure for the numerical computing performance of a computer. Typically expressed as Ops/cycle, this metric tells us how many operations are performed in one cycle.  
 
-\section{Operations per cycle}
-FLOPS/MIPS are quantities which are dependent on the clock frequencies supported by the FPGA boards.
-When we want to just showcase the performance decoupled from the clock frequencies , we make use of Operations per cycle.
-The way to measure Operations per cycle is similar to the way we find FLOPS. 
+To calculate Ops/cycle we look at the source code and the final profiler report from the executed code. From the source code, we calculate the number of operations sans the overheads (loop index calculations, loop increment operations etc). And from the profiler report, we get a concrete idea of the clock frequency of the FPGA and the run time – the execution time. Combining these two allows us to calculate operations per cycle.
 
-\section{Latency}
-Latency is generally defined as the time delay between initial input to a system and the output from the system.
-Latency captures the time it takes to load  data ,preprocess it, send said data over a network to the Inference Engine ,time needed for inference , and time needed to send the classified data back to the user.
-Latencies can be measured for just a single image or over a batch of images. We can expect to have different latencies based on how we measure it(single image vs batch of images).
+\subsection{Operations per second}
+Operations per second is closely related with the above metric “Operations per cycle”.It is usually expressed as Op/s. Op/s depends on the clock frequency of the platform. 
+We calculate “operations per second” by simply dividing the number of operations by the execution time.  
+As per literature mentioned in chapter 7 Related Work, popular toolflows like DNNWEAVER on Arria 10 GX115 have achieved 184.33GOps/s, running at a clock frequency of 200MHz.
 
-\section{Throughput}
-Throughput is  a measure of amount of information processed per unit time. In our case , we define it as the number of bytes processed per second.
-There are well known techniques to improve throughput like batch processing where a number of images is batched together and sent for inference job.
-But as the batch size goes up , latencies also tend to go up. So there is a trade off involved here between through put and latency
+\subsection{Operations per byte}
+Operations per byte or Arithmetic Intensity is the number of operations performed per a byte of data transferred between the FPGA and off chip memory.  
+In our case , we calculate the number of opeartions performed and the total amount of data transferred by looking at the source code . We also look at the profiler report at the end of execution to get the correct estimation of data transferred between global memory and local memory.  
+This metric helps us identify if we are memory bandwidth limited or compute resource bounded.  
 
-\section{Accuracy}
-Accuracy is defined as the fraction of the number of correct inferences made to the total number of inferences made.
-In our context, accuracy depends on the CNN topology used , nature of weights , training data etc.
+The metrics Op/s and Op/byte make up the metrics required to do Roofline Analysis of our inference system.  
 
 
-\section{Rate Correct Score}
+\subsection{Latency}
+Latency is generally defined as the time delay between initial input to a system and the output from the system. Latency captures the time it takes to load data, preprocess it, send said data over a network to the Inference Engine, time needed for inference, and time needed to send the classified data back to the user.   
+
+Latencies can be measured for just a single image or over a batch of images. We can expect to have different latencies based on how we measure it(single image vs batch of images).  
+
+As an example of what has been achieved in related works , we have ALAMO toolflow running on Arria 10 GT115 running at 239.62MHz having a latency of 4.05ms.
+Our aim would be to have latenicies in this range.
+
+\subsection{Throughtput}
+Throughput is  a measure of amount of information processed per unit time. In our case , we define it as the number of images classified  per second.  There are well known techniques to improve throughtput like batch processing where a number of images is batched together and sent for inference job. 
+But as the batch size goes up , latencies also tend to go up. So there is a trade off involved here between through put and latency.
+
+
+
+\section{Quality Metrics}
+\subsection{Accuracy}
+Accuracy is defined as the fraction of the number of correct inferences made to the total number of inferences made. In our context, accuracy depends on the CNN topology used, nature of weights (floating point vs fixed points etc), training data etc. 
+In literature, accuracies are expressed in terms of percentages and the changes from baseline models’ accuracies are measured in terms of percentage points (pp). 
+The use of quantized weights in our project might decrease the accuracy compared to baseline models. In our case, baseline models are the existing, pretrained topologies mentioned in chapter 3. Our goal would be to make use of DNN approximation techniques and still achieve an accuracy within 3pp of the baseline model.
+
+
+\subsection{Rate Correct Score}
 Taking inspiration from the field of Memory and  Cognitive research , we can combine accuracy and latency by considering Rate Correct Score. It is defined as    
 
 $RCS = \frac{c}{\sum R_t}$    
@@ -193,7 +207,7 @@ where
 
 $c$ = accuracy    
 
-      $R_t$ = batch execution time  
+      $\sum R_t$ = batch execution time  
       
 Our aim would be to maximize RCS (either by increasng the accuracy or by decreasing the latency or both).
 
