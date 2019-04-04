@@ -262,7 +262,7 @@ Today we have a lot of different deep learning frameworks such as TensorFlow, Ca
 
 TVM takes the model from different learning frameworks and generates optimized code for devices. TVM was started as a research project at the Paul G. Allen School of Computer Science and Engineering, University of Washington.
 
-TVM includes a computational graph rewriter, tensor expression language and new features for GPU accelerators.
+TVM includes a computational graph rewriter, tensor expression language and new features for GPU accelerators. The TVM compilation stack is shown in Fig 5.2.
 
 The system has the stack of implementation: NNVM $\to$ TOPI $\to$ TVM $\to$ VTA. NNVM acts as a graph optimizer by taking the model from an existing framework and converting it into “TVM” graph. For these operations, we use the TOPI language. TOPI is a library where functions operate as instructions for further work. For example, TOPI defines a tensor computation, schedules space for each NN operator (e.g. conv2d). The next step is the application of the TVM functions. TVM uses the TOPI instructions and generates code for several backends, such as LLVM, or CUDA, etc. The final step is the Versatile Tensor Accelerator (VTA) which is responsible for the stream and microkernels. 
 
