@@ -1,5 +1,5 @@
 #define G_NUMBER_OF_IMAGES 10000
-#define G_NUMBER_OF_FILERS 32
+#define G_NUMBER_OF_FILTERS 32
 #define G_NUMBER_OF_IMAGE_ROWS 28
 #define G_NUMBER_OF_IMAGE_COLS 28
 #define G_NUMBER_OF_FILTER_ROWS 5
@@ -17,7 +17,7 @@ __kernel void ConvolutionLayer(__global double * restrict img,
 
 	index = 0;
 	image_size = G_NUMBER_OF_IMAGE_ROWS * G_NUMBER_OF_IMAGE_COLS;
-	for (layer = 1; layer <=G_NUMBER_OF_FILERS; layer++) {
+	for (layer = 1; layer <=G_NUMBER_OF_FILTERS; layer++) {
 		image_index = 0;
 		for (i = 0; i < G_NUMBER_OF_IMAGE_ROWS; i++) {
 			for (j = 0; j < G_NUMBER_OF_IMAGE_COLS; j++) {
