@@ -1,4 +1,3 @@
-
  Date of Meeting (MM/DD/YYYY):  (04/08/2019)<br/>
   
  Time: 4:15pm to 6:45pm  <br/>
