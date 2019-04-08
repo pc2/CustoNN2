@@ -86,7 +86,7 @@ Reasons for selecting ImageNet
 We have considered three topologies for our project. The details of those topologies are described below.
 
 \subsection{GoogLeNet}
-GoogLeNet is a deep convolutional neural network and is also known as Inception-v1. The architecture is based on the \textit{Hebbian principle} with the intuition of multi-scale processing. GoogLeNet is 22 layers deep network and used for object detection and classification. It has modules known as Inception which is a network within a network. GoogLeNet does not have any fully connected layers but uses global average pooling which keeps the model from overfitting the data. It was able to achieve a top-5 error rate of 6.67\% and requires only 4 million parameters, whereas AlexNet requires up to 60 million parameters.
+GoogLeNet is a deep convolutional neural network and is also known as Inception-v1. The architecture is based on the Hebbian principle which states that \textit{cells that fire together wire together} with the intuition of multi-scale processing. GoogLeNet is 22 layers deep network and used for object detection and classification. It has modules known as Inception which is a network within a network. GoogLeNet does not have any fully connected layers but uses global average pooling which keeps the model from overfitting the data. It was able to achieve a top-5 error rate of 6.67\% and requires only 4 million parameters, whereas AlexNet requires up to 60 million parameters.
 
 \subsubsection{Inception Module}
 The logic behind Inception architecture is built on finding optimal local sparse structure in the convolution network and to repeat it spatially. There are 9 inception modules in GoogLeNet. Each inception module has 6 convolution layers and 1 max pooling layer. Some convolution layers and max pool layers are stacked on each other due to which four different outputs are created within the inception module which is concatenated to produce one single output and it is passed to next inception module and so forth. Concatenation of this output filter occurs based on depth wise. The 1x1 convolution layers in inception module help us to preserve spatial dimensions and to reduce the feature depth.
@@ -222,7 +222,7 @@ Our aim would be to maximize RCS (either by increasing the accuracy or by decrea
 \chapter{Technologies}
 We have considered the state-of-the-art toolkits to deploy pre-trained deep learning models to execute them on FPGAs as well as to generate OpenCL code.
 
-\section{OpenVINO}
+\section{OpenVino}
 \begin{figure}[!]
     \centering
     \includegraphics[scale=0.65]{open_vino_flowchart.jpg}
@@ -298,27 +298,30 @@ Xilinx ML Suite supports various frameworks such as Caffe, Tensorflow, Keras, MX
 It is a high-performance software library and provides API which works as a bridge between xDNN IP which runs on FPGAs and ML frameworks such as Caffe, Tensorflow. xfDNN requires SDAccel reconfigurable acceleration environment for running it on Xilinx FPGAs and currently is the only middleware available for programming ML frameworks on Xilinx FPGAs. xfDNN middleware has the following components:
 \subsubsection{Compiler}
 
-It provides tools for network optimization such as layer fusions, memory dependency optimization, removing CPU host control bottlenecks with network pre-scheduling. It creates a "one-shot" execution flow for the network to run on FPGA.
+It provides tools for network optimization such as layer fusions, memory dependency optimization, removing CPU host control bottlenecks with network pre-scheduling. It creates a one-shot execution flow for the network to run on FPGA.
 
 \subsubsection{xfDNN Quantizer} 
 
-xfDNN Quantizer enables fast, high-precision calibration to lower precision deployments to INT8 and INT16. It performs a quantization technique known as a re-calibration.
+xfDNN Quantizer enables fast, high-precision calibration to lower precision deployments to INT8 and INT16. It performs a quantization technique known as re-calibration.
 
 \subsection{xDNN IP}
 Xilinx xDNN IP cores are high-performance general CNN processing engines. Various different types of CNN networks and models can be executed on these engines. They have two DSP Array configurations available (28x32 and 56x32). 28x32 configuration provides higher throughput whereas 56x32 can fit larger models at low latency.
 xDNN provides Overlay to combine various xDNN IP kernels.
 
-\subsection{Advantages and Disadvantages}
+\subsection{Advantages}
   
  \begin{itemize}
  \item Supports model optimization and weights quantization.
  \item Delivers high throughput and low latency.
  \item Compiler and Quantizer can run as a single module independent of the environment.
+
+ \end{itemize}
+ 
+\subsection{Disadvantages}
+ \begin{itemize}
  \item Does not support fully connected and softmax layers.
  
  \end{itemize}
-
-
 
 %End of the chapter
 
