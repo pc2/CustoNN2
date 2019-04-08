@@ -34,7 +34,7 @@ classification applications.
 
 \section{Why FPGA}
 There are multiple hardware available in the market such as CPU, GPU, ASIC, and FPGA each used for a specific set of applications. Among all of them FPGAs are becoming widely popular and are being used in CNN based applications. Deep Neural Networks (DNN) benefit very much from using FPGA. DNN are math intensive models and FPGAs can be used to execute the mathematical operations involved in DNNs. FPGAs have dedicated DSP's and ALU's to perform such math intensive floating point arithmetic operations. FPGAs are suited for applications which use custom datatypes which is the case in DNN. Also, they provide better latency, parallel processing power, and flexibility among all its counterparts. Using FPGA also has another specific advantage. The advantage is that it can accommodate different CNN models without the need of changing the underlying architecture. CNN models have a streaming architecture that suits well with FPGA architecture.
-In this project, we are using the Intel Stratix 10 F1760 NF43 package with 520N scale-able FPGA network accelerator card for our CNN inference on image classification. Paderborn Center for Parallel Computing (PC2) has 32 of this FPGA and our task is to scale our CNN architecture using all 32 FPGAs. We will be using three pre-trained models namely GoogleNet, ResNet-50 and Inception V4 in a model ensemble architecture where majority voting is used. The workload will be divided among all the 32 FPGAs and the layers will be distributed to each of these FPGAs in a streaming architecture fashion. At last, we will measure the performance of our system using some performance metrics.
+In this project, we are using the Intel Stratix 10 with 520N scaleable FPGA network accelerator card for our CNN inference on image classification. Paderborn Center for Parallel Computing (PC2) has 32 of this FPGA and our task is to scale our CNN architecture using all 32 FPGAs. We will be using three pre-trained models namely GoogleNet, ResNet-50 and Inception V4 in a model ensemble architecture where majority voting is used. The workload will be divided among all the 32 FPGAs and the layers will be distributed to each of these FPGAs in a streaming architecture fashion. At last, we will measure the performance of our system using some performance metrics.
 
 % Remove below lipsum command before posting your work
 
@@ -112,7 +112,7 @@ Many convolution DNNs run into a problem with vanishing or exploding gradients b
 
 \begin{wrapfigure}{l}{0.4\textwidth}
 \centering
-\includegraphics[scale=0.85]{resnet_2}
+\includegraphics[scale=0.6]{resnet_2}
 \caption{ResNet-50}
 \label{fig:resnet_50}
 \end{wrapfigure}
@@ -121,7 +121,7 @@ The output of skip connection is  F(x) + x and the weight layers actually are to
 
 After each convolution layer, ResNet uses the batch normalization from Inception-V2. 
 
-The main concepts of construction ResNet:
+The main concepts of constructing ResNet:
 \begin{itemize}
 \item Avoiding representational bottlenecks by not abruptly reducing the dimension of data, but smoothly from the beginning of the network to the classifier at the output.
 \item Factorization of convolution layer into smaller pieces because this will save resources and help to increase the count of layers.
