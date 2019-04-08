@@ -21,19 +21,19 @@
 \newpage
 
 \chapter{Introduction}
-In recent times Convolutional Neural Networks (CNN) has gained immense popularity and are used in many applications such as image classification, speech recognition, etc. CNNs have become an industry standard and provide a near-human accuracy. However, CNNs are computationally intensive models requiring a large amount of processing power which calls for the need to have dedicated
+In recent times Convolutional Neural Networks (CNN) have gained immense popularity and are used in many applications such as image classification, speech recognition, etc. CNNs have become an industry standard and provide a near-human accuracy. However, CNNs are computationally intensive models requiring a large amount of processing power which calls for the need to have dedicated
 hardware for its acceleration. Graphics Processing Units (GPU) are conventionally used and provide satisfactory performance on some of the state-of-the-art CNN models. Although GPU provides good performance, it is not flexible enough to accommodate multiple CNN models. One may need to re-design the entire GPU architecture for a particular CNN. This is where Field Programmable
 Gate Arrays (FPGA) proves to be much more beneficial in terms of flexibility
 and parallel processing. Some state-of-the-art CNN models such as AlexNet,
 VGG16 and ResNet have shown considerable performance gain using FPGAs.
-Furthermore with the presence of various Software Development (SDK) Toolkit
+Furthermore, the presence of various Software Development (SDK) Toolkit
 in the market such as Intel OpenVINO, Xilinx ML Suite and TVM has helped
 the developers to efficiently map their CNN models to the underlying architecture. Due to all of these factors, CNN has become a popular choice for image
 classification applications.
 
 
 \section{Why FPGA}
-There are multiple hardware available in the market such as CPU, GPU, ASIC, and FPGA each used for a specific set of application. Among all of them FPGAs are becoming widely popular and used in CNN based applications. Deep Neural Networks (DNN) benefit very much from using FPGA. DNN are math intensive models which execute the same or any mathematical operation. FPGAs have dedicated DSP's and ALU's to perform such floating point arithmetic operations. FPGAs are suited for applications which use custom datatypes which is the case in DNN. Also, they provide better latency, parallel processing power, and flexibility among all its counterparts. Using FPGA also has another specific advantage. The advantage is that it can accommodate different CNN models without the need of changing the underlying architecture. CNNs models have a streaming architecture that suits well with FPGA architecture.
+There are multiple hardware available in the market such as CPU, GPU, ASIC, and FPGA each used for a specific set of applications. Among all of them FPGAs are becoming widely popular and are being used in CNN based applications. Deep Neural Networks (DNN) benefit very much from using FPGA. DNN are math intensive models and FPGAs can be used to execute the mathematical operations involved in DNNs. FPGAs have dedicated DSP's and ALU's to perform such math intensive floating point arithmetic operations. FPGAs are suited for applications which use custom datatypes which is the case in DNN. Also, they provide better latency, parallel processing power, and flexibility among all its counterparts. Using FPGA also has another specific advantage. The advantage is that it can accommodate different CNN models without the need of changing the underlying architecture. CNN models have a streaming architecture that suits well with FPGA architecture.
 In this project, we are using the Intel Stratix 10 F1760 NF43 package with 520N scale-able FPGA network accelerator card for our CNN inference on image classification. Paderborn Center for Parallel Computing (PC2) has 32 of this FPGA and our task is to scale our CNN architecture using all 32 FPGAs. We will be using three pre-trained models namely GoogleNet, ResNet-50 and Inception V4 in a model ensemble architecture where majority voting is used. The workload will be divided among all the 32 FPGAs and the layers will be distributed to each of these FPGAs in a streaming architecture fashion. At last, we will measure the performance of our system using some performance metrics.
 
 % Remove below lipsum command before posting your work
@@ -270,7 +270,7 @@ In order to change a hardware target ( CPU, GPU or TPU) we need to rebuild TVM l
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.19]{TVM_Flowchart_2.jpg}
+    \includegraphics[scale=0.30]{TVM.png}
     \caption{TVM Flowchart}
 \end{figure}
  
