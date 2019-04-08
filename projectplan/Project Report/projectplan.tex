@@ -60,22 +60,21 @@ CNN implementation is often complex due to the number of parameters and computat
 \chapter{Datasets, topology and architecture comparison}
 
 \section{Datasets}
-Datasets are an essential part of the neural networks. Training our neural networks on different datasets only make them better at different classification task since different datasets enable the network to only become better and better by learning different features. Below are some of the datasets specified which we can choose to work on in this project.
-
+CNNs are trained on datasets. Each dataset consists of a specific type of images and each of them is used in different tasks such as image classification or image captioning etc. Below are some of the datasets specified which we can choose to work on in this project.
 \subsection{ImageNet}
 It is one of the most prominent datasets used in the field of visual object recognition. In 2009 this dataset was first introduced to the world in the Conference on Computer Vision and Pattern Recognition by the computer science department of  Princeton University. It has over 14 million images and over 20000 categories. A large portion of the images has been hand annotated which can be helpful in the task of image captioning. Every year ImageNet runs a challenge called the ImageNet Large Scale Visual Recognition Challenge (ILSVRC), where different software architectures and algorithms take part in order to classify images of the dataset correctly. By 2017 most of the algorithms working on ImageNet have already achieved the accuracy of more than 95\%.
 
 \subsection{CIFAR10}
-Canadian Institute For Advanced Research (CIFAR) is a widely used dataset in machine learning paradigm which is used in training various machine learning models. It is used in visual object recognition. It consists of 60000 images in total. The 10 in the name stands for the 10 classes in the dataset and each class has 6000 images. Each image in the dataset is of 32*32 pixels coloured images. The 10 classes in the data set are air-planes, cars, birds, cats, deer, dogs, frogs, horses, ships, and trucks.  Due to its low image resolution, it is one of the favourites for researchers to train their algorithms. 
+CIFAR named after Canadian Institute For Advanced Research is a widely used dataset in machine learning paradigm which is used in training various machine learning models. It is used in visual object recognition. It consists of 60000 images in total. The 10 in the name stands for the 10 classes in the dataset and each class has 6000 images. Each image in the dataset is of 32*32 pixels coloured images. The 10 classes in the data set are air-planes, cars, birds, cats, deer, dogs, frogs, horses, ships, and trucks. Since the images in the dataset are of low resolution, it is one of the favourites for researchers to train their algorithms since they do not have to invest huge amount of resources in terms of money and hardware infrastructure. 
 
 \subsection{MNIST}
-Modified National Institute of Standards and Technology is a database consisting of handwritten digits. This database is commonly used in the field of machine learning. It is a derived dataset from NSIT dataset. It consists of images which are 28*28 pixel size and greyscale nature. This dataset has been divided into 2 sets. To say in total it has 60000 training images and 10000 testing images. NSIT's testing dataset contributes to one half of the training and testing database of the MNIST and the other half is filled by NSIT's training dataset. The lowest possible error rate on MNIST achieved is 0.23\%
+Modified National Institute of Standards and Technology is a dataset consisting of handwritten digits. This database is commonly used in the field of machine learning. MNIST is a derived dataset from NSIT dataset. It consists of images which are 28*28 pixel size and greyscale nature. This dataset has been divided into 2 sets. To say in total it has 60000 training images and 10000 testing images. NSIT's testing dataset contributes to one half of the training and testing database of the MNIST and the other half is filled by NSIT's training dataset. The lowest possible error rate on MNIST achieved is 0.23\%
 which was done by implementing a system of CNNs.
 
 \subsection{Selection of Dataset}
 Reasons for selecting ImageNet
 \begin{itemize}
-    \item The MNIST and CIFAR10 dataset are preliminary and intermediate dataset and does not pose a significant challenge in testing and training the complex CNN’s. Also, the topologies that are going to be used in the project are well optimized for a different dataset. Hence these are not being considered.
+    \item The topologies that are going to be used in the project are well optimized for ImageNet. Hence CIFAR10 and MNIST are not being considered also also they don't pose a significant challenge in testing and training complex CNNs.
     \item On the other hand, ImageNet provides a greater challenge and also the topologies that are going to be used have already used ImageNet dataset. Hence their result can be used as a benchmarking performance for the implementation in the project.
 \end{itemize}
 
