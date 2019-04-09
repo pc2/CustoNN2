@@ -380,7 +380,7 @@ Currently, we have divided the entire plan into three milestones.
 
 \textbf{Breakpoint} We have planned to achieve Milestone 1 in the first three weeks of April and Milestone 2 by the first week of May. If we fail to meet the above criteria with OpenVINO, then we will scrap OpenVINO and go with Xilinx ML Suite as Plan B with a similar design discussed above.
 
-\textbf{Milestone 3}  On Successful completion of Milestone 1 and 2, we will have a simple CNN model that can run on 2~4 FPGAs by leveraging the gains of OpenVINO and TVM. The goal of Milestone 3 is to train and deploy ResNet50 topology on 32 FPGAs on ImageNet dataset. But before scaling a more complex topology like ResNet50 and on 32 FPGAs we will take some time to design and rethink how to achieve this comparatively big milestone.
+\textbf{Milestone 3}  On completion of Milestone 1 and 2, we will have a simple CNN model that can run on 2~4 FPGAs by leveraging the gains of OpenVINO and TVM. The goal of Milestone 3 is to deploy a pre-trained ResNet50 topology on 32 FPGAs on ImageNet dataset. But before scaling a more complex topology like ResNet50 on 32 FPGAs, we will take some time to design and rethink how to achieve this comparatively big milestone. Hence, we are going to have a preparation phase for milestone 3 which will be for 2 weeks. In this phase we will come up with Performance model that theoretically gives a rough estimate of how our hardware design will perform in terms of OPs/second, global memory bandwidth, etc.
 
 \begin{table}[]
 \begin{tabular}{|l|l|}
@@ -394,7 +394,7 @@ Milestone 3                 & 01.06.2019 to 07.07.2019 \\ \hline
 \end{table}
 
 \subsection{Result collection and Performance Evaluation}
-Since one of the main goals of the project is performance optimization, we will run the application to collect results. After collecting, we will look into whether we are doing best in terms of first – our set goals, secondly – results in comparison with state of the art benchmarks. We will come up with a performance model to compare the observed results and the estimated results. The performance model is based on the Metrics we have decided such as FLOPS and other metrics like Initiation intervals and Memory bandwidth. If we find deviation with respect to the performance, we go back to the previous phase and work on improving.
+Since one of the main goals of the project is performance optimization, we will run the application to collect the results. After collecting the results, we will investigate whether we are doing best in terms of our set goals and if the results are in par with state-of-the-art benchmarks. We compare the observed results to the estimated results from our performance model we prepared earlier. If we find deviation with respect to the performance, we go back to the previous phase and work on improving said aspects of the project.
 
 \subsection{Final project report and Presentation}
 After achieving the desired results, we will prepare a final project report that covers all the aspects of our project in detail. In the end, we will present the implementation via a demo and show experimental results. 
