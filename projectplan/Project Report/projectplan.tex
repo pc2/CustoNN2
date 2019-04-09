@@ -42,23 +42,6 @@ In this project, we are using the Intel Stratix 10 with 520N scaleable FPGA netw
 
 %End of the chapter
 
-\chapter{Goals}
-Convolution Neural Network (CNN) is a type of Deep Neural Network (DNN) used in the field of image processing and image analyzing. CNNs are most widely used for extracting valuable features from the input images. The primary goal of our project is to implement the state of the art CNNs on the FPGAs which acts as an accelerator for compute-heavy neural networks. We have the following sub-goals:
-\section{Scaling over multiple FPGAs}
-An FPGA is made up of finite and limited resources and implementing these large CNN models can often result in running out of resources and cannot fit into a single FPGA. Hence in this project, we will use the FPGA infrastructure in the Noctua cluster. The Noctua cluster is a high-performance computing system equipped with 32 Intel Startix 10 FPGAs with point to point connections. We will be scaling our CNN models on the Noctua cluster by partitioning the large model into smaller models based on the number of layers that will fit onto a single FPGA and these smaller models can be executed on multiple FPGAs to provide low latency computation. We will use the OpenCL external IO channels to transfer intermediate results from one FPGA to another. Since we are developing an ensemble of three CNN models, all three can be executed in parallel on different FPGAs and results can be aggregated at the end. By scaling our application on multiple FPGAs infrastructure we target to perform as good as the Microsoft's Project Brainwave architecture in terms of latency and throughput.
-\par
-Microsoft Project Brainwave is a deep learning platform for real-time Artificial Intelligence (AI) applications like computer vision. Brainwave is equipped with Intel Stratix 10 FPGAs in the Microsoft Azure Cloud and Neural Processing Units (NPU) architecture for executing a DNN model with low latency and high throughput. Brainwave also supports multiple FPGAs infrastructure in the Azure cloud. When the memory resource of the FPGA is exhausted by the DNN model layers, the remaining layers will be mapped to the next FPGA enabling scaling.
-
-\section{Performance Optimization}
-Heterogeneous computing systems provide gain performance by using specialized capabilities of different types of processors (CPU+FPGA in our project). OpenCL is a framework for heterogeneous computing which provides software-centric development flow for FPGAs and obtains performance and power advantages with hardware acceleration. We will use the OpenCL tool flow for developing CNN models in our project, it offers us to develop individual kernels for each layer of the CNN model and we will also make use of the channels concept offered by OpenCL to transfer intermediate results from one layer to the next layer without writing the results in the global memory. The kernels will be further optimized by using several OpenCL optimization techniques learnt during the tutorial phase eg: loop unrolling, reducing the Initiation Interval (II) of loops to 1, removing memory dependencies, etc. Performance modeling is applied to each OpenCL kernels to identify the bottlenecks in the design and resolve the issues to obtain a high throughput and high utilization.
-
-\section{Quantization }
-CNN implementation is often complex due to the number of parameters and computations, which makes it difficult to be implemented on a resource-constrained FPGA. The floating point operations are computationally too expensive, hence quantization can be applied to the deep networks to convert the floating point weights into fixed point. Fixed point computation typically consumes fewer hardware resources than floating point operations. Quantization will help in reducing the power consumption, memory footprint and resources utilization. In our project, we rely on the machine learning suite to optimize and quantize the CNN model so that the accuracy is not drastically dropped in the quantized model. We will also distinguish the models with quantized weights and floating point weights.
-
-%End of the chapter
-
-
-
 \chapter{Metrics}
 Our objective is to leverage the infrastructure available at the Paderborn Centre for Parallel Computing (PC2) to build an inference accelerator system. We plan to evaluate the effectiveness of our inference accelerator system by considering two classes of metrics - performance metrics and quality metrics.  
 
@@ -67,14 +50,14 @@ Performance metrics just account for the arithmetic operations performed on the 
 \section{Performance Metrics}
 
 \subsection{Operations per cycle}
-Operations per cycle is a unit of measure for the numerical computing performance of a computer. Typically expressed as Ops/cycle, this metric tells us how many operations are performed in one cycle.  
+Operations per cycle is a unit of measure for the numerical computing performance of a computer. Typically expressed as OPs/cycle, this metric tells us how many operations are performed in one cycle.  
 
-To calculate Ops/cycle we look at the source code and the final profiler report from the executed code. From the source code, we calculate the number of operations sans the overheads (loop index calculations, loop increment operations, etc). And from the profiler report, we get a concrete idea of the clock frequency of the FPGA and the run time – the execution time. Combining these two allows us to calculate operations per cycle.
+To calculate OPs/cycle we look at the source code and the final profiler report from the executed code. From the source code, we calculate the number of operations sans the overheads (loop index calculations, loop increment operations, etc). And from the profiler report, we get a concrete idea of the clock frequency of the FPGA and the execution time. Combining these two allows us to calculate operations per cycle.
 
 \subsection{Operations per second}
-Operations per second is closely related with the above metric “Operations per cycle”. It is usually expressed as Op/s. Op/s depends on the clock frequency of the platform. 
+Operations per second is closely related with the above metric “Operations per cycle”. It is usually expressed as OPs/second. OPs/second depends on the clock frequency of the platform. 
 We calculate “operations per second” by simply dividing the number of operations by the execution time.  
-As per literature mentioned in chapter 7 Related Work, popular tool-flows like DNNWEAVER on Arria 10 GX115 have achieved 184.33GOps/s, running at a clock frequency of 200MHz.
+As per literature mentioned in chapter 7 Related Work, popular tool-flows like DNNWEAVER on Arria 10 GX115 have achieved 184.33GOPs/second, running at a clock frequency of 200MHz.
 
 \subsection{Operations per byte}
 Operations per byte or Arithmetic Intensity is the number of operations performed per a byte of data transferred between the FPGA and off-chip memory.  
