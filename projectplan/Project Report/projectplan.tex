@@ -57,6 +57,70 @@ CNN implementation is often complex due to the number of parameters and computat
 
 %End of the chapter
 
+
+
+\chapter{Metrics}
+Our objective is to leverage the infrastructure available at the Paderborn Centre for Parallel Computing (PC2) to build an inference accelerator system. We plan to evaluate the effectiveness of our inference accelerator system by considering two classes of metrics - performance metrics and quality metrics.  
+
+Performance metrics just account for the arithmetic operations performed on the FPGA. They do not tell whether the operations being performed are functionally correct or not. To account for the quality of the operations being performed, we also have to consider accuracy, which is defined a little further down in this chapter. Since we will be using existing, pre-trained network topologies, our aim would be to attain (or reach as close as possible to)  the accuracies mentioned in the literature.
+
+\section{Performance Metrics}
+
+\subsection{Operations per cycle}
+Operations per cycle is a unit of measure for the numerical computing performance of a computer. Typically expressed as Ops/cycle, this metric tells us how many operations are performed in one cycle.  
+
+To calculate Ops/cycle we look at the source code and the final profiler report from the executed code. From the source code, we calculate the number of operations sans the overheads (loop index calculations, loop increment operations, etc). And from the profiler report, we get a concrete idea of the clock frequency of the FPGA and the run time – the execution time. Combining these two allows us to calculate operations per cycle.
+
+\subsection{Operations per second}
+Operations per second is closely related with the above metric “Operations per cycle”. It is usually expressed as Op/s. Op/s depends on the clock frequency of the platform. 
+We calculate “operations per second” by simply dividing the number of operations by the execution time.  
+As per literature mentioned in chapter 7 Related Work, popular tool-flows like DNNWEAVER on Arria 10 GX115 have achieved 184.33GOps/s, running at a clock frequency of 200MHz.
+
+\subsection{Operations per byte}
+Operations per byte or Arithmetic Intensity is the number of operations performed per a byte of data transferred between the FPGA and off-chip memory.  
+In our case, we calculate the number of operations performed and the total amount of data transferred by looking at the source code. We also look at the profiler report at the end of execution to get the correct estimation of data transferred between global memory and local memory.  
+This metric helps us identify if we are memory bandwidth limited or compute resource-bounded.  
+
+The metrics Op/s and Op/byte make up the metrics required to do Roofline Analysis of our inference system.  
+
+
+\subsection{Latency}
+Latency is generally defined as the time delay between initial input to a system and the output from the system. Latency captures the time it takes to load data, pre-process it, send said data over a network to the Inference Engine, the time needed for inference, and time needed to send the classified data back to the user.   
+
+Latencies can be measured for just a single image or over for a batch of images. We can expect to have different latencies based on how we measure it (single image vs batch of images).  
+
+As an example of what has been achieved in related works, we have ALAMO tool-flow running on Arria 10 GT115 running at 239.62MHz having a latency of 4.05ms.
+Our aim would be to have latencies in this range.
+
+\subsection{Throughput}
+Throughput is a measure of the amount of information processed per unit time. In our case, we define it as the number of images classified per second.  There are well-known techniques to improve throughput like batch processing where a number of images are batched together and sent for inference job. 
+But as the batch size goes up, latencies also tend to go up. So there is a trade-off involved here between throughput and latency.  \par
+We had deployed a pre-trained ResNet50 DNN model in the Microsoft Azure cloud during our research phase and the images were classified in less than 4 ms and throughput of 39.5 Teraflops on a single Stratix 10 FPGA. Hence we decided to benchmark our project group's implementation against Project Brainwave.
+
+
+
+\section{Quality Metrics}
+\subsection{Accuracy}
+Accuracy is defined as the fraction of the number of correct inferences made to the total number of inferences made. In our context, accuracy depends on the CNN topology used, nature of weights (floating point vs fixed points, etc), training data, etc. 
+In literature, accuracies are expressed in terms of percentages and the changes from baseline models' accuracies are measured in terms of percentage points (pp). 
+The use of quantized weights in our project might decrease the accuracy compared to baseline models. In our case, baseline models are the existing, trained topologies mentioned in chapter 3. Our goal would be to make use of DNN approximation techniques and still achieve accuracy within 3pp of the baseline model.
+
+
+\subsection{Rate Correct Score}
+Taking inspiration from the field of Memory and  Cognitive research, we can combine accuracy and latency by considering Rate Correct Score. It is defined as    
+
+$RCS = \frac{c}{\sum R_t}$    
+
+where   
+
+$c$ = accuracy    
+
+      $\sum R_t$ = batch execution time  
+      
+Our aim would be to maximize RCS (either by increasing the accuracy or by decreasing the latency or both).
+
+%End of the chapter
+
 \chapter{Datasets, topology and architecture comparison}
 
 \section{Datasets}
@@ -149,72 +213,6 @@ Figure \ref{fig:inception_v4} shows the whole scheme for Inception-V4.
 \end{figure}
 
 \pagebreak
-
-
-
-
-
-\chapter{Metrics}
-Our objective is to leverage the infrastructure available at the Paderborn Centre for Parallel Computing (PC2) to build an inference accelerator system. We plan to evaluate the effectiveness of our inference accelerator system by considering two classes of metrics - performance metrics and quality metrics.  
-
-Performance metrics just account for the arithmetic operations performed on the FPGA. They do not tell whether the operations being performed are functionally correct or not. To account for the quality of the operations being performed, we also have to consider accuracy, which is defined a little further down in this chapter. Since we will be using existing, pre-trained network topologies, our aim would be to attain (or reach as close as possible to)  the accuracies mentioned in the literature.
-
-\section{Performance Metrics}
-
-\subsection{Operations per cycle}
-Operations per cycle is a unit of measure for the numerical computing performance of a computer. Typically expressed as Ops/cycle, this metric tells us how many operations are performed in one cycle.  
-
-To calculate Ops/cycle we look at the source code and the final profiler report from the executed code. From the source code, we calculate the number of operations sans the overheads (loop index calculations, loop increment operations, etc). And from the profiler report, we get a concrete idea of the clock frequency of the FPGA and the run time – the execution time. Combining these two allows us to calculate operations per cycle.
-
-\subsection{Operations per second}
-Operations per second is closely related with the above metric “Operations per cycle”. It is usually expressed as Op/s. Op/s depends on the clock frequency of the platform. 
-We calculate “operations per second” by simply dividing the number of operations by the execution time.  
-As per literature mentioned in chapter 7 Related Work, popular tool-flows like DNNWEAVER on Arria 10 GX115 have achieved 184.33GOps/s, running at a clock frequency of 200MHz.
-
-\subsection{Operations per byte}
-Operations per byte or Arithmetic Intensity is the number of operations performed per a byte of data transferred between the FPGA and off-chip memory.  
-In our case, we calculate the number of operations performed and the total amount of data transferred by looking at the source code. We also look at the profiler report at the end of execution to get the correct estimation of data transferred between global memory and local memory.  
-This metric helps us identify if we are memory bandwidth limited or compute resource-bounded.  
-
-The metrics Op/s and Op/byte make up the metrics required to do Roofline Analysis of our inference system.  
-
-
-\subsection{Latency}
-Latency is generally defined as the time delay between initial input to a system and the output from the system. Latency captures the time it takes to load data, pre-process it, send said data over a network to the Inference Engine, the time needed for inference, and time needed to send the classified data back to the user.   
-
-Latencies can be measured for just a single image or over for a batch of images. We can expect to have different latencies based on how we measure it (single image vs batch of images).  
-
-As an example of what has been achieved in related works, we have ALAMO tool-flow running on Arria 10 GT115 running at 239.62MHz having a latency of 4.05ms.
-Our aim would be to have latencies in this range.
-
-\subsection{Throughput}
-Throughput is a measure of the amount of information processed per unit time. In our case, we define it as the number of images classified per second.  There are well-known techniques to improve throughput like batch processing where a number of images are batched together and sent for inference job. 
-But as the batch size goes up, latencies also tend to go up. So there is a trade-off involved here between throughput and latency.  \par
-We had deployed a pre-trained ResNet50 DNN model in the Microsoft Azure cloud during our research phase and the images were classified in less than 4 ms and throughput of 39.5 Teraflops on a single Stratix 10 FPGA. Hence we decided to benchmark our project group's implementation against Project Brainwave.
-
-
-
-\section{Quality Metrics}
-\subsection{Accuracy}
-Accuracy is defined as the fraction of the number of correct inferences made to the total number of inferences made. In our context, accuracy depends on the CNN topology used, nature of weights (floating point vs fixed points, etc), training data, etc. 
-In literature, accuracies are expressed in terms of percentages and the changes from baseline models' accuracies are measured in terms of percentage points (pp). 
-The use of quantized weights in our project might decrease the accuracy compared to baseline models. In our case, baseline models are the existing, trained topologies mentioned in chapter 3. Our goal would be to make use of DNN approximation techniques and still achieve accuracy within 3pp of the baseline model.
-
-
-\subsection{Rate Correct Score}
-Taking inspiration from the field of Memory and  Cognitive research, we can combine accuracy and latency by considering Rate Correct Score. It is defined as    
-
-$RCS = \frac{c}{\sum R_t}$    
-
-where   
-
-$c$ = accuracy    
-
-      $\sum R_t$ = batch execution time  
-      
-Our aim would be to maximize RCS (either by increasing the accuracy or by decreasing the latency or both).
-
-
 
 
 \chapter{Technologies}
