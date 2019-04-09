@@ -195,6 +195,21 @@ Figure \ref{fig:inception_v4} shows the whole scheme for Inception-V4.
     \label{fig:inception_v4}
 \end{figure}
 
+\section{Ensemble plan}
+
+We use topologies described above for image recognition and the results obtained with each topology contain several labels and their scores. We choose a label based on its score. In our case, we have three different topologies from which we get three labels and select the one which was found more than one time or have the highest score among all labels. 
+
+Figure \ref{fig:topology_results} shows the example of the output for one of the topologies for the image recognition.
+
+\pagebreak
+\raisebox
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.8]{topology_results.png}
+    \caption{List of labels with their scores}
+    \label{fig:topology_results}
+\end{figure}
+
 \pagebreak
 
 
