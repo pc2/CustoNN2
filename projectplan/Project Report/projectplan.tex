@@ -134,7 +134,7 @@ Here, we describe the CNN topologies that we will be deploying in our project. T
 GoogLeNet is a deep convolutional neural network and is also known as Inception-v1. The architecture is based on the Hebbian principle which states that \textit{cells that fire together wire together} with the intuition of multi-scale processing. GoogLeNet is 22 layers deep network and used for object detection and classification. It has modules known as Inception which is a network within a network. GoogLeNet does not have any fully connected layers but uses global average pooling which keeps the model from overfitting the data. It was able to achieve a top-5 error rate of 6.67\% and requires only 4 million parameters, whereas AlexNet requires up to 60 million parameters.
 
 \subsubsection{Inception Module}
-The logic behind Inception architecture is built on finding optimal local sparse structure in the convolution network and to repeat it spatially. There are 9 inception modules in GoogLeNet. Each inception module has 6 convolution layers and 1 max pooling layer. Some convolution layers and max pool layers are stacked on each other due to which four different outputs are created within the inception module which is concatenated to produce one single output and it is passed to next inception module and so forth. Concatenation of this output filter occurs based on depth wise. The 1x1 convolution layers in inception module help us to preserve spatial dimensions and to reduce the feature depth.
+The logic behind Inception architecture is built on finding optimal local sparse structure in the convolution network and to repeat it spatially. There are 9 inception modules in GoogLeNet. Each inception module has 6 convolution layers and 1 max pooling layer. Some convolution layers and max pool layer are stacked on each other due to which four different outputs are created within the inception module which is concatenated to produce one single output and it is passed to next inception module and so forth. Concatenation of this output filter occurs based on depth wise. The 1x1 convolution layers in inception module help us to preserve spatial dimensions and to reduce the feature depth.
 
 The output from the last inception module is forwarded to global average pooling.
 
@@ -157,14 +157,14 @@ Many convolution DNNs run into a problem with vanishing or exploding gradients b
 
 \begin{wrapfigure}{l}{0.4\textwidth}
 \centering
-\includegraphics[scale=0.6]{resnet_2}
+\includegraphics[scale=0.5]{resnet_2}
 \caption{ResNet-50}
 \label{fig:resnet_50}
 \end{wrapfigure}
 
 The output of skip connection is  F(x) + x and the weight layers actually are to learn a kind of residual mapping: output minus identity x. If we have a vanishing gradient we always have an identity x to send it back to previous layers. 
 
-After each convolution layer, ResNet uses the batch normalization from Inception-V2. 
+After each convolution layer, ResNet uses the batch normalization from Inception-v2. 
 
 The main concepts of constructing ResNet:
 \begin{itemize}
@@ -175,23 +175,23 @@ The main concepts of constructing ResNet:
 
 Figure \ref{fig:resnet_50} shows the whole scheme for ResNet-50.
 
-\subsection{Inception v4}
-Inception-V4 is a deep neural network (DNN) released by Google. Inception-V4 is the fourth version of inception module and includes all techniques from Inception-V1, Inception-V2, and Inception-V3. Google devised inception module and it was a key idea for Inception-V1. The naive version of the first inception module included 1×1, 3×3 and 5×5 convolution and max-pooling as input and the result of concatenated them together as output. \\
+\subsection{Inception-v4}
+Inception-v4 is a deep neural network (DNN) released by Google. Inception-v4 is the fourth version of inception module and includes all techniques from Inception-v1, Inception-v2, and Inception-v3. Google devised inception module and it was a key idea for Inception-v1. The naive version of the first inception module included 1X1, 3X3 and 5X5 convolution and max-pooling as input and the result of them concatenated together as output. \\
 
-The contribution from Inception-V2 is batch normalization. They use ReLU as activation function in order to avoid the saturation problem and vanishing gradients. They had to use a higher learning rate for regularization because the output became more irregular. Last changes were reducing dimension by replacing  5×5 convolution to two 3×3 convolutions. 
+The contribution from Inception-v2 is batch normalization. They use ReLU as activation function in order to avoid the saturation problem and vanishing gradients. They had to use a higher learning rate for regularization because the output became more irregular. Last changes were reducing dimension by replacing  5X5 convolution to two 3X3 convolutions. 
 
-Inception-V4 also used the factorization from the Inception-V3. They reduce the dimensionality and it helped to decrease the overfitting problem. For example, if you have a 3×3 filter then you need 9 parameters, but the factorization idea proposes to operate  3×1 and  1×3 filters and use only 6 parameters. 
+Inception-v4 also used the factorization from the Inception-V3. They reduced the dimensionality and it helped to decrease the overfitting problem. For example, if you have a 3×3 filter then you need 9 parameters, but the factorization idea proposes to operate  3X1 and  1X3 filters and use only 6 parameters. 
 
-Inception-V4 have 3.1\% in Top-5 error rate and this result is better than the winner of the 2015 year ResNet (3.57\%) and  Inception-V3 (3.58\%). 
+Inception-v4 has 3.1\% in Top-5 error rate and this result is better than the winner of the 2015 year ResNet (3.57\%) and  Inception-v3 (3.58\%). 
 
-Inception architecture has a relatively low computation cost. Google tries to make the inception module more efficient,so they made it deeper and wider than Inception-V3 and they also simplified the architecture of this DNN.
+Inception architecture has a relatively low computation cost. Google tries to make the inception module more efficient, so they made it deeper and wider than Inception-v3 and they also simplified the architecture of this DNN.
 
-Figure \ref{fig:inception_v4} shows the whole scheme for Inception-V4.
+Figure \ref{fig:inception_v4} shows the whole scheme for Inception-v4.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.3]{inception_v4}
-    \caption{Inception-V4}
+    \caption{Inception-v4}
     \label{fig:inception_v4}
 \end{figure}
 
@@ -210,17 +210,18 @@ Figure \ref{fig:topology_results} shows the example of the output for one of the
     \label{fig:topology_results}
 \end{figure}
 
+
 \pagebreak
 
 
 \chapter{Technologies}
 We have considered the state-of-the-art toolkits to deploy pre-trained deep learning models to execute them on FPGAs as well as to generate OpenCL code.
 
-\section{OpenVino}
+\section{OpenVINO}
 \begin{figure}[!]
     \centering
     \includegraphics[scale=0.65]{open_vino_flowchart.jpg}
-    \caption{Open Vino Flowchart}
+    \caption{OpenVINO Flowchart}
 \end{figure}
 
 % Remove below lipsum command before posting your work
@@ -300,7 +301,7 @@ xfDNN Quantizer enables fast, high-precision calibration to lower precision depl
 
 \subsection{xDNN IP}
 Xilinx xDNN IP cores are high-performance general CNN processing engines. Various different types of CNN networks and models can be executed on these engines. They have two DSP Array configurations available (28x32 and 56x32). 28x32 configuration provides higher throughput whereas 56x32 can fit larger models at low latency.
-xDNN provides Overlay to combine various xDNN IP kernels.
+xDNN provides \textit{Overlay} to combine various xDNN IP kernels.
 
 \subsection{Advantages}
   
@@ -321,11 +322,11 @@ xDNN provides Overlay to combine various xDNN IP kernels.
 
 \chapter{Related Work}
 % Remove below lipsum command before posting your work
-A lot of research has been going on in the field of enhancing the computation speed of CNNs on FPGA for quite some time. In this section, we will take a look at the various research work that has been done so far. We know that CNNs consist of different layers such as convolution, pooling, and fully connected layers, out of which convolution forms a major part of it. C. Zhang et.al implemented convolution layer using sequential nested for loops. In our project, we are also using sequential nested for loops for the implementation of convolution layer.
+A lot of research has been going on in the field of enhancing the computation speed of CNNs on FPGA for quite some time. In this section, we will take a look at the various research work that has been done so far. We know that CNNs consist of different layers such as convolution, pooling, and fully connected layers, out of which convolution forms a major part of it. C. Zhang et.al implemented convolution layer using sequential nested \textit{for} loops. In our project, we are also using sequential nested for loops for the implementation of convolution layer.
 
-We also know that FPGAs and ASICs increase the speed of inference, while GPUs still excel at floating point operations. CNNs generally work on floating point representation but working with them comes at a cost in the form of computation time. The need of the hour is to have high throughput and high efficiency. Hence it is better to use data in a fixed-point representation. To cite a few, most of the research work of Jacob et al., Courbariaux et al., Qiu et al. and Shin et al. (2015) has been done in the field of quantization in order to improve computation speed through low bit representation. Courbariaux et al. (2015) implemented block floating point and their CNN topology gave a 1.0 pp accuracy loss. Qiu et al. (2016) used an 8-bit representation of weights on ImageNet and achieved a 0.4 pp accuracy loss. Similarly, other techniques like binarization, ternarization, etc, are also implemented and these techniques showed better performance than the standard CNN which used FP32 bit representation. In our project, we are going to quantize weights in 16-bit representation because by doing quantization of weights in 16-bit we will have a mere loss of 0.1pp in accuracy and also it will help us to achieve our goal of high throughput.
+We also know that FPGAs and ASICs increase the speed of inference, while GPUs still excel at floating point operations. CNNs generally work on floating-point representation but working with them comes at a cost in the form of computation time. The need of the hour is to have high throughput and high efficiency. Hence it is better to use data in a fixed-point representation. To cite a few, most of the research work of Jacob et al., Courbariaux et al., Qiu et al., and Shin et al. (2015) has been done in the field of quantization in order to improve computation speed through low bit representation. Courbariaux et al. (2015) implemented block floating point and their CNN topology gave a 1.0 pp accuracy loss. Qiu et al. (2016) used an 8-bit representation of weights on ImageNet and achieved a 0.4 pp accuracy loss. Similarly, other techniques like binarization, ternarization, etc, are also implemented and these techniques showed better performance than the standard CNN which used FP32 bit representation. In our project, we are going to quantize weights in 16-bit representation because by doing quantization of weights in 16-bit we will have a mere loss of 0.1pp in accuracy and also it will help us to achieve our goal of high throughput.
 
-In 2018 a survey was carried out which discussed various tool-flows for mapping of CNNs on FPGAs. These tool-flows were distinguished into two categories based on the architecture each tool-flow adheres to. First architecture is Streaming architecture where each layer is assigned a hardware block and these layers are chained to form a pipeline. Second architecture is Single computation Engine architecture which is used to form an overlay. Due to this, it provides flexibility, portability, fast configuration time. In our project, we are aiming to create overlays, where we will create a separate .aocx file for each layer and then these can be called in the OpenVINO plugin to deploy it on FPGAs.
+In 2018 a survey was carried out which discussed various tool-flows for mapping of CNN on FPGAs. These tool-flows were distinguished into two categories based on the architecture each tool-flow adheres to. First architecture is \textit{Streaming Architecture} where each layer is assigned a hardware block and these layers are chained to form a pipeline. Second architecture is \textit{Single Computation Engine} architecture which is used to form an overlay. Due to this, it provides flexibility, portability, fast configuration time. In our project, we are aiming to create overlays, where we will create a separate .aocx file for each layer and then these can be called in the OpenVINO plugin to deploy it on FPGAs.
 
 
 %End of the chapter
