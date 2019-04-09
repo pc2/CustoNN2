@@ -82,8 +82,7 @@ Reasons for selecting ImageNet
 
 
 \section{Topologies}
-We have considered three topologies for our project. The details of those topologies are described below.
-
+Here, we describe the CNN topologies that we will be deploying in our project. These are some of the state-of-the-art topologies that have performed exceptionally well on the ImageNet challenge such as ResNet and GoogLeNet, as a result of which we made the decision for their deployment so as to investigate how their performance can be improved through FPGA acceleration while maintaining classification accuracy. The following sections give a detailed explanation about their architectures and basic working principles.
 \subsection{GoogLeNet}
 GoogLeNet is a deep convolutional neural network and is also known as Inception-v1. The architecture is based on the Hebbian principle which states that \textit{cells that fire together wire together} with the intuition of multi-scale processing. GoogLeNet is 22 layers deep network and used for object detection and classification. It has modules known as Inception which is a network within a network. GoogLeNet does not have any fully connected layers but uses global average pooling which keeps the model from overfitting the data. It was able to achieve a top-5 error rate of 6.67\% and requires only 4 million parameters, whereas AlexNet requires up to 60 million parameters.
 
