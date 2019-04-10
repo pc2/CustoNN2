@@ -36,15 +36,15 @@ classification applications.
 
 
 \section{Why FPGA}
-There are multiple hardware available in the market such as CPU, GPU, ASIC, and FPGA each used for a specific set of applications. Among all of them FPGAs are becoming widely popular and are being used in CNN based applications. Deep Neural Networks (DNN) benefit very much from using FPGA. DNN are math intensive models and FPGAs can be used to execute the mathematical operations involved in DNNs. FPGAs have dedicated DSPs and ALUs to perform such math intensive floating point arithmetic operations. FPGAs are suited for applications which use custom datatypes which is the case in DNN. Also, they provide better latency, parallel processing power, and flexibility among all its counterparts. Using FPGA also has another specific advantage. The advantage is that it can accommodate different CNN models without the need of changing the underlying architecture. CNN models have a streaming architecture that suits well with FPGA architecture.
-In this project, we are using the Intel Stratix 10 with 520N scaleable FPGA network accelerator card for our CNN inference on image classification. Paderborn Center for Parallel Computing (PC2) has 32 of this FPGA and our task is to scale our CNN architecture using all 32 FPGAs. We will be using three pre-trained models namely GoogleNet, ResNet-50 and Inception-v4 in a model ensemble architecture where majority voting is used. The workload will be divided among all the 32 FPGAs and the layers will be distributed to each of these FPGAs in a streaming architecture fashion. At last, we will measure the performance of our system using some performance metrics.
+There are multiple hardware available in the market such as CPU, GPU, ASIC, and FPGA each used for a specific set of applications. Among all of them FPGAs are becoming widely popular and are being used in CNN based applications. Deep Neural Network (DNN) benefit very much from using FPGA. DNN are math intensive models and FPGAs can be used to execute the mathematical operations involved in DNNs. FPGAs have dedicated DSPs and ALUs to perform such math intensive floating point arithmetic operations. FPGAs are suited for applications which use custom datatypes which is the case in DNN. Also, they provide better latency, parallel processing power, and flexibility among all its counterparts. Using FPGA also has another specific advantage. The advantage is that it can accommodate different CNN models without the need of changing the underlying architecture. CNN models have a streaming architecture that suits well with FPGA architecture.
+In this project, we are using the Intel Stratix 10 with 520N scaleable FPGA network accelerator card for our CNN inference on image classification. Paderborn Center for Parallel Computing (PC2) has 32 of this FPGA and our task is to scale our CNN architecture using all 32 FPGAs. We will be using three pre-trained models namely GoogleNet, ResNet 50 and Inception-v4 in a model ensemble architecture where majority voting is used. The workload will be divided among all the 32 FPGAs and the layers will be distributed to each of these FPGAs. At last, we will measure the performance of our system using some performance metrics.
 
 % Remove below lipsum command before posting your work
 
 \chapter{Goals}
-Convolution Neural Network (CNN) is a type of Deep Neural Network (DNN) used in the field of image processing and image analyzing. CNNs are most widely used for extracting valuable features from the input images. The primary goal of our project is to implement the state of the art CNNs on the FPGAs which acts as an accelerator for compute-heavy neural networks. We have the following sub-goals:
+Convolution Neural Network (CNN) is a type of Deep Neural Network (DNN) used in the field of image processing and image analyzing. CNNs are most widely used for extracting valuable features from the input images. The primary goal of our project is to implement the state-of-the-art CNNs on the FPGAs which acts as an accelerator for compute-heavy neural networks. We have the following sub-goals:
 \section{Scaling over multiple FPGAs}
-An FPGA is made up of finite and limited resources and implementing these large CNN models can often result in running out of resources and cannot fit into a single FPGA. Hence in this project, we will use the FPGA infrastructure in the Noctua cluster. The Noctua cluster is a high-performance computing system equipped with 32 Intel Stratix 10 FPGAs with point to point connections. We will be scaling our CNN models on the Noctua cluster by partitioning the large model into smaller models based on the number of layers that will fit onto a single FPGA and these smaller models can then be executed on multiple FPGAs to provide low latency computation. We will use the OpenCL external IO channels to transfer intermediate results from one FPGA to another. Since we are developing an ensemble of three CNN models, all three can be executed in parallel on different FPGAs and results can be aggregated at the end. By scaling our application on multiple FPGAs infrastructure we target to perform as good as the Microsoft's Project Brainwave architecture in terms of latency and throughput.
+An FPGA is made up of finite and limited resources and implementing these large CNN models can often result in running out of resources and cannot fit into a single FPGA. Hence in this project, we will use the FPGA infrastructure in the Noctua cluster. The Noctua cluster is a high-performance computing system equipped with 32 Intel Stratix 10 FPGAs with point to point connections. We will be scaling our CNN models on the Noctua cluster by partitioning the large model into smaller models based on the number of layers that will fit onto a single FPGA and these smaller models can then be executed on multiple FPGAs to provide low latency computation. We will use the OpenCL external I/O channels to transfer intermediate results from one FPGA to another. Since we are developing an ensemble of three CNN models, all three can be executed in parallel on different FPGAs and results can be aggregated at the end. By scaling our application on multiple FPGAs infrastructure we target to perform as good as the Microsoft's Project Brainwave architecture in terms of latency and throughput.
 \par
 Microsoft Project Brainwave is a deep learning platform for real-time Artificial Intelligence (AI) applications like computer vision. Brainwave is equipped with Intel Stratix 10 FPGAs in the Microsoft Azure Cloud and Neural Processing Units (NPU) architecture for executing a DNN model with low latency and high throughput. Brainwave also supports multiple FPGAs infrastructure in the Azure cloud. When the memory resource of the FPGA is exhausted by the DNN model layers, the remaining layers will be mapped to the next FPGA enabling scaling.
 
@@ -52,7 +52,7 @@ Microsoft Project Brainwave is a deep learning platform for real-time Artificial
 Heterogeneous computing systems provide performance gain by using specialized capabilities of different types of processors (CPU+FPGA in our project). OpenCL is a framework for heterogeneous computing which provides software-centric development flow for FPGAs and obtains performance and power advantages with hardware acceleration. We will use the OpenCL tool flow for developing CNN models in our project. It offers us to develop individual kernels for each layer of the CNN model and we will also make use of the channels concept offered by OpenCL to transfer intermediate results from one layer to the next layer without writing the results in the global memory. The kernels will be further optimized by using several OpenCL optimization techniques learnt during the tutorial phase eg: loop unrolling, reducing the Initiation Interval (II) of loops to 1, removing memory dependencies, etc. Performance modeling is applied to each OpenCL kernels to identify the bottlenecks in the design and resolve the issues to obtain a high throughput and high utilization.
 
 \section{Quantization }
-CNN implementation is often complex due to the number of parameters and computations, which makes it difficult to be implemented on a resource-constrained FPGA. The floating point operations are computationally too expensive, hence quantization can be applied to the deep networks to convert the floating point weights into fixed point weights. Fixed point operations typically consumes fewer hardware resources than floating point operations. Quantization will help in reducing the power consumption, memory footprint and resources utilization. In our project, we rely on the machine learning suite to optimize and quantize the CNN model so that the accuracy is not drastically dropped in the quantized model. We will also distinguish the models with quantized weights and floating point weights.
+CNN implementation is often complex due to the large number of parameters and computations, which makes it difficult to be implemented on a resource constrained FPGA. The floating point operations are computationally expensive, hence quantization can be applied to the deep networks to convert the floating point weights into fixed point weights. Fixed point operations typically consumes fewer hardware resources than floating point operations. Quantization will help in reducing the power consumption, memory footprint and resources utilization. In our project, we rely on Intel OpenVINO to optimize and quantize the CNN model so that the accuracy is not drastically dropped in the quantized model. We will also distinguish the models with quantized weights and floating point weights.
 
 %End of the chapter
 
@@ -66,7 +66,7 @@ Performance metrics just account for the arithmetic operations performed on the 
 \subsection{Operations per cycle}
 Operations per cycle is a unit of measure for the numerical computing performance of a computer. Typically expressed as OPs/cycle, this metric tells us how many operations are performed in one cycle.  
 
-To calculate OPs/cycle we look at the source code and the final profiler report from the executed code. From the source code, we calculate the number of operations sans the overheads (loop index calculations, loop increment operations, etc). And from the profiler report, we get a concrete idea of the clock frequency of the FPGA and the execution time. Combining these two allows us to calculate operations per cycle.
+To calculate OPs/cycle we look at the source code and the final profiler report from the executed code. From the source code, we calculate the number of operations sans the overheads (loop index calculations, loop increment operations, etc). From the profiler report, we get a concrete idea of the clock frequency of the FPGA and the execution time. Combining these two allows us to calculate operations per cycle.
 
 \subsection{Operations per second}
 Operations per second is closely related with the above metric “Operations per cycle”. It is usually expressed as OPs/second. OPs/second depends on the clock frequency of the platform. 
@@ -82,29 +82,27 @@ The metrics OPs/second and OPs/byte make up the metrics required to do Roofline 
 
 
 \subsection{Latency}
-Latency is generally defined as the time delay between initial input to a system and the output from the system. Latency captures the time it takes to load data, pre-process it, send said data over a network to the Inference Engine, the time needed for inference, and time needed to send the classified data back to the user.   
+Latency is generally defined as the time delay between initial input to a system and the output from the system. Latency captures the time it takes to load data, pre-process it, send said data over a network to the Inference Engine, the time needed for inference, and time needed to send the classified data back to the user. 
 
-Latencies can be measured for just a single image or over for a batch of images. We can expect to have different latencies based on how we measure it (single image vs batch of images).  
-
-As an example of what has been achieved in related works, we have ALAMO tool-flow running on Arria 10 GT115 running at 239.62MHz having a latency of 4.05ms.
+Latencies can be measured for just a single image or over for a batch of images. We can expect to have different latencies based on how we measure it (single image vs batch of images). As an example of what has been achieved in related works, we have ALAMO tool-flow running on Arria 10 GT115 running at 239.62MHz having a latency of 4.05ms.
 Our aim would be to have latencies in this range.
 
 \subsection{Throughput}
 Throughput is a measure of the amount of information processed per unit time. In our case, we define it as the number of images classified per second.  There are well-known techniques to improve throughput like batch processing where a number of images are batched together and sent for inference job. 
 But as the batch size goes up, latencies also tend to go up. So there is a trade-off involved here between throughput and latency.  \par
-We had deployed a pre-trained ResNet50 DNN model in the Microsoft Azure cloud during our research phase and the images were classified in less than 4 ms and throughput of 39.5 Teraflops on a single Stratix 10 FPGA. Hence we decided to benchmark our project group's implementation against Project Brainwave.
+We had deployed a pre-trained ResNet 50 DNN model in the Microsoft Azure cloud during our research phase and the images were classified in less than 4 ms and throughput of 39.5 Teraflops on a single Stratix 10 FPGA. Hence we decided to benchmark our project group's implementation against Microsoft Project Brainwave.
 
 
 
 \section{Quality Metrics}
 \subsection{Accuracy}
 Accuracy is defined as the fraction of the number of correct inferences made to the total number of inferences made. In our context, accuracy depends on the CNN topology used, nature of weights (floating point vs fixed points, etc), training data, etc. 
-In literature, accuracies are expressed in terms of percentages and the changes from baseline models' accuracies are measured in terms of percentage points (pp). 
-The use of quantized weights in our project might decrease the accuracy compared to baseline models. In our case, baseline models are the existing, trained topologies mentioned in chapter 3. Our goal would be to make use of DNN approximation techniques and still achieve accuracy within 3pp of the baseline model.
+In literature, accuracies are expressed in terms of percentages and the changes from baseline model's accuracies are measured in terms of percentage points (pp). 
+The use of quantized weights in our project might decrease the accuracy compared to baseline models. In our case, baseline models are the existing, trained topologies mentioned in Chapter 3. Our goal would be to make use of DNN approximation techniques and still achieve accuracy within 3pp of the baseline model.
 
 
 \subsection{Rate Correct Score}
-Taking inspiration from the field of Memory and  Cognitive research, we can combine accuracy and latency by considering Rate Correct Score. It is defined as    
+Taking inspiration from the field of Memory and Cognitive research, we can combine accuracy and latency by considering Rate Correct Score. It is defined as    
 
 $RCS = \frac{c}{\sum R_t}$    
 
@@ -121,15 +119,15 @@ Our aim would be to maximize RCS (either by increasing the accuracy or by decrea
 \chapter{Datasets, Topologies and Architecture comparison}
 
 \section{Datasets}
-CNN are trained on datasets. Each dataset consists of specific type of images and each of them is used in different tasks such as image classification or image captioning etc. Below are some of the datasets specified which we can choose to work on in this project.
+CNN are trained on datasets. Each dataset consists of specific type of images and each of them are used in different tasks such as image classification or image captioning etc. Below are some of the datasets specified which we can choose to work on in this project.
 \subsection{ImageNet}
-It is one of the most prominent datasets used in the field of visual object recognition. In 2009 this dataset was first introduced to the world in the Conference on Computer Vision and Pattern Recognition by the computer science department of  Princeton University. It has over 14 million images and over 20000 categories. A large portion of the images has been hand annotated which can be helpful in the task of image captioning. Every year ImageNet runs a challenge called the ImageNet Large Scale Visual Recognition Challenge (ILSVRC), where different software architectures and algorithms take part in order to classify images of the dataset correctly. By 2017 most of the algorithms working on ImageNet have already achieved the accuracy of more than 95\%.
+It is one of the most prominent dataset used in the field of visual object recognition. In 2009 this dataset was first introduced to the world in the Conference on Computer Vision and Pattern Recognition by the computer science department of  Princeton University. It has over 14 million images and over 20000 categories. A large portion of the images has been hand annotated which can be helpful in the task of image captioning. Every year ImageNet runs a challenge called the ImageNet Large Scale Visual Recognition Challenge (ILSVRC), where different software architectures and algorithms take part in order to classify images of the dataset correctly. By 2017 most of the algorithms working on ImageNet have already achieved the accuracy of more than 95\%.
 
 \subsection{CIFAR10}
-CIFAR named after Canadian Institute For Advanced Research is a widely used dataset in machine learning paradigm which is used in training various machine learning models. It is used in visual object recognition. It consists of 60000 images in total. The 10 in the name stands for the 10 classes in the dataset and each class has 6000 images. Each image in the dataset is of 32*32 pixels coloured images. The 10 classes in the data set are air-planes, cars, birds, cats, deer, dogs, frogs, horses, ships, and trucks. Since the images in the dataset are of low resolution, it is one of the favourites for researchers to train their algorithms since they do not have to invest huge amount of resources in terms of money and hardware infrastructure. 
+Canadian Institute For Advanced Research (CIFAR) is a widely used dataset in machine learning paradigm which is used in training various machine learning models. It is used in visual object recognition. It consists of 60000 images in total. The 10 in the name stands for the 10 classes in the dataset and each class has 6000 images. Each image in the dataset is of 32x32 pixels coloured images. The 10 classes in the data set are air-planes, cars, birds, cats, deer, dogs, frogs, horses, ships, and trucks. Since the images in the dataset are of low resolution, it is one of the favourites for researchers to train their algorithms since they do not have to invest huge amount of resources in terms of money and hardware infrastructure. 
 
 \subsection{MNIST}
-Modified National Institute of Standards and Technology is a dataset consisting of handwritten digits. This database is commonly used in the field of machine learning. MNIST is a derived dataset from NSIT dataset. It consists of images which are 28*28 pixel size and greyscale nature. This dataset has been divided into 2 sets. To say in total it has 60000 training images and 10000 testing images. NSIT's testing dataset contributes to one half of the training and testing database of the MNIST and the other half is filled by NSIT's training dataset. The lowest possible error rate on MNIST achieved is 0.23\%
+Modified National Institute of Standards and Technology (MNIST) is a dataset consisting of handwritten digits. This database is commonly used in the field of machine learning. MNIST is a derived dataset from NSIT dataset. It consists of images which are 28x28 pixel size and greyscale nature. This dataset has been divided into 2 sets. To say in total it has 60000 training images and 10000 testing images. NSIT's testing dataset contributes to one half of the training and testing database of the MNIST and the other half is filled by NSIT's training dataset. The lowest possible error rate on MNIST achieved is 0.23\%
 which was done by implementing a system of CNNs.
 
 \subsection{Selection of Dataset}
@@ -172,7 +170,7 @@ Many convolution DNNs run into a problem with vanishing or exploding gradients b
 \begin{wrapfigure}{l}{0.4\textwidth}
 \centering
 \includegraphics[scale=0.5]{resnet_2}
-\caption{ResNet-50}
+\caption{ResNet 50}
 \label{fig:resnet_50}
 \end{wrapfigure}
 
@@ -187,18 +185,16 @@ The main concepts of constructing ResNet:
 \item Supporting a balance between the depth and width of the network. You should increase or decrease both dimensions.
 \end{itemize}
 
-Figure \ref{fig:resnet_50} shows the whole scheme for ResNet-50.
+Figure \ref{fig:resnet_50} shows the whole scheme for ResNet 50.
 
 \subsection{Inception-v4}
-Inception-v4 is a deep neural network (DNN) released by Google. Inception-v4 is the fourth version of inception module and includes all techniques from Inception-v1, Inception-v2, and Inception-v3. Google devised inception module and it was a key idea for Inception-v1. The naive version of the first inception module included 1X1, 3X3 and 5X5 convolution and max-pooling as input and the result of them concatenated together as output. \\
+Inception-v4 is a deep neural network (DNN) released by Google. Inception-v4 is the fourth version of inception module and includes all techniques from Inception-v1, Inception-v2, and Inception-v3. Google devised inception module and it was a key idea for Inception-v1. The naive version of the first inception module included 1x1, 3x3 and 5x5 convolution and max-pooling as input and the result of them concatenated together as output.
 
-The contribution from Inception-v2 is batch normalization. They use ReLU as activation function in order to avoid the saturation problem and vanishing gradients. They had to use a higher learning rate for regularization because the output became more irregular. Last changes were reducing dimension by replacing  5X5 convolution to two 3X3 convolutions. 
+The contribution from Inception-v2 is batch normalization. They use ReLU as activation function in order to avoid the saturation problem and vanishing gradients. They had to use a higher learning rate for regularization because the output became more irregular. Last changes were reducing dimension by replacing  5x5 convolution to two 3x3 convolutions. 
 
-Inception-v4 also used the factorization from the Inception-V3. They reduced the dimensionality and it helped to decrease the overfitting problem. For example, if you have a 3×3 filter then you need 9 parameters, but the factorization idea proposes to operate  3X1 and  1X3 filters and use only 6 parameters. 
+Inception-v4 also used the factorization from the Inception-v3. They reduced the dimensionality and it helped to decrease the overfitting problem. For example, if you have a 3x3 filter then you need 9 parameters, but the factorization idea proposes to operate 3x1 and 1x3 filters and use only 6 parameters. 
 
-Inception-v4 has 3.1\% in Top-5 error rate and this result is better than the winner of the 2015 year ResNet (3.57\%) and  Inception-v3 (3.58\%). 
-
-Inception architecture has a relatively low computation cost. Google tries to make the inception module more efficient, so they made it deeper and wider than Inception-v3 and they also simplified the architecture of this DNN.
+Inception-v4 has 3.8\% in Top-5 error rate. Inception architecture has a relatively low computation cost. Google tries to make the inception module more efficient, so they made it deeper and wider than Inception-v3 and they also simplified the architecture of this DNN.
 
 Figure \ref{fig:inception_v4} shows the whole scheme for Inception-v4.
 
@@ -220,7 +216,7 @@ Figure \ref{fig:topology_results} shows the example of the output for one of the
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.8]{topology_results.png}
-    \caption{List of labels with their scores}
+    \caption{List of labels with their score}
     \label{fig:topology_results}
 \end{figure}
 
@@ -240,13 +236,13 @@ We have considered state-of-the-art toolkits to deploy pre-trained deep learning
 
 % Remove below lipsum command before posting your work
 Intel OpenVINO is an open source toolkit from Intel that allows the deployment of pre-trained deep neural networks on different hardware platforms such as CPU, GPU, FPGA, etc. The toolkit is available for installation for the Windows operating system as well as selected Linux distributions. All of the tool's libraries and plugins except the FPGA plugin are a part of the open source GitHub repository.
-The functionality of OpenVINO is divided among its components, Model Optimizer, Calibration Tool,  Inference Engine. This is shown in Fig 5.1 and explained below. 
+The functionality of OpenVINO is divided among its components, Model Optimizer, Calibration Tool, Inference Engine. This is shown in Fig 5.1 and explained below. 
 
 \subsection{Model Optimizer}
 The Model Optimizer is a python based tool which takes as input a pre-trained model. It supports many popular deep learning frameworks such as TensorFlow, Caffe, PyTorch, MXnet, etc. This model is then converted to a common intermediate format (IR), thereby making the inference engine independent of the training framework. The IR contains a .xml file which represents the computational graph of the CNN and a .bin file containing the weights. The graph is optimized by fusing different layers of the original topology wherever possible. The weights are accordingly adjusted. The toolkit comes with a model downloader which can download various openly available pre-trained models for different frameworks.
  
 \subsection{Calibration Tool}
-The Calibration Tool, added in the recent release of the toolkit, performs post training quantization to int8 before the IR is passed on to the inference engine.  The tool is open source. 
+The Calibration Tool, added in the recent release of the toolkit, performs post training quantization to int8 before the IR is passed on to the inference engine. The tool is open source. 
  
  \subsection{Inference Engine}
  The Inference Engine is responsible for the execution of the model on the selected hardware. For this purpose, it provides a C++ API which can be integrated into an application. The main task performed by the inference engine is to read the intermediate representation of the model, select the hardware for deployments such as CPU or FPGA and call the appropriate plugin which defines all necessary data structures and functions required to perform inference and return the output along with performance statistics. 
@@ -273,7 +269,7 @@ TVM takes the model from different learning frameworks and generates optimized c
 
 TVM includes a computational graph rewriter, tensor expression language and new features for GPU accelerators. The TVM compilation stack is shown in Fig 5.2.
 
-The system has the stack of implementation: NNVM $\to$ TOPI $\to$ TVM $\to$ VTA. NNVM acts as a graph optimizer by taking the model from an existing framework and converting it into “TVM” graph. For these operations, we use the TOPI language. TOPI is a library where functions operate as instructions for further work. For example, TOPI defines a tensor computation, schedules space for each NN operator (e.g. conv2d). The next step is the application of the TVM functions. TVM uses the TOPI instructions and generates code for several backends, such as LLVM, or CUDA, etc. The final step is the Versatile Tensor Accelerator (VTA) which is responsible for the stream and microkernels. 
+The system has the stack of implementation: NNVM $\to$ TOPI $\to$ TVM $\to$ VTA. Neural Network Virtual Machine (NNVM) acts as a graph optimizer by taking the model from an existing framework and converting it into “TVM” graph. For these operations, we use the TVM Operator Inventory (TOPI) language. TOPI is a library where functions operate as instructions for further work. For example, TOPI defines a tensor computation, schedules space for each NN operator (e.g. conv2d). The next step is the application of the TVM functions. TVM uses the TOPI instructions and generates code for several backends, such as Low Level Virtual Machine (LLVM), or Compute Unified Device Architecture (CUDA), etc. The final step is the Versatile Tensor Accelerator (VTA) which is responsible for the stream and microkernels. 
 
 In order to change a hardware target ( CPU, GPU or TPU) we need to rebuild TVM libraries again.  
 
@@ -335,9 +331,12 @@ xDNN provides \textit{Overlay} to combine various xDNN IP kernels.
  \section{Selection of Technologies}
 Reasons for selecting OpenVINO and TVM
  \begin{itemize}
- \item Intel OpenVINO and Xilinx ML-Suite provide similar features such as Layer fusion, Optimizer, and Quantizer as a  model optimizer components for optimization of the CNN model. 
- \item For Ml-Suite we have to write our own inference engine  to execute the bitstreams on the Noctua cluster which is readily available in OpenVINO due to which we have decided to use OpenVINO
- \item OpenCL kernels generated by TVM for the CNN model needs to be compiled separately to create bitstreams. The FPGA synthesis takes a long time to create bitstreams which is not the case for OpenVINO. Due to this, we plan to use TVM only for the generation of OpenCL kernels.
+ \item Intel OpenVINO and Xilinx ML Suite provide similar features such as Layer fusion, Optimizer, and Quantizer as model optimizer components for optimization of the CNN model. 
+ \item For ML-Suite we have to write our own inference engine  to execute the bitstreams on the Noctua cluster, which is readily available in OpenVINO due to which we have decided to use OpenVINO.
+ \item The OpenVINO inference engine, as explained earlier comes with several plugins for hardware platforms such as CPU,GPU,FPGA etc. respectively. The FPGA plugin available by default is not open source and works only with certain FPGA boards for which it contains pre-compiled bitstreams. 
+ \item Thus, we will be developing our own FPGA plugin, extending the capabilities of OpenVINO inference engine, to make it operational with Stratix 10 FPGAs in the Noctua Cluster of the PC2 infrastructure. 
+ \item This plugin development effort will primarily be directed at developing bitstreams for Stratix 10 which will be synthesized from OpenCL kernels written according to the CNN layer requirements of our chosen topologies, as well as to deploy the bitstreams on the FPGAs so as to leverage the availability of multiple devices (scaling over multiple FPGAs) as efficiently as possible.    
+ \item We will use TVM to generate OpenCL kernel codes which will then be synthesized into bitstreams to work with OpenVINO. TVM will not be used beyond this since it only has support for Xilinx boards by default and does not support scaling over multiple FPGAs.
 
  \end{itemize}
 
@@ -368,7 +367,7 @@ Project meetings will be held twice a week. Currently, it is being held on Monda
 % Remove below lipsum command before posting your work
 In this phase, we decide on the goals, feasibilities of achieving these goals, prioritizing and the overall organization of the project which will be followed till the completion of the project. This involves defining the scope, dividing the project into subgroups, assigning roles and responsibilities (such as project lead, Git master). Here we define the phases and estimate the time required. 
 
-During the research phase of the project, the team members conducted background research on 4 frameworks. They were Intel OpenVINO, Xilinx ML Suite, TVM and Microsoft Project Brainwave. We discussed the feasibilities of each of these tools, pros, and cons from the knowledge gained from the research phase. We identified a design that is a combination of TVM and OpenVINO to achieve our goals. Based on this design, we have come up with three milestones for the project. The details of this and the milestones will be discussed in the next sections.
+During the research phase of the project, the team members conducted background research on 4 frameworks. They were Intel OpenVINO, Xilinx ML Suite, TVM and Microsoft Project Brainwave. We discussed the feasibilities of each of these tool's pros and cons from the knowledge gained in the research phase. We identified a design that is a combination of TVM and OpenVINO to achieve our goals. Based on this design, we have come up with three milestones for the project. The details of this and the milestones will be discussed in the next sections.
 
 The team is working in groups now with one group working on OpenVINO plugin development while the other group is working on using TVM to generate OpenCL kernel for a simple CNN topology. Once this is done, we will identify individual tasks and the team leader will assign them to the members. The track of individual tasks will be kept in MoMs and GitLab. We are using the Waterfall model since our project is a short-term project with linear sequence of phases and goals are defined and fixed already. 
 
@@ -397,7 +396,7 @@ In this phase, we start coding by keeping the goals in mind and start implementi
 \begin{tabular}{|l|l|}
 \hline
 Milestones                  & Duration                 \\ \hline
-Milestone 1                 & 01.04.2019 to 24.04.2019 \\ \hline
+Milestone 1                 & 08.04.2019 to 24.04.2019 \\ \hline
 Milestone 2                 & 25.04.2019 to 15.05.2019 \\ \hline
 Preparation for Milestone 3 & 16.05.2019 to 31.05.2019 \\ \hline
 Milestone 3                 & 01.06.2019 to 07.07.2019 \\ \hline
@@ -423,7 +422,7 @@ Project Phases                               & \multicolumn{4}{c|}{Mar}         
 Project Planning                             &  &  & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &  &  \\ \hline
 Finalizing the Plan and Mini Presentation    &  &  &                          &                          & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &  &  \\ \hline
 Design Phase                                 &  &  &                          &                          &                          & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &  &  \\ \hline
-Implementation and Testing                   &  &  &                          &                          &                          &                          & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} &                          &                          &                          &                          &                          &                          &                          &                          &                          &  &  \\ \hline
+Implementation and Testing                   &  &  &                          &                          &                          & \cellcolor[HTML]{32CB00}                         & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} &                          &                          &                          &                          &                          &                          &                          &                          &                          &  &  \\ \hline
 Result collection and Performance Evaluation &  &  &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} &                          &                          &                          &                          &  &  \\ \hline
 Final project report and Presentation        &  &  &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          &                          & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} & \cellcolor[HTML]{32CB00} &  &  \\ \hline
 \end{tabular}
@@ -435,7 +434,7 @@ Final project report and Presentation        &  &  &                          & 
 \chapter{Conclusion}
 
 % Remove below lipsum command before posting your work
-To recap the project plan, we are trying to build a system which performs as good as or better than State of the art inference systems by leveraging the infrastructure available in PC2. Currently, we have finalized the dataset we are going to use(ImageNet), and the CNNs topologies (GoogleNet, Inception V4 and Resnet50). The next challenge is to divide the work of developing a plugin for Intel OpenVINO and meanwhile implement a simple model in TVM. For the future phase, we will use TVM to generate OpenCL kernels on our model. Later, we will transfer these decisions to small talk before the research group before starting the project.
+To recap the project plan, we are trying to build a system which performs as good as or better than State of the art inference systems by leveraging the infrastructure available in PC2. Currently, we have finalized the dataset we are going to use which is ImageNet, and the CNNs topologies (GoogleNet, Inception V4 and Resnet 50). The next challenge is to divide the work of developing a plugin for Intel OpenVINO and meanwhile implement a simple model in TVM. For the future phase, we will use TVM to generate OpenCL kernels on our model. Later, we will transfer these decisions to small talk before the research group before starting the project.
 
 %End of the chapter
 
