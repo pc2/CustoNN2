@@ -1,5 +1,5 @@
 # OpenVINO Installation guide on CC Frontend
-Download the Intel® Distribution of OpenVINO™ 2019 R1 toolkit package file from Intel® Distribution of OpenVINO™ toolkit for Linux* with FPGA Support. Select the Intel® Distribution of OpenVINO™ toolkit for Linux with FPGA Support package from the dropdown menu.
+Download the Intel® Distribution of OpenVINO™ 2019 R1 toolkit package file from Intel® Distribution of OpenVINO™ toolkit for Linux* with FPGA Support [`here`](https://software.intel.com/en-us/openvino-toolkit/choose-download/free-download-linux-fpga). Select the Intel® Distribution of OpenVINO™ toolkit for Linux with FPGA Support package from the dropdown menu.
 
 Open a command prompt terminal window.
 Change directories to where you downloaded the Intel Distribution of OpenVINO toolkit for Linux* with FPGA Support package file.
