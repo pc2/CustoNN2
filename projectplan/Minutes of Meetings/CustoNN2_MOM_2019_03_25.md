@@ -15,9 +15,8 @@
   2nd team has cloned the dldt repository from GitHub onto the GitLab for OpenVINO plugin development. <br/>
   
   Action: <br/>
-  Project Plan
-    Owner: <br/>
-    Team
-    Due Date: <br/>
-    2019/03/25
+  Project Plan <br/>
+    Owner: Team <br/>
+    Due Date: 2019/03/25<br/>
+    
   
