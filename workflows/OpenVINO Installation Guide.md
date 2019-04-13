@@ -78,6 +78,8 @@ Run the script for your model framework. You can run more than one script:
     
 The Model Optimizer is configured for two frameworks.
 
+OpenVINO does not support bitstreams that are compatible with FPGA on PC2 Infrastructure. Hence it requires development of custom plugin and bitstreams for respective boards. 
+
 Detailed installation guide can be found here:
 https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux_fpga.html
 
