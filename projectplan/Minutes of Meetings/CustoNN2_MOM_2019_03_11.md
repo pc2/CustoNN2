@@ -19,8 +19,8 @@
   2) Model Ensemble: GoogleNet, ResNet-52, InceptionV4 <br/> 
   
   Action: <br/> 
-  &nbsp;&nbsp;Coming up with the project plan 
-  &nbsp;&nbsp;Owner : Team
+  &nbsp;&nbsp;Coming up with the project plan  <br/> 
+  &nbsp;&nbsp;Owner : Team  <br/> 
   
 
 
