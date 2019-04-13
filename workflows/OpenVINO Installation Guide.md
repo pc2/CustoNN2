@@ -17,14 +17,13 @@ Go to the `l_openvino_toolkit_fpga_p_<version>` directory:
     cd l_openvino_toolkit_fpga_p_<version>
 If you have a previous version of the Intel Distribution of OpenVINO toolkit installed, rename or delete these two directories:
     - `/home/<user>/inference_engine_samples`
-    
     - `/home/<user>/openvino_models`
     
 #### Installation Notes:
 
 Choose an installation option and run the related script as root.
 You can use either a GUI installation wizard or command-line instructions (CLI).
-Screenshots are provided for the GUI, but not for CLI. The following information also applies to CLI and will be helpful to your installation where you will be presented with the same choices and tasks.
+The following information applies to CLI and will be helpful to your installation where you will be presented with the same choices and tasks.
 Choose your installation option:
 
 Option 1: GUI Installation Wizard:
