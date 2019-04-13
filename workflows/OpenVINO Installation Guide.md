@@ -17,6 +17,7 @@ Go to the `l_openvino_toolkit_fpga_p_<version>` directory:
     cd l_openvino_toolkit_fpga_p_<version>
 If you have a previous version of the Intel Distribution of OpenVINO toolkit installed, rename or delete these two directories:
     - `/home/<user>/inference_engine_samples`
+    
     - `/home/<user>/openvino_models`
     
 #### Installation Notes:
