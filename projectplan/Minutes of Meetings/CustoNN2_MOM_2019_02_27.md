@@ -20,4 +20,7 @@
   5) Survey: Findings will be given in the next meetings.<br/>
   
   
-  Project decisions: <br/> Team distributed few tasks to team members. <br/> 1) Adesh would research on: IO channels <br/> 2) Rushikesh and Nikhitha would research on: Datasets <br/> 3) Amey would research on: CNN models
+  Project decisions: Team distributed few tasks to team members. <br/> 
+  1) Adesh would research on: IO channels <br/> 
+  2) Rushikesh and Nikhitha would research on: Datasets <br/> 
+  3) Amey would research on: CNN models
