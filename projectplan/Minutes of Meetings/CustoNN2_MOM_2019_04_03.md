@@ -1,4 +1,4 @@
-  Date of Meeting (MM/DD/YYYY):  (04/03/2019)<br/>
+  Date of Meeting (YYYY/MM/DD):  (2019/04/03)<br/>
   
   Time: 9:15 to 11:45 AM <br/>
   Present members: Aayush, Adesh, Alina, Amey, Anshul, Arathy, Chiranjeevi, Rushikesh, Nikitha <br/>
