@@ -228,7 +228,7 @@ public:
         CALL_STATUS_FNC(serialize, xmlPath, binPath);
     }
 
-protected:
+//protected:
     /**
      * @brief reader extra reference, might be nullptr
      */

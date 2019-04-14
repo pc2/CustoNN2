@@ -118,10 +118,17 @@ int main(int argc, char *argv[]) {
         /** Extracting model name and loading weights **/
         networkReader.ReadWeights(binFileName);
         CNNNetwork network = networkReader.getNetwork();
+	details::CNNNetworkIterator i(network.actual);
+	while (i != details::CNNNetworkIterator()) {
+        CNNLayer::Ptr layer = *i;
+       	std::cout<<"Layer name: "<<layer->name<<" Layer type: "<<layer->type<<"\n";
+        i++;
+    }
+
         // -----------------------------------------------------------------------------------------------------
 
         // --------------------------- 3. Configure input & output ---------------------------------------------
-
+	
         // --------------------------- Prepare input blobs -----------------------------------------------------
         slog::info << "Preparing input blobs" << slog::endl;
 
@@ -327,3 +334,4 @@ int main(int argc, char *argv[]) {
     slog::info << "Execution successful" << slog::endl;
     return 0;
 }
+
