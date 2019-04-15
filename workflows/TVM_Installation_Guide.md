@@ -2,11 +2,10 @@
 
 Step 1. Clone tvm repository from git
 
----
 
-git clone --recursive https://github.com/dmlc/tvm
 
----
+    git clone --recursive https://github.com/dmlc/tvm
+
 
 Step 2. Create build direcotry and copy cmake/config.cmake file
 
