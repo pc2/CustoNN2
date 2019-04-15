@@ -12,8 +12,8 @@ Step 2. Create build direcotry and copy cmake/config.cmake file
     cp cmake/config.cmake build
 
 
-Step 3. Change set(USE_OPENCL OFF) to set(USE_OPENCL ON)
-Change set(USE_AOCL OFF) to set(USE_AOCL ON)
+Step 3. Change `set(USE_OPENCL OFF)` to `set(USE_OPENCL ON)`
+Change `set(USE_AOCL OFF)` to `set(USE_AOCL ON)`
 
 Step 4. 
 
