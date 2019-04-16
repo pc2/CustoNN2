@@ -384,22 +384,30 @@ The most important phase of our project is this phase and arguably the lengthies
 
 In this phase, we start coding by keeping the goals in mind and start implementing the tasks assigned to us. This phase will also include testing and fixing bugs therefore coding and testing will go hand in hand. At the end of this phase, we will have a working application that meets the goals we defined. Currently, we have divided the entire plan into three milestones. 
 
-\textbf{Milestone 1} is developing a plugin for OpenVINO and generating kernels using TVM to run a simple topology (3 Layers) on one FPGA. The design for this milestone is, we will use a simple CNN on TensorFlow and use the model optimizer of OpenVINO and meanwhile prepare OpenCL kernels using TVM Then we will customize the kernels for OpenVINO and synthesize them for Stratix 10. After this, the plugin will use the .aocx files generated and produce labels and results. The evaluation criteria for this Milestone is whether the plugin can launch the .aocx files we create on the FPGAs. 
+\textbf{Milestone 1} is developing a plugin for OpenVINO and generating kernels using TVM to run a simple topology (3 Layers) on one FPGA. The design for this milestone is, we will use a simple CNN on TensorFlow and use the model optimizer of OpenVINO and meanwhile prepare OpenCL kernels using TVM. Then we will customize the kernels for OpenVINO and synthesize them for Stratix 10. After this, the plugin will use the .aocx files generated and produce labels and results. The evaluation criteria for this milestone is whether the plugin can launch the .aocx files we created on the FPGAs. 
 
 \textbf{Milestone 2} is running the same topology on multiple FPGAs available in the Noctua Cluster. The evaluation criteria for this milestone is whether plugin can scale the model on multiple (2~4) FPGAs.
 
-\textbf{Breakpoint} We have planned to achieve Milestone 1 in the first three weeks of April and Milestone 2 by the first week of May. If we fail to meet the above criteria with OpenVINO, then we will scrap OpenVINO and go with Xilinx ML Suite as Plan B with a similar design discussed above. 
+\textbf{Breakpoint:} We have planned to achieve Milestone 1 in the first three weeks of April and Milestone 2 by the second week of May. If we fail to meet the above criteria with OpenVINO, then we will scrap OpenVINO and go with Xilinx ML Suite as Plan B with a similar design discussed above. 
 
-\textbf{Milestone 3}  On completion of Milestone 1 and 2, we will have a simple CNN model that can run on 2~4 FPGAs by leveraging the gains of OpenVINO and TVM. The goal of Milestone 3 is to deploy a pre-trained ResNet50 topology on 32 FPGAs on ImageNet dataset. But before scaling a more complex topology like ResNet50 on 32 FPGAs, we will take some time to design and rethink how to achieve this comparatively big milestone. Hence, we are going to have a preparation phase for milestone 3 which will be for 2 weeks. In this phase we will come up with Performance model that theoretically gives a rough estimate of how our hardware design will perform in terms of OPs/second, global memory bandwidth, etc.
+\textbf{Preparation Phase:} In this phase we will be preparing for the upcoming milestone. This includes downloading the pre-trained models of all the three topologies. We will then quantize the weights to int16 for these model. This will be followed by an estimated performance model that theoretically gives us a rough estimate of how good our hardware design will perform in terms of OPs/second, global memory bandwidth, etc.
+
+\textbf{Milestone 3:} On completion of Milestone 1 and 2, we will have a simple CNN model that can run on 2~4 FPGAs by leveraging the gains of OpenVINO and TVM. The goal of Milestone 3 is to deploy all the three topologies on 32 FPGAs for ImageNet dataset. The results from all three topologies will be sent back to the host application where ensemble plan will be executed and final results will be obtained.
+
+\textbf{Milestone 4:} The observed results from Milestone 3 will be compared to the estimated results in the Preparation phase. If any discrepancy in performance is found, necessary optimization techniques will be employed to get rid of any bottlenecks.
+
+\textbf{Milestone 5:} This marks the final phase of the project wherein detailed project report will be submitted. The project report will enclose all the details and results of the project group. A final project presentation will be given by the team which will talk about the implementation and experimental results.
 
 \begin{table}[]
 \begin{tabular}{|l|l|}
 \hline
-Milestones                  & Duration                 \\ \hline
+\textbf{Milestones}                   & \textbf{Duration}                  \\ \hline
 Milestone 1                 & 08.04.2019 to 24.04.2019 \\ \hline
 Milestone 2                 & 25.04.2019 to 15.05.2019 \\ \hline
-Preparation for Milestone 3 & 16.05.2019 to 31.05.2019 \\ \hline
+Preparation Phase & 16.05.2019 to 31.05.2019 \\ \hline
 Milestone 3                 & 01.06.2019 to 07.07.2019 \\ \hline
+Milestone 4                 & 07.07.2019 to 05.08.2019 \\ \hline
+Milestone 5                 & 06.08.2019 to 06.09.2019 \\ \hline
 \end{tabular}
 \end{table}
 
