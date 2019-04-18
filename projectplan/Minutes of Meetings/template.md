@@ -1,14 +1,14 @@
 # CustoNN2 : Minutes of the meeting
-&nbsp;
+<br/>
 | Date of Meeting (YYYY/MM/DD)  | (2019/ / )  |
 |:---| :---: |
 | Time  |   |
 | MOM Prepared by  |   |
 
-| Team||
-|---| :---: |
-|Present members| | 
-|Absentees| |
+| Team | |
+| --- | :---: |
+| Present members | - | 
+| Absentees | - |
 
 ### Notes and Decisions 
 ##### Project organization updates
@@ -23,12 +23,12 @@
 -
 
 ### Issues and Actions
-|Issue| Owner|Time|
+| Issue | Owner | Time |
 |:---| :--- | :---: |
-|Issue 1||
-| Issue 2 ||
+| Issue 1| - |
+| Issue 2 | - |
 
 |Action| Owner|Due Date|
 |:---| :--- | :---: |
-|Action1||
-|Action2||
+| Action1 | - |
+| Action2 | - |
