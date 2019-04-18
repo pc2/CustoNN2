@@ -1,22 +1,34 @@
-  Date of Meeting (YYYY/MM/DD):  (2019//)<br/>
-  
-  Time:  <br/>
-  Present members: <br/>
-  Absentees:   <br/>
-  MOM Prepared by : 
-  
-  Project organization updates:<br/>  <br/>
-  
-  
-  Research/Individual Task Updates: Task Updates :<br/>
-  
-  
-  Project decisions: <br/> 
+# CustoNN2 : Minutes of the meeting
+&nbsp;
+| Date of Meeting (YYYY/MM/DD)  | (2019/ / )  |
+|:---| :---: |
+| Time  |   |
+| MOM Prepared by  |   |
 
-  Issues: <br/>
+| Team||
+|---| :---: |
+|Present members| | 
+|Absentees| |
 
-  Action: <br/>
+### Notes and Decisions 
+##### Project organization updates
+-  
+- 
+##### Research/Individual Task Updates: Task Updates
+-  
+- 
 
+##### Project decisions
+-
+-
 
-<!--- Please write detailed commit messages--->
+### Issues and Actions
+|Issue| Owner|Time|
+|:---| :--- | :---: |
+|Issue 1||
+| Issue 2 ||
 
+|Action| Owner|Due Date|
+|:---| :--- | :---: |
+|Action1||
+|Action2||
