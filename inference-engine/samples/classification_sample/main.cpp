@@ -119,11 +119,49 @@ int main(int argc, char *argv[]) {
         networkReader.ReadWeights(binFileName);
         CNNNetwork network = networkReader.getNetwork();
 	details::CNNNetworkIterator i(network.actual);
+
 	while (i != details::CNNNetworkIterator()) {
         CNNLayer::Ptr layer = *i;
-       	std::cout<<"Layer name: "<<layer->name<<" Layer type: "<<layer->type<<"\n";
+       	std::cout<<"Layer name: "<<layer->name<<" Layer type: "<<layer->type <<" :"<< layer->precision<<"\n";
+        LayerParams params = {layer->name, layer->type, layer->precision};
+        
+        for (auto const& x : layer->blobs)
+        {
+                std::cout << x.first  // string (key)
+                        << ":\n"
+                        << "size:" << x.second->size() << ",\n"
+                        << "type:" << x.second->type()  << ",\n"
+                        << "bytesize:" << x.second->byteSize()  << ",\n" ;
+                        if(x.first=="biases")
+                        for(int m=0;m<x.second->size();m++){
+                            std::cout << m << x.second->buffer().as<PrecisionTrait<Precision::FP32>::value_type*>()[m] << ",\n"<< std::endl ;
+                        }
+                        
+                
+        }
+        
+        /*auto res = std::make_shared<CLT>(params);
+        auto * weightLayerPtr = dynamic_cast<WeightableLayer *>(layer.get());
+        for (auto& it : layer->getParameters()->getConstantData()) {
+            res->blobs[it.first] = std::const_pointer_cast<Blob>(it.second);
+            if (weightLayerPtr == nullptr)
+                continue;
+            if (it.first == "weights") {
+                weightLayerPtr->_weights =  std::const_pointer_cast<Blob>(it.second);
+            } else if (it.first == "biases") {
+                weightLayerPtr->_biases =  std::const_pointer_cast<Blob>(it.second);
+            }
+        } 
+        */
         i++;
     }
+        
+        
+        
+        
+
+        
+
 
         // -----------------------------------------------------------------------------------------------------
 
