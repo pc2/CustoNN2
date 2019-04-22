@@ -51,7 +51,9 @@ for (auto & i : imageNames) {
         }
         if (imagesData.empty()) throw std::logic_error("Valid input images were not found!");
 
-	images = new unsigned char[inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2]*imagesData.size()];
+	/* TODO: imagesData[i] : ERROR at Line 62
+  
+  images = new unsigned char[inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2]*imagesData.size()];
 	int img_index = 0;
 	for(int i=0;i<imagesData.size();i++)
 	{
@@ -60,7 +62,7 @@ for (auto & i : imageNames) {
 			images[img_index] = imagesData.at(i)[j];
 			img_index++;
 		}
-	}
+	}*/
 
 	
 
@@ -99,7 +101,7 @@ void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path,std::ve
 
 std::string overlay_name = bitstreamFinder(model_path);		//Checking the availability of bitstream
 
-parse_images(std::vector<std::string> imageNames,images,network);	
+parse_images(imageNames,images,network);	
 
 cl_int err;
 	

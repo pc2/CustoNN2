@@ -17,6 +17,7 @@ file(GLOB HEADERS
 include_directories(
     ${IE_MAIN_SOURCE_DIR}/src/inference_engine
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${IE_MAIN_SOURCE_DIR}/samples/common/format_reader
 )
 
 # OPENCL Libraries
