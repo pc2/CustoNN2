@@ -234,6 +234,10 @@ std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_i
 
 cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));	
 cl::Program program(mycontext,DeviceList[0],mybinaries);  
+
+//TODO Buffer for Inputs and outputs
+//TODO Writing data to the device
+
 */  
   
 //creating  kernel
