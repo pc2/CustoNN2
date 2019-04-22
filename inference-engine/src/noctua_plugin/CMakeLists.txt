@@ -25,5 +25,5 @@ link_directories($(shell aocl compile-config))
 
 
 add_library(${TARGET_NAME} SHARED ${SOURCES} ${HEADERS})
-target_link_libraries(${TARGET_NAME} inference_engine ${INTEL_ITT_LIBS})
+target_link_libraries(${TARGET_NAME} inference_engine ${INTEL_ITT_LIBS}  format_reader gflags)
 set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME})
