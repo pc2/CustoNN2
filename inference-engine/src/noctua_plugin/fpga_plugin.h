@@ -5,6 +5,6 @@
 
 using namespace InferenceEngine;
 
-void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path);
+void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path,std::vector<std::string> imageNames);
 std::string bitstreamFinder(char *model_path);
 void parse_images(std::vector<std::string> imageNames,unsigned char *images,InferenceEngine::CNNNetwork network);
