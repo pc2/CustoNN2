@@ -220,4 +220,89 @@ void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::v
     CNNLayer::Ptr layer = *it;
     queues[i] = new cl::CommandQueue(mycontext, DeviceList[0]);
   } */
+ 
+ 
+/*  
+// Launching of Kernel
+	
+const char *conv_kernel_name = "ConvolutionLayer";
+const char *max_kernel_name = "MaxPool";
+const char *fcl_kernel_name = "FCL_Kernel";
+std::ifstream aocx_stream("SimpleCNN.aocx", std::ios::in|std::ios::binary);
+checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, "SimpleCNN.aocx");
+std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+
+cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));	
+cl::Program program(mycontext,DeviceList[0],mybinaries);  
+*/  
+  
+//creating  kernel
+
+cl::Kernel Convkernel(program,conv_kernel_name);
+assert(err==CL_SUCCESS);
+cl::Kernel Maxkernel(program,max_kernel_name);
+assert(err==CL_SUCCESS);
+cl::Kernel FCLkernel(program,fcl_kernel_name);
+assert(err==CL_SUCCESS);
+
+
+layersDetails conv1;
+for(auto const& value: cnnLayersList) {
+	if (value.layerName == "conv1") {
+		conv1 = value;
+	}
+}
+err = Convkernel.setArg(0, images);
+assert(err==CL_SUCCESS);
+err = Convkernel.setArg(1, conv1_output);
+assert(err==CL_SUCCESS);
+err = Convkernel.setArg(2, conv1.layerBias);
+assert(err==CL_SUCCESS);
+err = Convkernel.setArg(3, conv1.layerWeights);
+assert(err==CL_SUCCESS);
+err = Convkernel.setArg(4, conv1.number_of_filters);
+assert(err==CL_SUCCESS);
+err = Convkernel.setArg(5, conv1.number_of_image_rows);
+assert(err==CL_SUCCESS);
+err = Convkernel.setArg(6, conv1.number_of_image_cols);
+assert(err==CL_SUCCESS);
+err = Convkernel.setArg(7, conv1.conv_stride);
+assert(err==CL_SUCCESS);
+
+
+layersDetails pool1;
+for(auto const& value: cnnLayersList) {
+	if (value.layerName == "pool1") {
+		pool1 = value;
+	}
+}
+err = Maxkernel.setArg(0, conv1_output);
+assert(err==CL_SUCCESS);
+err = Maxkernel.setArg(1, pool1_output);
+assert(err==CL_SUCCESS);
+err = Maxkernel.setArg(2, pool1.number_of_filters);
+assert(err==CL_SUCCESS);
+err = Maxkernel.setArg(3, pool1.number_of_image_rows);
+assert(err==CL_SUCCESS);
+err = Maxkernel.setArg(4, pool1.number_of_image_cols);
+assert(err==CL_SUCCESS);
+	
+
+layersDetails ip1;
+for(auto const& value: cnnLayersList) {
+	if (value.layerName == "ip1") {
+		ip1 = value;
+	}
+}
+err = FCLkernel.setArg(0, pool1_output);
+assert(err==CL_SUCCESS);
+err = FCLkernel.setArg(1, ip1.layerWeights);
+assert(err==CL_SUCCESS);
+err = FCLkernel.setArg(2, output_labels);
+assert(err==CL_SUCCESS);
+err = FCLkernel.setArg(3, ip1.number_of_filters);
+assert(err==CL_SUCCESS);
+err = FCLkernel.setArg(4, 10);
+assert(err==CL_SUCCESS);
+
 }
