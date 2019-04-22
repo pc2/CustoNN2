@@ -1,12 +1,26 @@
+
+#include <string>
+#include <vector>
+#include <iostream>
+
 #include "CL/cl.hpp"
+#include "fpga_plugin.h"
+#include <format_reader_ptr.h>
+
 #include <inference_engine.hpp>
-#include<string.h>
-#include<vector>
+
 using namespace InferenceEngine;
 
 
+//Data structure to store information of each layer
+struct layersDetails{
+  std::string layerName;
+  std::vector<float> layerBias;
+  std::vector<float> layerWeights;
+};
 
 unsigned char *images;
+
 
 void parse_images(std::vector<std::string> imageNames,unsigned char *images,InferenceEngine::CNNNetwork network)
 {
@@ -15,8 +29,8 @@ InputsDataMap inputInfo = network.getInputsInfo();
 if (inputInfo.size() != 1) throw std::logic_error("Sample supports topologies only with 1 input");
 auto inputInfoItem = *inputInfo.begin();
 
-        /** Specifying the precision and layout of input data provided by the user.
-         * This should be called before load of the network to the plugin **/
+        // Specifying the precision and layout of input data provided by the user.
+        // This should be called before load of the network to the plugin 
 inputInfoItem.second->setPrecision(Precision::U8);
 inputInfoItem.second->setLayout(Layout::NCHW);
 
@@ -24,10 +38,10 @@ std::vector<std::shared_ptr<unsigned char>> imagesData;
 for (auto & i : imageNames) {
    FormatReader::ReaderPtr reader(i.c_str());
             if (reader.get() == nullptr) {
-                slog::warn << "Image " + i + " cannot be read!" << slog::endl;
+                std::cout << "Image " + i + " cannot be read!" << std::endl;
                 continue;
             }
-            /** Store image data **/
+            // Store image data 
             std::shared_ptr<unsigned char> data(
                     reader->getData(inputInfoItem.second->getTensorDesc().getDims()[3],
                                     inputInfoItem.second->getTensorDesc().getDims()[2]));
@@ -53,19 +67,22 @@ for (auto & i : imageNames) {
 }
 
 
-tring bitstreamfinder(char* filepath){  
+std::string bitstreamFinder(char* filepath){  
+
   char * full_filename;
   char * filenameFromPath;
+  
   strtok (filepath,"/");
   while ( (filenameFromPath = strtok (NULL, "/") ) != NULL)
   {
     full_filename = filenameFromPath;
   }
-  string str=full_filename;
+  std::string str="";
+  str=full_filename;
   size_t lastindex = str.find_last_of("."); 
-  string filename = str.substr(0, lastindex);
+  std::string filename = str.substr(0, lastindex);
   filename+=".aocx";
-  string str1 = "kernels/"+filename;
+  std::string str1 = "kernels/"+filename;
   char char1[20];
   strcpy(char1, str1.c_str());
   FILE *fp = fopen(char1,"r");
@@ -80,7 +97,7 @@ tring bitstreamfinder(char* filepath){
 void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path,std::vector<std::string> imageNames)
 {
 
-string overlay_name = bitstreamFinder(model_path);		//Checking the availability of bitstream
+std::string overlay_name = bitstreamFinder(model_path);		//Checking the availability of bitstream
 
 parse_images(std::vector<std::string> imageNames,images,network);	
 
@@ -101,7 +118,34 @@ assert(err==CL_SUCCESS);
 
 
 details::CNNNetworkIterator it(network.actual);
-int no_of_layers = std::distance(it.begin(),it.end());	
+int no_of_layers = static_cast<int>(network.layerCount());
+
+//Get the Layers in the network and store the weights and bias in a structure for each layer.
+  
+  std::vector<layersDetails> cnnLayersList;
+	while (it != details::CNNNetworkIterator()) {
+        CNNLayer::Ptr layer = *it;
+        layersDetails layerinfo;
+        layerinfo.layerName=layer->name;
+        int biasCount=0;
+
+        //store the bias and weights 
+        for (auto const& x : layer->blobs)
+        {
+          if(x.first=="biases"){
+            layerinfo.layerBias.push_back(x.second->buffer().as<PrecisionTrait<Precision::FP32>::value_type*>()[biasCount]);   // put the layer bias in the list
+            biasCount++;
+          }else if(x.first=="weights"){
+            for(int m=0;m<x.second->size();m++){
+              layerinfo.layerWeights.push_back(x.second->buffer().as<PrecisionTrait<Precision::FP32>::value_type*>()[m]);
+            }             
+          }      
+        }
+    cnnLayersList.push_back(layerinfo);  // add the layer information to the List of structure.
+  }
+
+
+
 	
 //cl::CommandQueue myqueue(mycontext, DeviceList[0]); 	//command queue
 //assert(err==CL_SUCCESS);
