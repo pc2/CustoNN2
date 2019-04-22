@@ -1,4 +1,3 @@
-
 #include <string>
 #include <vector>
 #include <iostream>
@@ -17,6 +16,10 @@ struct layersDetails
   std::string layerName;
   std::vector<float> layerBias;
   std::vector<float> layerWeights;
+  int number_of_filters; 
+  int number_of_image_rows; 
+  int number_of_image_cols; 
+  int conv_stride;
 };
 
 unsigned char *images;
