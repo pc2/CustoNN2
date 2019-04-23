@@ -53,23 +53,31 @@ void parse_images(std::vector<std::string> imageNames, unsigned char *images, In
     if (data.get() != nullptr)
     {
       imagesData.push_back(data);
+      //unsigned char test=data.get()[0];
+      //std::cout<<unsigned(test)<<std::endl;
     }
   }
   if (imagesData.empty())
     throw std::logic_error("Valid input images were not found!");
-
-  /* TODO: imagesData[i] : ERROR at Line 62
-  
+  //Total number of images * dimension
   images = new unsigned char[inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2]*imagesData.size()];
+  int numberOfPixels=inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2];
 	int img_index = 0;
+  std::cout<<"Number of Pixels:"<<numberOfPixels<<" , Number of Images:"<<imagesData.size() <<std::endl;
 	for(int i=0;i<imagesData.size();i++)
 	{
-		for(int j=0;j<inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2];j++)
+		for(int j=0;j<numberOfPixels;j++)
 		{
-			images[img_index] = imagesData.at(i)[j];
+			images[i*numberOfPixels + j] = imagesData.at(i).get()[j];
+      //std::cout<<unsigned(imagesData.at(i).get()[j])<<" ";
 			img_index++;
 		}
-	} */
+	}
+  std::cout<<"Images Pixel: " <<std::endl;
+  for(int k=0;k<numberOfPixels;k++){
+    std::cout<<k <<":"<< unsigned(images[k]) <<std::endl;
+  }
+  std::cout<<"Number of Pixels:"<<numberOfPixels<<" , Number of Images:"<<imagesData.size() <<std::endl;
 }
 
 void print_layerDetails(std::vector<layersDetails> cnnlayers)
