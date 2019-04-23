@@ -14,6 +14,7 @@ using namespace InferenceEngine;
 struct layersDetails
 {
   std::string layerName;
+  std::string layerType;
   std::vector<float> layerBias;
   std::vector<float> layerWeights;
   int number_of_filters; 
@@ -77,7 +78,8 @@ void print_layerDetails(std::vector<layersDetails> cnnlayers)
 
   for (layersDetails a : cnnlayers)
   {
-    std::cout << " LayerName: " << a.layerName;
+    std::cout << " LayerName: " << a.layerName<<std::endl;
+    std::cout << " LayerType: " << a.layerType<<std::endl;
     std::cout << "Bias:";
     for (int i = 0; i < a.layerBias.size(); i++)
     {
@@ -126,9 +128,11 @@ std::string bitstreamFinder(char *filepath)
 
 void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames)
 {
-  std::cout<<"Lauching FPGA"<<std::endl;
+  std::cout<<"In FPGA Launcher"<<std::endl;
   std::string overlay_name = bitstreamFinder(model_path); //Checking the availability of bitstream
-  
+  if(overlay_name=="not found"){
+    exit(0);  
+  }
   parse_images(imageNames, images, network);
 
   cl_int err;
@@ -183,6 +187,7 @@ void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::v
     CNNLayer::Ptr layer = *it;
     layersDetails layerinfo;
     layerinfo.layerName = layer->name;
+    layerinfo.layerType = layer->type;
     std::cout<<"Parsing Kernel:" <<layer->name<<std::endl;
     
 
