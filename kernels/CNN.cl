@@ -103,7 +103,7 @@ __kernel void ConvLayer(__global unsigned char * restrict img,__constant short *
  * Input : 28*28*32 Pixels for 1 Image. 10k Images in total
  * Output : 14*14*32 Pixels for 1 Image, 10K Images in total sent through Channel to FC.
  */
-__kernel void MaxPool( __global int * restrict ConvOutput,int G_NUMBER_OF_CONV_OUT_COLS,int G_NUMBER_OF_CONV_OUT_ROWS,int G_NUMBER_OF_FILERS,int G_MAXPOOL_STRIDE,int G_NUMBER_OF_IMAGES,int G_NUMBER_OF_IMAGE_COLS,__global unsigned int * restrict Maxoutput)
+__kernel void MaxPool( __global int * restrict ConvOutput,int G_NUMBER_OF_CONV_OUT_COLS,int G_NUMBER_OF_CONV_OUT_ROWS,int G_NUMBER_OF_FILERS,int G_MAXPOOL_STRIDE,int G_NUMBER_OF_IMAGES,__global unsigned int * restrict Maxoutput)
 {
 
         //struct conv_buffer conv1;
@@ -172,7 +172,7 @@ __kernel void MaxPool( __global int * restrict ConvOutput,int G_NUMBER_OF_CONV_O
  * Output : 1 class for each 10K images
  */
 __kernel void FCLayer(__global unsigned int * restrict Maxoutput,__constant short * restrict digitWeights,const int numberOfFCPixels,const int NUMBER_OF_CLASSES,const int NUMBER_OF_IMAGES,__global int * restrict
-kernelcalculatedLabels,int G_MAXPOOL_OUT_ROWS,int G_MAXPOOL_OUT_COLS,int G_NUMBER_OF_FILERS,__global unsigned int * restrict FCLoutput,const int SR)
+kernelcalculatedLabels,int G_MAXPOOL_OUT_ROWS,int G_MAXPOOL_OUT_COLS,int G_NUMBER_OF_FILERS, const int SR)
 {
 
         // int maxScore=0;
