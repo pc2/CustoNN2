@@ -15,8 +15,10 @@ struct layersDetails
 {
   std::string layerName;
   std::string layerType;
-  std::vector<float> layerBias;
-  std::vector<float> layerWeights;
+  float *layerBias;
+  float *layerWeights;
+  int num_biases;
+  int num_weights;
   std::map<std::string,std::string> params;
 };
 
@@ -78,14 +80,14 @@ void print_layerDetails(std::vector<layersDetails> cnnlayers)
     std::cout << " LayerName: " << a.layerName<<std::endl;
     std::cout << " LayerType: " << a.layerType<<std::endl;
     std::cout << "Bias:";
-    for (int i = 0; i < a.layerBias.size(); i++)
+    for (int i = 0; i < a.num_biases; i++)
     {
       std::cout << a.layerBias[i] << " ";
     }
     std::cout << std::endl;
 
     std::cout << "Weights:";
-    for (int i = 0; i < a.layerWeights.size(); i++)
+    for (int i = 0; i < a.num_weights; i++)
     {
       //std::cout << a.layerWeights[i] << " ";
     }
@@ -126,12 +128,13 @@ std::string bitstreamFinder(char *filepath)
   }
 }
 
-void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames)
+int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames)
 {
   std::cout<<"In FPGA Launcher"<<std::endl;
   std::string overlay_name = bitstreamFinder(model_path); //Checking the availability of bitstream
   if(overlay_name=="not found"){
     std::cout<<" Bitstream not found\n";
+   //return -1; 
     //exit(0);  
   }
   parse_images(imageNames, images, network);
@@ -190,6 +193,8 @@ void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::v
     layerinfo.layerName = layer->name;
     layerinfo.layerType = layer->type;
     layerinfo.params = layer->params;
+    layerinfo.num_biases = 0;
+    layerinfo.num_weights = 0;
     std::cout<<"Parsing Kernel:" <<layer->name<<std::endl;
 
     //store the bias and weights
@@ -197,17 +202,27 @@ void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::v
     {
       if (x.first == "biases")
       {
-        for (int biasCount = 0; biasCount < x.second->size(); biasCount++)
-        {
-          layerinfo.layerBias.push_back(x.second->buffer().as<PrecisionTrait<Precision::FP32>::value_type *>()[biasCount]); // put the layer bias in the list
-        }
+	if(x.second->size()>0)
+	{
+		layerinfo.layerBias = new float[x.second->size()];
+		layerinfo.num_biases = x.second->size();
+        	for (int biasCount = 0; biasCount < x.second->size(); biasCount++)
+        	{
+          	layerinfo.layerBias[biasCount] = x.second->buffer().as<PrecisionTrait<Precision::FP32>::value_type *>()[biasCount]; // put the layer bias in the list
+        	}
+	}
       }
       else if (x.first == "weights")
       {
-        for (int m = 0; m < x.second->size(); m++)
-        {
-          layerinfo.layerWeights.push_back(x.second->buffer().as<PrecisionTrait<Precision::FP32>::value_type *>()[m]);
-        }
+	if(x.second->size()>0)
+	{
+		layerinfo.layerWeights = new float[x.second->size()];
+		layerinfo.num_weights = x.second->size();
+        	for (int m = 0; m < x.second->size(); m++)
+        	{
+         	 layerinfo.layerWeights[m] = x.second->buffer().as<PrecisionTrait<Precision::FP32>::value_type *>()[m];
+        	}
+	}
       }
     }
     cnnLayersList.push_back(layerinfo); // add the layer information to the List of structure.
@@ -227,59 +242,40 @@ cl::Kernel Maxkernel(program,max_kernel_name);
 assert(err==CL_SUCCESS);
 cl::Kernel FCLkernel(program,fcl_kernel_name);
 assert(err==CL_SUCCESS);
+*/
+/*
+std::ifstream aocx_stream("kernels/"+overlay_name, std::ios::in|std::ios::binary);
+checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, "SimpleKernel.aocx");
+std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
 
-  cl::CommandQueue *queues[50];
+cl::Program program(mycontext, DeviceList, mybinaries);
+err=program.build(DeviceList);
+assert(err==CL_SUCCESS);
+*/
+
+  //cl::CommandQueue *queues[50];
   cl::Buffer *buffers[100];
-  for (int i = 0; i < no_of_layers; i++)
+  for (layersDetails l : cnnLayersList)
   {
-    CNNLayer::Ptr layer = *it;
-    queues[i] = new cl::CommandQueue(mycontext, DeviceList[0]);
-    switch ( cnnLayersList[i].layerType )
+    //CNNLayer::Ptr layer = *it;
+    //queues[i] = new cl::CommandQueue(mycontext, DeviceList[0]);
+	/*
+    switch ( l.layerType )
       {
-         case 'Convolution':
-		err = Convkernel.setArg(0, images);
-		assert(err==CL_SUCCESS);
-		err = Convkernel.setArg(1, conv1_output);
-		assert(err==CL_SUCCESS);
-		err = Convkernel.setArg(2, cnnLayersList[i].layerBias);
-		assert(err==CL_SUCCESS);
-		err = Convkernel.setArg(3, cnnLayersList[i].layerWeights);
-		assert(err==CL_SUCCESS);
-		err = Convkernel.setArg(4, cnnLayersList[i].number_of_filters);
-		assert(err==CL_SUCCESS);
-		err = Convkernel.setArg(5, cnnLayersList[i].number_of_image_rows);
-		assert(err==CL_SUCCESS);
-		err = Convkernel.setArg(6, cnnLayersList[i].number_of_image_cols);
-		assert(err==CL_SUCCESS);
-		err = Convkernel.setArg(7, cnnLayersList[i].conv_stride);
-		assert(err==CL_SUCCESS);
+         case "Convolution":
+		
             break;
-         case 'Pooling':
-		err = Maxkernel.setArg(0, conv1_output);
-		assert(err==CL_SUCCESS);
-		err = Maxkernel.setArg(1, pool1_output);
-		assert(err==CL_SUCCESS);
-		err = Maxkernel.setArg(2, cnnLayersList[i].number_of_filters);
-		assert(err==CL_SUCCESS);
-		err = Maxkernel.setArg(3, cnnLayersList[i].number_of_image_rows);
-		assert(err==CL_SUCCESS);
-		err = Maxkernel.setArg(4, cnnLayersList[i].number_of_image_cols);
-		assert(err==CL_SUCCESS);
+         case "Pooling":
+		
             break;
-         case 'FullyConnected':
-		err = FCLkernel.setArg(0, pool1_output);
-		assert(err==CL_SUCCESS);
-		err = FCLkernel.setArg(1, cnnLayersList[i].layerWeights);
-		assert(err==CL_SUCCESS);
-		err = FCLkernel.setArg(2, output_labels);
-		assert(err==CL_SUCCESS);
-		err = FCLkernel.setArg(3, cnnLayersList[i].number_of_filters);
-		assert(err==CL_SUCCESS);
-		err = FCLkernel.setArg(4, 10);
-		assert(err==CL_SUCCESS);
+         case "FullyConnected":
+		
             break;
          default:
             break;
       }
-  } */
+*/
+  } 
+return 0;
 }
