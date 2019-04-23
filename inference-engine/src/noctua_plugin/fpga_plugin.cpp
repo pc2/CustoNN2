@@ -17,10 +17,7 @@ struct layersDetails
   std::string layerType;
   std::vector<float> layerBias;
   std::vector<float> layerWeights;
-  int number_of_filters; 
-  int number_of_image_rows; 
-  int number_of_image_cols; 
-  int conv_stride;
+  std::map<std::string,std::string> params;
 };
 
 unsigned char *images;
@@ -92,6 +89,9 @@ void print_layerDetails(std::vector<layersDetails> cnnlayers)
     {
       //std::cout << a.layerWeights[i] << " ";
     }
+    for(auto const &y : a.params){
+      std::cout<<y.first << ":"<<y.second<<std::endl;
+    }
   }
   std::cout << std::endl;
 }
@@ -131,7 +131,8 @@ void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::v
   std::cout<<"In FPGA Launcher"<<std::endl;
   std::string overlay_name = bitstreamFinder(model_path); //Checking the availability of bitstream
   if(overlay_name=="not found"){
-    exit(0);  
+    std::cout<<" Bitstream not found\n";
+    //exit(0);  
   }
   parse_images(imageNames, images, network);
 
@@ -188,8 +189,14 @@ void fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::v
     layersDetails layerinfo;
     layerinfo.layerName = layer->name;
     layerinfo.layerType = layer->type;
+    layerinfo.params = layer->params;
     std::cout<<"Parsing Kernel:" <<layer->name<<std::endl;
-    
+
+    //Parameters print:
+    //std::cout<<"Parameters for the layer are:"<<std::endl;
+    //for(auto const &y : layer->params){
+      //std::cout<<y.first << ":"<<y.second<<std::endl;
+    //}
 
     //store the bias and weights
     for (auto const &x : layer->blobs)
@@ -246,7 +253,7 @@ cl::Program program(mycontext,DeviceList[0],mybinaries);
 */  
   
 //creating  kernel
-
+/*
 cl::Kernel Convkernel(program,conv_kernel_name);
 assert(err==CL_SUCCESS);
 cl::Kernel Maxkernel(program,max_kernel_name);
@@ -313,5 +320,5 @@ err = FCLkernel.setArg(3, ip1.number_of_filters);
 assert(err==CL_SUCCESS);
 err = FCLkernel.setArg(4, 10);
 assert(err==CL_SUCCESS);
-
+*/
 }
