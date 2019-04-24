@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
-
+#include<fstream>
 #include "CL/cl.hpp"
 #include "fpga_plugin.h"
 #include <format_reader_ptr.h>
@@ -23,7 +23,7 @@ struct layersDetails
 };
 
 unsigned char *images;
-
+int num_images,dim_x,dim_y;
 void parse_images(std::vector<std::string> imageNames, unsigned char *images, InferenceEngine::CNNNetwork network)
 {
 
@@ -58,6 +58,9 @@ void parse_images(std::vector<std::string> imageNames, unsigned char *images, In
   if (imagesData.empty())
     throw std::logic_error("Valid input images were not found!");
 
+	num_images = imagesData.size();
+	dim_x = inputInfoItem.second->getTensorDesc().getDims()[3];
+	dim_y = inputInfoItem.second->getTensorDesc().getDims()[2];
   /* TODO: imagesData[i] : ERROR at Line 62
   
   images = new unsigned char[inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2]*imagesData.size()];
@@ -231,8 +234,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
   print_layerDetails(cnnLayersList);
 
-//  cl::CommandQueue myqueue(mycontext, DeviceList[0]); 	//command queue
-//  assert(err==CL_SUCCESS);
+ cl::CommandQueue myqueue(mycontext, DeviceList[0]); 	//command queue
+  assert(err==CL_SUCCESS);
 
 //creating  kernel
 /*
@@ -243,39 +246,195 @@ assert(err==CL_SUCCESS);
 cl::Kernel FCLkernel(program,fcl_kernel_name);
 assert(err==CL_SUCCESS);
 */
-/*
+
 std::ifstream aocx_stream("kernels/"+overlay_name, std::ios::in|std::ios::binary);
-checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, "SimpleKernel.aocx");
+//checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
 std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
 
-cl::Program program(mycontext, DeviceList, mybinaries);
+
+cl::Program program(mycontext, DeviceList, mybinaries);                                     
+
 err=program.build(DeviceList);
 assert(err==CL_SUCCESS);
-*/
 
+cl::Kernel *kernels[52];
+int kernel_index = 0;
   //cl::CommandQueue *queues[50];
   cl::Buffer *buffers[100];
+  int buffer_index = 0;
+  buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar)*dim_x*dim_y*num_images);
+  err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar)*dim_x*dim_y*num_images, images); //images buffer
+  assert(err==CL_SUCCESS);
+  myqueue.finish(); 
+  
+  int num_filters = 0;
+  int num_classes = 0;
+  int num_pixels = dim_x * dim_y;
   for (layersDetails l : cnnLayersList)
   {
-    //CNNLayer::Ptr layer = *it;
-    //queues[i] = new cl::CommandQueue(mycontext, DeviceList[0]);
-	/*
-    switch ( l.layerType )
-      {
-         case "Convolution":
+    if(l.layerType == "Convolution")
+	{
+		kernels[kernel_index] = new cl::Kernel(program, "ConvLayer", &err);
+		assert(err==CL_SUCCESS);
 		
-            break;
-         case "Pooling":
+		err = kernels[kernel_index]->setArg(0,buffers[buffer_index]);   //first argument, input, also the output of the previous layer
+		assert(err==CL_SUCCESS);
+		buffer_index++;
 		
-            break;
-         case "FullyConnected":
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_weights);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_weights, l.layerWeights);    //weights
+		myqueue.finish();
+		assert(err==CL_SUCCESS);		
+		err = kernels[kernel_index]->setArg(1,buffers[buffer_index]);
+		assert(err==CL_SUCCESS);
+		buffer_index++;
 		
-            break;
-         default:
-            break;
-      }
-*/
+		
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_biases);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_biases, l.layerBias);           //biases
+		myqueue.finish();
+		assert(err==CL_SUCCESS);
+		err = kernels[kernel_index]->setArg(2,buffers[buffer_index]);
+		assert(err==CL_SUCCESS);
+		buffer_index++;
+
+		char f_dim = l.params["kernel"].at(0);
+		err = kernels[kernel_index]->setArg(3,(int)f_dim);		//filter rows
+		assert(err==CL_SUCCESS);
+		
+		err = kernels[kernel_index]->setArg(4,(int)f_dim);		//filter cols
+		assert(err==CL_SUCCESS);
+
+		 num_filters = std::atoi(l.params["output"].c_str());
+		err = kernels[kernel_index]->setArg(5,num_filters);		//no of filters
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(6,num_images);		//no of images
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(7,dim_y);		//no of image cols
+		assert(err==CL_SUCCESS);
+		
+		err = kernels[kernel_index]->setArg(8,dim_x);		//no of image rows
+		assert(err==CL_SUCCESS);
+		
+		err = kernels[kernel_index]->setArg(9,dim_x);		//conv output rows
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(10,dim_y);		//conv output cols
+		assert(err==CL_SUCCESS);
+		
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*dim_x*dim_y*num_images*num_filters);
+		err = kernels[kernel_index]->setArg(11,buffers[buffer_index]);								//output of conv
+		assert(err==CL_SUCCESS);
+
+		err=myqueue.enqueueTask(*kernels[kernel_index]);
+		assert(err==CL_SUCCESS);
+		kernel_index++;
+		
+		num_pixels *= num_filters;
+	}
+	else if(l.layerType == "Pooling")
+	{
+		kernels[kernel_index] = new cl::Kernel(program, "MaxPool", &err);
+		assert(err==CL_SUCCESS);
+		
+		err = kernels[kernel_index]->setArg(0,buffers[buffer_index]);   //first argument, input, also the output of the previous layer
+		assert(err==CL_SUCCESS);
+		buffer_index++;
+
+		err = kernels[kernel_index]->setArg(1,dim_y);		//conv output cols
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(2,dim_x);		//conv output rows
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(3,num_filters);		//no of filters
+		assert(err==CL_SUCCESS);
+		
+		int stride = (int)l.params["strides"].at(0);
+		err = kernels[kernel_index]->setArg(4,(int)stride);		//stride
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(5,num_images);		//no of images
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(6,dim_y);		//no of image cols
+		assert(err==CL_SUCCESS);
+
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*(dim_x/stride)*(dim_y/stride)*num_images*num_filters);
+		err = kernels[kernel_index]->setArg(7,buffers[buffer_index]);								//output of pool
+		assert(err==CL_SUCCESS);
+
+		err=myqueue.enqueueTask(*kernels[kernel_index]);
+		assert(err==CL_SUCCESS);
+		kernel_index++;
+		
+		dim_x /= stride;
+		dim_y /= stride;
+		num_pixels /= (stride * stride);
+	}
+	else if(l.layerType == "FullyConnected")
+	{
+		kernels[kernel_index] = new cl::Kernel(program, "FCLayer", &err);
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(0,buffers[buffer_index]);   //first argument, input, also the output of the previous layer
+		assert(err==CL_SUCCESS);
+		buffer_index++;
+
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_weights);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_weights, l.layerWeights);    //weights
+		myqueue.finish();
+		assert(err==CL_SUCCESS);		
+		err = kernels[kernel_index]->setArg(1,buffers[buffer_index]);
+		assert(err==CL_SUCCESS);
+		buffer_index++;
+
+		err = kernels[kernel_index]->setArg(2,num_pixels);		//no of pixels
+		assert(err==CL_SUCCESS);
+	
+		 num_classes = std::atoi(l.params["out-size"].c_str());
+		err = kernels[kernel_index]->setArg(3,num_classes);		//no of classes
+		assert(err==CL_SUCCESS);	
+		
+		err = kernels[kernel_index]->setArg(4,num_images);		//no of images
+		assert(err==CL_SUCCESS);
+
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*num_images);
+		err = kernels[kernel_index]->setArg(5,buffers[buffer_index]);								//output of FC
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(6,dim_x);		//rows
+		assert(err==CL_SUCCESS);
+
+		err = kernels[kernel_index]->setArg(7,dim_y);		//cols
+		assert(err==CL_SUCCESS);
+	
+		err = kernels[kernel_index]->setArg(8,num_filters);		//no of filters
+		assert(err==CL_SUCCESS);
+	
+		err=myqueue.enqueueTask(*kernels[kernel_index]);
+		assert(err==CL_SUCCESS);
+		kernel_index++;
+	}
   } 
+
+int final_labels[num_images];
+err=myqueue.enqueueReadBuffer(*buffers[buffer_index], CL_TRUE, 0, sizeof(cl_int)*num_images, final_labels);
+assert(err==CL_SUCCESS);
+
+err=myqueue.finish();
+assert(err==CL_SUCCESS);
+
+for(int i=0;i<num_images;i++)
+{
+	std::cout<<"Image "<<i<<" : "<<final_labels[i]<<"\n";
+
+}
+
+
+
 return 0;
 }
