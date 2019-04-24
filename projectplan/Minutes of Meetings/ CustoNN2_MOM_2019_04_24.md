@@ -1,4 +1,3 @@
-
 # CustoNN2 : Minutes of the meeting
 <br/>
 
@@ -22,16 +21,16 @@
 2. Team TVM : Able to generate Kernels for pretrained models but have issues with custom models.
 ##### Project decisions
 1. Team OpenVino : Investigate why segmentation error is happening . Does it have something to do with unpadded images ?
-2. Team TVM : Try to run simple, individual kernels using tensorflow . Check which version of tensorflow is being supported by TVM. 
+2. Team TVM : Try to run simple, individual kernels using tensorflow . Check which version of tensorflow is being supported by TVM.
+3. Team Documentation : Design Document completed . To keep it as a living doc.
 
 ### Issues and Actions
 | Issue | Owner | Time |
 |:--- | :--- | :---: |
-|  Communication gap in the team ? Integration of  Slack and GitLab possible ? Anyway , `Issues` in issue board must be more verbose.|Everyone
-|
-| Integrate DLDT with main project | Everyone |
+| Communication gap in the team ? Integration of  Slack and GitLab possible ? Anyway , `Issues` in issue board must be more verbose.|Everyone| |
+| Integrate DLDT with main project | Everyone | |
 
 |Action| Owner|Due Date|
 |:--- | :--- | :---: |
-| Action1 | - |
-| Action2 | - |
+| List requirements for Caffe 1 for CC Frontend | Team TVM | |
+| Generate one kernel using TVM | Team TVM  ||
