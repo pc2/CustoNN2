@@ -120,10 +120,28 @@ int main(int argc, char *argv[]) {
         networkReader.ReadWeights(binFileName);
         CNNNetwork network = networkReader.getNetwork();
 
-        char inputModel[]="";
-        std::vector<std::string> input_imagePath;
+        std::string modelName=fileNameNoExt(FLAGS_m);
+        const int length_str = modelName.length();
+        char *inputModel = new char[length_str+1];
+        strcpy(inputModel, modelName.c_str());
+        
+        std::cout<<" Starting FPGA Launcher\n"<<modelName<<std::endl;
+        //std::vector<std::string> input_imagePath;
        // input_imagePath.push_back(input_image_path.c_str());
+
+        //typedef std::chrono::high_resolution_clock Time;
+        //typedef std::chrono::duration<double, std::ratio<1, 1000>> ms;
+        //typedef std::chrono::duration<float> fsec;
+
+        //double total = 0.0;
+        //auto t0 = Time::now();
+        
         fpga_launcher(network,inputModel,imageNames);
+        /*auto t1 = Time::now();
+        fsec fs = t1 - t0;
+        ms d = std::chrono::duration_cast<ms>(fs);
+        total += d.count();
+        std::cout << std::endl << "total inference time(ms): " << total << std::endl; */
 
     }
     catch (const std::exception& error) {
