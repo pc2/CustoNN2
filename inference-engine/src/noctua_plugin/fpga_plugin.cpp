@@ -286,7 +286,7 @@ int kernel_index = 0;
 		kernels[kernel_index] = new cl::Kernel(program, "ConvLayer", &err);
 		assert(err==CL_SUCCESS);
 		
-		err = kernels[kernel_index]->setArg(0,buffers[buffer_index]);   //first argument, input, also the output of the previous layer
+		err = kernels[kernel_index]->setArg(0,*buffers[buffer_index]);   //first argument, input, also the output of the previous layer
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 		
@@ -294,7 +294,7 @@ int kernel_index = 0;
 		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_weights, l.layerWeights);    //weights
 		myqueue.finish();
 		assert(err==CL_SUCCESS);		
-		err = kernels[kernel_index]->setArg(1,buffers[buffer_index]);
+		err = kernels[kernel_index]->setArg(1,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 		
@@ -303,7 +303,7 @@ int kernel_index = 0;
 		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_biases, l.layerBias);           //biases
 		myqueue.finish();
 		assert(err==CL_SUCCESS);
-		err = kernels[kernel_index]->setArg(2,buffers[buffer_index]);
+		err = kernels[kernel_index]->setArg(2,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 
@@ -334,7 +334,7 @@ int kernel_index = 0;
 		assert(err==CL_SUCCESS);
 		
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*dim_x*dim_y*num_images*num_filters);
-		err = kernels[kernel_index]->setArg(11,buffers[buffer_index]);								//output of conv
+		err = kernels[kernel_index]->setArg(11,*buffers[buffer_index]);								//output of conv
 		assert(err==CL_SUCCESS);
 
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
@@ -348,7 +348,7 @@ int kernel_index = 0;
 		kernels[kernel_index] = new cl::Kernel(program, "MaxPool", &err);
 		assert(err==CL_SUCCESS);
 		
-		err = kernels[kernel_index]->setArg(0,buffers[buffer_index]);   //first argument, input, also the output of the previous layer
+		err = kernels[kernel_index]->setArg(0,*buffers[buffer_index]);   //first argument, input, also the output of the previous layer
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 
@@ -372,7 +372,7 @@ int kernel_index = 0;
 		assert(err==CL_SUCCESS);
 
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*(dim_x/stride)*(dim_y/stride)*num_images*num_filters);
-		err = kernels[kernel_index]->setArg(7,buffers[buffer_index]);								//output of pool
+		err = kernels[kernel_index]->setArg(7,*buffers[buffer_index]);								//output of pool
 		assert(err==CL_SUCCESS);
 
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
@@ -388,7 +388,7 @@ int kernel_index = 0;
 		kernels[kernel_index] = new cl::Kernel(program, "FCLayer", &err);
 		assert(err==CL_SUCCESS);
 
-		err = kernels[kernel_index]->setArg(0,buffers[buffer_index]);   //first argument, input, also the output of the previous layer
+		err = kernels[kernel_index]->setArg(0,*buffers[buffer_index]);   //first argument, input, also the output of the previous layer
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 
@@ -396,7 +396,7 @@ int kernel_index = 0;
 		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_weights, l.layerWeights);    //weights
 		myqueue.finish();
 		assert(err==CL_SUCCESS);		
-		err = kernels[kernel_index]->setArg(1,buffers[buffer_index]);
+		err = kernels[kernel_index]->setArg(1,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 
@@ -411,7 +411,7 @@ int kernel_index = 0;
 		assert(err==CL_SUCCESS);
 
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*num_images);
-		err = kernels[kernel_index]->setArg(5,buffers[buffer_index]);								//output of FC
+		err = kernels[kernel_index]->setArg(5,*buffers[buffer_index]);								//output of FC
 		assert(err==CL_SUCCESS);
 
 		err = kernels[kernel_index]->setArg(6,dim_x);		//rows
