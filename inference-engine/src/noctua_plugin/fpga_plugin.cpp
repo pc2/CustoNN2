@@ -288,15 +288,15 @@ int kernel_index = 0;
   {
     if(l.layerType == "Convolution")
 	{
-		kernels[kernel_index] = new cl::Kernel(program, "ConvLayer", &err);
+		kernels[kernel_index] = new cl::Kernel(program, "ConvolutionLayer", &err);
 		assert(err==CL_SUCCESS);
 		
 		err = kernels[kernel_index]->setArg(0,*buffers[buffer_index]);   //first argument, input, also the output of the previous layer
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 		
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_weights);
-		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_weights, l.layerWeights);    //weights
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*l.num_weights);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*l.num_weights, l.layerWeights);    //weights
 		myqueue.finish();
 		assert(err==CL_SUCCESS);		
 		err = kernels[kernel_index]->setArg(1,*buffers[buffer_index]);
@@ -304,8 +304,8 @@ int kernel_index = 0;
 		buffer_index++;
 		
 		
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_biases);
-		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_biases, l.layerBias);           //biases
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*l.num_biases);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*l.num_biases, l.layerBias);           //biases
 		myqueue.finish();
 		assert(err==CL_SUCCESS);
 		err = kernels[kernel_index]->setArg(2,*buffers[buffer_index]);
@@ -326,17 +326,25 @@ int kernel_index = 0;
 		err = kernels[kernel_index]->setArg(6,num_images);		//no of images
 		assert(err==CL_SUCCESS);
 
-		err = kernels[kernel_index]->setArg(7,dim_y);		//no of image cols
+		err = kernels[kernel_index]->setArg(7,dim_x);		//no of image rows
 		assert(err==CL_SUCCESS);
 		
-		err = kernels[kernel_index]->setArg(8,dim_x);		//no of image rows
+		err = kernels[kernel_index]->setArg(8,dim_y);		//no of image cols
 		assert(err==CL_SUCCESS);
 		
-		err = kernels[kernel_index]->setArg(9,dim_x);		//conv output rows
+		int pad = (int)l.params["pads_begin"].at(0);
+		err = kernels[kernel_index]->setArg(9,pad);		//padding
 		assert(err==CL_SUCCESS);
 
-		err = kernels[kernel_index]->setArg(10,dim_y);		//conv output cols
+		int stride = (int)l.params["strides"].at(0);
+		err = kernels[kernel_index]->setArg(10,stride);		//stride
 		assert(err==CL_SUCCESS);
+
+		//err = kernels[kernel_index]->setArg(9,dim_x);		//conv output rows
+		//assert(err==CL_SUCCESS);
+
+		//err = kernels[kernel_index]->setArg(10,dim_y);		//conv output cols
+		//assert(err==CL_SUCCESS);
 		
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*dim_x*dim_y*num_images*num_filters);
 		err = kernels[kernel_index]->setArg(11,*buffers[buffer_index]);								//output of conv
@@ -357,27 +365,27 @@ int kernel_index = 0;
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 
-		err = kernels[kernel_index]->setArg(1,dim_y);		//conv output cols
+		err = kernels[kernel_index]->setArg(1,dim_x);		//conv output rows
 		assert(err==CL_SUCCESS);
 
-		err = kernels[kernel_index]->setArg(2,dim_x);		//conv output rows
+		err = kernels[kernel_index]->setArg(2,dim_y);		//conv output cols
 		assert(err==CL_SUCCESS);
 
 		err = kernels[kernel_index]->setArg(3,num_filters);		//no of filters
 		assert(err==CL_SUCCESS);
 		
 		int stride = (int)l.params["strides"].at(0);
-		err = kernels[kernel_index]->setArg(4,(int)stride);		//stride
+		err = kernels[kernel_index]->setArg(4,stride);		//stride
 		assert(err==CL_SUCCESS);
 
 		err = kernels[kernel_index]->setArg(5,num_images);		//no of images
 		assert(err==CL_SUCCESS);
 
-		err = kernels[kernel_index]->setArg(6,dim_y);		//no of image cols
-		assert(err==CL_SUCCESS);
+		//err = kernels[kernel_index]->setArg(6,dim_y);		//no of image cols
+		//assert(err==CL_SUCCESS);
 
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*(dim_x/stride)*(dim_y/stride)*num_images*num_filters);
-		err = kernels[kernel_index]->setArg(7,*buffers[buffer_index]);								//output of pool
+		err = kernels[kernel_index]->setArg(6,*buffers[buffer_index]);								//output of pool
 		assert(err==CL_SUCCESS);
 
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
@@ -390,15 +398,15 @@ int kernel_index = 0;
 	}
 	else if(l.layerType == "FullyConnected")
 	{
-		kernels[kernel_index] = new cl::Kernel(program, "FCLayer", &err);
+		kernels[kernel_index] = new cl::Kernel(program, "FCL_Kernel", &err);
 		assert(err==CL_SUCCESS);
 
 		err = kernels[kernel_index]->setArg(0,*buffers[buffer_index]);   //first argument, input, also the output of the previous layer
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_weights);
-		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_weights, l.layerWeights);    //weights
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*l.num_weights);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*l.num_weights, l.layerWeights);    //weights
 		myqueue.finish();
 		assert(err==CL_SUCCESS);		
 		err = kernels[kernel_index]->setArg(1,*buffers[buffer_index]);
