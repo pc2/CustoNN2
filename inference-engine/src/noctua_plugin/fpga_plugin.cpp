@@ -24,7 +24,7 @@ struct layersDetails
 
 unsigned char *images;
 int num_images,dim_x,dim_y;
-void parse_images(std::vector<std::string> imageNames, unsigned char *images, InferenceEngine::CNNNetwork network)
+void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwork network)
 {
 
   InputsDataMap inputInfo = network.getInputsInfo();
@@ -156,7 +156,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
   }else{
     std::cout<<" Bitstream found\n";
   } 
-  parse_images(imageNames, images, network);
+  parse_images(imageNames, network);
 
   cl_int err;
 
@@ -271,6 +271,11 @@ int kernel_index = 0;
   //cl::CommandQueue *queues[50];
   cl::Buffer *buffers[100];
   int buffer_index = 0;
+  //std::cout<<"Images array size: "<<sizeof(images)/sizeof(images[0])<<"\n";
+	std::cout<<"first image\n";
+	//for(int i=0;i<784;i++)
+		//std::cout<<unsigned(images[i])<<"\n";
+	
   buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar)*dim_x*dim_y*num_images);
   err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar)*dim_x*dim_y*num_images, images); //images buffer
   assert(err==CL_SUCCESS);
