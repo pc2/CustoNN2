@@ -103,16 +103,20 @@ __kernel void MaxPool(__global double * restrict input,
 __kernel void FCL_Kernel(__global volatile int * restrict input,
 				__global short *restrict weights,
 		 		__global unsigned char *restrict output_labels, 
-		 		int number_of_filters, 
-		 		int weight_number)
+		 		int number_of_filters,
+				int image_number, 
+		 		int weight_number,
+				int number_of_image_rows, 
+				int  number_of_image_cols)
+{
 		  	long maxScore=0;
 		  	int weightIndex=0;
-		  	int image_size = maxpool_out_rows * maxpool_out_cols * number_of_filters;
+		  	int image_size = number_of_image_rows * number_of_image_cols * number_of_filters;
 
 			for(int w = 0; w < weight_number; w++){
 				long  sum=0;
 				for(int j=0;j<image_size;j++){
-					sum+= curr_image[j] * (int)weights[(w*image_size)+j];
+					sum+= input[j] * (int)weights[(w*image_size)+j];
 				}
 				if (sum > maxScore)
 				{
@@ -123,5 +127,5 @@ __kernel void FCL_Kernel(__global volatile int * restrict input,
 
 			}
 
-			output_labels[i]=weightIndex;
+			output_labels[image_number]=weightIndex;
 }
