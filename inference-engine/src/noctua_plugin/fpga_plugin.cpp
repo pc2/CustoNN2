@@ -82,7 +82,7 @@ void parse_images(std::vector<std::string> imageNames, unsigned char *images, In
 	}
   std::cout<<"Images Pixel: " <<std::endl;
   for(int k=0;k<numberOfPixels;k++){
-    std::cout<<k <<":"<< unsigned(images[k]) <<std::endl;
+    //std::cout<<k <<":"<< unsigned(images[k]) <<std::endl;
   }
   std::cout<<"Number of Pixels:"<<numberOfPixels<<" , Number of Images:"<<imagesData.size() <<std::endl;
 }
@@ -115,7 +115,7 @@ void print_layerDetails(std::vector<layersDetails> cnnlayers)
 
 std::string bitstreamFinder(char *filepath)
 {
-
+  std::cout <<"Finding the bitstream"<< std::endl;
   char *full_filename;
   char *filenameFromPath;
 
@@ -126,11 +126,13 @@ std::string bitstreamFinder(char *filepath)
   }
   std::string str = "";
   str = full_filename;
-  size_t lastindex = str.find_last_of(".");
+  std::cout<<" AOCX File is:" <<str<<std::endl;
+  size_t lastindex = str.length();
   std::string filename = str.substr(0, lastindex);
   filename += ".aocx";
-  std::string str1 = "kernels/" + filename;
-  char char1[20];
+  std::string str1 = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/" + filename;
+  std::cout<<"Final AOCX File is:" <<str1<<std::endl;
+  char *char1= new char[str1.length()+1];
   strcpy(char1, str1.c_str());
   FILE *fp = fopen(char1, "r");
   if (fp != NULL)
@@ -151,7 +153,9 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
     std::cout<<" Bitstream not found\n";
    //return -1; 
     //exit(0);  
-  }
+  }else{
+    std::cout<<" Bitstream found\n";
+  } 
   parse_images(imageNames, images, network);
 
   cl_int err;
@@ -251,7 +255,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 
 
-std::ifstream aocx_stream("kernels/"+overlay_name, std::ios::in|std::ios::binary);
+std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/"+overlay_name, std::ios::in|std::ios::binary);
 //checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
 std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
