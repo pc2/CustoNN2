@@ -2,9 +2,9 @@
  * Kernel for ConvolutionLayer.
  */
 
-__kernel void ConvolutionLayer(__global int * restrict img, 
-				__global int * restrict weights, 
-				__global int * restrict bias,
+__kernel void ConvolutionLayer(__global unsigned char * restrict img, 
+				__global short * restrict weights, 
+				__global short * restrict bias,
 				int number_of_filter_rows, 
 				int number_of_filter_cols,
 				int number_of_filters, 	
@@ -73,11 +73,12 @@ __kernel void MaxPool(__global int * restrict input,
 			int  number_of_image_cols,
 			int number_of_filters, 
 			int stride,
+			int number_of_images,
 			__global int * restrict output){
 
 	int count = 0,modVal = number_of_image_cols - 2; //mod val is used to skip certain loops
 	double maxpool[4]; //maxpooing matrix 1D matrix with 0 and 1 position has r1c1 r1c2 and 2 and 3 has r2c1 r2c2
-	int image_size = number_of_image_rows * number_of_image_cols * number_of_filters;
+	int image_size = number_of_image_rows * number_of_image_cols * number_of_filters * number_of_images;
 	int max;
 	for(int i = 0; i<image_size;i+=2){
 	
