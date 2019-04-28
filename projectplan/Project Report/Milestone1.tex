@@ -1,0 +1,43 @@
+\documentclass[titlepage]{report}
+
+\usepackage{titlesec}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{colortbl}
+
+%setting for chapter font
+\titleformat{\chapter}[display]
+  {\Huge\bfseries}{}{1pt}{\Huge}
+  
+  
+
+\title{\textbf{Milestone 1}}  
+
+
+\begin{document}
+\maketitle
+
+\tableofcontents{}
+\newpage
+
+\chapter{Plan for milestone 1}
+In this phase, we develop a plugin for OpenVINO and using Tensor Virtual Machine (TVM), we generate kernels in order to run a simple topology on a single FPGA. The generated kernels are customized for OpenVINO and synthesized for Stratix 10.
+\chapter{Development of OpenVINO Plugin}
+Firstly, the deep learning deployment toolkit (dldt) github repository was integrated into the university gitlab server. A folder named Noctua\_plugin was created inside dldt and another folder named kernels was created inside Nocuta\_plugin to store the bitstreams (.aocx files).\par
+The development process started by editing the classification sample application to parse the IR of the given input topology. This parsed IR, which is stored in a data structure called CNNNetwork, is then passed on to the plugin. A single file named fpga\_plugin.cpp retrieved the layer information from the IR, launched the kernels on the FPGA after passing them the required arguments.
+
+
+\chapter{Using TVM to generate kernels}
+
+
+\chapter{Summary of the progress}
+The developed plugin supports convolution, Max pooling and Fully connected layers as required by the simpleCNN topology.
+
+
+\chapter{Conclusion and feedback}
+
+
+\end{document}
