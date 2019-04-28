@@ -130,7 +130,7 @@ std::string bitstreamFinder(char *filepath)
   size_t lastindex = str.length();
   std::string filename = str.substr(0, lastindex);
   filename += ".aocx";
-  std::string str1 = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/" + filename;
+  std::string str1 = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/rnagle/openvino_models/simplecnn/" + filename;
   std::cout<<"Final AOCX File is:" <<str1<<std::endl;
   char *char1= new char[str1.length()+1];
   strcpy(char1, str1.c_str());
@@ -255,7 +255,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 
 
-std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/"+overlay_name, std::ios::in|std::ios::binary);
+std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/rnagle/openvino_models/simplecnn/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
 //checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
 std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
@@ -280,7 +280,7 @@ int kernel_index = 0;
   err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar)*dim_x*dim_y*num_images, images); //images buffer
   assert(err==CL_SUCCESS);
   myqueue.finish(); 
-  
+  std::cout<<"images copied\n";
   int num_filters = 0;
   int num_classes = 0;
   int num_pixels = dim_x * dim_y;
@@ -294,52 +294,66 @@ int kernel_index = 0;
 		err = kernels[kernel_index]->setArg(0,*buffers[buffer_index]);   //first argument, input, also the output of the previous layer
 		assert(err==CL_SUCCESS);
 		buffer_index++;
+		std::cout<<"images passed\n";		
 		
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*l.num_weights);
-		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*l.num_weights, l.layerWeights);    //weights
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_weights);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_weights, l.layerWeights);    //weights
 		myqueue.finish();
 		assert(err==CL_SUCCESS);		
 		err = kernels[kernel_index]->setArg(1,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 		
-		
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*l.num_biases);
-		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*l.num_biases, l.layerBias);           //biases
+		std::cout<<"weights passed\n";
+
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_biases);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_biases, l.layerBias);           //biases
 		myqueue.finish();
 		assert(err==CL_SUCCESS);
 		err = kernels[kernel_index]->setArg(2,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
 		buffer_index++;
+		std::cout<<"biases passed\n";
 
-		char f_dim = l.params["kernel"].at(0);
-		err = kernels[kernel_index]->setArg(3,(int)f_dim);		//filter rows
+		int f_dim = l.params["kernel"].at(0) - '0';
+		std::cout<<"num of filter rows : "<<f_dim<<"\n";
+		err = kernels[kernel_index]->setArg(3,f_dim);		//filter rows
 		assert(err==CL_SUCCESS);
-		
+		std::cout<<"filter rows passed\n";		
+
 		err = kernels[kernel_index]->setArg(4,(int)f_dim);		//filter cols
 		assert(err==CL_SUCCESS);
+		std::cout<<"filter cols passed\n";
 
 		 num_filters = std::atoi(l.params["output"].c_str());
+		std::cout<<"no of filters from the map: "<<num_filters<<"\n";
 		err = kernels[kernel_index]->setArg(5,num_filters);		//no of filters
 		assert(err==CL_SUCCESS);
+		std::cout<<"no of filters passed\n";
 
 		err = kernels[kernel_index]->setArg(6,num_images);		//no of images
 		assert(err==CL_SUCCESS);
+		std::cout<<"no of images passed\n";
 
 		err = kernels[kernel_index]->setArg(7,dim_x);		//no of image rows
 		assert(err==CL_SUCCESS);
-		
+		std::cout<<"no of image rows passed\n";	
+	
 		err = kernels[kernel_index]->setArg(8,dim_y);		//no of image cols
 		assert(err==CL_SUCCESS);
+		std::cout<<"no of image cols passed\n";
 		
-		int pad = (int)l.params["pads_begin"].at(0);
+		int pad = l.params["pads_begin"].at(0) - '0';
+		std::cout<<"padding from the map"<<pad<<"\n";
 		err = kernels[kernel_index]->setArg(9,pad);		//padding
 		assert(err==CL_SUCCESS);
+		std::cout<<"padding passed\n";
 
-		int stride = (int)l.params["strides"].at(0);
+		int stride = l.params["strides"].at(0) - '0';
+		std::cout<<"stride from the map(conv): "<<stride<<"\n";
 		err = kernels[kernel_index]->setArg(10,stride);		//stride
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"stride passed\n";
 		//err = kernels[kernel_index]->setArg(9,dim_x);		//conv output rows
 		//assert(err==CL_SUCCESS);
 
@@ -349,6 +363,7 @@ int kernel_index = 0;
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*dim_x*dim_y*num_images*num_filters);
 		err = kernels[kernel_index]->setArg(11,*buffers[buffer_index]);								//output of conv
 		assert(err==CL_SUCCESS);
+		std::cout<<"conv output passed\n";
 
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
 		assert(err==CL_SUCCESS);
@@ -364,30 +379,35 @@ int kernel_index = 0;
 		err = kernels[kernel_index]->setArg(0,*buffers[buffer_index]);   //first argument, input, also the output of the previous layer
 		assert(err==CL_SUCCESS);
 		buffer_index++;
-
+		std::cout<<"images passed\n";
 		err = kernels[kernel_index]->setArg(1,dim_x);		//conv output rows
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"conv output rows passed\n";
 		err = kernels[kernel_index]->setArg(2,dim_y);		//conv output cols
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"conv output cols passed\n";
 		err = kernels[kernel_index]->setArg(3,num_filters);		//no of filters
 		assert(err==CL_SUCCESS);
-		
-		int stride = (int)l.params["strides"].at(0);
+		std::cout<<"no of filters passed\n";
+		int stride = l.params["strides"].at(0) - '0';
+		std::cout<<"Stride from the map: "<<stride<<"\n";
 		err = kernels[kernel_index]->setArg(4,stride);		//stride
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"stride passed: "<<stride<<"\n";
 		err = kernels[kernel_index]->setArg(5,num_images);		//no of images
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"no of images passed\n";
 		//err = kernels[kernel_index]->setArg(6,dim_y);		//no of image cols
 		//assert(err==CL_SUCCESS);
-
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*(dim_x/stride)*(dim_y/stride)*num_images*num_filters);
+		dim_x /= stride;
+		dim_y /= stride;
+		num_pixels /= (stride * stride);
+		std::cout<<"dim x: "<<dim_x<<" dim y: "<<dim_y<<" num_pixels: "<<num_pixels<<"\n";		
+	
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*dim_x*dim_y*num_images*num_filters);
 		err = kernels[kernel_index]->setArg(6,*buffers[buffer_index]);								//output of pool
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"pool output\n";
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
 		assert(err==CL_SUCCESS);
 		kernel_index++;
@@ -404,7 +424,8 @@ int kernel_index = 0;
 		err = kernels[kernel_index]->setArg(0,*buffers[buffer_index]);   //first argument, input, also the output of the previous layer
 		assert(err==CL_SUCCESS);
 		buffer_index++;
-
+		std::cout<<"images passed\n";		
+		
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*l.num_weights);
 		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*l.num_weights, l.layerWeights);    //weights
 		myqueue.finish();
@@ -412,30 +433,31 @@ int kernel_index = 0;
 		err = kernels[kernel_index]->setArg(1,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
 		buffer_index++;
-
+		std::cout<<"weights passed\n";
 		err = kernels[kernel_index]->setArg(2,num_pixels);		//no of pixels
 		assert(err==CL_SUCCESS);
-	
+		std::cout<<"no of pixels passed\n";
 		 num_classes = std::atoi(l.params["out-size"].c_str());
+		std::cout<<"num classes from the map: "<<num_classes<<"\n";
 		err = kernels[kernel_index]->setArg(3,num_classes);		//no of classes
 		assert(err==CL_SUCCESS);	
-		
+		std::cout<<"no of classes passed\n";
 		err = kernels[kernel_index]->setArg(4,num_images);		//no of images
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"no of images passed\n";
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*num_images);
 		err = kernels[kernel_index]->setArg(5,*buffers[buffer_index]);								//output of FC
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"output of FC passed\n";
 		err = kernels[kernel_index]->setArg(6,dim_x);		//rows
 		assert(err==CL_SUCCESS);
-
+		std::cout<<"no of rows passed\n";
 		err = kernels[kernel_index]->setArg(7,dim_y);		//cols
 		assert(err==CL_SUCCESS);
-	
+		std::cout<<"no of cols passed\n";
 		err = kernels[kernel_index]->setArg(8,num_filters);		//no of filters
 		assert(err==CL_SUCCESS);
-	
+		std::cout<<"no of filters passed\n";
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
 		assert(err==CL_SUCCESS);
 		kernel_index++;
