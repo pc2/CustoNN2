@@ -18,6 +18,7 @@
 3. Merge DLDT with CustoNN2 and TVM needs to be brought into Version Control.
 4. DLDT linked with Slack. Need the same to be done with CustoNN2.
 5. Alina takes over as the team leader . Duration : Until Milestone 2 (22nd May)
+6. Request for extending Milestone 2 until May 22nd.
 ##### Research/Individual Task Updates: Task Updates
 1. Team OpenVino : Milestone 1 is working . Need to test more than one Image.
 2. Team TVM : Focus now on GoogLeNet as Simple CNN is not working properly.
