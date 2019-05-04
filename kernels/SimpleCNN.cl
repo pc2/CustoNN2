@@ -13,7 +13,7 @@ __kernel void ConvolutionLayer(__global unsigned char * restrict img,
 				int number_of_image_cols, 
 				int conv_pad,
 				int stride,
-				__global int * restrict output){
+				__global unsigned int * restrict output){
 	
 	int i,j,k,t;
 	int index, temp_index, filter_index, image_index;
@@ -51,8 +51,8 @@ __kernel void ConvolutionLayer(__global unsigned char * restrict img,
 						filter_index++;
 					}
 				}
-				if (output[index] < (double)0)
-					output[index] = (double)0;
+				if (output[index] < (unsigned int)0)
+					output[index] = (unsigned int)0;
 				index++;
 				image_index++;
 
@@ -114,7 +114,7 @@ __kernel void FCL_Kernel(__global volatile int * restrict input,
 				int number_of_pixels,
 				int weight_number,
 				int number_of_images,
-		 		__global unsigned char *restrict output_labels, 
+		 		__global int *restrict output_labels, 
 				int number_of_image_rows, 
 				int  number_of_image_cols,
 		 		int number_of_filters)
