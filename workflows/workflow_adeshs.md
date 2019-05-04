@@ -45,6 +45,21 @@ CIFS IMT Link : https://hilfe.uni-paderborn.de/Netzlaufwerk_einbinden_(Windows_7
 - Yes, .bashrc file is owned by me and I can edit it. We usually add environment variables inside .bashrc file. I added
 `export PG_HOME_ADESH=/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs` as a variable for easy access of the project directory.
 - Quota in Cluster is 15TB
+### Steps to set up Platform
+1. Get the list of platforms.
+2. Get FPGA devices of a particular platform.
+3. Create an OpenCL context for the above FPGA Device.
+### Steps for executing kernel in host code
+1. Create OpenCL command queue.
+2. Create then build the program: Create a program using context,device and aocx binaries
+3. Create kernels from the program: Use the kernel name given in the .cl code.
+4. Allocate and transfer buffers to device 
+5. Set Arguments for the kernel. Argument number starts from 0
+6. Launch the Kernel using <queue>.enqueueTask
+7. Transfer the result buffer back
+
+## Sample Makefile for OpenCL kernels
+https://www.intel.com/content/www/us/en/programmable/documentation/mwh1391807965224.html#ewa1411396461611
 
 ## Channels & Pipes in OpenCL
 - Channels/Pipes are OpenCL extensions or functions which provide data transfer functionality between kernels with low latency and high efficiency.
@@ -65,8 +80,11 @@ source:
 - -list-boards = prints all available boards
 - -c -report = generates html report of the kernel for 17.1.2 tools
 - -rtl -report = generates html report of the kernel for 18.0.1 tools
+- const-cache-bytes = helps is setting up cache for the kernel
+- -profile  = Generates a .source file which can be used to study performance of the kernel. The generated aocx file has to be executed by host code, a profile.mon is created.
+- `aocl report <aocx_file>.aocx profile.mon <kernel>.source` = to view statistical data using profile GUI.
 
-## Task 4 :Git Best Practices
+## Git Best Practices
   
 - Enabling git color coded console:  
 > git config --global color.ui auto
