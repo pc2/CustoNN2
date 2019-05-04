@@ -19,14 +19,11 @@ v[D].bind(qx, tvm.thread_axis("pipeline"))
 
 fadd = tvm.build(s, [A, B, C, D], tgt, target_host=tgt_host, name="myadd")
 
-faddsec = tvm.build(s, [A, B, C, D], tgt, target_host=tgt_host, name="secondadd")
+#faddsec = tvm.build(s, [A, B, C, D], tgt, target_host=tgt_host, name="secondadd")
 
 #fadd.save("myadd.o")
 #fadd.imported_modules[0].save("myadd.aocx")
 
 #tvm.contrib.cc.create_shared("myadd.so", ["myadd.o"])
 
-faddsec.save("secondadd.o")
-faddsec.imported_modules[0].save("secondadd.aocx")
 
-tvm.contrib.cc.create_shared("secondadd.so", ["secondadd.o"])
