@@ -27,7 +27,7 @@
 - Following teams were formed:
 	- OpenVINO FPGA Plugin with scaling capability : Adesh, Alina , Rushikesh
 	- TVM (Continue research to generate OpenCL Kernels) : Chiranjeevi, Arathy
-	- Kernels (Write OpenCL Kernels for GoogLeNet) : Aayush, Anshul, Nikitha, Amay, Alina
+	- Kernels (Write OpenCL Kernels for GoogLeNet) : Aayush, Anshul, Nikitha, Amay, Suprajith
 
 ### Issues and Actions
 | Issue | Owner | Time |
