@@ -44,7 +44,7 @@ Variables:
 
 For example see this link: https://developers.google.com/machine-learning/crash-course/multi-class-neural-networks/softmax
 
-#Concatincation kernel.
+# Concatincation kernel.
 Variables:
 - __global double * restrict input,
 - int number_of_input_blocks,
