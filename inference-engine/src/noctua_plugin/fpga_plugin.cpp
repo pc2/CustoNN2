@@ -1,13 +1,18 @@
 #include <string>
 #include <vector>
+#include <array>
 #include <iostream>
 #include<fstream>
+#include <math.h>
 #include "CL/cl.hpp"
 #include "fpga_plugin.h"
 #include <format_reader_ptr.h>
+#include <chrono>
+#include <thread>
+#include <assert.h> 
 
 #include <inference_engine.hpp>
-
+#include <opencv2/opencv.hpp>
 using namespace InferenceEngine;
 
 //Data structure to store information of each layer
@@ -24,23 +29,56 @@ struct layersDetails
 
 unsigned char *images;
 int num_images,dim_x,dim_y;
+void printImage(unsigned char * image,int numberOfImages,int xdim,int ydim){
+
+	std::cout<<"Image Pixels are:"<<std::endl;
+	for(int m=0;m<numberOfImages;m++){
+		for(int i=0;i<xdim;i++){
+			for(int k=0;k<ydim;k++){
+				std::cout<<unsigned(image[(m*xdim*ydim)+(i*ydim)+k]) << " ";
+			}
+			std::cout<<std::endl;
+		}
+		std::cout<<std::endl;
+	}
+
+}
+
+void printFilterWeights(float * layerWeights){
+	std::cout<<"1st Filter weights are:"<<std::endl;
+	for(int i=0;i<5;i++){
+		for(int k=0;k<5;k++){
+			std::cout<<layerWeights[i*5+k] << " ";
+		}
+		std::cout<<std::endl;
+	}
+
+
+}
+
+
 void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwork network)
 {
 
   InputsDataMap inputInfo = network.getInputsInfo();
-  if (inputInfo.size() != 1)
+  
+	if (inputInfo.size() != 1)
     throw std::logic_error("Sample supports topologies only with 1 input");
+	
   auto inputInfoItem = *inputInfo.begin();
-
-  // Specifying the precision and layout of input data provided by the user.
-  // This should be called before load of the network to the plugin
-  inputInfoItem.second->setPrecision(Precision::U8);
+	inputInfoItem.second->setPrecision(Precision::U8);
   inputInfoItem.second->setLayout(Layout::NCHW);
+	std::vector<std::shared_ptr<unsigned char>> imagesData;
+	std::string input_name = network.getInputsInfo().begin()->first;
+	int imageIndex=0;
+	
+  images = new unsigned char[inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2]*imageNames.size()*inputInfoItem.second->getTensorDesc().getDims()[1]];
 
-  std::vector<std::shared_ptr<unsigned char>> imagesData;
-  for (auto &i : imageNames)
-  {
-    FormatReader::ReaderPtr reader(i.c_str());
+for(std::string i: imageNames){
+	std::cout<<"Reading Image :"<<i<<std::endl;
+	cv::Mat image = cv::imread(i);
+
+	FormatReader::ReaderPtr reader(i.c_str());
     if (reader.get() == nullptr)
     {
       std::cout << "Image " + i + " cannot be read!" << std::endl;
@@ -50,41 +88,36 @@ void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwo
     std::shared_ptr<unsigned char> data(
         reader->getData(inputInfoItem.second->getTensorDesc().getDims()[3],
                         inputInfoItem.second->getTensorDesc().getDims()[2]));
-    if (data.get() != nullptr)
+
+	if (data.get() != nullptr)
     {
       imagesData.push_back(data);
-      //unsigned char test=data.get()[0];
-      //std::cout<<unsigned(test)<<std::endl;
     }
-  }
-  if (imagesData.empty())
-    throw std::logic_error("Valid input images were not found!");
-
-
-	num_images = imagesData.size();
+  num_images = imagesData.size();
 	dim_x = inputInfoItem.second->getTensorDesc().getDims()[3];
 	dim_y = inputInfoItem.second->getTensorDesc().getDims()[2];
- 
-  
-  //Total number of images * dimension
-  images = new unsigned char[inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2]*imagesData.size()];
-  int numberOfPixels=inputInfoItem.second->getTensorDesc().getDims()[3]*inputInfoItem.second->getTensorDesc().getDims()[2];
-	int img_index = 0;
-  std::cout<<"Number of Pixels:"<<numberOfPixels<<" , Number of Images:"<<imagesData.size() <<std::endl;
-	for(int i=0;i<imagesData.size();i++)
-	{
-		for(int j=0;j<numberOfPixels;j++)
-		{
-			images[i*numberOfPixels + j] = imagesData.at(i).get()[j];
-      //std::cout<<unsigned(imagesData.at(i).get()[j])<<" ";
-			img_index++;
+	size_t channels_number = inputInfoItem.second->getTensorDesc().getDims()[1];
+  size_t image_size = inputInfoItem.second->getTensorDesc().getDims()[3] * inputInfoItem.second->getTensorDesc().getDims()[2];
+	
+
+  if (imagesData.empty())
+    throw std::logic_error("Valid input images were not found!");
+	std::cout<<"Number of Pixels:"<<image_size*channels_number<<" , Number of Images:"<<imagesData.size() <<std::endl;
+  cv::resize(image, image, cv::Size(inputInfoItem.second->getTensorDesc().getDims()[3], inputInfoItem.second->getTensorDesc().getDims()[2]));
+
+	
+		for (size_t pid = 0; pid < image_size; ++pid) {
+			for (size_t ch = 0; ch < channels_number; ++ch) {
+					images[(imageIndex*image_size*channels_number) + ch * image_size + pid] = image.at<cv::Vec3b>(pid)[ch];
+			}
 		}
+	imageIndex++;
 	}
-  std::cout<<"Images Pixel: " <<std::endl;
-  for(int k=0;k<numberOfPixels;k++){
-    //std::cout<<k <<":"<< unsigned(images[k]) <<std::endl;
-  }
-  std::cout<<"Number of Pixels:"<<numberOfPixels<<" , Number of Images:"<<imagesData.size() <<std::endl;
+	std::cout<<"Images Pixel: " <<std::endl;
+	printImage(images,num_images,dim_x,dim_y);
+  
+	
+  
 }
 
 void print_layerDetails(std::vector<layersDetails> cnnlayers)
@@ -130,7 +163,7 @@ std::string bitstreamFinder(char *filepath)
   size_t lastindex = str.length();
   std::string filename = str.substr(0, lastindex);
   filename += ".aocx";
-  std::string str1 = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/rnagle/openvino_models/simplecnn/" + filename;
+  std::string str1 = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs/dldt/kernels/" + filename;
   std::cout<<"Final AOCX File is:" <<str1<<std::endl;
   char *char1= new char[str1.length()+1];
   strcpy(char1, str1.c_str());
@@ -148,7 +181,8 @@ std::string bitstreamFinder(char *filepath)
 int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames)
 {
   std::cout<<"In FPGA Launcher"<<std::endl;
-  std::string overlay_name = bitstreamFinder(model_path); //Checking the availability of bitstream
+  //std::string overlay_name = bitstreamFinder(model_path); //Checking the availability of bitstream
+	std::string overlay_name = " ";
   if(overlay_name=="not found"){
     std::cout<<" Bitstream not found\n";
    //return -1; 
@@ -164,7 +198,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
   err = cl::Platform::get(&PlatformList);
   assert(err == CL_SUCCESS);
-
+	std::cout<<" Error code after Get Platform:"<<" is ===>"<<err<<std::endl;
    for (int i=0; i<PlatformList.size(); i++)
         {
                 printf("Platform Number: %d\n", i);
@@ -176,11 +210,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 
 
-  std::vector<cl::Device> DeviceList; //Devices
+  std::vector<cl::Device> DeviceList_Master,DeviceList; //Devices
 
-  err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList);
+  err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList_Master);
   assert(err == CL_SUCCESS);
-
+	std::cout<<" Error code after Get Device:"<<" is ===>"<<err<<std::endl;
+	DeviceList.push_back(DeviceList_Master[0]);
    for (int i=0; i<DeviceList.size(); i++)
         {
                 printf("Device Number: %d\n", i);
@@ -198,7 +233,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
   cl::Context mycontext(DeviceList); //Context
   assert(err == CL_SUCCESS);
-
+	std::cout<<" Error code after Context:"<<" is ===>"<<err<<std::endl;
   details::CNNNetworkIterator it(network.actual);
   int no_of_layers = static_cast<int>(network.layerCount());
 
@@ -252,10 +287,10 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
  cl::CommandQueue myqueue(mycontext, DeviceList[0]); 	//command queue
   assert(err==CL_SUCCESS);
+	std::cout<<" Error code after Cmd Queue:"<<" is ===>"<<err<<std::endl;
 
-
-
-std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/rnagle/openvino_models/simplecnn/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
+std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/simplecnn_openvino/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
+//std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs/dldt/kernels/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
 //checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
 std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
@@ -265,7 +300,7 @@ cl::Program program(mycontext, DeviceList, mybinaries);
 
 err=program.build(DeviceList);
 assert(err==CL_SUCCESS);
-
+std::cout<<" Error code after BUILD:"<<" is ===>"<<err<<std::endl;
 cl::Kernel *kernels[52];
 int kernel_index = 0;
   //cl::CommandQueue *queues[50];
@@ -279,7 +314,9 @@ int kernel_index = 0;
   buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar)*dim_x*dim_y*num_images);
   err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar)*dim_x*dim_y*num_images, images); //images buffer
   assert(err==CL_SUCCESS);
-  myqueue.finish(); 
+ err= myqueue.finish(); 
+ std::cout<<" Error code after image transfer:"<<kernel_index<<" is ===>"<<err<<std::endl;
+ assert(err==CL_SUCCESS);
   std::cout<<"images copied\n";
   int num_filters = 0;
   int num_classes = 0;
@@ -296,9 +333,11 @@ int kernel_index = 0;
 		buffer_index++;
 		std::cout<<"images passed\n";		
 		
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_weights);
-		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_weights, l.layerWeights);    //weights
-		myqueue.finish();
+		printFilterWeights(l.layerWeights);
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_float)*l.num_weights);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float)*l.num_weights, l.layerWeights);    //weights
+		err = myqueue.finish();
+		std::cout<<" Error code after weights transfer:"<<kernel_index<<" is ===>"<<err<<std::endl;
 		assert(err==CL_SUCCESS);		
 		err = kernels[kernel_index]->setArg(1,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
@@ -306,9 +345,10 @@ int kernel_index = 0;
 		
 		std::cout<<"weights passed\n";
 
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_short)*l.num_biases);
-		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_short)*l.num_biases, l.layerBias);           //biases
-		myqueue.finish();
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_float)*l.num_biases);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float)*l.num_biases, l.layerBias);           //biases
+		err = myqueue.finish();
+		std::cout<<" Error code after bias transfer:"<<kernel_index<<" is ===>"<<err<<std::endl;
 		assert(err==CL_SUCCESS);
 		err = kernels[kernel_index]->setArg(2,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
@@ -343,15 +383,31 @@ int kernel_index = 0;
 		assert(err==CL_SUCCESS);
 		std::cout<<"no of image cols passed\n";
 		
-		int pad = l.params["pads_begin"].at(0) - '0';
-		std::cout<<"padding from the map"<<pad<<"\n";
-		err = kernels[kernel_index]->setArg(9,pad);		//padding
+		int pad_begin[] = {l.params["pads_begin"].at(0) - '0',l.params["pads_begin"].at(2) - '0'};
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*2);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*2,pad_begin);           //pad begin
+		assert(err==CL_SUCCESS);
+		err = myqueue.finish();
+		assert(err==CL_SUCCESS);
+		//std::cout<<"padding from the map"<<pad<<"\n";
+		err = kernels[kernel_index]->setArg(9,*buffers[buffer_index]);		//padding
 		assert(err==CL_SUCCESS);
 		std::cout<<"padding passed\n";
+		buffer_index++;
+		
+		int pad_end[] = {l.params["pads_end"].at(0) - '0',l.params["pads_end"].at(2) - '0'};
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*2);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*2,pad_end);           //pad end
+		myqueue.finish();
+		//std::cout<<"padding from the map"<<pad<<"\n";
+		err = kernels[kernel_index]->setArg(10,*buffers[buffer_index]);		//padding
+		assert(err==CL_SUCCESS);
+		std::cout<<"padding passed\n";
+		buffer_index++;
 
 		int stride = l.params["strides"].at(0) - '0';
 		std::cout<<"stride from the map(conv): "<<stride<<"\n";
-		err = kernels[kernel_index]->setArg(10,stride);		//stride
+		err = kernels[kernel_index]->setArg(11,stride);		//stride
 		assert(err==CL_SUCCESS);
 		std::cout<<"stride passed\n";
 		//err = kernels[kernel_index]->setArg(9,dim_x);		//conv output rows
@@ -360,15 +416,22 @@ int kernel_index = 0;
 		//err = kernels[kernel_index]->setArg(10,dim_y);		//conv output cols
 		//assert(err==CL_SUCCESS);
 		
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*dim_x*dim_y*num_images*num_filters);
-		err = kernels[kernel_index]->setArg(11,*buffers[buffer_index]);								//output of conv
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_double)*dim_x*dim_y*num_images*num_filters);
+		err = kernels[kernel_index]->setArg(12,*buffers[buffer_index]);								//output of conv
 		assert(err==CL_SUCCESS);
 		std::cout<<"conv output passed\n";
 
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 		assert(err==CL_SUCCESS);
+		std::cout<<" Error code soon after conv layer for kernel:"<<kernel_index<<" is ===>"<<err<<std::endl;
 		kernel_index++;
 		
+		err=myqueue.finish();
+		assert(err==CL_SUCCESS);
+
+		std::cout<<" Error code  after conv layer finish for kernel:"<<kernel_index<<" is ===>"<<err<<std::endl;
+
 		num_pixels *= num_filters;
 	}
 	else if(l.layerType == "Pooling")
@@ -404,17 +467,18 @@ int kernel_index = 0;
 		num_pixels /= (stride * stride);
 		std::cout<<"dim x: "<<dim_x<<" dim y: "<<dim_y<<" num_pixels: "<<num_pixels<<"\n";		
 	
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*dim_x*dim_y*num_images*num_filters);
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_double)*dim_x*dim_y*num_images*num_filters);
 		err = kernels[kernel_index]->setArg(6,*buffers[buffer_index]);								//output of pool
 		assert(err==CL_SUCCESS);
 		std::cout<<"pool output\n";
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 		assert(err==CL_SUCCESS);
 		kernel_index++;
 		
-		dim_x /= stride;
-		dim_y /= stride;
-		num_pixels /= (stride * stride);
+		//dim_x /= stride;
+		//dim_y /= stride;
+		//num_pixels /= (stride * stride);
 	}
 	else if(l.layerType == "FullyConnected")
 	{
@@ -426,36 +490,44 @@ int kernel_index = 0;
 		buffer_index++;
 		std::cout<<"images passed\n";		
 		
-		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_int)*l.num_weights);
-		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int)*l.num_weights, l.layerWeights);    //weights
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_float)*l.num_weights);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float)*l.num_weights, l.layerWeights);    //weights
 		myqueue.finish();
 		assert(err==CL_SUCCESS);		
 		err = kernels[kernel_index]->setArg(1,*buffers[buffer_index]);
 		assert(err==CL_SUCCESS);
 		buffer_index++;
 		std::cout<<"weights passed\n";
-		err = kernels[kernel_index]->setArg(2,num_pixels);		//no of pixels
+		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_ONLY, sizeof(cl_float)*l.num_biases);
+		err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float)*l.num_biases, l.layerBias);           //biases
+		myqueue.finish();
+		assert(err==CL_SUCCESS);
+		err = kernels[kernel_index]->setArg(2,*buffers[buffer_index]);
+		assert(err==CL_SUCCESS);
+		buffer_index++;
+		std::cout<<"biases passed\n";
+		err = kernels[kernel_index]->setArg(3,num_pixels);		//no of pixels
 		assert(err==CL_SUCCESS);
 		std::cout<<"no of pixels passed\n";
 		 num_classes = std::atoi(l.params["out-size"].c_str());
 		std::cout<<"num classes from the map: "<<num_classes<<"\n";
-		err = kernels[kernel_index]->setArg(3,num_classes);		//no of classes
+		err = kernels[kernel_index]->setArg(4,num_classes);		//no of classes
 		assert(err==CL_SUCCESS);	
 		std::cout<<"no of classes passed\n";
-		err = kernels[kernel_index]->setArg(4,num_images);		//no of images
+		err = kernels[kernel_index]->setArg(5,num_images);		//no of images
 		assert(err==CL_SUCCESS);
 		std::cout<<"no of images passed\n";
 		buffers[buffer_index] = new cl::Buffer(mycontext,CL_MEM_READ_WRITE,sizeof(cl_int)*num_images);
-		err = kernels[kernel_index]->setArg(5,*buffers[buffer_index]);								//output of FC
+		err = kernels[kernel_index]->setArg(6,*buffers[buffer_index]);								//output of FC
 		assert(err==CL_SUCCESS);
 		std::cout<<"output of FC passed\n";
-		err = kernels[kernel_index]->setArg(6,dim_x);		//rows
+		err = kernels[kernel_index]->setArg(7,dim_x);		//rows
 		assert(err==CL_SUCCESS);
 		std::cout<<"no of rows passed\n";
-		err = kernels[kernel_index]->setArg(7,dim_y);		//cols
+		err = kernels[kernel_index]->setArg(8,dim_y);		//cols
 		assert(err==CL_SUCCESS);
 		std::cout<<"no of cols passed\n";
-		err = kernels[kernel_index]->setArg(8,num_filters);		//no of filters
+		err = kernels[kernel_index]->setArg(9,num_filters);		//no of filters
 		assert(err==CL_SUCCESS);
 		std::cout<<"no of filters passed\n";
 		err=myqueue.enqueueTask(*kernels[kernel_index]);
@@ -473,7 +545,7 @@ assert(err==CL_SUCCESS);
 
 for(int i=0;i<num_images;i++)
 {
-	std::cout<<"Image "<<i<<" : "<<final_labels[i]<<"\n";
+	std::cout<<"Image "<<imageNames[i]<<" : "<<final_labels[i]<<"\n";
 
 }
 
