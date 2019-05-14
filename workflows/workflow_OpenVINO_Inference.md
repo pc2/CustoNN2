@@ -26,7 +26,7 @@
     - `/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation` directory is the repository for OpenVINO intermediate representation files (with bin and xml).
     - `/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs` is the FPGA bitstream repo.
 6. Execute the test_plugin using FPGA Plugin Inference.  
- We had written a user application called "test_plugin" to launch the SimpleCNN model using OpenVINO FPGA Plugin. The command to execute the application is :  
+ We have written a user application called "test_plugin" to launch the SimpleCNN model using OpenVINO FPGA Plugin. The command to execute the application is :  
  `./test_plugin -m $IR/lenet_iter_10000.xml  -i $IR/one.png > out_noctua.txt`
     - parameters for test plugin:
         - `-m` : path to the CNN Model name (IR XML file)
