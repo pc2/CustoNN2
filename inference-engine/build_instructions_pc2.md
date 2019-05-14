@@ -5,7 +5,7 @@
 
 ### Cloning the DLDT repository
 We need to clone the open source Deep Learning Deployment Toolkit repository.
-- execute `git clone  https://git.uni-paderborn.de/rnagle/dldt.git` to clone the DLDT repository.
+- execute `git@git.uni-paderborn.de:cs-hit/pg-custonn2-2018-3rd-party/dldt.git` to clone the DLDT repository.
 - Once the DLDT repository is cloned, we need to clone a sub project `ade` into the project. Navigate to dldt dir and execute the command `git submodule init` followed by `git submodule update --recursive`.
 ### Build Steps:
 - Navigate to <inference Engine directory.> `cd <dldt>/inference-engine`
