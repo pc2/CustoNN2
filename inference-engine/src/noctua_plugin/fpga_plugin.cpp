@@ -190,7 +190,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
   }else{
     std::cout<<" Bitstream found\n";
   } 
-  parse_images(imageNames, network);
+ // parse_images(imageNames, network);
 
   cl_int err;
 
@@ -234,7 +234,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
   cl::Context mycontext(DeviceList); //Context
   assert(err == CL_SUCCESS);
 	std::cout<<" Error code after Context:"<<" is ===>"<<err<<std::endl;
-  details::CNNNetworkIterator it(network.actual);
+  
+	details::CNNNetworkIterator it(network.actual);
   int no_of_layers = static_cast<int>(network.layerCount());
 
   //Get the Layers in the network and store the weights and bias in a structure for each layer.
@@ -250,7 +251,24 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
     layerinfo.num_biases = 0;
     layerinfo.num_weights = 0;
     std::cout<<"Parsing Kernel:" <<layer->name<<std::endl;
+		int inLayer=0;
+		for (auto& src : layer->insData) {
+			if(layer->name!="input"){
+				auto previousLayer = layer->insData[inLayer].lock()->getCreatorLayer().lock();
+				std::string inputLayerName = previousLayer->name;
+				std::cout<<"		Input:" <<inputLayerName<<std::endl;
+				inLayer++;
+			}
+			
+		}
+		int outLayer=0;
+		for (auto it : layer->outData[0]->getInputTo()) {
+                std::cout<<"		Output:" <<it.second->name<<std::endl;
+								outLayer++;
+            }
 
+		std::cout<<std::endl;
+		std::cout<<std::endl;
     //store the bias and weights
     for (auto const &x : layer->blobs)
     {
@@ -548,7 +566,6 @@ for(int i=0;i<num_images;i++)
 	std::cout<<"Image "<<imageNames[i]<<" : "<<final_labels[i]<<"\n";
 
 }
-
 
 
 return 0;
