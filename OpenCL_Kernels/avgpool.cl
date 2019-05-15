@@ -12,7 +12,7 @@ __kernel void AvgPool5_5(__global int * restrict input,
 			__global int * restrict output){
 	double avgpool[25]; 
 	int image_size = number_of_image_rows * number_of_image_cols * number_of_filters * number_of_images;
-	int avg=0, i, input[300], count=5, s=5, k, f, startIndex=0, endIndex=s, imageIndex=1, j=0;
+	int avg=0, i, count=5, s=5, k, f, startIndex=0, endIndex=s, imageIndex=1, j=0;
 
    	for(f=0;f<s;f++){
 	   while(count!=0){
@@ -30,7 +30,6 @@ __kernel void AvgPool5_5(__global int * restrict input,
        		avg=avg+avgpool[i];
    	}
 	avg=avg/(s*s);
-    	return avg;
 }
 
 
@@ -48,7 +47,7 @@ __kernel void AvgPool7_7(__global int * restrict input,
 			__global int * restrict output){
 
 	int image_size = number_of_image_rows * number_of_image_cols * number_of_filters * number_of_images;
-	int avg=0, i, count=7, s=7, k, f, startIndex=0, endIndex=s, imageIndex=1, j=0;
+	int avg=0, i, count=7, s=7, k, f, startIndex=0, endIndex=s, imageIndex=1, j=0,avgpool[50];
 
    	for(f=0;f<s;f++){
 	       	while(count!=0){
@@ -66,7 +65,7 @@ __kernel void AvgPool7_7(__global int * restrict input,
 		avg=avg+avgpool[i];
 	}
 	avg=avg/(s*s);
-    	return avg;
+    	
 }
 
 
