@@ -10,21 +10,21 @@
 static const int NUMBER_OF_IMAGES  = 3;
 static const int NUMBER_OF_PIXELS = 100;
 static const int NUMBER_OF_CLASSES = 5;  //0 to 4
-static const int NUMBER_OF_FILTERS = 1;
-static const int DEPTH = 4;
+static const int NUMBER_OF_FILTERS = 4;
+static const int DEPTH = 1;
 static const int NUMBER_OF_ROWS = 9; //Including zero padding
 static const int NUMBER_OF_COLS = 9; //Including zero padding
 static const int FILTER_ROWS = 3; // Number of rows in the conv Filter
 static const int FILTER_COLS = 3; // Number of rows in the conv Filter
 static const int CONV_PADDING = 1; // Number of Zero Padding
 static const int CONV_STRIDE=1; // Stride
-static const int CONV_OUTPUT_ROWS = 10; // Number of Rows in the output image from Maxpool
-static const int CONV_OUTPUT_COLS = 10;  // Number of Cols in the output image from Maxpool
-static const int MAXPOOL_OUTPUT_ROWS = 3; // Number of Rows in the output image from Maxpool
-static const int MAXPOOL_OUTPUT_COLS = 3;  // Number of Cols in the output image from Maxpool
-static const int CONCAT_OUTPUT_ROWS = 3; // Number of Rows in the output image from Concat
-static const int CONCAT_OUTPUT_COLS = 3;  // Number of Cols in the output image from Concat
-static const int CONCAT_NUMBER_OF_FILTERS = 8;
+static const int CONV_OUTPUT_ROWS = 9; // Number of Rows in the output image from Maxpool
+static const int CONV_OUTPUT_COLS = 9;  // Number of Cols in the output image from Maxpool
+static const int MAXPOOL_OUTPUT_ROWS = 9; // Number of Rows in the output image from Maxpool
+static const int MAXPOOL_OUTPUT_COLS = 9;  // Number of Cols in the output image from Maxpool
+static const int CONCAT_OUTPUT_ROWS = 9; // Number of Rows in the output image from Concat
+static const int CONCAT_OUTPUT_COLS = 9;  // Number of Cols in the output image from Concat
+static const int CONCAT_NUMBER_OF_FILTERS = 16;
 unsigned char calculatedLabels[NUMBER_OF_IMAGES];// Classified Class after FC
 int kernelcalculatedLabels[NUMBER_OF_IMAGES];
 unsigned char available_labels[NUMBER_OF_IMAGES]; // Labels from the MNIST Dataset
@@ -100,12 +100,12 @@ std::cout << "started"<< std::endl;
 	cl::Buffer Buffer_ConvPadEnd(mycontext, CL_MEM_READ_ONLY, sizeof(int)* 2);	
 	cl::Buffer Buffer_ConvOutput(mycontext,CL_MEM_READ_WRITE,sizeof(double)* NUMBER_OF_IMAGES*CONV_OUTPUT_ROWS*CONV_OUTPUT_COLS*NUMBER_OF_FILTERS*DEPTH);
 
-	cl::Buffer Buffer_MaxPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(double)* NUMBER_OF_IMAGES*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
-	cl::Buffer Buffer_AvgPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(double)* NUMBER_OF_IMAGES*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
+	cl::Buffer Buffer_MaxPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(double)* NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
+	cl::Buffer Buffer_AvgPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(double)* NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
 	//cl::Buffer Buffer_AvgPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(int)* NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES);
 	//cl::Buffer Buffer_ConcatInput(mycontext, CL_MEM_READ_ONLY, sizeof(int)* NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES * 2);
 	//cl::Buffer Buffer_ConcatLayers(mycontext, CL_MEM_READ_ONLY, sizeof(int)* 2);
-	cl::Buffer Buffer_ConcatOutput(mycontext, CL_MEM_WRITE_ONLY, sizeof(double)* NUMBER_OF_IMAGES*4*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
+	cl::Buffer Buffer_ConcatOutput(mycontext, CL_MEM_WRITE_ONLY, sizeof(double)* NUMBER_OF_IMAGES*4*NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
 	
 	//cl::Buffer Buffer_FCLWeights(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_FC_WEIGHTS);
 	//cl::Buffer Buffer_FCLBias(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_CLASSES);
@@ -115,15 +115,17 @@ std::cout << "started"<< std::endl;
 	
 	
 	std::cout << "Creating the Images" << std::endl;
-	for (int i; i < NUMBER_OF_PIXELS*NUMBER_OF_IMAGES; i++) {
-		Kernel_Img[i] = i%3;	
+	for (int i=0; i < NUMBER_OF_PIXELS*NUMBER_OF_IMAGES; i++) {
+		Kernel_Img[i] = 1;	
 	}
 
 	std::cout << "Finished creating the Images" << std::endl;
 
+	int temp_count = 0;
+/*
 	std::cout << "Creating the Class Weights" << std::endl;
         short digitWeights[NUMBER_OF_CLASSES*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS*NUMBER_OF_FILTERS];
-	int temp_count = 0;
+	temp_count = 0;
         for(int i=0; i<NUMBER_OF_CLASSES; i++) {
                 for(int j=0; j<(CONCAT_OUTPUT_ROWS*CONCAT_OUTPUT_COLS*CONCAT_NUMBER_OF_FILTERS); j++) {
 			digitWeights[temp_count] = i;
@@ -131,6 +133,7 @@ std::cout << "started"<< std::endl;
                 }
         }
         std::cout << "Finished creating the Class Weights" << std::endl;
+*/
 
 	std::cout << "Creating the Convolution Weights" << std::endl;
 	temp_count = 0;
@@ -189,6 +192,22 @@ std::cout << "started"<< std::endl;
         cl::Kernel kernel4(program,Concat_kernel4_name, &err);
         assert(err==CL_SUCCESS);
 
+	printf("\nPrint out the image...\n");
+
+	temp_count = 0;
+	for (int j = 0; j < NUMBER_OF_IMAGES; j++){
+		std::cout << j << " image: " << std::endl;
+		for (int i = 0; i < CONV_OUTPUT_ROWS; i++) {
+			for (int k = 0; k < CONV_OUTPUT_COLS; k++){
+				std::cout << Kernel_Img[temp_count] << " ";
+				temp_count++;
+			}
+			std::cout << std::endl; 	
+		}
+		std::cout << std::endl;
+	}
+
+
 	printf("\nSetting arguments and launching the ConvKernel...\n");
 
         //////////////     Set Arguments to the Kernels
@@ -225,9 +244,29 @@ std::cout << "started"<< std::endl;
         err=queueConvLayer.enqueueTask(kernel);
         assert(err==CL_SUCCESS);
 
+	double Conv_Output_local[NUMBER_OF_IMAGES*CONV_OUTPUT_ROWS*CONV_OUTPUT_COLS*NUMBER_OF_FILTERS*DEPTH];
+	err=queueConvLayer.enqueueReadBuffer(Buffer_ConvOutput, CL_TRUE, 0, sizeof(double)*(NUMBER_OF_IMAGES*CONV_OUTPUT_ROWS*CONV_OUTPUT_COLS*NUMBER_OF_FILTERS*DEPTH), Conv_Output_local);
+        assert(err==CL_SUCCESS);
 
-	//err=queueConvLayer.enqueueReadBuffer(Conv_output, CL_TRUE, 0, sizeof(int)*(NUMBER_OF_PIXELS * NUMBER_OF_IMAGES * 32), Conv_Output_local);
-        //assert(err==CL_SUCCESS);
+	printf("\nPrint out the conv image...\n");
+
+	temp_count = 0;
+	for (int j = 0; j < NUMBER_OF_IMAGES; j++){
+		std::cout << j << " image: " << std::endl;
+		for (int l = 0; l < NUMBER_OF_FILTERS; l++){
+			std::cout << "# filter: "<< l << std::endl;
+			for (int i = 0; i < CONV_OUTPUT_ROWS; i++) {
+				for (int k = 0; k < CONV_OUTPUT_COLS; k++){
+					if (l == j)
+						std::cout << Conv_Output_local[temp_count] << " ";
+					temp_count++;
+				}
+				if (l == j)			
+					std::cout << std::endl; 	
+			}
+		}
+		std::cout << std::endl;
+	}
 
 	err=queueConvLayer.finish();
         assert(err==CL_SUCCESS);
@@ -240,9 +279,9 @@ std::cout << "started"<< std::endl;
 
 	err = kernel2.setArg(0, Buffer_ConvOutput);
         assert(err==CL_SUCCESS);
-        err = kernel2.setArg(1, CONV_OUTPUT_COLS);
+        err = kernel2.setArg(1, CONV_OUTPUT_ROWS);
         assert(err==CL_SUCCESS);
-        err = kernel2.setArg(2, CONV_OUTPUT_ROWS);
+        err = kernel2.setArg(2, CONV_OUTPUT_COLS);
         assert(err==CL_SUCCESS);
         err = kernel2.setArg(3, NUMBER_OF_FILTERS);
         assert(err==CL_SUCCESS);
@@ -261,8 +300,29 @@ std::cout << "started"<< std::endl;
 	err=queueMaxPool.enqueueTask(kernel2);
         assert(err==CL_SUCCESS);
 
-	//err=queueMaxPool.enqueueReadBuffer(maxOutput, CL_TRUE, 0, sizeof(int)*(NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES), Maxpool_Output);
-        //assert(err==CL_SUCCESS);
+	double MaxPool_Output_local[NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
+	err=queueMaxPool.enqueueReadBuffer(Buffer_MaxPoolOutput, CL_TRUE, 0, sizeof(double)*(NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS), MaxPool_Output_local);
+        assert(err==CL_SUCCESS);
+
+	printf("\nPrint out the MaxPool image...\n");
+
+	temp_count = 0;
+	for (int j = 0; j < NUMBER_OF_IMAGES; j++){
+		std::cout << j << " image: " << std::endl;
+		for (int l = 0; l < NUMBER_OF_FILTERS; l++){
+			std::cout << "# filter: "<< l << std::endl;
+			for (int i = 0; i < MAXPOOL_OUTPUT_ROWS; i++) {
+				for (int k = 0; k < MAXPOOL_OUTPUT_COLS; k++){
+					if (l == j)
+						std::cout << MaxPool_Output_local[temp_count] << " ";
+					temp_count++;
+				}
+				if (l == j)			
+					std::cout << std::endl; 	
+			}
+		}
+		std::cout << std::endl;
+	}
 
 	err=queueMaxPool.finish();
         assert(err==CL_SUCCESS);
@@ -297,7 +357,7 @@ std::cout << "started"<< std::endl;
 	err=queueAvgPool.finish();
         assert(err==CL_SUCCESS);
 */
-
+/*
 	printf("\nSetting arguments and launching the ConcatKernel...\n");
 
 	err = kernel4.setArg(0, Buffer_MaxPoolOutput);
@@ -349,6 +409,6 @@ std::cout << "started"<< std::endl;
         err = queueConcat.enqueueReadBuffer(Buffer_ConcatOutput, CL_FALSE, 0, sizeof(double)*(NUMBER_OF_IMAGES*4*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS), Concat_Output);
         assert(err==CL_SUCCESS);
 
-
+*/
 
 }
