@@ -10,19 +10,20 @@
 static const int NUMBER_OF_IMAGES  = 3;
 static const int NUMBER_OF_PIXELS = 100;
 static const int NUMBER_OF_CLASSES = 5;  //0 to 4
-static const int NUMBER_OF_FILTERS = 4;
-static const int NUMBER_OF_ROWS = 10; //Including zero padding
-static const int NUMBER_OF_COLS = 10; //Including zero padding
+static const int NUMBER_OF_FILTERS = 1;
+static const int DEPTH = 4;
+static const int NUMBER_OF_ROWS = 9; //Including zero padding
+static const int NUMBER_OF_COLS = 9; //Including zero padding
 static const int FILTER_ROWS = 3; // Number of rows in the conv Filter
 static const int FILTER_COLS = 3; // Number of rows in the conv Filter
 static const int CONV_PADDING = 1; // Number of Zero Padding
 static const int CONV_STRIDE=1; // Stride
 static const int CONV_OUTPUT_ROWS = 10; // Number of Rows in the output image from Maxpool
 static const int CONV_OUTPUT_COLS = 10;  // Number of Cols in the output image from Maxpool
-static const int MAXPOOL_OUTPUT_ROWS = 5; // Number of Rows in the output image from Maxpool
-static const int MAXPOOL_OUTPUT_COLS = 5;  // Number of Cols in the output image from Maxpool
-static const int CONCAT_OUTPUT_ROWS = 5; // Number of Rows in the output image from Concat
-static const int CONCAT_OUTPUT_COLS = 5;  // Number of Cols in the output image from Concat
+static const int MAXPOOL_OUTPUT_ROWS = 3; // Number of Rows in the output image from Maxpool
+static const int MAXPOOL_OUTPUT_COLS = 3;  // Number of Cols in the output image from Maxpool
+static const int CONCAT_OUTPUT_ROWS = 3; // Number of Rows in the output image from Concat
+static const int CONCAT_OUTPUT_COLS = 3;  // Number of Cols in the output image from Concat
 static const int CONCAT_NUMBER_OF_FILTERS = 8;
 unsigned char calculatedLabels[NUMBER_OF_IMAGES];// Classified Class after FC
 int kernelcalculatedLabels[NUMBER_OF_IMAGES];
@@ -34,13 +35,15 @@ static const int NUMBER_OF_FC_PIXELS =NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXP
 static const int NUMBER_OF_FC_WEIGHTS =NUMBER_OF_FC_PIXELS*NUMBER_OF_CLASSES;
 static const int NUMBER_OF_PIXELS_FCL = 175 ;
 
-char Kernel_Img[TOTAL_NUMBER_OF_IMAGE_PIXELS] __attribute__ ((aligned (64)));
-short Kernel_CNN_WEIGHTS[TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS]  __attribute__ ((aligned (64)));
-short Kernel_CNN_BIAS[NUMBER_OF_FILTERS]  __attribute__ ((aligned (64)));
+double Kernel_Img[TOTAL_NUMBER_OF_IMAGE_PIXELS] __attribute__ ((aligned (64)));
+float Kernel_CNN_WEIGHTS[TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS]  __attribute__ ((aligned (64)));
+float Kernel_CNN_BIAS[NUMBER_OF_FILTERS]  __attribute__ ((aligned (64)));
 int Kernel_Out[TOTAL_NUMBER_OF_CONV_OUT_PIXELS]  __attribute__ ((aligned (64)));
+int CONV_PAD_BEGIN[2] __attribute__ ((aligned (64)));
+int CONV_PAD_END[2] __attribute__ ((aligned (64)));
 
 int Conv_Output_local[NUMBER_OF_IMAGES*32*NUMBER_OF_PIXELS] __attribute__ ((aligned (64)));
-int Maxpool_Output[NUMBER_OF_IMAGES*NUMBER_OF_PIXELS_FCL] __attribute__ ((aligned (64)));
+int Maxpool_Output[NUMBER_OF_IMAGES*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS] __attribute__ ((aligned (64)));
 
 
 
@@ -48,6 +51,11 @@ int Maxpool_Output[NUMBER_OF_IMAGES*NUMBER_OF_PIXELS_FCL] __attribute__ ((aligne
 
 int main(void)
 {
+CONV_PAD_BEGIN[0] = 1;
+CONV_PAD_BEGIN[1] = 1;
+CONV_PAD_END[0] = 1;
+CONV_PAD_END[1] = 1;
+
 std::cout << "started"<< std::endl;
         // FPGA Implementation
         cl_int err;
@@ -83,27 +91,26 @@ std::cout << "started"<< std::endl;
         assert(err==CL_SUCCESS);
         cl::CommandQueue queueConcat(mycontext, DeviceList[0]);
         assert(err==CL_SUCCESS);
-        cl::CommandQueue queueFCLayer(mycontext, DeviceList[0]);
-        assert(err==CL_SUCCESS);
-        cl::CommandQueue queueSoftMax(mycontext, DeviceList[0]);
-        assert(err==CL_SUCCESS);
 
 	//Create Buffers for input and outputs
-        cl::Buffer Buffer_Imgs(mycontext, CL_MEM_READ_ONLY, sizeof(char)* TOTAL_NUMBER_OF_IMAGE_PIXELS);
-        cl::Buffer Buffer_ConvWeights(mycontext, CL_MEM_READ_ONLY, sizeof(short)* TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS);
-        cl::Buffer Buffer_ConvBias(mycontext, CL_MEM_READ_ONLY, sizeof(short)* NUMBER_OF_FILTERS);
-	cl::Buffer Buffer_ConvOutput(mycontext,CL_MEM_READ_WRITE,sizeof(int)* NUMBER_OF_IMAGES*CONV_OUTPUT_ROWS*CONV_OUTPUT_COLS*NUMBER_OF_FILTERS);
+        cl::Buffer Buffer_Imgs(mycontext, CL_MEM_READ_ONLY, sizeof(double)* TOTAL_NUMBER_OF_IMAGE_PIXELS);
+        cl::Buffer Buffer_ConvWeights(mycontext, CL_MEM_READ_ONLY, sizeof(float)* TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS);
+        cl::Buffer Buffer_ConvBias(mycontext, CL_MEM_READ_ONLY, sizeof(float)* NUMBER_OF_FILTERS);
+	cl::Buffer Buffer_ConvPadBegin(mycontext, CL_MEM_READ_ONLY, sizeof(int)* 2);
+	cl::Buffer Buffer_ConvPadEnd(mycontext, CL_MEM_READ_ONLY, sizeof(int)* 2);	
+	cl::Buffer Buffer_ConvOutput(mycontext,CL_MEM_READ_WRITE,sizeof(double)* NUMBER_OF_IMAGES*CONV_OUTPUT_ROWS*CONV_OUTPUT_COLS*NUMBER_OF_FILTERS*DEPTH);
 
-	cl::Buffer Buffer_MaxPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(int)* NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES);
-	cl::Buffer Buffer_AvgPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(int)* NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES);
-	cl::Buffer Buffer_ConcatInput(mycontext, CL_MEM_READ_ONLY, sizeof(int)* NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES * 2);
-	cl::Buffer Buffer_ConcatLayers(mycontext, CL_MEM_READ_ONLY, sizeof(int)* 2);
-	cl::Buffer Buffer_ConcatOutput(mycontext, CL_MEM_READ_WRITE, sizeof(int)* NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES * 2);
+	cl::Buffer Buffer_MaxPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(double)* NUMBER_OF_IMAGES*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
+	cl::Buffer Buffer_AvgPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(double)* NUMBER_OF_IMAGES*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
+	//cl::Buffer Buffer_AvgPoolOutput(mycontext, CL_MEM_READ_WRITE, sizeof(int)* NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES);
+	//cl::Buffer Buffer_ConcatInput(mycontext, CL_MEM_READ_ONLY, sizeof(int)* NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES * 2);
+	//cl::Buffer Buffer_ConcatLayers(mycontext, CL_MEM_READ_ONLY, sizeof(int)* 2);
+	cl::Buffer Buffer_ConcatOutput(mycontext, CL_MEM_WRITE_ONLY, sizeof(double)* NUMBER_OF_IMAGES*4*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS);
 	
-	cl::Buffer Buffer_FCLWeights(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_FC_WEIGHTS);
-	cl::Buffer Buffer_FCLBias(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_CLASSES);
-        cl::Buffer Buffer_FCLOutput(mycontext,CL_MEM_READ_WRITE,sizeof(int)*NUMBER_OF_IMAGES);
-	cl::Buffer Buffer_SoftMaxOutput(mycontext,CL_MEM_READ_ONLY,sizeof(int)*NUMBER_OF_IMAGES);
+	//cl::Buffer Buffer_FCLWeights(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_FC_WEIGHTS);
+	//cl::Buffer Buffer_FCLBias(mycontext, CL_MEM_READ_ONLY, sizeof(short)*NUMBER_OF_CLASSES);
+        //cl::Buffer Buffer_FCLOutput(mycontext,CL_MEM_READ_WRITE,sizeof(int)*NUMBER_OF_IMAGES);
+	//cl::Buffer Buffer_SoftMaxOutput(mycontext,CL_MEM_READ_ONLY,sizeof(int)*NUMBER_OF_IMAGES);
 
 	
 	
@@ -139,30 +146,33 @@ std::cout << "started"<< std::endl;
         for(int i=0; i<NUMBER_OF_FILTERS; i++)
                 Kernel_CNN_BIAS[i]= i;
 	std::cout << "Finished creating the Convolution Weights" << std::endl;
-/*
+
 	//Write data to device
-        err = queueConvLayer.enqueueWriteBuffer(Buffer_Imgs, CL_FALSE, 0, sizeof(char)*TOTAL_NUMBER_OF_IMAGE_PIXELS, Kernel_Img);
+        err = queueConvLayer.enqueueWriteBuffer(Buffer_Imgs, CL_FALSE, 0, sizeof(double)*TOTAL_NUMBER_OF_IMAGE_PIXELS, Kernel_Img);
         assert(err==CL_SUCCESS);
-        err = queueConvLayer.enqueueWriteBuffer(Buffer_ConvWeights, CL_FALSE, 0, sizeof(short)*TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS, Kernel_CNN_WEIGHTS);
+        err = queueConvLayer.enqueueWriteBuffer(Buffer_ConvWeights, CL_FALSE, 0, sizeof(float)*TOTAL_NUMBER_OF_CNN_WEIGHT_PIXELS, Kernel_CNN_WEIGHTS);
         assert(err==CL_SUCCESS);
-        err = queueConvLayer.enqueueWriteBuffer(Buffer_ConvBias, CL_FALSE, 0, sizeof(short)*NUMBER_OF_FILTERS, Kernel_CNN_BIAS);
+        err = queueConvLayer.enqueueWriteBuffer(Buffer_ConvBias, CL_FALSE, 0, sizeof(float)*NUMBER_OF_FILTERS, Kernel_CNN_BIAS);
         assert(err==CL_SUCCESS);
-        err = queueFCLayer.enqueueWriteBuffer(Buffer_FCLWeights, CL_FALSE, 0, sizeof(short)*NUMBER_OF_FC_WEIGHTS, digitWeights);
+        err = queueConvLayer.enqueueWriteBuffer(Buffer_ConvPadBegin, CL_FALSE, 0, sizeof(int)*2, CONV_PAD_BEGIN);
+        assert(err==CL_SUCCESS);
+        err = queueConvLayer.enqueueWriteBuffer(Buffer_ConvPadEnd, CL_FALSE, 0, sizeof(int)*2, CONV_PAD_END);
         assert(err==CL_SUCCESS);
 
 	// create the kernel
         const char *CONV_kernel_name = "ConvolutionLayer";
         const char *MP_kernel2_name = "MaxPool";
-        const char *FC_kernel3_name = "FCL_Kernel";
+	const char *AP_kernel3_name = "AvgPool";
+	const char *Concat_kernel4_name = "ConcatLayer";
+        //const char *FC_kernel3_name = "FCL_Kernel";
         //Read in binaries from file
-        std::ifstream aocx_stream("./SimpleCNN.aocx", std::ios::in|std::ios::binary);
-        checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "SimpleCNN.aocx");
+        std::ifstream aocx_stream("./CustomKernels.aocx", std::ios::in|std::ios::binary);
+        checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "CustomKernels.aocx");
         std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
         cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));	
 
         // Create the Program from the AOCX file.
         cl::Program program(mycontext, DeviceList, mybinaries);
-
         // build the program
         err=program.build(DeviceList);
         assert(err==CL_SUCCESS);
@@ -173,8 +183,13 @@ std::cout << "started"<< std::endl;
         cl::Kernel kernel2(program,MP_kernel2_name, &err);
         assert(err==CL_SUCCESS);
 
-        cl::Kernel kernel3(program,FC_kernel3_name, &err);
+        cl::Kernel kernel3(program,AP_kernel3_name, &err);
         assert(err==CL_SUCCESS);
+
+        cl::Kernel kernel4(program,Concat_kernel4_name, &err);
+        assert(err==CL_SUCCESS);
+
+	printf("\nSetting arguments and launching the ConvKernel...\n");
 
         //////////////     Set Arguments to the Kernels
         err = kernel.setArg(0, Buffer_Imgs);
@@ -191,15 +206,19 @@ std::cout << "started"<< std::endl;
         assert(err==CL_SUCCESS);
         err = kernel.setArg(6, NUMBER_OF_IMAGES);
         assert(err==CL_SUCCESS);
-        err = kernel.setArg(7, CONV_LAYER_OUTPUT_COLS);
+        err = kernel.setArg(7, CONV_OUTPUT_ROWS);
         assert(err==CL_SUCCESS);
-        err = kernel.setArg(8, CONV_LAYER_OUTPUT_ROWS);
+        err = kernel.setArg(8, CONV_OUTPUT_COLS);
         assert(err==CL_SUCCESS);
-        err = kernel.setArg(9, ZERO_PADDING);
+        err = kernel.setArg(9, DEPTH);
         assert(err==CL_SUCCESS);
-        err = kernel.setArg(10, STRIDE);
+        err = kernel.setArg(10, Buffer_ConvPadBegin);
         assert(err==CL_SUCCESS);
-	err = kernel.setArg(11, Buffer_ConvOutput);
+        err = kernel.setArg(11, Buffer_ConvPadEnd);
+        assert(err==CL_SUCCESS);
+        err = kernel.setArg(12, CONV_STRIDE);
+        assert(err==CL_SUCCESS);
+	err = kernel.setArg(13, Buffer_ConvOutput);
         assert(err==CL_SUCCESS);
 
 	 // Launch Kernel
@@ -213,25 +232,31 @@ std::cout << "started"<< std::endl;
 	err=queueConvLayer.finish();
         assert(err==CL_SUCCESS);
 
-	printf("\nLaunching the kernel1 conv...\n");
 
 	//err = queueMaxPool.enqueueWriteBuffer(ConvMaxPoolBuffer, CL_FALSE, 0, sizeof(int)*(NUMBER_OF_PIXELS * NUMBER_OF_IMAGES * 32), Conv_Output_local);
         //assert(err==CL_SUCCESS);
 
+	printf("\nSetting arguments and launching the MaxPoolKernel...\n");
+
 	err = kernel2.setArg(0, Buffer_ConvOutput);
         assert(err==CL_SUCCESS);
-        err = kernel2.setArg(1, CONV_LAYER_OUTPUT_COLS);
+        err = kernel2.setArg(1, CONV_OUTPUT_COLS);
         assert(err==CL_SUCCESS);
-        err = kernel2.setArg(2, CONV_LAYER_OUTPUT_ROWS);
+        err = kernel2.setArg(2, CONV_OUTPUT_ROWS);
         assert(err==CL_SUCCESS);
         err = kernel2.setArg(3, NUMBER_OF_FILTERS);
         assert(err==CL_SUCCESS);
-	err = kernel2.setArg(4,STRIDE);
+	err = kernel2.setArg(4,CONV_STRIDE);
         assert(err==CL_SUCCESS);
         err = kernel2.setArg(5, NUMBER_OF_IMAGES);
         assert(err==CL_SUCCESS);
-	err = kernel2.setArg(6, Buffer_MaxPoolOutput);
+        err = kernel2.setArg(6, Buffer_ConvPadBegin);
         assert(err==CL_SUCCESS);
+        err = kernel2.setArg(7, Buffer_ConvPadEnd);
+        assert(err==CL_SUCCESS);
+	err = kernel2.setArg(8, Buffer_MaxPoolOutput);
+        assert(err==CL_SUCCESS);
+
 
 	err=queueMaxPool.enqueueTask(kernel2);
         assert(err==CL_SUCCESS);
@@ -242,59 +267,88 @@ std::cout << "started"<< std::endl;
 	err=queueMaxPool.finish();
         assert(err==CL_SUCCESS);
 
-        //err = queueFCLayer.enqueueWriteBuffer(MaxFCLBuffer, CL_FALSE, 0, sizeof(int)*(NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES), Maxpool_Output);
+/*
+
+	printf("\nSetting arguments and launching the AvgPoolKernel...\n");
+
+	err = kernel3.setArg(0, Buffer_ConvOutput);
+        assert(err==CL_SUCCESS);
+        err = kernel3.setArg(1, CONV_OUTPUT_COLS);
+        assert(err==CL_SUCCESS);
+        err = kernel3.setArg(2, CONV_OUTPUT_ROWS);
+        assert(err==CL_SUCCESS);
+        err = kernel3.setArg(3, NUMBER_OF_FILTERS);
+        assert(err==CL_SUCCESS);
+	err = kernel3.setArg(4,CONV_STRIDE);
+        assert(err==CL_SUCCESS);
+	err = kernel3.setArg(5,3);
+        assert(err==CL_SUCCESS);
+        err = kernel3.setArg(6, NUMBER_OF_IMAGES);
+        assert(err==CL_SUCCESS);
+	err = kernel3.setArg(7, Buffer_AvgPoolOutput);
+        assert(err==CL_SUCCESS);
+
+	err=queueAvgPool.enqueueTask(kernel);
+        assert(err==CL_SUCCESS);
+
+	//err=queueAvgPool.enqueueReadBuffer(maxOutput, CL_TRUE, 0, sizeof(int)*(NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES), Maxpool_Output);
         //assert(err==CL_SUCCESS);
 
-	err = kernel3.setArg(0, Buffer_MaxPoolOutput);
+	err=queueAvgPool.finish();
         assert(err==CL_SUCCESS);
-        err = kernel3.setArg(1, Buffer_FCLWeights);
-        assert(err==CL_SUCCESS);
-        err = kernel3.setArg(2, NUMBER_OF_FC_PIXELS);
-        assert(err==CL_SUCCESS);
-        err = kernel3.setArg(3, NUMBER_OF_CLASSES);
-        assert(err==CL_SUCCESS);
-	err = kernel3.setArg(4, NUMBER_OF_IMAGES);
-        assert(err==CL_SUCCESS);
-        err = kernel3.setArg(5, Buffer_FCLOutput);
-        assert(err==CL_SUCCESS);
-	err = kernel3.setArg(6, MAXPOOL_OUTPUT_ROWS);
-        assert(err==CL_SUCCESS);
-	err = kernel3.setArg(7, MAXPOOL_OUTPUT_COLS);
-        assert(err==CL_SUCCESS);
-	err = kernel3.setArg(8, NUMBER_OF_FILTERS);
-        assert(err==CL_SUCCESS);
-
-        printf("\nLaunching the kernel...\n");
-
-	auto startFPGA = std::chrono::high_resolution_clock::now();
-
-        err=queueFCLayer.enqueueTask(kernel3);
-        assert(err==CL_SUCCESS);
-
-        // read the output
-        err=queueFCLayer.enqueueReadBuffer(Buffer_FCLOutput, CL_TRUE, 0, sizeof(int)*NUMBER_OF_IMAGES, kernelcalculatedLabels);
-        assert(err==CL_SUCCESS);
-        
-        err=queueFCLayer.finish();
-        assert(err==CL_SUCCESS);
-
-	auto endFPGA = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> elapsedFPGA = endFPGA - startFPGA;
-        std::cout << "FPGA ==> Time Taken for Convolution of 10k images and 32 filters (in sec) :" <<elapsedFPGA.count()<< std::endl;
-
-	float counterfpga = 0;
-        for(int zc = 0; zc < NUMBER_OF_IMAGES; zc++)
-        {
-                if(kernelcalculatedLabels[zc] == (int)available_labels[zc])
-                        counterfpga++;
-
-                //if(zc<100)
-                  //      std::cout << "FPGA Value :" <<kernelcalculatedLabels[zc] << " ,Label"<<(int)available_labels[zc] << '\n';
-        }
-
-        std::cout << "Number of Images correctly classified: " << counterfpga <<std::endl;
-        float p_f_Accuracy = (counterfpga/ NUMBER_OF_IMAGES) * 100;
-
-        printf("FPGA Accuracy is %f\n",p_f_Accuracy);
 */
+
+	printf("\nSetting arguments and launching the ConcatKernel...\n");
+
+	err = kernel4.setArg(0, Buffer_MaxPoolOutput);
+        assert(err==CL_SUCCESS);
+        err = kernel4.setArg(1, Buffer_MaxPoolOutput);
+        assert(err==CL_SUCCESS);
+        err = kernel4.setArg(2, Buffer_MaxPoolOutput);
+        assert(err==CL_SUCCESS);
+        err = kernel4.setArg(3, Buffer_MaxPoolOutput);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(4,MAXPOOL_OUTPUT_ROWS);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(5,MAXPOOL_OUTPUT_COLS);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(6,3);
+	assert(err==CL_SUCCESS);
+	err = kernel4.setArg(7,MAXPOOL_OUTPUT_ROWS);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(8,MAXPOOL_OUTPUT_COLS);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(9,3);
+	assert(err==CL_SUCCESS);	
+	err = kernel4.setArg(10,MAXPOOL_OUTPUT_ROWS);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(11,MAXPOOL_OUTPUT_COLS);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(12,3);
+	assert(err==CL_SUCCESS);
+	err = kernel4.setArg(13,MAXPOOL_OUTPUT_ROWS);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(14,MAXPOOL_OUTPUT_COLS);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(15,3);
+        assert(err==CL_SUCCESS);
+	err = kernel4.setArg(16, Buffer_ConcatOutput);
+        assert(err==CL_SUCCESS);
+
+
+	err=queueConcat.enqueueTask(kernel);
+        assert(err==CL_SUCCESS);
+
+	//err=queueConcat.enqueueReadBuffer(maxOutput, CL_TRUE, 0, sizeof(int)*(NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES), Maxpool_Output);
+        //assert(err==CL_SUCCESS);
+
+	err=queueConcat.finish();
+        assert(err==CL_SUCCESS);
+
+	double Concat_Output[NUMBER_OF_IMAGES*4*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
+        err = queueConcat.enqueueReadBuffer(Buffer_ConcatOutput, CL_FALSE, 0, sizeof(double)*(NUMBER_OF_IMAGES*4*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS), Concat_Output);
+        assert(err==CL_SUCCESS);
+
+
+
 }
