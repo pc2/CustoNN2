@@ -39,3 +39,56 @@ Another one locally on my laptop.
 ### Can you access and edit the .bashrc file there?
 - Yes, .bashrc file can be accessed and edited. We add environment variables inside .bashrc file. 
 - Quota in Cluster is 15TB
+
+# TASK 4
+
+
+# Knowledge Base 
+
+  - OpenCL: 
+1. Programming Guide: https://wiki.pc2.uni-paderborn.de/display/FPGAIn/Documentation+-+Intel-18.0
+ 2. 18.0 Documentation:  https://wiki.pc2.uni-paderborn.de/display/FPGAIn/Documentation+-+Intel-18.0?preview=/19563863/19563865/aocl_programming_guide-18.0.pdf
+ 
+ 
+
+Git :
+
+ 1. Getting started with git- https://git-scm.com/book/en/v2/Getting-Started-Git-Basics
+ 2. Best practices or Git: https://raygun.com/blog/git-workflow/
+
+AOC Command line:
+
+ - aoc --help gives documention regarding aoc command line options
+ - aoc -version gives version name
+ - aoc -list-boards lists out all the available boards.
+ - aoc board= compiles for the specified boards
+
+.
+## OpenCL Channels 
+
+- Channel is implemented using the FIFO mechanism for buffers. 
+- These buffers are used for communication between two kernels or I/O in kernels directly
+- OpenCL channels can be of blocking or non-blocking type.
+- A blocking channel blocks the kernel execution for a write operation when the buffer is not free and for a read operation when the buffer is empty. 
+- Whereas in non-blocking type the kernel does not wait conform to this type of operation. 
+
+## Git best practices
+
+ - Given Sequence of Commands:-
+1. git status: Gives information about untracked files, files staged for commit, the ones that are not staged for commit and so on.
+2. git add -n: Used to add specified files to git so that they will be tracked and staged for commit.
+3. git reset: Reset a specific commit.
+4. git commit -m "message": Commit the staged files with a message describing the commit.
+
+
+
+It is a good practice to run git status after adding  file(s) to check if they have been correctly staged. git diff gives us information about conflicts while merging branches or pulling from the remote at the exact lines in the files in question.
+
+
+- git rebase: It is used for integrating two branches, similar to merge.
+- git log: It provides the commit history of the repository in a sequential time ordered fashion. Each commit, its author, their commit message and time is displayed.
+
+
+
+
+

@@ -1,0 +1,29 @@
+1)Motivation and  Problem Definition (Ayush)
+•	Why FPGA’s
+•	CNNs
+2) Goals (Adesh )
+•	Scaling over multiple FPGAs
+•	Performance Optimization	
+•	Quantization / Pruning
+3 )Topologies, datasets. Architecture comparision
+
+•	Inception V4 (alina), GoogleNet,(Amey) Resnet 50(Alina), 
+•	Imagenet, CIFAR10, MNIST (Anshul)
+4 ) Metrics (Suprajith)
+o	FLOPS using performance modelling
+o	Latency, Throughput
+o	Accuracy
+5) Flowcharts (Nikitha & Arathy)
+6) Technologies. (Rushikesh &  Alina )
+•	OpenVINO vs TVM vs Xilinx ML(Amey)
+7) Related Work (Anshul)
+8) Time plan  (Chiru)
+•	Design
+•	Implementation
+•	Report and Presentation
+•	Organization
+9 ) Expected Results (How do you evaluate the success of the project) 
+•	Final Outputs
+10 )Conclusion (Chiru)
+
+

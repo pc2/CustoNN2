@@ -45,3 +45,77 @@ CIFS IMT Link : https://hilfe.uni-paderborn.de/Netzlaufwerk_einbinden_(Windows_7
 - Yes, .bashrc file is owned by me and I can edit it. We usually add environment variables inside .bashrc file. I added
 `export PG_HOME_ADESH=/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs` as a variable for easy access of the project directory.
 - Quota in Cluster is 15TB
+### Steps to set up Platform
+1. Get the list of platforms.
+2. Get FPGA devices of a particular platform.
+3. Create an OpenCL context for the above FPGA Device.
+### Steps for executing kernel in host code
+1. Create OpenCL command queue.
+2. Create then build the program: Create a program using context,device and aocx binaries
+3. Create kernels from the program: Use the kernel name given in the .cl code.
+4. Allocate and transfer buffers to device 
+5. Set Arguments for the kernel. Argument number starts from 0
+6. Launch the Kernel using <queue>.enqueueTask
+7. Transfer the result buffer back
+
+## Sample Makefile for OpenCL kernels
+https://www.intel.com/content/www/us/en/programmable/documentation/mwh1391807965224.html#ewa1411396461611
+
+## Channels & Pipes in OpenCL
+- Channels/Pipes are OpenCL extensions or functions which provide data transfer functionality between kernels with low latency and high efficiency.
+- FIFO mechanism communication and unidirectional
+- Helps in in-order execution
+- The default behavior of Channels is blocking whereas for pipe, it is non-blocking.
+- Channels can have multiple read call but only a single write call.
+- Pipes can have only a single read and a single write call.
+- Channel implemented file scope variable
+- Pipes are implemented as kernel arguments.
+  
+source:
+- Intel FPGA SDK OpenCL Programming Guide : https://www.intel.com/content/www/us/en/programmable/documentation/mwh1391807965224.html
+- Using Channels and Pipes with OpenCL on Intel FPGAs : https://www.youtube.com/watch?v=_0RtAKeRl00
+
+## aoc useful commands
+- -march = emulator Create kernels to be executed on x86
+- -list-boards = prints all available boards
+- -c -report = generates html report of the kernel for 17.1.2 tools
+- -rtl -report = generates html report of the kernel for 18.0.1 tools
+- const-cache-bytes = helps is setting up cache for the kernel
+- -profile  = Generates a .source file which can be used to study performance of the kernel. The generated aocx file has to be executed by host code, a profile.mon is created.
+- `aocl report <aocx_file>.aocx profile.mon <kernel>.source` = to view statistical data using profile GUI.
+
+## Git Best Practices
+  
+- Enabling git color coded console:  
+> git config --global color.ui auto
+  
+### Useful git commands:
+- `git add <filenames>` moves the files from untracked state to  git staging area. These files will be included in the next commit.
+- `git add .` adds all the untracked/modified files from the current directory.
+- `git add -n .` This command doesn't actually adds the files, just shows which files will be added from the current dir.
+- `git status` lists the status of the files in the git branch ( Untracked/modified/files to be committed )
+- `get reset` tool for undoing the commits in a branch
+- `git commit -m "<Message>"` Commits the newly added (tracked files) to the branch.
+- `git push origin <branch_name>`  pushes all the commits from local repo branch to remote repository.
+- `git pull` pulls all the changes from the remote repository to local repo.
+- `git log` shows the commit logs 
+### Git Rebase:
+- Git Rebase helps us in combining/adding commits from one branch to another branch.
+- It adds the new commits on top of the base commit. 
+- If there are no conflicts, the new commits in another feature branch can be added to master branch using rebase.  
+  
+source:  
+https://git-scm.com/docs
+
+### Resolving git conflicts:
+- Git Conflicts happens when I have commited a file locally and pull new changes from the remote repository and that file has competing commits.
+- Git auto merges the file with conflict markers(<<<<< HEAD <local changes> ==== <Remote Changes> >>>>> commitID) , search for these conflict markers in the file.
+  
+- git pull log obtained in dev_branch_adeshs for conflict:
+> Auto-merging workflows/workflow_adeshs.md
+  CONFLICT (content): Merge conflict in workflows/workflow_adeshs.md
+  
+- this conflict was manually resolved and pushed back to the remote repository.
+  
+source:  
+https://help.github.com/articles/resolving-a-merge-conflict-using-the-command-line/
