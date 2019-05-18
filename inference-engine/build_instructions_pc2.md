@@ -25,3 +25,6 @@ command : `make -j16`
 `include_directories(${InferenceEngine_INCLUDE_DIRS})`  
 `target_link_libraries(${PROJECT_NAME} ${InferenceEngine_LIBRARIES} dl)`  
 
+### Running the plugin on fpgas:
+Please refer to this work instruction:
+https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018/blob/master/workflows/workflow_OpenVINO_Inference.md
