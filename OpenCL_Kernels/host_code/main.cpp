@@ -348,7 +348,7 @@ std::cout << "started"<< std::endl;
 	err = kernel3.setArg(7, Buffer_AvgPoolOutput);
         assert(err==CL_SUCCESS);
 
-	err=queueAvgPool.enqueueTask(kernel);
+	err=queueAvgPool.enqueueTask(kernel3);
         assert(err==CL_SUCCESS);
 
 	double AvgPool_Output_local[NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
@@ -378,7 +378,7 @@ std::cout << "started"<< std::endl;
 	err=queueAvgPool.finish();
         assert(err==CL_SUCCESS);
 
-/*
+
 	printf("\nSetting arguments and launching the ConcatKernel...\n");
 
 	err = kernel4.setArg(0, Buffer_MaxPoolOutput);
@@ -417,19 +417,43 @@ std::cout << "started"<< std::endl;
         assert(err==CL_SUCCESS);
 
 
-	err=queueConcat.enqueueTask(kernel);
+	err=queueConcat.enqueueTask(kernel4);
         assert(err==CL_SUCCESS);
 
 	//err=queueConcat.enqueueReadBuffer(maxOutput, CL_TRUE, 0, sizeof(int)*(NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES), Maxpool_Output);
         //assert(err==CL_SUCCESS);
 
-	err=queueConcat.finish();
-        assert(err==CL_SUCCESS);
+	
 
 	double Concat_Output[NUMBER_OF_IMAGES*4*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
         err = queueConcat.enqueueReadBuffer(Buffer_ConcatOutput, CL_FALSE, 0, sizeof(double)*(NUMBER_OF_IMAGES*4*DEPTH*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS), Concat_Output);
         assert(err==CL_SUCCESS);
 
-*/
+	printf("\nPrint out the Concat image...\n");
+	temp_count = 0;
+	for (int j = 0; j < NUMBER_OF_IMAGES; j++){
+		std::cout << j << " image: " << std::endl;
+		for (int l = 0; l < NUMBER_OF_FILTERS; l++){
+			std::cout << "# filter: "<< l << std::endl;
+			for (int i = 0; i < MAXPOOL_OUTPUT_ROWS; i++) {
+				for (int k = 0; k < MAXPOOL_OUTPUT_COLS; k++){
+					//if (l == j)
+						std::cout << Concat_Output[temp_count] << " ";
+					temp_count++;
+				}
+				//if (l == j)			
+					std::cout << std::endl; 	
+			}
+		}
+		std::cout << std::endl;
+	}
+	
+
+        
+
+        err=queueConcat.finish();
+        assert(err==CL_SUCCESS);
+
+
 
 }
