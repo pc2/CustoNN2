@@ -373,7 +373,8 @@ struct layersDetails *findbyID(struct layersDetails *root, int id)
             // Enqueue all children of the dequeued item 
             		for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
 			{ 
-                		q.push(*it);
+				if(*it!=NULL)
+                			q.push(*it);
 			} 
             		n--; 
         	} 
@@ -385,7 +386,11 @@ struct layersDetails *findbyID(struct layersDetails *root, int id)
 
 struct layersDetails *parse_child(InferenceEngine::CNNNetwork network,std::string layer_name, struct layersDetails *root)
 {
-	if(isLayerSupported(layer_name))
+	const char *l_name = layer_name.c_str();
+	std::cout<<"For layer name: "<<l_name<<"\n";
+	CNNLayerPtr layer = network.getLayerByName(l_name);
+	std::cout<<"Inside parse child\n";
+	if(isLayerSupported(layer->type))
 	{
 		auto search = layerIDMap.find(layer_name);
 		int ID = search->second;
@@ -397,8 +402,7 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network,std::strin
 		}
 		else
 		{
-			const char *l_name = layer_name.c_str();
-			CNNLayerPtr layer = network.getLayerByName(l_name);
+			
 			struct layersDetails *child = new layersDetails;
 			//retrieving the child information
 			child->layerName = layer->name;
@@ -469,7 +473,7 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network,std::strin
 				}
 			}
 
-			for(std::vector<std::string>::iterator it = child->outputLayerNames.begin(); it != root->outputLayerNames.end(); ++it)
+			for(std::vector<std::string>::iterator it = child->outputLayerNames.begin(); it != child->outputLayerNames.end(); ++it)
 			{
 			child->children.push_back(parse_child(network,*it,root));
 
@@ -478,7 +482,21 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network,std::strin
 			return child;
 		}
 	}
-	return NULL;
+	else
+	{
+		int outLayer = 0;
+		struct layersDetails temp;
+		for (auto it : layer->outData[0]->getInputTo())
+		{
+			temp.outputLayerNames.push_back(it.second->name);
+			outLayer++;
+		}
+		//std::cout<<"Unsupported Layer name: "<<layer->type<<" outputs vector size: "<<temp.outputLayerNames.size()<<" Child of this layer "<<temp.outputLayerNames.front()<<"\n"; 
+		if(temp.outputLayerNames.size()>0)
+			return parse_child(network,temp.outputLayerNames.front(),root);
+		else
+			return NULL;
+	}
 
 }
 
@@ -579,7 +597,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 		}
 	}
 
-	
+	std::cout<<"Number of children of root: "<<root->children.size()<<"\n";
 
 	//Print the details of each layers in the network to check their correctness. 
 	//print_layersDetails(cnnLayersList);
@@ -860,8 +878,10 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
             			// Enqueue all children of the dequeued item 
             			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
 				{ 
-                			q.push(*it);
+					if(*it!=NULL)
+                				q.push(*it);
 				} 
+				std::cout<<"size of queue: "<<q.size()<<"\n";
             			n--; 
         		} 
 		}
