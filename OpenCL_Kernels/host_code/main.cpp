@@ -327,7 +327,7 @@ std::cout << "started"<< std::endl;
 	err=queueMaxPool.finish();
         assert(err==CL_SUCCESS);
 
-/*
+
 
 	printf("\nSetting arguments and launching the AvgPoolKernel...\n");
 
@@ -339,9 +339,9 @@ std::cout << "started"<< std::endl;
         assert(err==CL_SUCCESS);
         err = kernel3.setArg(3, NUMBER_OF_FILTERS);
         assert(err==CL_SUCCESS);
-	err = kernel3.setArg(4,CONV_STRIDE);
+	err = kernel3.setArg(4,3);
         assert(err==CL_SUCCESS);
-	err = kernel3.setArg(5,3);
+	err = kernel3.setArg(5,CONV_STRIDE);
         assert(err==CL_SUCCESS);
         err = kernel3.setArg(6, NUMBER_OF_IMAGES);
         assert(err==CL_SUCCESS);
@@ -351,12 +351,33 @@ std::cout << "started"<< std::endl;
 	err=queueAvgPool.enqueueTask(kernel);
         assert(err==CL_SUCCESS);
 
-	//err=queueAvgPool.enqueueReadBuffer(maxOutput, CL_TRUE, 0, sizeof(int)*(NUMBER_OF_PIXELS_FCL * NUMBER_OF_IMAGES), Maxpool_Output);
-        //assert(err==CL_SUCCESS);
+	double AvgPool_Output_local[NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS];
+	err=queueAvgPool.enqueueReadBuffer(Buffer_AvgPoolOutput, CL_TRUE, 0, sizeof(double)*(NUMBER_OF_IMAGES*NUMBER_OF_FILTERS*MAXPOOL_OUTPUT_ROWS*MAXPOOL_OUTPUT_COLS), AvgPool_Output_local);
+        assert(err==CL_SUCCESS);
+
+	printf("\nPrint out the AvgPool image...\n");
+
+	temp_count = 0;
+	for (int j = 0; j < NUMBER_OF_IMAGES; j++){
+		std::cout << j << " image: " << std::endl;
+		for (int l = 0; l < NUMBER_OF_FILTERS; l++){
+			std::cout << "# filter: "<< l << std::endl;
+			for (int i = 0; i < MAXPOOL_OUTPUT_ROWS; i++) {
+				for (int k = 0; k < MAXPOOL_OUTPUT_COLS; k++){
+					//if (l == j)
+						std::cout << AvgPool_Output_local[temp_count] << " ";
+					temp_count++;
+				}
+				//if (l == j)			
+					std::cout << std::endl; 	
+			}
+		}
+		std::cout << std::endl;
+	}
 
 	err=queueAvgPool.finish();
         assert(err==CL_SUCCESS);
-*/
+
 /*
 	printf("\nSetting arguments and launching the ConcatKernel...\n");
 
