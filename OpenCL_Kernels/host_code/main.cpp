@@ -257,11 +257,11 @@ std::cout << "started"<< std::endl;
 			std::cout << "# filter: "<< l << std::endl;
 			for (int i = 0; i < CONV_OUTPUT_ROWS; i++) {
 				for (int k = 0; k < CONV_OUTPUT_COLS; k++){
-					if (l == j)
+					//if (l == j)
 						std::cout << Conv_Output_local[temp_count] << " ";
 					temp_count++;
 				}
-				if (l == j)			
+				//if (l == j)			
 					std::cout << std::endl; 	
 			}
 		}
@@ -313,11 +313,11 @@ std::cout << "started"<< std::endl;
 			std::cout << "# filter: "<< l << std::endl;
 			for (int i = 0; i < MAXPOOL_OUTPUT_ROWS; i++) {
 				for (int k = 0; k < MAXPOOL_OUTPUT_COLS; k++){
-					if (l == j)
+					//if (l == j)
 						std::cout << MaxPool_Output_local[temp_count] << " ";
 					temp_count++;
 				}
-				if (l == j)			
+				//if (l == j)			
 					std::cout << std::endl; 	
 			}
 		}
