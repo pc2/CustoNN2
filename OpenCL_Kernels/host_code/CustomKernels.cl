@@ -27,32 +27,7 @@ __kernel void ConvolutionLayer(__global double * restrict img,
 	image_size = number_of_image_rows * number_of_image_cols;
 	for (image_number = 0; image_number < number_of_images; image_number++)
 	{
-		//printf("Before padding\n");
-		//padding logic
-		for(int d=0;d<depth;d++)
-		{
-			for(int r=0,r_in=0;r<num_rows_after_padding && r_in<number_of_image_rows;r++)
-			{
-				for(int c=0,c_in=0;c<num_cols_after_padding && c_in<number_of_image_cols;c++)
-				{
-					if((r<conv_pad_begin[0]||r>(number_of_image_rows+1))||(c<conv_pad_begin[1]||c>(number_of_image_cols+1)))
-					{
-						temp_image_padded[(d*num_rows_after_padding*num_cols_after_padding)+(num_cols_after_padding*r)+c]=0.0;
-					}
-					else
-					{
-						temp_image_padded[(d*num_rows_after_padding*num_cols_after_padding)+(num_cols_after_padding*r)+c]=img[(image_number*number_of_image_rows*number_of_image_cols*depth)+(d*number_of_image_rows*number_of_image_cols)+(number_of_image_cols*r_in)+c_in];
-						c_in++;
-					}
-
-				}
-				if(r>(conv_pad_begin[0]-1)&&r<(number_of_image_rows+1))
-				{
-					r_in++;
-				}
-			}
-		}
-		//printf("Padding done\n");
+		
 		
 		for (layer = 0; layer <number_of_filters; layer++) 
 		{
@@ -67,17 +42,29 @@ __kernel void ConvolutionLayer(__global double * restrict img,
 						double temp_conv_val = bias[layer];
 						int PaddedX = i;
 						int PaddedY = j;
+						int paderX = i - conv_pad_begin[0];
+						int paderY = j - conv_pad_begin[1];
 
 						 for(int filterX=0; filterX<number_of_filter_rows; filterX++)
 			      			 {
 			    	  		 	for(int filterY=0; filterY<number_of_filter_cols; filterY++)
 			    	  		 	{
-			               			 	temp_conv_val  += temp_image_padded[(d*num_rows_after_padding*num_cols_after_padding)+(PaddedX*num_cols_after_padding) + PaddedY] *weights[(layer*number_of_filter_rows*number_of_filter_cols*depth)+(d*number_of_filter_rows*number_of_filter_cols)+(filterX*number_of_filter_cols)+filterY] ;
+								if(paderX<0||paderX>=number_of_image_rows||paderY<0||paderY>=number_of_image_cols)
+								{
+									//do nothing here
+								}
+								else
+								{
+			               			 	temp_conv_val  += img[(image_number*number_of_image_rows*number_of_image_cols*depth)+(d*number_of_image_rows*number_of_image_cols)+(number_of_image_cols*PaddedX)+PaddedY] *weights[(layer*number_of_filter_rows*number_of_filter_cols*depth)+(d*number_of_filter_rows*number_of_filter_cols)+(filterX*number_of_filter_cols)+filterY] ;
 							//printf("%f = %f * %f\n",temp_conv_val,temp_image_padded[(PaddedX*num_cols_after_padding) + PaddedY],weights[(filterX*number_of_filter_cols)+filterY]);
 			                			PaddedY++;
+								}
+								paderY++;
 			           			 }
 			           			PaddedX++;
+							paderX++;
 			           			PaddedY=j;
+							paderY = j - conv_pad_begin[1];
 						}
 
 					
@@ -100,7 +87,7 @@ __kernel void ConvolutionLayer(__global double * restrict img,
 
 
 
-__kernel void MaxPool(__global double * restrict img,
+__kernel void MaxPool(__global int * restrict img,
 			int number_of_image_rows, 
 			int  number_of_image_cols,
 			int number_of_filters, 
@@ -108,7 +95,7 @@ __kernel void MaxPool(__global double * restrict img,
 			int number_of_images,
 			__global int * restrict conv_pad_begin,
 			__global int * restrict conv_pad_end,
-			__global double * restrict output)
+			__global int * restrict output)
 {
 
 	int count = 0,modVal = number_of_image_cols - stride; //mod val is used to skip certain loops
@@ -119,6 +106,7 @@ __kernel void MaxPool(__global double * restrict img,
 	int image_size = num_rows_after_padding * num_cols_after_padding;
 	int image_number;
 	int max;
+	 
 	
 	
 	__local double temp_image_padded[200704];
@@ -183,23 +171,27 @@ __kernel void MaxPool(__global double * restrict img,
 		}
 	}
 }
+/*
+ * Kernel for Avgpooling Layer
+ * Used for reducing the dimension of images.
+ */
 
 /*
  * Kernel for Avgpooling Layer
  * Used for reducing the dimension of images.
  */
 
-__kernel void AvgPool(__global double * restrict input, 
+__kernel void AvgPool(__global int * restrict input, 
 			int number_of_image_rows, 
 			int  number_of_image_cols,
 			int number_of_filters,
 			int kernel_size, 
 			int stride,
 			int number_of_images,
-			__global double * restrict output){
+			__global int * restrict output){
 	double avgpool[200]; 
 	int image_size = number_of_image_rows * number_of_image_cols * number_of_filters * number_of_images;
-	int avg=0, i, count=kernel_size, s=kernel_size, k, f, startIndex=0, endIndex=s, imageIndex=1, j=0;
+	int avg=0, i, oindex=0,count=kernel_size, s=kernel_size, k, f, startIndex=0, endIndex=s, imageIndex=1, j=0;
 
    	for(f=0;f<s;f++){
 	   while(count!=0){
@@ -217,8 +209,9 @@ __kernel void AvgPool(__global double * restrict input,
        		avg=avg+avgpool[i];
    	}
 	avg=avg/(s*s);
+	output[oindex]=avg;
+	oindex++;
 }
-
 
 
 
