@@ -1,15 +1,16 @@
+/**
+* SIMPLE CNN OpenCL Kernel.
+*
+*/
+
 #pragma OPENCL EXTENSION cl_intel_channels : enable
-
-
-typedef struct conv_buffer {
-        double temp_buffer;
-}co;
 
 //To send 256 bits of data
 typedef struct max_buffer {
         double maxPool_buffer[4];
 }maxStruct;
 
+//Channel Between Conv and Maxpool
 channel double ConvOutChannel __attribute__((depth(64)));                        
 //Channel Between Maxpool and FC Layer
 channel maxStruct MaxPoolOutChannel __attribute__((depth(28))) __attribute__((io("kernel_input_ch0"))); // Channel Tx
@@ -34,7 +35,7 @@ __kernel void ConvolutionLayer(__global unsigned char * restrict img,
 				int stride){
 	
 
-	printf("Inside conv layer\n");
+	//printf("Inside conv layer\n");
 	int i,j,k,t;
 	int index, temp_index, filter_index, image_index;
 	int layer, current_layer, image_size;
@@ -42,16 +43,14 @@ __kernel void ConvolutionLayer(__global unsigned char * restrict img,
 	int num_rows_after_padding,num_cols_after_padding;
 	num_rows_after_padding = number_of_image_rows + conv_pad_begin[0] + conv_pad_end[0];
 	num_cols_after_padding = number_of_image_cols + conv_pad_begin[1] + conv_pad_end[1];
+	//Local array to store padded image
 	__local unsigned char temp_image_padded[512 * 512];
 	index = 0;
 	image_size = number_of_image_rows * number_of_image_cols;
 	for (image_number = 0; image_number < number_of_images; image_number++)
 	{
-		 
     	//printf("Convolution for Image %d\n",image_number);
 
-
-		//printf("Before padding\n");
 		//padding logic
 		for(int r=0,r_in=0;r<num_rows_after_padding && r_in<number_of_image_rows;r++)
 		{
@@ -104,18 +103,15 @@ __kernel void ConvolutionLayer(__global unsigned char * restrict img,
 					double co1 = (temp_conv_val>0) ? temp_conv_val : 0;
 					//if(image_number==0 && layer==4)
                     //    printf("%f  ",co1);
-
+					//Send 1 pixel in the internal channel (64 bits width channel)
 					write_channel_intel(ConvOutChannel,co1);
 					index++;
 				}
 				//if(image_number==0 && layer==4)
                 //	printf("\n");
-
-		
 			}
 			//if(image_number==0 && layer==4)
               //  	printf("\n\n");
-
 		}
 	}
 }
@@ -133,6 +129,7 @@ __kernel void MaxPool(
 			int stride,
 			int number_of_images){
 	int count = 0;
+	int pixelCount=0;
 	double maxpool[4]; //maxpooing matrix 1D matrix with 0 and 1 position has r1c1 r1c2 and 2 and 3 has r2c1 r2c2
 	for ( int i =0; i < number_of_images; ++i)
         {
@@ -155,7 +152,7 @@ __kernel void MaxPool(
                 for (int x = 0; x < number_of_image_rows; x=x+stride)
                 {
 					struct max_buffer max1;
-					int pixelCount=0;
+					
                     for (int y = 0; y < number_of_image_cols; y=y+stride)
                     {
 						double max=0.0;
@@ -181,19 +178,14 @@ __kernel void MaxPool(
 						//if((i==1 || i==0) && k==0)
                         //	printf("%f  ",output[count]);
 						count++;
-										
-
-                    }
-
-                	//if((i==1 || i==0) && k==0)
+	                }
+	            	//if((i==1 || i==0) && k==0)
                     //   printf("\n ");
-                    
-				   }
+    			   }
         	        //if((i==1 || i==0) && k==0)
                     //printf("\n\n\n ");
                 }
-
-        }
+	    }
 
 };
 
@@ -217,9 +209,10 @@ __kernel void FCL_Kernel(__global float * restrict weights,
 	int image_number;
 	int image_size = (number_of_image_rows) * (number_of_image_cols) * number_of_filters;
 	for (image_number = 0; image_number < number_of_images; image_number++){
-		printf("FC for Image %d\n",image_number);
+		//printf("FC for Image %d\n",image_number);
 		double maxScore=0.0;
 		int weightIndex=0;
+		//Store 1 image data locally
 		double maxpooldata[14*14*32];
 
 		//Read 256 bits input and store it in a local array
@@ -235,7 +228,6 @@ __kernel void FCL_Kernel(__global float * restrict weights,
                     for(int l=0;l<4;l++){
                         maxpooldata[imgIndex] = max1[colData].maxPool_buffer[l];
 						imgIndex++;
-						printf(" Iamge Index: %d",imgIndex);
                     }
                 }
             }
