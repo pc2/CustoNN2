@@ -11,20 +11,20 @@
 #include <thread>
 #include <assert.h>
 #include <ie_builders.hpp>
-#include<queue>
+#include <queue>
 
 #include <inference_engine.hpp>
 #include <opencv2/opencv.hpp>
 
 using namespace InferenceEngine;
 
-std::string supported_layers[3] = {"Convolution","Pooling","FullyConnected"};
+std::string supported_layers[4] = {"Convolution","Pooling","FullyConnected", "Concat"};
 std::map<std::string,int> layerIDMap;
 std::vector<int> ID_list;
 
 bool isLayerSupported(std::string layer_name)
 {
-	for(int i=0;i<3;i++)
+	for(int i=0;i<4;i++)
 	{
 		if(layer_name.compare(supported_layers[i])==0)
 			return true;
@@ -249,8 +249,6 @@ std::string bitstreamFinder(char *filepath)
 		return "not found";
 	}
 }
-
-
 
 struct layersDetails *parse_root(InferenceEngine::CNNNetwork network)
 {
@@ -500,6 +498,33 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network,std::strin
 
 }
 
+void printCNNTree(layersDetails *root){
+	std::cout<<" Printing CNN Tree..."<<std::endl;
+	std::queue<struct layersDetails *> q;
+	
+	q.push(root);
+	while(!q.empty())
+	{
+		int n = q.size();
+	
+		while (n > 0) 
+    	{ 
+            struct layersDetails *p = q.front(); 
+            q.pop();
+			if(p!=NULL){
+				std::cout<<p->layerID<<" -- "<<p->layerName <<" -- "<<p->layerType <<std::endl;
+			}
+			// Enqueue all children of the dequeued item 
+            for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
+			{ 
+				if(*it!=NULL)
+                	q.push(*it);
+			}		
+			n--;
+		}
+	}
+
+}
 
 /**
  * OPENVINO FPGA NOCTUA PLUGIN is implemented in this function  
@@ -539,7 +564,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 		std::cout << "Platform Vendor: " << PlatformList.at(i).getInfo<CL_PLATFORM_VENDOR>() << "\n\n";
 	}
 
-	std::vector<cl::Device> DeviceList_Master, DeviceList; //Devices
+	std::vector<cl::Device> DeviceList_Master, DeviceList1,DeviceList2; //Devices
 	//Printing the Devices available for the given platform.
 	err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList_Master);
 	assert(err == CL_SUCCESS);
@@ -547,23 +572,26 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						<< " is ===>" << err << std::endl;
 	
 	//Adding the first device to a seperate List
-	DeviceList.push_back(DeviceList_Master[0]);
+	DeviceList1.push_back(DeviceList_Master[0]);
+	DeviceList2.push_back(DeviceList_Master[0]);
 	//Printing the Devices
-	for (int i = 0; i < DeviceList.size(); i++)
+	for (int i = 0; i < DeviceList1.size(); i++)
 	{
 		printf("Device Number: %d\n", i);
-		std::cout << "Device Name: " << DeviceList.at(i).getInfo<CL_DEVICE_NAME>() << "\n";
-		std::cout << "Device Vendor: " << DeviceList.at(i).getInfo<CL_DEVICE_VENDOR>() << "\n";
-		std::cout << "Is Device Available?: " << DeviceList.at(i).getInfo<CL_DEVICE_AVAILABLE>() << "\n";
-		std::cout << "Is Device Little Endian?: " << DeviceList.at(i).getInfo<CL_DEVICE_ENDIAN_LITTLE>() << "\n";
-		std::cout << "Device Max Compute Units: " << DeviceList.at(i).getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() << "\n";
-		std::cout << "Device Max Work Item Dimensions: " << DeviceList.at(i).getInfo<CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS>() << "\n";
-		std::cout << "Device Max Work Group Size: " << DeviceList.at(i).getInfo<CL_DEVICE_MAX_WORK_GROUP_SIZE>() << "\n";
-		std::cout << "Device Max Frequency: " << DeviceList.at(i).getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>() << "\n";
-		std::cout << "Device Max Mem Alloc Size: " << DeviceList.at(i).getInfo<CL_DEVICE_MAX_MEM_ALLOC_SIZE>() << "\n\n";
+		std::cout << "Device Name: " << DeviceList1.at(i).getInfo<CL_DEVICE_NAME>() << "\n";
+		std::cout << "Device Vendor: " << DeviceList1.at(i).getInfo<CL_DEVICE_VENDOR>() << "\n";
+		std::cout << "Is Device Available?: " << DeviceList1.at(i).getInfo<CL_DEVICE_AVAILABLE>() << "\n";
+		std::cout << "Is Device Little Endian?: " << DeviceList1.at(i).getInfo<CL_DEVICE_ENDIAN_LITTLE>() << "\n";
+		std::cout << "Device Max Compute Units: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() << "\n";
+		std::cout << "Device Max Work Item Dimensions: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS>() << "\n";
+		std::cout << "Device Max Work Group Size: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_WORK_GROUP_SIZE>() << "\n";
+		std::cout << "Device Max Frequency: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>() << "\n";
+		std::cout << "Device Max Mem Alloc Size: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_MEM_ALLOC_SIZE>() << "\n\n";
 	}
 
-	cl::Context mycontext(DeviceList); //Context
+	cl::Context mycontext(DeviceList1); //Context
+	 cl::Context mycontext1(DeviceList2);
+
 	assert(err == CL_SUCCESS);
 	std::cout << " Error code after Context:"<< " is ===>" << err << std::endl;
 
@@ -598,11 +626,16 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	}
 
 	std::cout<<"Number of children of root: "<<root->children.size()<<"\n";
+	printCNNTree(root);
 
 	//Print the details of each layers in the network to check their correctness. 
 	//print_layersDetails(cnnLayersList);
 
-	cl::CommandQueue myqueue(mycontext, DeviceList[0]); //command queue
+	cl::CommandQueue myqueue(mycontext, DeviceList1[0]); //command queue
+	cl::CommandQueue myqueue1(mycontext, DeviceList1[0]);
+	cl::CommandQueue myqueue2(mycontext1, DeviceList2[0]);
+	
+
 	assert(err == CL_SUCCESS);
 	std::cout << " Error code after Cmd Queue:"
 						<< " is ===>" << err << std::endl;
@@ -613,9 +646,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 	cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
 
-	cl::Program program(mycontext, DeviceList, mybinaries);
+	cl::Program program(mycontext, DeviceList1, mybinaries);
+	 cl::Program program1(mycontext1, DeviceList2, mybinaries);
 
-	err = program.build(DeviceList);
+	err = program.build(DeviceList1);
+	 err = program1.build(DeviceList2);
 	assert(err == CL_SUCCESS);
 	std::cout << " Error code after BUILD:"
 						<< " is ===>" << err << std::endl;
@@ -625,9 +660,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	cl::Buffer *buffers[100];
 	int buffer_index = 0;
 	//std::cout<<"Images array size: "<<sizeof(images)/sizeof(images[0])<<"\n";
-	std::cout << "first image\n";
-	//for(int i=0;i<784;i++)
-	//std::cout<<unsigned(images[i])<<"\n";
+	
 
 	buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * num_images);
 	err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar) * dim_x * dim_y * num_images, images); //images buffer
@@ -664,7 +697,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
             			q.pop();
 				if(p!=NULL)
 				{ 
-            				//code to launch kernels
+            		//code to launch kernels
 					if (p->layerType == "Convolution")
 					{
 						kernels[kernel_index] = new cl::Kernel(program, "ConvolutionLayer", &err);
@@ -758,18 +791,19 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						//err = kernels[kernel_index]->setArg(10,dim_y);		//conv output cols
 						//assert(err==CL_SUCCESS);
 
+						/*
 						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_double) * dim_x * dim_y * num_images * num_filters);
 						err = kernels[kernel_index]->setArg(12, *buffers[buffer_index]); //output of conv
 						assert(err == CL_SUCCESS);
 						std::cout << "conv output passed\n";
-
+						*/
 						err = myqueue.enqueueTask(*kernels[kernel_index]);
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
 						std::cout << " Error code soon after conv layer for kernel:" << kernel_index << " is ===>" << err << std::endl;
 						kernel_index++;
 
-						err = myqueue.finish();
+						//err = myqueue.finish();
 						assert(err == CL_SUCCESS);
 
 						std::cout << " Error code  after conv layer finish for kernel:" << kernel_index << " is ===>" << err << std::endl;
@@ -780,26 +814,27 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 					{
 						kernels[kernel_index] = new cl::Kernel(program, "MaxPool", &err);
 						assert(err == CL_SUCCESS);
-
+						/*
 						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //first argument, input, also the output of the previous layer
 						assert(err == CL_SUCCESS);
 						buffer_index++;
 						std::cout << "images passed\n";
-						err = kernels[kernel_index]->setArg(1, dim_x); //conv output rows
+						*/
+						err = kernels[kernel_index]->setArg(0, dim_x); //conv output rows
 						assert(err == CL_SUCCESS);
 						std::cout << "conv output rows passed\n";
-						err = kernels[kernel_index]->setArg(2, dim_y); //conv output cols
+						err = kernels[kernel_index]->setArg(1, dim_y); //conv output cols
 						assert(err == CL_SUCCESS);
 						std::cout << "conv output cols passed\n";
-						err = kernels[kernel_index]->setArg(3, num_filters); //no of filters
+						err = kernels[kernel_index]->setArg(2, num_filters); //no of filters
 						assert(err == CL_SUCCESS);
 						std::cout << "no of filters passed\n";
 						int stride = p->params["strides"].at(0) - '0';
 						std::cout << "Stride from the map: " << stride << "\n";
-						err = kernels[kernel_index]->setArg(4, stride); //stride
+						err = kernels[kernel_index]->setArg(3, stride); //stride
 						assert(err == CL_SUCCESS);
 						std::cout << "stride passed: " << stride << "\n";
-						err = kernels[kernel_index]->setArg(5, num_images); //no of images
+						err = kernels[kernel_index]->setArg(4, num_images); //no of images
 						assert(err == CL_SUCCESS);
 						std::cout << "no of images passed\n";
 						//err = kernels[kernel_index]->setArg(6,dim_y);		//no of image cols
@@ -809,77 +844,81 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						num_pixels /= (stride * stride);
 						std::cout << "dim x: " << dim_x << " dim y: " << dim_y << " num_pixels: " << num_pixels << "\n";
 
+						/*
 						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_double) * dim_x * dim_y * num_images * num_filters);
 						err = kernels[kernel_index]->setArg(6, *buffers[buffer_index]); //output of pool
 						assert(err == CL_SUCCESS);
 						std::cout << "pool output\n";
-						err = myqueue.enqueueTask(*kernels[kernel_index]);
+						*/
+						err = myqueue1.enqueueTask(*kernels[kernel_index]);
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
 						kernel_index++;
 					}
 					else if (p->layerType == "FullyConnected")
 					{
-						kernels[kernel_index] = new cl::Kernel(program, "FCL_Kernel", &err);
-						assert(err == CL_SUCCESS);
 
+						kernels[kernel_index] = new cl::Kernel(program1, "FCL_Kernel", &err);
+						assert(err == CL_SUCCESS);
+						/*
 						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //first argument, input, also the output of the previous layer
 						assert(err == CL_SUCCESS);
 						buffer_index++;
 						std::cout << "images passed\n";
-
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
-						err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
-						myqueue.finish();
+						*/
+						
+						buffers[buffer_index] = new cl::Buffer(mycontext1, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+						err = myqueue2.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
+						myqueue2.finish();
+						assert(err == CL_SUCCESS);
+						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]);
+						assert(err == CL_SUCCESS);
+						buffer_index++;
+						std::cout << "weights passed\n";
+						buffers[buffer_index] = new cl::Buffer(mycontext1, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+						err = myqueue2.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
+						myqueue2.finish();
 						assert(err == CL_SUCCESS);
 						err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]);
 						assert(err == CL_SUCCESS);
 						buffer_index++;
-						std::cout << "weights passed\n";
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
-						err = myqueue.enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
-						myqueue.finish();
-						assert(err == CL_SUCCESS);
-						err = kernels[kernel_index]->setArg(2, *buffers[buffer_index]);
-						assert(err == CL_SUCCESS);
-						buffer_index++;
 						std::cout << "biases passed\n";
-						err = kernels[kernel_index]->setArg(3, num_pixels); //no of pixels
+						err = kernels[kernel_index]->setArg(2, num_pixels); //no of pixels
 						assert(err == CL_SUCCESS);
 						std::cout << "no of pixels passed\n";
 						num_classes = std::atoi(p->params["out-size"].c_str());
 						std::cout << "num classes from the map: " << num_classes << "\n";
-						err = kernels[kernel_index]->setArg(4, num_classes); //no of classes
+						err = kernels[kernel_index]->setArg(3, num_classes); //no of classes
 						assert(err == CL_SUCCESS);
 						std::cout << "no of classes passed\n";
-						err = kernels[kernel_index]->setArg(5, num_images); //no of images
+						err = kernels[kernel_index]->setArg(4, num_images); //no of images
 						assert(err == CL_SUCCESS);
 						std::cout << "no of images passed\n";
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_int) * num_images);
-						err = kernels[kernel_index]->setArg(6, *buffers[buffer_index]); //output of FC
+						buffers[buffer_index] = new cl::Buffer(mycontext1, CL_MEM_READ_WRITE, sizeof(cl_int) * num_images);
+						err = kernels[kernel_index]->setArg(5, *buffers[buffer_index]); //output of FC
 						assert(err == CL_SUCCESS);
 						std::cout << "output of FC passed\n";
-						err = kernels[kernel_index]->setArg(7, dim_x); //rows
+						err = kernels[kernel_index]->setArg(6, dim_x); //rows
 						assert(err == CL_SUCCESS);
 						std::cout << "no of rows passed\n";
-						err = kernels[kernel_index]->setArg(8, dim_y); //cols
+						err = kernels[kernel_index]->setArg(7, dim_y); //cols
 						assert(err == CL_SUCCESS);
 						std::cout << "no of cols passed\n";
-						err = kernels[kernel_index]->setArg(9, num_filters); //no of filters
+						err = kernels[kernel_index]->setArg(8, num_filters); //no of filters
 						assert(err == CL_SUCCESS);
 						std::cout << "no of filters passed\n";
-						err = myqueue.enqueueTask(*kernels[kernel_index]);
+						err = myqueue2.enqueueTask(*kernels[kernel_index]);
 						assert(err == CL_SUCCESS);
 						kernel_index++;
 					}
 
 				
    				}
-            			// Enqueue all children of the dequeued item 
-            			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
+            	// Enqueue all children of the dequeued item 
+            	for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
 				{ 
 					if(*it!=NULL)
-                				q.push(*it);
+                		q.push(*it);
 				} 
 				std::cout<<"size of queue: "<<q.size()<<"\n";
             			n--; 
@@ -890,15 +929,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	}
 
 
-
-
-
-
 	int final_labels[num_images];
-	err = myqueue.enqueueReadBuffer(*buffers[buffer_index], CL_TRUE, 0, sizeof(cl_int) * num_images, final_labels);
+	err = myqueue2.enqueueReadBuffer(*buffers[buffer_index], CL_TRUE, 0, sizeof(cl_int) * num_images, final_labels);
 	assert(err == CL_SUCCESS);
 
-	err = myqueue.finish();
+	err = myqueue2.finish();
 	assert(err == CL_SUCCESS);
 
 	for (int i = 0; i < num_images; i++)
