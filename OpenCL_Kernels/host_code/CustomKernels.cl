@@ -191,26 +191,49 @@ __kernel void AvgPool(__global double * restrict input,
 			__global double * restrict output){
 	double avgpool[200]; 
 	int image_size = number_of_image_rows * number_of_image_cols * number_of_filters * number_of_images;
-	int avg=0, i, oindex=0,count=kernel_size, s=kernel_size, k, f, startIndex=0, endIndex=s, imageIndex=1, j=0;
+    int loopend=0;
+    //int image_size = number_of_image_rows * number_of_image_cols * number_of_filters * number_of_images;
+    int bigstart=0;
+    int avg=0, rowi=1, i, oindex=0,count=3, s=9, k, f, startIndex=0, endIndex=3, bi=1, imageIndex=1, j=0, acII=3,inputarrayII=0,accincreement=0;
+        int stridecount=1;
+            for(int kk=0;kk<9;kk++){
+                    imageIndex=1;
+                    count=3;
+                    loopend=startIndex+3;
+                    while(count!=0){
+                        for(k=startIndex;k<loopend;k++){
+                                avgpool[j]=input[k];
+                                j++; 
+                        }
+                        count--;
+                        startIndex=loopend+6;
+                        imageIndex++;  
+                        loopend=startIndex+3;
+                        endIndex=startIndex+s;  
+                    }
+                    for(i=0;i<j;i++)
+                       avg=avg+avgpool[i];
+                    avg=avg/s;
+                    //cout<<"avg is "<<avg<<"\n";
+                    output[oindex]=avg;
+                    oindex++;
+                    avg=0;
+                    j=0;
+                    if(stridecount%3==0){
+                            bigstart=3*3*3*rowi;
+                            startIndex=bigstart;
+                            rowi++;
+                    }else{
+                        bigstart=bigstart+3;
+                    }
+                    startIndex=bigstart;
+                    stridecount++;
+                    accincreement++;
+            }
+    //for(i=0;i<9;i++)
+        //cout<<output[i]<<"\t";
+   
 
-   	for(f=0;f<s;f++){
-	   while(count!=0){
-		for(k=startIndex;k<endIndex;k++){
-		    avgpool[j]=input[k];
-		    j++;  
-		}
-		count--; 
-		startIndex=number_of_image_cols*imageIndex;
-		imageIndex++;       
-		endIndex=startIndex+s;       
-	    }
-   	}
-	for(i=0;i<s*s;i++){
-       		avg=avg+avgpool[i];
-   	}
-	avg=avg/(s*s);
-	output[oindex]=avg;
-	oindex++;
 }
 
 
