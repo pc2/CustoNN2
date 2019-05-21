@@ -266,10 +266,10 @@ __kernel void MaxPool(__global double * restrict input,
 	for(int f=0;f<number_of_filters;f++)
 	{
 
-            for(int kk=0;kk<9;kk++)
+            for(int kk=0;kk<(image_size / filter_size);kk++)
 		{
-                    count= 3;
-                    loopend=startIndex+3;
+                    count= number_of_filter_rows;
+                    loopend=startIndex+number_of_filter_cols;
                     while(count!=0)
 			{
                         for(k=startIndex;k<loopend;k++)
@@ -278,9 +278,9 @@ __kernel void MaxPool(__global double * restrict input,
                                 j++; 
                         }
                         count--;
-                        startIndex=loopend+6;
-                        loopend=startIndex+3;
-			endIndex=startIndex+s;  
+                        startIndex=loopend+(number_of_image_cols-number_of_filter_cols);
+                        loopend=startIndex+number_of_filter_cols;
+			endIndex=startIndex+filter_size;  
                     }
 			max = maxpool[0];
                     for(i=0;i<j;i++)
@@ -296,13 +296,13 @@ __kernel void MaxPool(__global double * restrict input,
                     j=0;
                     if(stridecount%3==0)
 		    {
-                            bigstart=3*3*3*rowi;
+                            bigstart=number_of_filter_rows*number_of_filter_cols*3*rowi;
                             startIndex=bigstart;
                             rowi++;
                     }
 		    else
 		    {
-                        bigstart=bigstart+3;
+                        bigstart=bigstart+number_of_filter_cols;
                     }
                     startIndex=bigstart;
                     stridecount++;
@@ -436,10 +436,10 @@ __kernel void AvgPool(__global double * restrict input,
 	for(int f=0;f<number_of_filters;f++)
 	{
 
-            for(int kk=0;kk<9;kk++)
+            for(int kk=0;kk<(image_size / filter_size);kk++)
 		{
-                    count= 3;
-                    loopend=startIndex+3;
+                    count= number_of_filter_rows;
+                    loopend=startIndex+number_of_filter_cols;
                     while(count!=0)
 			{
                         for(k=startIndex;k<loopend;k++)
@@ -448,13 +448,13 @@ __kernel void AvgPool(__global double * restrict input,
                                 j++; 
                         }
                         count--;
-                        startIndex=loopend+6;
-                        loopend=startIndex+3;
-			endIndex=startIndex+s;  
+                        startIndex=loopend+(number_of_image_cols-number_of_filter_cols);
+                        loopend=startIndex+number_of_filter_cols;
+			endIndex=startIndex+filter_size;  
                     }
                     for(i=0;i<j;i++)
                        avg=avg+avgpool[i];
-                    avg=avg/s;    
+                    avg=avg/filter_size;    
                     
                     output[oindex]=avg;
                     oindex++;
@@ -462,13 +462,13 @@ __kernel void AvgPool(__global double * restrict input,
                     j=0;
                     if(stridecount%3==0)
 		    {
-                            bigstart=3*3*3*rowi;
+                            bigstart=number_of_filter_rows*number_of_filter_cols*3*rowi;
                             startIndex=bigstart;
                             rowi++;
                     }
 		    else
 		    {
-                        bigstart=bigstart+3;
+                        bigstart=bigstart+number_of_filter_cols;
                     }
                     startIndex=bigstart;
                     stridecount++;
