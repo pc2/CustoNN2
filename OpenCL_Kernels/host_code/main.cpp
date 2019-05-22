@@ -20,8 +20,10 @@ static const int CONV_PADDING = 1; // Number of Zero Padding
 static const int CONV_STRIDE=1; // Stride
 static const int CONV_OUTPUT_ROWS = 9; // Number of Rows in the output image from Maxpool
 static const int CONV_OUTPUT_COLS = 9;  // Number of Cols in the output image from Maxpool
-static const int MAXPOOL_OUTPUT_ROWS = 9; // Number of Rows in the output image from Maxpool
-static const int MAXPOOL_OUTPUT_COLS = 9;  // Number of Cols in the output image from Maxpool
+static const int MAXPOOL_OUTPUT_ROWS = 3; // Number of Rows in the output image from Maxpool
+static const int MAXPOOL_OUTPUT_COLS = 3;  // Number of Cols in the output image from Maxpool
+static const int AVGPOOL_OUTPUT_ROWS = 3; // Number of Rows in the output image from Avgpool
+static const int AVGPOOL_OUTPUT_COLS = 3;  // Number of Cols in the output image from Apool
 static const int CONCAT_OUTPUT_ROWS = 9; // Number of Rows in the output image from Concat
 static const int CONCAT_OUTPUT_COLS = 9;  // Number of Cols in the output image from Concat
 static const int CONCAT_NUMBER_OF_FILTERS = 16;
@@ -148,6 +150,11 @@ std::cout << "started"<< std::endl;
         //Bias Array
         for(int i=0; i<NUMBER_OF_FILTERS; i++)
                 Kernel_CNN_BIAS[i]= i;
+	
+	std::cout<<"Bias: "<<Kernel_CNN_BIAS[1]<<"\n";
+
+	for(int i=9;i<18;i++)
+		std::cout<<Kernel_CNN_WEIGHTS[i]<<"\n";
 	std::cout << "Finished creating the Convolution Weights" << std::endl;
 
 	//Write data to device
@@ -285,13 +292,13 @@ std::cout << "started"<< std::endl;
         assert(err==CL_SUCCESS);
         err = kernel2.setArg(3, NUMBER_OF_FILTERS);
         assert(err==CL_SUCCESS);
-	err = kernel2.setArg(4,CONV_STRIDE);
+	err = kernel2.setArg(4, FILTER_ROWS);
         assert(err==CL_SUCCESS);
-        err = kernel2.setArg(5, NUMBER_OF_IMAGES);
+        err = kernel2.setArg(5, FILTER_COLS);
         assert(err==CL_SUCCESS);
-        err = kernel2.setArg(6, Buffer_ConvPadBegin);
+	err = kernel2.setArg(6,CONV_STRIDE);
         assert(err==CL_SUCCESS);
-        err = kernel2.setArg(7, Buffer_ConvPadEnd);
+        err = kernel2.setArg(7, NUMBER_OF_IMAGES);
         assert(err==CL_SUCCESS);
 	err = kernel2.setArg(8, Buffer_MaxPoolOutput);
         assert(err==CL_SUCCESS);
@@ -333,19 +340,21 @@ std::cout << "started"<< std::endl;
 
 	err = kernel3.setArg(0, Buffer_ConvOutput);
         assert(err==CL_SUCCESS);
-        err = kernel3.setArg(1, CONV_OUTPUT_COLS);
+        err = kernel3.setArg(1, CONV_OUTPUT_ROWS);
         assert(err==CL_SUCCESS);
-        err = kernel3.setArg(2, CONV_OUTPUT_ROWS);
+        err = kernel3.setArg(2, CONV_OUTPUT_COLS);
         assert(err==CL_SUCCESS);
         err = kernel3.setArg(3, NUMBER_OF_FILTERS);
+	assert(err==CL_SUCCESS);
+	err = kernel3.setArg(4, FILTER_ROWS);
         assert(err==CL_SUCCESS);
-	err = kernel3.setArg(4,3);
+        err = kernel3.setArg(5, FILTER_COLS);
         assert(err==CL_SUCCESS);
-	err = kernel3.setArg(5,CONV_STRIDE);
+	err = kernel3.setArg(6,CONV_STRIDE);
         assert(err==CL_SUCCESS);
-        err = kernel3.setArg(6, NUMBER_OF_IMAGES);
+        err = kernel3.setArg(7, NUMBER_OF_IMAGES);
         assert(err==CL_SUCCESS);
-	err = kernel3.setArg(7, Buffer_AvgPoolOutput);
+	err = kernel3.setArg(8, Buffer_AvgPoolOutput);
         assert(err==CL_SUCCESS);
 
 	err=queueAvgPool.enqueueTask(kernel3);
@@ -362,8 +371,8 @@ std::cout << "started"<< std::endl;
 		std::cout << j << " image: " << std::endl;
 		for (int l = 0; l < NUMBER_OF_FILTERS; l++){
 			std::cout << "# filter: "<< l << std::endl;
-			for (int i = 0; i < MAXPOOL_OUTPUT_ROWS; i++) {
-				for (int k = 0; k < MAXPOOL_OUTPUT_COLS; k++){
+			for (int i = 0; i < AVGPOOL_OUTPUT_ROWS; i++) {
+				for (int k = 0; k < AVGPOOL_OUTPUT_COLS; k++){
 					//if (l == j)
 						std::cout << AvgPool_Output_local[temp_count] << " ";
 					temp_count++;
