@@ -13,7 +13,7 @@ typedef struct max_buffer {
 //Channel Between Conv and Maxpool
 channel double ConvOutChannel __attribute__((depth(64)));                        
 //Channel Between Maxpool and FC Layer
-channel maxStruct MaxPoolOutChannel __attribute__((depth(28))) __attribute__((io("kernel_input_ch0"))); // Channel Tx
+channel maxStruct MaxPoolOutChannel __attribute__((depth(28))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
 channel maxStruct FCInChannel __attribute__((depth(28))) __attribute__((io("kernel_input_ch0")));  // Channel Rx
 
 
