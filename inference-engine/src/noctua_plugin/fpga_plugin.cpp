@@ -63,6 +63,7 @@ struct layersDetails
 	std::vector<std::string> inputLayerNames;
 	std::vector<std::string> outputLayerNames;
 	std::vector<struct layersDetails *> children;
+	int device_num;
 };
 
 unsigned char *images;
@@ -512,7 +513,7 @@ void printCNNTree(layersDetails *root){
             struct layersDetails *p = q.front(); 
             q.pop();
 			if(p!=NULL){
-				std::cout<<p->layerID<<" -- "<<p->layerName <<" -- "<<p->layerType <<std::endl;
+				std::cout<<p->layerID<<" -- "<<p->layerName <<" -- "<<p->layerType <<" Device num: "<<p->device_num<<std::endl;
 			}
 			// Enqueue all children of the dequeued item 
             for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
@@ -529,7 +530,7 @@ void printCNNTree(layersDetails *root){
 /**
  * OPENVINO FPGA NOCTUA PLUGIN is implemented in this function  
  */
-int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames)
+int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames,std::string model_name)
 {
 	std::cout << "In FPGA Launcher" << std::endl;
 	//std::string overlay_name = bitstreamFinder(model_path); //Checking the availability of bitstream
@@ -626,6 +627,63 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	}
 
 	std::cout<<"Number of children of root: "<<root->children.size()<<"\n";
+	
+
+	// Code for assigning affinity to layers, device numbering starts at 0
+	int device_num = 0;
+	std::string curr,prev;
+	if(model_name.compare("GoogleNet")==0)
+	{
+		std::queue<struct layersDetails *> q;
+	
+		q.push(root);
+	
+		while(!q.empty())
+		{
+			int n = q.size();
+		
+			while (n > 0) 
+        		{ 
+            	
+            			struct layersDetails *p = q.front(); 
+            			q.pop();
+				if(p!=NULL)
+				{ 
+					std::size_t pos = p->layerName.find("Mixed_"); 
+            				if(pos!=std::string::npos)
+					{
+						curr = p->layerName.substr(pos,8);
+						if(prev!=curr)
+						{
+							prev = curr;
+							device_num++;
+							p->device_num = device_num;
+						}
+						else
+						{
+							p->device_num = device_num;
+						}
+					}
+					else
+					{
+						p->device_num = 0;
+
+					}
+   				}
+            // Enqueue all children of the dequeued item 
+            			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
+				{ 
+					if(*it!=NULL)
+                				q.push(*it);
+				} 
+            			n--; 
+        		} 
+		}
+
+	} 
+
+	// Code for Affinity ends
+
 	printCNNTree(root);
 
 	//Print the details of each layers in the network to check their correctness. 
