@@ -509,49 +509,54 @@ __kernel void ConcatLayer(__global double * restrict input_1,
 	temp_list[1][2] = input_2_filters;
 	temp_list[2][2] = input_3_filters;
 	temp_list[3][2] = input_4_filters;
+	temp_list[0][3] = total_inputs;
+	temp_list[1][3] = total_inputs;
+	temp_list[2][3] = total_inputs;
+	temp_list[3][3] = total_inputs;
 	
-
+	printf("Entered concat\n");
+	int count = 0, total_range = 0, range = 0;
+	//total_range is used for adding different depths inputs eg input_1 =108 in[ut_2=208 so for input_3 to be concatenated properly in output. total_range = 108+208
 	for(int i = 1; i<=total_inputs; i++){
-		double temp_var[100000];
+		double temp_var[108];
 		if(i==1){
-			for(int x = 1; x<=temp_list[(i-1)][0]; x++){
-				for(int y = 1; y<=temp_list[(i-1)][1]; y++){
-					temp_var[x] = input_1[(x*y)-1];
-				}
+			range = temp_list[(i-1)][0]*temp_list[(i-1)][1]*temp_list[(i-1)][2]*temp_list[(i-1)][3];
+			//rowsxcolsxfiltersxtotalimagesperarray
+			for(int x = 1; x<=range; x++){
+				temp_var[x-1] = input_1[x-1];
+				count+=1;
+				
 			}
 		}
 		if(i==2){
-			for(int x = 1; x<=temp_list[(i-1)][0]; x++){
-				for(int y = 1; y<=temp_list[(i-1)][1]; y++){
-					temp_var[x] = input_2[(x*y)-1];
-				}
+			range = temp_list[(i-1)][0]*temp_list[(i-1)][1]*temp_list[(i-1)][2]*temp_list[(i-1)][3];
+			//rowsxcolsxfiltersxtotalimagesperarray
+			for(int x = 1; x<=range; x++){
+					temp_var[x-1] = input_2[x-1];
 			}
 		}
 		if(i==3){
-			for(int x = 1; x<=temp_list[(i-1)][0]; x++){
-				for(int y = 1; y<=temp_list[(i-1)][1]; y++){
-					temp_var[x] = input_3[(x*y)-1];
-				}
+			range = temp_list[(i-1)][0]*temp_list[(i-1)][1]*temp_list[(i-1)][2]*temp_list[(i-1)][3];
+			//rowsxcolsxfiltersxtotalimagesperarray
+			for(int x = 1; x<=range; x++){
+					temp_var[x-1] = input_3[x-1];
 			}
 		}
 		if(i==4){
-			for(int x = 1; x<=temp_list[(i-1)][0]; x++){
-				for(int y = 1; y<=temp_list[(i-1)][1]; y++){
-					temp_var[x] = input_4[(x*y)-1];
-				}
+			range = temp_list[(i-1)][0]*temp_list[(i-1)][1]*temp_list[(i-1)][2]*temp_list[(i-1)][3];
+			//rowsxcolsxfiltersxtotalimagesperarray
+			for(int x = 1; x<=range; x++){
+					temp_var[x-1] = input_4[x-1];
 			}
 		}
-		for(int filter=1; filter<=temp_list[(i-1)][2]; filter++){
-			for(int layer=1; layer <= image_layers; layer++){		
-				for(int c=1; c <= temp_list[(i-1)][1]; c++){
-					for(int r=1; r <= temp_list[i][0]; r++){
-					
-						output[(i*r*c*layer*filter)-1]+=temp_var[(r*c*layer*filter)-1];
 
-					}
-				}
-			}
+
+		for(int filter=0; filter<=range; filter++){
+
+			output[total_range+filter]+=temp_var[filter];
 		}
+		total_range+=range;
+		//append old range to total range
 
 	}
 	
