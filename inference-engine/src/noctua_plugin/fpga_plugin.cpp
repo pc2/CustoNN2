@@ -12,10 +12,13 @@
 #include <assert.h>
 #include <ie_builders.hpp>
 #include <queue>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include <inference_engine.hpp>
 #include <opencv2/opencv.hpp>
-
+#define GoogleNet_dir .			// Directories where the aocx files will be stored
+#define ResNet_dir .
 using namespace InferenceEngine;
 
 std::string supported_layers[4] = {"Convolution","Pooling","FullyConnected", "Concat"};
@@ -527,6 +530,40 @@ void printCNNTree(layersDetails *root){
 
 }
 
+void printPlatforms(std::vector<cl::Platform> PlatformList)
+{
+	 //Printing the Plaforms 						
+	for (int i = 0; i < PlatformList.size(); i++)
+	{
+		printf("Platform Number: %d\n", i);
+		std::cout << "Platform Name: " << PlatformList.at(i).getInfo<CL_PLATFORM_NAME>() << "\n";
+		std::cout << "Platform Profile: " << PlatformList.at(i).getInfo<CL_PLATFORM_PROFILE>() << "\n";
+		std::cout << "Platform Version: " << PlatformList.at(i).getInfo<CL_PLATFORM_VERSION>() << "\n";
+		std::cout << "Platform Vendor: " << PlatformList.at(i).getInfo<CL_PLATFORM_VENDOR>() << "\n\n";
+	}
+
+}
+
+void printDevices(std::vector<cl::Device> DeviceList1)
+{
+
+	for (int i = 0; i < DeviceList1.size(); i++)
+	{
+		printf("Device Number: %d\n", i);
+		std::cout << "Device Name: " << DeviceList1.at(i).getInfo<CL_DEVICE_NAME>() << "\n";
+		std::cout << "Device Vendor: " << DeviceList1.at(i).getInfo<CL_DEVICE_VENDOR>() << "\n";
+		std::cout << "Is Device Available?: " << DeviceList1.at(i).getInfo<CL_DEVICE_AVAILABLE>() << "\n";
+		std::cout << "Is Device Little Endian?: " << DeviceList1.at(i).getInfo<CL_DEVICE_ENDIAN_LITTLE>() << "\n";
+		std::cout << "Device Max Compute Units: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() << "\n";
+		std::cout << "Device Max Work Item Dimensions: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS>() << "\n";
+		std::cout << "Device Max Work Group Size: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_WORK_GROUP_SIZE>() << "\n";
+		std::cout << "Device Max Frequency: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>() << "\n";
+		std::cout << "Device Max Mem Alloc Size: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_MEM_ALLOC_SIZE>() << "\n\n";
+	}
+
+
+}
+
 /**
  * OPENVINO FPGA NOCTUA PLUGIN is implemented in this function  
  */
@@ -555,17 +592,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	assert(err == CL_SUCCESS);
 	std::cout << " Error code after Get Platform:"
 						<< " is ===>" << err << std::endl;
-  //Printing the Plaforms 						
-	for (int i = 0; i < PlatformList.size(); i++)
-	{
-		printf("Platform Number: %d\n", i);
-		std::cout << "Platform Name: " << PlatformList.at(i).getInfo<CL_PLATFORM_NAME>() << "\n";
-		std::cout << "Platform Profile: " << PlatformList.at(i).getInfo<CL_PLATFORM_PROFILE>() << "\n";
-		std::cout << "Platform Version: " << PlatformList.at(i).getInfo<CL_PLATFORM_VERSION>() << "\n";
-		std::cout << "Platform Vendor: " << PlatformList.at(i).getInfo<CL_PLATFORM_VENDOR>() << "\n\n";
-	}
+ 
+	printPlatforms(PlatformList);
 
-	std::vector<cl::Device> DeviceList_Master, DeviceList1,DeviceList2; //Devices
+	
+	std::vector<cl::Device> DeviceList_Master;
+	std::vector<std::vector<cl::Device>> Devices_to_flash; //Devices
 	//Printing the Devices available for the given platform.
 	err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList_Master);
 	assert(err == CL_SUCCESS);
@@ -573,28 +605,34 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						<< " is ===>" << err << std::endl;
 	
 	//Adding the first device to a seperate List
-	DeviceList1.push_back(DeviceList_Master[0]);
-	DeviceList2.push_back(DeviceList_Master[0]);
+	//DeviceList1.push_back(DeviceList_Master[0]);
+	//DeviceList2.push_back(DeviceList_Master[0]);
 	//Printing the Devices
-	for (int i = 0; i < DeviceList1.size(); i++)
+	
+	printDevices(DeviceList_Master);
+	
+	
+	for(int i=0;i<DeviceList_Master.size();i++)
 	{
-		printf("Device Number: %d\n", i);
-		std::cout << "Device Name: " << DeviceList1.at(i).getInfo<CL_DEVICE_NAME>() << "\n";
-		std::cout << "Device Vendor: " << DeviceList1.at(i).getInfo<CL_DEVICE_VENDOR>() << "\n";
-		std::cout << "Is Device Available?: " << DeviceList1.at(i).getInfo<CL_DEVICE_AVAILABLE>() << "\n";
-		std::cout << "Is Device Little Endian?: " << DeviceList1.at(i).getInfo<CL_DEVICE_ENDIAN_LITTLE>() << "\n";
-		std::cout << "Device Max Compute Units: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() << "\n";
-		std::cout << "Device Max Work Item Dimensions: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS>() << "\n";
-		std::cout << "Device Max Work Group Size: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_WORK_GROUP_SIZE>() << "\n";
-		std::cout << "Device Max Frequency: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>() << "\n";
-		std::cout << "Device Max Mem Alloc Size: " << DeviceList1.at(i).getInfo<CL_DEVICE_MAX_MEM_ALLOC_SIZE>() << "\n\n";
+		std::vector<cl::Device> temp_device;
+		temp_device.push_back(DeviceList_Master[i]);
+		Devices_to_flash.push_back(temp_device);
+
 	}
 
-	cl::Context mycontext(DeviceList1); //Context
-	 cl::Context mycontext1(DeviceList2);
+	cl::Context *contexts[32];
+	//cl::Context mycontext(DeviceList1); //Context
+	 //cl::Context mycontext1(DeviceList2);
 
-	assert(err == CL_SUCCESS);
-	std::cout << " Error code after Context:"<< " is ===>" << err << std::endl;
+	
+	for(int i=0;i<Devices_to_flash.size();i++)
+	{
+		contexts[i] = new cl::Context(Devices_to_flash[i]);
+	
+	}
+
+	//assert(err == CL_SUCCESS);
+	//std::cout << " Error code after Context:"<< " is ===>" << err << std::endl;
 
 	
 	
@@ -689,15 +727,16 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//Print the details of each layers in the network to check their correctness. 
 	//print_layersDetails(cnnLayersList);
 
-	cl::CommandQueue myqueue(mycontext, DeviceList1[0]); //command queue
-	cl::CommandQueue myqueue1(mycontext, DeviceList1[0]);
-	cl::CommandQueue myqueue2(mycontext1, DeviceList2[0]);
-	
+	//cl::CommandQueue myqueue(mycontext, DeviceList1[0]); //command queue
+	//cl::CommandQueue myqueue1(mycontext, DeviceList1[0]);
+	//cl::CommandQueue myqueue2(mycontext1, DeviceList2[0]);
+	cl::CommandQueue *cmd_queues[100];   // To be dynamically allocated at kernel launch, one per kernel
 
-	assert(err == CL_SUCCESS);
-	std::cout << " Error code after Cmd Queue:"
-						<< " is ===>" << err << std::endl;
-
+	//assert(err == CL_SUCCESS);
+	//std::cout << " Error code after Cmd Queue:"
+						//<< " is ===>" << err << std::endl;
+	cl::Program *programs[32];
+	/*
 	//std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/simplecnn_openvino/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
 	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs/dldt/kernels/lenet_iter_10000.aocx", std::ios::in | std::ios::binary);
 	//checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
@@ -712,6 +751,34 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	assert(err == CL_SUCCESS);
 	std::cout << " Error code after BUILD:"
 						<< " is ===>" << err << std::endl;
+
+	*/
+	std::vector<std::string> aocx_files;
+	if(model_name.compare("GoogleNet")==0)
+	{
+		DIR* dirp = opendir(GoogleNet_dir.c_str());
+    		struct dirent * dp;
+		while ((dp = readdir(dirp)) != NULL) 
+		{
+       			aocx_files.push_back(dp->d_name);
+   		}
+    		 closedir(dirp);
+
+	}
+	
+	for(int i=0;i<aocx_files.size();i++)
+	{
+		std::ifstream aocx_stream(aocx_files[i].c_str(), std::ios::in | std::ios::binary);
+	
+		std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+		cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
+		programs[i] = new cl::Program(contexts[i],Devices_to_flash[i],mybinaries);
+		err = programs[i].build(Devices_to_flash[i]);
+		std::cout << " Error code after BUILD:"<< " is ===>" << err << std::endl;
+
+	}
+	
+	
 	cl::Kernel *kernels[52];
 	int kernel_index = 0;
 	//cl::CommandQueue *queues[50];
