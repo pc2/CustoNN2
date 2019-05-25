@@ -17,7 +17,7 @@
 #include <samples/args_helper.hpp>
 #include "fpga_plugin.cpp"
 
-#include "classification_sample_test.h"
+#include "test_plugin.h"
 
 using namespace InferenceEngine;
 
@@ -129,19 +129,25 @@ int main(int argc, char *argv[]) {
         //std::vector<std::string> input_imagePath;
        // input_imagePath.push_back(input_image_path.c_str());
 
-        //typedef std::chrono::high_resolution_clock Time;
-        //typedef std::chrono::duration<double, std::ratio<1, 1000>> ms;
-        //typedef std::chrono::duration<float> fsec;
+        std::string cnn_modelArg = FLAGS_model;
+        const int model_name_str = cnn_modelArg.length();
+        char *cnn_model = new char[model_name_str+1];
+        strcpy(cnn_model, cnn_modelArg.c_str());
+        //int num_devices = FLAGS_num_devices;
 
-        //double total = 0.0;
-        //auto t0 = Time::now();
+        typedef std::chrono::high_resolution_clock Time;
+        typedef std::chrono::duration<double, std::ratio<1, 1000>> ms;
+        typedef std::chrono::duration<float> fsec;
+
+        double total = 0.0;
+        auto t0 = Time::now();
         
-        fpga_launcher(network,inputModel,imageNames);
-        /*auto t1 = Time::now();
+        fpga_launcher(network,inputModel,imageNames,cnn_model);
+        auto t1 = Time::now();
         fsec fs = t1 - t0;
         ms d = std::chrono::duration_cast<ms>(fs);
         total += d.count();
-        std::cout << std::endl << "total inference time(ms): " << total << std::endl; */
+        std::cout << std::endl << "total inference time(ms): " << total << std::endl; 
 
     }
     catch (const std::exception& error) {
