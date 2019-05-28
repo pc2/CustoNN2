@@ -40,6 +40,13 @@ import tvm.relay.testing.tf as tf_testing
 
 from tensorflow.python.ops import variables
 
+
+#import nnvm ir
+
+import nnvm.frontend
+import nnvm.compiler
+import nnvm.symbol
+
 # Base location for model related files.
 repo_base = 'https://github.com/dmlc/web-data/raw/master/tensorflow/models/InceptionV1/'
 
@@ -93,7 +100,7 @@ img_path = download_testdata(image_url, img_name, module='data')
 # model_path='/home/amey/.tvm_test_data/tf/InceptionV1/'
 
 # model_path='/home/amey/Masters/project/tvm/build/models/inception_v1_inf_graph_t11.pb'
-model_path='models/inceptionv1/frozen.pb'
+model_path='/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/tvm_models/inceptionv1/frozen.pb'
 # model_path='/home/amey/Masters/project/tvm/build/models/frozen_graph.pb'
 # model_path='/home/amey/.tvm_test_data/data/imagenet_2012_challenge_label_map_proto.pbtxt'
 
@@ -151,7 +158,17 @@ x = np.array(image)
 shape_dict = {'DecodeJpeg/contents': x.shape}
 dtype_dict = {'DecodeJpeg/contents': 'uint8'}
 # tvm.relay.testing.tf.AddShapesToGraphDef
-sym, params = relay.frontend.from_tensorflow(graph_def, layout=layout, shape=shape_dict)
+
+#either use nnvm or relay ir and comment the lines accordingly
+###using relay ir
+#sym, params = relay.frontend.from_tensorflow(graph_def, layout=layout, shape=shape_dict)
+###end of relay ir
+
+###using nnvm ir
+
+sym, params = nnvm.frontend.from_tensorflow(graph_def, layout=layout, shape=shape_dict)
+###end of nnvm ir
+
 
 print("Tensorflow protobuf imported to relay frontend.")
 ######################################################################
@@ -164,40 +181,11 @@ print("Tensorflow protobuf imported to relay frontend.")
 #   params: final params after compilation.
 #   lib: target library which can be deployed on target with tvm runtime.
 
+#for nnvm ir
+graph, lib, params = nnvm.compiler.build(sym,  target=target, target_host=target_host , params=params)
+
+###for relay ir
+'''
 with relay.build_config(opt_level=3):
     graph, lib, params = relay.build(sym, target=target, target_host=target_host, params=params)
-
-fadd = relay.build(sym, target=target, target_host=target_host, params=params)
-
-
-fadd.save()
-######################################################################
-# Execute the portable graph on TVM
-# ---------------------------------
-# Now we can try deploying the compiled model on target.
-
-from tvm.contrib import graph_runtime
-dtype = 'uint8'
-m = graph_runtime.create(graph, lib, ctx)
-# set inputs
-m.set_input('DecodeJpeg/contents', tvm.nd.array(x.astype(dtype)))
-m.set_input(**params)
-# execute
-m.run()
-# get outputs
-tvm_output = m.get_output(0, tvm.nd.empty(((1, 1008)), 'float32'))
-
-######################################################################
-# Process the output
-# ------------------
-# Process the model output to human readable text for InceptionV1.
-predictions = tvm_output.asnumpy()
-predictions = np.squeeze(predictions)
-
-# Creates node ID --> English string lookup.
-node_lookup = tf_testing.NodeLookup(label_lookup_path=map_proto_path,
-                                    uid_lookup_path=label_path)
-
-
-
-
+'''
