@@ -173,7 +173,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1(__global float* restrict compute,
 }
 
 
-__kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3(__global double * restrict img, 
+__kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3(__global double * restrict img, 
 											__global float * restrict weights, 
 											__global float * restrict bias,
 											 int number_of_images,		 
