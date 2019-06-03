@@ -1,0 +1,6 @@
+*.o
+*.aocx
+*.aoco
+task2
+SimpleKernel/*
+
