@@ -592,8 +592,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	printPlatforms(PlatformList);
 
-	std::vector<cl::Device> DeviceList_Master;
-	std::vector<std::vector<cl::Device>> Devices_to_flash; //Devices
+	std::vector<cl::Device> DeviceList_Master , DeviceList1;
+	//std::vector<std::vector<cl::Device>> Devices_to_flash; //Devices
 	//Printing the Devices available for the given platform.
 	err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList_Master);
 	assert(err == CL_SUCCESS);
@@ -601,30 +601,18 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 			  << " is ===>" << err << std::endl;
 
 	//Adding the first device to a seperate List
-	//DeviceList1.push_back(DeviceList_Master[0]);
-	//DeviceList2.push_back(DeviceList_Master[0]);
+	DeviceList1.push_back(DeviceList_Master[0]);
+	
 	//Printing the Devices
 
 	printDevices(DeviceList_Master);
 
-	for (int i = 0; i < DeviceList_Master.size(); i++)
-	{
-		std::vector<cl::Device> temp_device;
-		temp_device.push_back(DeviceList_Master[i]);
-		Devices_to_flash.push_back(temp_device);
-	}
+	
 
-	cl::Context *contexts[32];
-	//cl::Context mycontext(DeviceList1); //Context
-	//cl::Context mycontext1(DeviceList2);
+	
+	cl::Context mycontext(DeviceList1); //Context
 	cl::CommandQueue *cmd_queues[250]; // To be dynamically allocated at kernel launch, one per kernel. the index  of cmd queue array is Layer ID.
-	for (int i = 0; i < Devices_to_flash.size(); i++)
-	{
-		contexts[i] = new cl::Context(Devices_to_flash[i]);
-	}
-
-	//assert(err == CL_SUCCESS);
-	//std::cout << " Error code after Context:"<< " is ===>" << err << std::endl;
+	
 
 	Builder::Network originalNetwork(network);
 
@@ -654,60 +642,9 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	std::cout << "Number of children of root: " << root->children.size() << "\n";
 	
-	// Code for assigning affinity to layers, device numbering starts at 0
-	int device_num = 0;
-	std::string curr, prev;
-	if (model_name.compare("GoogleNet") == 0)
-	{
-		std::queue<struct layersDetails *> q;
+	
 
-		q.push(root);
-
-		while (!q.empty())
-		{
-			int n = q.size();
-
-			while (n > 0)
-			{
-
-				struct layersDetails *p = q.front();
-				q.pop();
-				if (p != NULL)
-				{
-					std::size_t pos = p->layerName.find("Mixed_");
-					if (pos != std::string::npos)
-					{
-						curr = p->layerName.substr(pos, 8);
-						if (prev != curr)
-						{
-							prev = curr;
-							device_num++;
-							p->device_num = device_num;
-						}
-						else
-						{
-							p->device_num = device_num;
-							*cmd_queues[p->layerID] = cl::CommandQueue(*contexts[p->device_num], Devices_to_flash.at(p->device_num)[0]); 
-						}
-					}
-					else
-					{
-						p->device_num = 0;
-						*cmd_queues[p->layerID] = cl::CommandQueue(*contexts[p->device_num], Devices_to_flash.at(p->device_num)[0]); 
-					}
-				}
-				// Enqueue all children of the dequeued item
-				for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
-				{
-					if (*it != NULL)
-						q.push(*it);
-				}
-				n--;
-			}
-		}
-	}
-
-	// Code for Affinity ends
+	
 
 	printCNNTree(root);
 
@@ -722,48 +659,21 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//assert(err == CL_SUCCESS);
 	//std::cout << " Error code after Cmd Queue:"
 	//<< " is ===>" << err << std::endl;
-	cl::Program *programs[32];
-	/*
-	//std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/simplecnn_openvino/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
-	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs/dldt/kernels/lenet_iter_10000.aocx", std::ios::in | std::ios::binary);
-	//checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
+	
+	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/simplecnn_openvino/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
+
+	checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
 	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 	cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
 
 	cl::Program program(mycontext, DeviceList1, mybinaries);
-	 cl::Program program1(mycontext1, DeviceList2, mybinaries);
+	 
 
 	err = program.build(DeviceList1);
-	 err = program1.build(DeviceList2);
+	 ;
 	assert(err == CL_SUCCESS);
 	std::cout << " Error code after BUILD:"
 						<< " is ===>" << err << std::endl;
-
-	*/
-	std::vector<std::string> aocx_files;
-	if (model_name.compare("GoogleNet") == 0)
-	{
-		DIR *dirp = opendir(GoogLeNet_DIR);
-		struct dirent *dp;
-		while ((dp = readdir(dirp)) != NULL)
-		{
-			aocx_files.push_back(dp->d_name);
-		}
-		closedir(dirp);
-	}
-
-	for (int i = 0; i < aocx_files.size(); i++)
-	{
-		std::ifstream aocx_stream(aocx_files[i].c_str(), std::ios::in | std::ios::binary);
-
-		std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
-		cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
-		programs[i] = new cl::Program(*contexts[i], Devices_to_flash[i], mybinaries);
-		
-		err = programs[i]->build(Devices_to_flash[i]);
-		std::cout << " Error code after BUILD:"
-				  << " is ===>" << err << std::endl;
-	}
 
 	cl::Kernel *kernels[52];
 	int kernel_index = 0;
@@ -812,8 +722,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 					if (p->layerType == "Convolution")
 					{
 						// To check on which device this  layer is mapped to.
-						int layerDeviceNumber = p->device_num;
-						kernels[kernel_index] = new cl::Kernel(*programs[layerDeviceNumber], "ConvolutionLayer", &err);
+						kernels[kernel_index] = new cl::Kernel(program , "ConvolutionLayer", &err);
 						assert(err == CL_SUCCESS);
 
 						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //first argument, input, also the output of the previous layer
@@ -926,8 +835,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 					else if (p->layerType == "Pooling")
 					{
 						// To check on which device this  layer is mapped to.
-						int layerPoolDeviceNumber = p->device_num;
-						kernels[kernel_index] = new cl::Kernel(*programs[layerPoolDeviceNumber], "MaxPool", &err);
+						kernels[kernel_index] = new cl::Kernel(program, "MaxPool", &err);
 						assert(err == CL_SUCCESS);
 						/*
 						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //first argument, input, also the output of the previous layer
@@ -973,8 +881,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 					else if (p->layerType == "FullyConnected")
 					{
 						// To check on which device this  layer is mapped to.
-						int layerFCDeviceNumber = p->device_num;
-						kernels[kernel_index] = new cl::Kernel(*programs[layerFCDeviceNumber], "FCL_Kernel", &err);
+						
+						kernels[kernel_index] = new cl::Kernel(program, "FCL_Kernel", &err);
 						assert(err == CL_SUCCESS);
 						/*
 						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //first argument, input, also the output of the previous layer
