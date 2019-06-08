@@ -44,7 +44,6 @@ struct layersDetails
 	std::vector<std::string> inputLayerNames;
 	std::vector<std::string> outputLayerNames;
 	std::vector<struct layersDetails *> children;
-	int device_num;
 };
 
 unsigned char *images;
@@ -517,7 +516,7 @@ void printCNNTree(layersDetails *root)
 			q.pop();
 			if (p != NULL)
 			{
-				std::cout << p->layerID << " -- " << p->layerName << " -- " << p->layerType << " Device num: " << p->device_num << std::endl;
+				//std::cout << p->layerID << " -- " << p->layerName << " -- " << p->layerType << " Device num: " << p->device_num << std::endl;
 			}
 			// Enqueue all children of the dequeued item
 			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
@@ -612,6 +611,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	
 	cl::Context mycontext(DeviceList1); //Context
 	cl::CommandQueue *cmd_queues[250]; // To be dynamically allocated at kernel launch, one per kernel. the index  of cmd queue array is Layer ID.
+	for ( int i =0 ; i<250;i++)
+	{
+		cmd_queues[i] = new cl::CommandQueue(mycontext, DeviceList1[0])	;	
+	}
+
 	
 
 	Builder::Network originalNetwork(network);
@@ -662,7 +666,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	
 	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/simplecnn_openvino/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
 
-	checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
+	//checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
 	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
 	cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
 
@@ -683,7 +687,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//std::cout<<"Images array size: "<<sizeof(images)/sizeof(images[0])<<"\n";
 
 	//Input image buffer is always mapped to 1st device context(Device ID =0)
-	buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * num_images);
+	buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * num_images);
 	err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar) * dim_x * dim_y * num_images, images); //images buffer
 	assert(err == CL_SUCCESS);
 	err = cmd_queues[0]->finish();
@@ -731,7 +735,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						std::cout << "images passed\n";
 
 						printFilterWeights(p->layerWeights);
-						buffers[buffer_index] = new cl::Buffer(*contexts[p->layerID], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
 						err = cmd_queues[p->layerID]->finish();
 						std::cout << " Error code after weights transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -742,7 +746,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 						std::cout << "weights passed\n";
 
-						buffers[buffer_index] = new cl::Buffer(*contexts[p->layerID], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
 						err = cmd_queues[p->layerID]->finish();
 						std::cout << " Error code after bias transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -781,7 +785,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						std::cout << "no of image cols passed\n";
 
 						int pad_begin[] = {p->params["pads_begin"].at(0) - '0', p->params["pads_begin"].at(2) - '0'};
-						buffers[buffer_index] = new cl::Buffer(*contexts[p->layerID], CL_MEM_READ_ONLY, sizeof(cl_int) * 2);
+						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_int) * 2);
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int) * 2, pad_begin); //pad begin
 						assert(err == CL_SUCCESS);
 						err = cmd_queues[p->layerID]->finish();
@@ -793,7 +797,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						buffer_index++;
 
 						int pad_end[] = {p->params["pads_end"].at(0) - '0', p->params["pads_end"].at(2) - '0'};
-						buffers[buffer_index] = new cl::Buffer(*contexts[p->layerID], CL_MEM_READ_ONLY, sizeof(cl_int) * 2);
+						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_int) * 2);
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_int) * 2, pad_end); //pad end
 						cmd_queues[p->layerID]->finish();
 						//std::cout<<"padding from the map"<<pad<<"\n";
@@ -891,7 +895,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						std::cout << "images passed\n";
 						*/
 
-						buffers[buffer_index] = new cl::Buffer(*contexts[p->layerID], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
 						cmd_queues[p->layerID]->finish();
 						assert(err == CL_SUCCESS);
@@ -899,7 +903,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						assert(err == CL_SUCCESS);
 						buffer_index++;
 						std::cout << "weights passed\n";
-						buffers[buffer_index] = new cl::Buffer(*contexts[p->layerID], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
 						cmd_queues[p->layerID]->finish();
 						assert(err == CL_SUCCESS);
@@ -918,7 +922,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						err = kernels[kernel_index]->setArg(4, num_images); //no of images
 						assert(err == CL_SUCCESS);
 						std::cout << "no of images passed\n";
-						buffers[buffer_index] = new cl::Buffer(*contexts[p->layerID], CL_MEM_READ_WRITE, sizeof(cl_int) * num_images);
+						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_int) * num_images);
 						err = kernels[kernel_index]->setArg(5, *buffers[buffer_index]); //output of FC
 						assert(err == CL_SUCCESS);
 						std::cout << "output of FC passed\n";
