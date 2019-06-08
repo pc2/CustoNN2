@@ -884,7 +884,13 @@ __kernel void InceptionV1_Mixed_4c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
   }
 }
 
-// TODO InceptionV1/InceptionV1/Mixed_4c/concat
+__kernel void InceptionV1_Mixed_4c_concat(__global float* restrict T_concat, __global float* restrict input9, __global float* restrict input10, __global float* restrict input11, __global float* restrict input6, __global float* restrict input7, __global float* restrict input8, __global float* restrict input3, __global float* restrict input4, __global float* restrict input5, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? max(((input9[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] * input10[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -448)]) + input11[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -448)]), 0.000000e+00f) : (float)((384 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? max(((input6[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -75264)] * input7[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -384)]) + input8[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -384)]), 0.000000e+00f) : (float)((128 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? max(((input3[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -25088)] * input4[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -128)]) + input5[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -128)]), 0.000000e+00f) : max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)]), 0.000000e+00f))));
+  }
+}
+
+
 
 __kernel void InceptionV1_Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
@@ -1065,7 +1071,13 @@ __kernel void InceptionV1_Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
   }
 }
 
-// TODO InceptionV1/InceptionV1/Mixed_4d/concat
+
+__kernel void InceptionV1_Mixed_4d_concat(__global float* restrict T_concat, __global float* restrict input9, __global float* restrict input10, __global float* restrict input11, __global float* restrict input6, __global float* restrict input7, __global float* restrict input8, __global float* restrict input3, __global float* restrict input4, __global float* restrict input5, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? max(((input9[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] * input10[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -448)]) + input11[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -448)]), 0.000000e+00f) : (float)((384 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? max(((input6[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -75264)] * input7[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -384)]) + input8[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -384)]), 0.000000e+00f) : (float)((160 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? max(((input3[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -31360)] * input4[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -160)]) + input5[((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) + -160)]), 0.000000e+00f) : max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)]), 0.000000e+00f))));
+  }
+}
+
 
 __kernel void InceptionV1_Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                       __global float* restrict input0, 
