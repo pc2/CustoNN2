@@ -17,12 +17,18 @@
 
 #include <inference_engine.hpp>
 #include <opencv2/opencv.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/foreach.hpp>
+
 
 // Directories where the aocx files will be stored
 #define GoogLeNet_DIR "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/GoogLeNet"
 #define ResNet_DIR "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/ResNet"
 
 using namespace InferenceEngine;
+using namespace boost;
+using namespace boost::property_tree;
 
 std::string supported_layers[4] = {"Convolution", "Pooling", "FullyConnected", "Concat"};
 std::map<std::string, int> layerIDMap;
@@ -561,10 +567,37 @@ void printDevices(std::vector<cl::Device> DeviceList1)
 	}
 }
 
+const ptree& empty_ptree(){
+    static ptree t;
+    return t;
+}
+
+void xml_parser(char *filename,std::vector<std::string> kernel_names)
+{
+	ptree tree;
+	read_xml(filename, tree);
+	const ptree & formats = tree.get_child("board", empty_ptree());
+	BOOST_FOREACH(const ptree::value_type & f, formats){
+        std::string at = f.first + ".<xmlattr>";
+        const ptree & attributes = formats.get_child(at, empty_ptree());
+        //cout << "Extracting attributes from " << at << ":" << endl;
+        BOOST_FOREACH(const ptree::value_type &v, attributes)
+	{
+		if(v.first == "name")
+		{
+			//std::cout << "First: " << v.first.data() << " Second: " << v.second.data() << std::endl;
+			kernel_names.push_back(v.second.data);
+		}
+        }
+    }
+	
+
+}
+
 /**
  * OPENVINO FPGA NOCTUA PLUGIN is implemented in this function  
  */
-int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name)
+int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name,int rank)
 {
 	std::cout << "In FPGA Launcher" << std::endl;
 	//std::string overlay_name = bitstreamFinder(model_path); //Checking the availability of bitstream
@@ -592,36 +625,27 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	printPlatforms(PlatformList);
 
-	std::vector<cl::Device> DeviceList_Master;
-	std::vector<std::vector<cl::Device>> Devices_to_flash; //Devices
+	std::vector<cl::Device> DeviceList_Master,DeviceList1,DeviceList2;
+	//std::vector<std::vector<cl::Device>> Devices_to_flash; //Devices
 	//Printing the Devices available for the given platform.
 	err = PlatformList[0].getDevices(CL_DEVICE_TYPE_ALL, &DeviceList_Master);
 	assert(err == CL_SUCCESS);
-	std::cout << " Error code after Get Device:"
-			  << " is ===>" << err << std::endl;
+	std::cout << " Error code after Get Device is ===> " << err << std::endl;
 
 	//Adding the first device to a seperate List
-	//DeviceList1.push_back(DeviceList_Master[0]);
-	//DeviceList2.push_back(DeviceList_Master[0]);
+	DeviceList1.push_back(DeviceList_Master[0]);
+	DeviceList2.push_back(DeviceList_Master[1]);
 	//Printing the Devices
 
 	printDevices(DeviceList_Master);
-
-	for (int i = 0; i < DeviceList_Master.size(); i++)
-	{
-		std::vector<cl::Device> temp_device;
-		temp_device.push_back(DeviceList_Master[i]);
-		Devices_to_flash.push_back(temp_device);
-	}
-
-	cl::Context *contexts[32];
+	
+	
+	cl::Context context1(DeviceList1);
+	cl::Context context2(DeviceList2);
 	//cl::Context mycontext(DeviceList1); //Context
 	//cl::Context mycontext1(DeviceList2);
 	cl::CommandQueue *cmd_queues[250]; // To be dynamically allocated at kernel launch, one per kernel. the index  of cmd queue array is Layer ID.
-	for (int i = 0; i < Devices_to_flash.size(); i++)
-	{
-		contexts[i] = new cl::Context(Devices_to_flash[i]);
-	}
+	
 
 	//assert(err == CL_SUCCESS);
 	//std::cout << " Error code after Context:"<< " is ===>" << err << std::endl;
@@ -655,115 +679,49 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	std::cout << "Number of children of root: " << root->children.size() << "\n";
 	
 	// Code for assigning affinity to layers, device numbering starts at 0
-	int device_num = 0;
-	std::string curr, prev;
-	if (model_name.compare("GoogleNet") == 0)
-	{
-		std::queue<struct layersDetails *> q;
-
-		q.push(root);
-
-		while (!q.empty())
-		{
-			int n = q.size();
-
-			while (n > 0)
-			{
-
-				struct layersDetails *p = q.front();
-				q.pop();
-				if (p != NULL)
-				{
-					std::size_t pos = p->layerName.find("Mixed_");
-					if (pos != std::string::npos)
-					{
-						curr = p->layerName.substr(pos, 8);
-						if (prev != curr)
-						{
-							prev = curr;
-							device_num++;
-							p->device_num = device_num;
-						}
-						else
-						{
-							p->device_num = device_num;
-							*cmd_queues[p->layerID] = cl::CommandQueue(*contexts[p->device_num], Devices_to_flash.at(p->device_num)[0]); 
-						}
-					}
-					else
-					{
-						p->device_num = 0;
-						*cmd_queues[p->layerID] = cl::CommandQueue(*contexts[p->device_num], Devices_to_flash.at(p->device_num)[0]); 
-					}
-				}
-				// Enqueue all children of the dequeued item
-				for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
-				{
-					if (*it != NULL)
-						q.push(*it);
-				}
-				n--;
-			}
-		}
-	}
+	
 
 	// Code for Affinity ends
 
 	printCNNTree(root);
-
-	//Print the details of each layers in the network to check their correctness.
-	//print_layersDetails(cnnLayersList);
-
-	//cl::CommandQueue myqueue(mycontext, DeviceList1[0]); //command queue
-	//cl::CommandQueue myqueue1(mycontext, DeviceList1[0]);
-	//cl::CommandQueue myqueue2(mycontext1, DeviceList2[0]);
 	
+	std::string file1 = GoogLeNet_DIR+"Inception"+std::to_string(2*rank)+".aocx";     //first aocx
+	std::string file2 = GoogLeNet_DIR+"Inception"+std::to_string(2*rank+1)+".aocx";   //second aocx
+	
+	char f1[file1.length()];
+	strcpy(f1,file1.c_str());
+	
+	char f2[file2.length()];
+	strcpy(f2,file2.c_str()];
+	
+	std::ifstream aocx_stream(f1, std::ios::in|std::ios::binary);
+        //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
+        std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+        cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
+	cl::Program program1(context1, DeviceList1, mybinaries);
+	err = program1.build(DeviceList1);	
 
-	//assert(err == CL_SUCCESS);
-	//std::cout << " Error code after Cmd Queue:"
-	//<< " is ===>" << err << std::endl;
-	cl::Program *programs[32];
-	/*
-	//std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/simplecnn_openvino/lenet_iter_10000.aocx", std::ios::in|std::ios::binary);
-	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs/dldt/kernels/lenet_iter_10000.aocx", std::ios::in | std::ios::binary);
-	//checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
-	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
-	cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
 
-	cl::Program program(mycontext, DeviceList1, mybinaries);
-	 cl::Program program1(mycontext1, DeviceList2, mybinaries);
+	std::ifstream aocx_stream2(f2, std::ios::in|std::ios::binary);
+        //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
+        std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
+        cl::Program::Binaries mybinaries2 (1, std::make_pair(prog2.c_str(), prog2.length()+1));
+	cl::Program program2(context2, DeviceList2, mybinaries);
+	err = program2.build(DeviceList2);
 
-	err = program.build(DeviceList1);
-	 err = program1.build(DeviceList2);
-	assert(err == CL_SUCCESS);
-	std::cout << " Error code after BUILD:"
-						<< " is ===>" << err << std::endl;
-
-	*/
-	std::vector<std::string> aocx_files;
-	if (model_name.compare("GoogleNet") == 0)
-	{
-		DIR *dirp = opendir(GoogLeNet_DIR);
-		struct dirent *dp;
-		while ((dp = readdir(dirp)) != NULL)
-		{
-			aocx_files.push_back(dp->d_name);
-		}
-		closedir(dirp);
-	}
-
-	for (int i = 0; i < aocx_files.size(); i++)
-	{
-		std::ifstream aocx_stream(aocx_files[i].c_str(), std::ios::in | std::ios::binary);
-
-		std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
-		cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
-		programs[i] = new cl::Program(*contexts[i], Devices_to_flash[i], mybinaries);
-		
-		err = programs[i]->build(Devices_to_flash[i]);
-		std::cout << " Error code after BUILD:"
-				  << " is ===>" << err << std::endl;
-	}
+	std::string file1_xml = GoogLeNet_DIR+"Inception"+std::to_string(2*rank)+".xml";
+	std::string file2_xml = GoogLeNet_DIR+"Inception"+std::to_string(2*rank+1)+".xml";
+	
+	char f1_xml[file1.length()];
+	strcpy(f1,file1_xml.c_str());
+	std::vector<std::string> first_kernels;   //kernels from first aocx
+	xml_parser(f1_xml,first_kernels);
+	
+	char f2_xml[file1.length()];
+	strcpy(f2_xml,file2_xml.c_str());
+	std::vector<std::string> second_kernels;   //kernels from second aocx
+	xml_parser(f2_xml,second_kernels);
+	
 
 	cl::Kernel *kernels[52];
 	int kernel_index = 0;

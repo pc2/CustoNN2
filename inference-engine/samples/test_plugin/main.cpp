@@ -16,7 +16,7 @@
 #include <samples/slog.hpp>
 #include <samples/args_helper.hpp>
 #include "fpga_plugin.cpp"
-
+#include "mpi.h"
 #include "test_plugin.h"
 
 using namespace InferenceEngine;
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
                 "\n\t" << FLAGS_m <<
                 "\n\t" << binFileName <<
         slog::endl;
-
+	MPI_Init(&argc, &argv);
         CNNNetReader networkReader;
         /** Reading network model **/
         networkReader.ReadNetwork(FLAGS_m);
@@ -141,8 +141,9 @@ int main(int argc, char *argv[]) {
 
         double total = 0.0;
         auto t0 = Time::now();
-        
-        fpga_launcher(network,inputModel,imageNames,cnn_model);
+        int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+        fpga_launcher(network,inputModel,imageNames,cnn_model,rank);
         auto t1 = Time::now();
         fsec fs = t1 - t0;
         ms d = std::chrono::duration_cast<ms>(fs);
@@ -160,6 +161,7 @@ int main(int argc, char *argv[]) {
     }
 
     slog::info << "Execution successful" << slog::endl;
+    MPI_Finalize();
     return 0;
 }
 
