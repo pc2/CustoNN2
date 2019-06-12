@@ -496,6 +496,24 @@ __kernel void Mixed_3c_concat(__global float* restrict T_transpose, __global flo
 }
 
 
+__kernel void MaxPool_4a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+  for (int ax1 = 0; ax1 < 480; ++ax1) {
+    for (int ax2 = 0; ax2 < 14; ++ax2) {
+      for (int ax3 = 0; ax3 < 14; ++ax3) {
+        tensor[((((ax1 * 14) + ax2) * 14) + ax3)] = -3.402823e+38f;
+        for (int rv = 0; rv < 3; ++rv) {
+          for (int rv1 = 0; rv1 < 3; ++rv1) {
+            tensor[((((ax1 * 14) + ax2) * 14) + ax3)] = max(tensor[((((ax1 * 14) + ax2) * 14) + ax3)], (float)((((ax2 * 2) < (28 - rv)) && ((ax3 * 2) < (28 - rv1))) ? input0[((((((((ax1 * 14) + ax2) * 2) + rv) * 14) + ax3) * 2) + rv1)] : -3.402823e+38f));
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
 __kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1,
