@@ -1,4 +1,4 @@
-__kernel void InceptionV1_Conv2d_1a_7x7_Conv2D(__global double * restrict img, 
+__kernel void Conv2d_1a_7x7_Conv2D(__global double * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
@@ -45,7 +45,7 @@ __kernel void InceptionV1_Conv2d_1a_7x7_Conv2D(__global double * restrict img,
 }
 
 
-__kernel void InceptionV1_MaxPool_2a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void MaxPool_2a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0){
   for (int ax1 = 0; ax1 < 64; ++ax1) {
     for (int ax2 = 0; ax2 < 56; ++ax2) {
       for (int ax3 = 0; ax3 < 56; ++ax3) {
@@ -60,7 +60,7 @@ __kernel void InceptionV1_MaxPool_2a_3x3_MaxPool(__global float* restrict tensor
   }
 }
 
-__kernel void InceptionV1_Conv2d_2b_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void Conv2d_2b_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 64; ++ff) {
     for (int yy = 0; yy < 56; ++yy) {
       for (int xx = 0; xx < 56; ++xx) {
@@ -75,7 +75,7 @@ __kernel void InceptionV1_Conv2d_2b_1x1_Conv2D(__global float* restrict compute,
 }
 
 
-__kernel void InceptionV1_Conv2d_2c_3x3_Conv2D(__global double * restrict img, 
+__kernel void Conv2d_2c_3x3_Conv2D(__global double * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
@@ -120,7 +120,7 @@ __kernel void InceptionV1_Conv2d_2c_3x3_Conv2D(__global double * restrict img,
   }
 }
 
-__kernel void InceptionV1_MaxPool_3a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void MaxPool_3a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 192; ++ax1) {
     for (int ax2 = 0; ax2 < 28; ++ax2) {
       for (int ax3 = 0; ax3 < 28; ++ax3) {
@@ -135,7 +135,7 @@ __kernel void InceptionV1_MaxPool_3a_3x3_MaxPool(__global float* restrict tensor
   }
 }
 
-__kernel void InceptionV1_Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 64; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -149,7 +149,7 @@ __kernel void InceptionV1_Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1 , __global float* restrict input2) {
+__kernel void Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1 , __global float* restrict input2) {
   for (int ff = 0; ff < 96; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -164,7 +164,7 @@ __kernel void InceptionV1_Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float*
 }
 
 
-__kernel void InceptionV1_Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
@@ -210,7 +210,7 @@ __kernel void InceptionV1_Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double
   }
 }
 
-__kernel void InceptionV1_Mixed_3b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void Mixed_3b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 16; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -224,7 +224,7 @@ __kernel void InceptionV1_Mixed_3b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
@@ -270,13 +270,13 @@ __kernel void InceptionV1_Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global double
   }
 }
 
-__kernel void Padding_InceptionV1_Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+__kernel void Padding_Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 150528; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 192) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))];
   }
 }
 
-__kernel void InceptionV1_Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 192; ++ax1) {
     for (int ax2 = 0; ax2 < 28; ++ax2) {
       for (int ax3 = 0; ax3 < 28; ++ax3) {
@@ -292,7 +292,7 @@ __kernel void InceptionV1_Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
 }
 
 
-__kernel void InceptionV1_Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1 , __global float* restrict input2) {
+__kernel void Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1 , __global float* restrict input2) {
   for (int ff = 0; ff < 32; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -306,14 +306,14 @@ __kernel void InceptionV1_Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_3b_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_3b_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(224 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -175616)] : (float)(192 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -150528)] : (float)(64 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -50176)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256))])));
   }
 }
 
 
-__kernel void InceptionV1_Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1 , __global float* restrict input2) {
+__kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1 , __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff){
     for (int yy = 0; yy < 28; ++yy){
       for (int xx = 0; xx < 28; ++xx) {
@@ -327,7 +327,7 @@ __kernel void InceptionV1_Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1 , __global float* restrict input2) {
+__kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1 , __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -341,7 +341,7 @@ __kernel void InceptionV1_Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                             __global float * restrict weights, 
                             __global float * restrict bias,
                              int number_of_images,     
@@ -388,7 +388,7 @@ __kernel void InceptionV1_Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double
 }
 
 
-__kernel void InceptionV1_Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1,
                   __global float* restrict input2 ){
@@ -407,7 +407,7 @@ for (int ff = 0; ff < 32; ++ff) {
 }
 
 
-__kernel void InceptionV1_Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
@@ -452,7 +452,7 @@ int i,j,k;
   }
 }
 
-__kernel void InceptionV1_Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 256; ++ax1) {
     for (int ax2 = 0; ax2 < 28; ++ax2) {
       for (int ax3 = 0; ax3 < 28; ++ax3) {
@@ -468,7 +468,7 @@ __kernel void InceptionV1_Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
 }
 
 
-__kernel void InceptionV1_Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1,
                   __global float* restrict input2 ){
@@ -489,14 +489,14 @@ for (int ff = 0; ff < 64; ++ff) {
 }
 
 
-__kernel void InceptionV1_Mixed_3c_concat(__global float* restrict T_transpose, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_3c_concat(__global float* restrict T_transpose, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 376320; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float) ((326144 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input0[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -326144)] : (float)((250880 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -250880)] : (float)((100352 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -100352)] : input3[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
   }
 }
 
 
-__kernel void InceptionV1_Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1,
                   __global float* restrict input2 ){
@@ -516,7 +516,7 @@ for (int ff = 0; ff < 192; ++ff) {
   }
 }
 
-__kernel void InceptionV1_Mixed_4b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1,
                   __global float* restrict input2 ){
@@ -537,7 +537,7 @@ for (int ff = 0; ff < 96; ++ff) {
 }
 
 
-__kernel void InceptionV1_Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
@@ -586,7 +586,7 @@ int i,j,k;
 }
 
 
-__kernel void InceptionV1_Mixed_4b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1,
                   __global float* restrict input2 ){
@@ -607,7 +607,7 @@ for (int ff = 0; ff < 16; ++ff) {
 }
 
 
-__kernel void InceptionV1_Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
@@ -655,13 +655,13 @@ int i,j,k;
   }
 }
 
-__kernel void Padding_InceptionV1_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+__kernel void Padding_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 94080; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 480) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
   }
 }
 
-__kernel void InceptionV1_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 480; ++ax1) {
     for (int ax2 = 0; ax2 < 14; ++ax2) {
       for (int ax3 = 0; ax3 < 14; ++ax3) {
@@ -676,7 +676,7 @@ __kernel void InceptionV1_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
   }
 }
 
-__kernel void InceptionV1_Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1,
                   __global float* restrict input2 ){
@@ -697,14 +697,14 @@ for (int ff = 0; ff < 64; ++ff) {
 }
 
 
-__kernel void InceptionV1_Mixed_4b_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_4b_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] : (float)((400 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -78400)] : (float)((192 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -37632)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))])));
   }
 }
 
 
-__kernel void InceptionV1_Mixed_4c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void Mixed_4c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 160; ++ff) {
     for (int yy = 0; yy < 14; ++yy) {
       for (int xx = 0; xx < 14; ++xx) {
@@ -717,7 +717,7 @@ __kernel void InceptionV1_Mixed_4c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1,
                   __global float* restrict input2 ){
@@ -737,7 +737,7 @@ for (int ff = 0; ff < 112; ++ff) {
   }
 }
 
-__kernel void InceptionV1_Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
@@ -785,7 +785,7 @@ int i,j,k;
   }
 }
 
-__kernel void InceptionV1_Mixed_4c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
               __global float* restrict input0, 
               __global float* restrict input1, 
               __global float* restrict input2) {
@@ -802,7 +802,7 @@ __kernel void InceptionV1_Mixed_4c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
               __global float * restrict weights, 
               __global float * restrict bias,
                int number_of_images,     
@@ -846,13 +846,13 @@ __kernel void InceptionV1_Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double
   }
 }
 
-__kernel void Padding_InceptionV1_Mixed_4c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+__kernel void Padding_Mixed_4c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
   }
 }
 
-__kernel void InceptionV1_Mixed_4c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_4c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 512; ++ax1) {
     for (int ax2 = 0; ax2 < 14; ++ax2) {
       for (int ax3 = 0; ax3 < 14; ++ax3) {
@@ -867,7 +867,7 @@ __kernel void InceptionV1_Mixed_4c_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
   }
 }
 
-__kernel void InceptionV1_Mixed_4c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
               __global float* restrict input0, 
               __global float* restrict input1, 
               __global float* restrict input2) {
@@ -884,7 +884,7 @@ __kernel void InceptionV1_Mixed_4c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4c_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_4c_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] : (float)((384 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -75264)] : (float)((160 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -31360)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))])));
   }
@@ -892,7 +892,7 @@ __kernel void InceptionV1_Mixed_4c_concat(__global float* restrict T_concat, __g
 
 
 
-__kernel void InceptionV1_Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1, 
                   __global float* restrict input2) {
@@ -909,7 +909,7 @@ __kernel void InceptionV1_Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                   __global float* restrict input0, 
                   __global float* restrict input1, 
                   __global float* restrict input2) {
@@ -926,7 +926,7 @@ __kernel void InceptionV1_Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
               __global float * restrict weights, 
               __global float * restrict bias,
                int number_of_images,     
@@ -970,7 +970,7 @@ __kernel void InceptionV1_Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global double
   }
 }
 
-__kernel void InceptionV1_Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                       __global float* restrict input0, 
                       __global float* restrict input1, 
                       __global float* restrict input2) {
@@ -987,7 +987,7 @@ __kernel void InceptionV1_Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
@@ -1032,13 +1032,13 @@ __kernel void InceptionV1_Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global double
 }
 
 
-__kernel void Padding_InceptionV1_Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+__kernel void Padding_Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
   }
 }
 
-__kernel void InceptionV1_Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 512; ++ax1) {
     for (int ax2 = 0; ax2 < 14; ++ax2) {
       for (int ax3 = 0; ax3 < 14; ++ax3) {
@@ -1054,7 +1054,7 @@ __kernel void InceptionV1_Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
 }
 
 
-__kernel void InceptionV1_Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
                       __global float* restrict input0, 
                       __global float* restrict input1, 
                       __global float* restrict input2) {
@@ -1072,14 +1072,14 @@ __kernel void InceptionV1_Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
 }
 
 
-__kernel void InceptionV1_Mixed_4d_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_4d_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] : (float)((384 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -75264)] : (float)((128 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -25088)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))])));
   }
 }
 
 
-__kernel void InceptionV1_Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                       __global float* restrict input0, 
                       __global float* restrict input1, 
                       __global float* restrict input2) {
@@ -1096,7 +1096,7 @@ __kernel void InceptionV1_Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4e_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4e_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                       __global float* restrict input0, 
                       __global float* restrict input1, 
                       __global float* restrict input2) {
@@ -1113,7 +1113,7 @@ __kernel void InceptionV1_Mixed_4e_Branch_1_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
@@ -1157,7 +1157,7 @@ __kernel void InceptionV1_Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global double
   }
 }
 
-__kernel void InceptionV1_Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                 __global float* restrict input0, 
                 __global float* restrict input1, 
                 __global float* restrict input2) {
@@ -1174,7 +1174,7 @@ __kernel void InceptionV1_Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
@@ -1219,13 +1219,13 @@ __kernel void InceptionV1_Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global double
 }
 
 
-__kernel void Padding_InceptionV1_Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+__kernel void Padding_Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
   }
 }
 
-__kernel void InceptionV1_Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 512; ++ax1) {
     for (int ax2 = 0; ax2 < 14; ++ax2) {
       for (int ax3 = 0; ax3 < 14; ++ax3) {
@@ -1240,7 +1240,7 @@ __kernel void InceptionV1_Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
   }
 }
 
-__kernel void InceptionV1_Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
                 __global float* restrict input0, 
                 __global float* restrict input1, 
                 __global float* restrict input2) {
@@ -1257,13 +1257,13 @@ __kernel void InceptionV1_Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4e_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_4e_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 103488; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((464 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528)) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 528)) + -90944)] : (float)((400 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 528)) + -78400)] : (float)((112 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 528)) + -21952)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 528))])));
   }
 }
 
-__kernel void InceptionV1_Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                 __global float* restrict input0, 
                 __global float* restrict input1, 
                 __global float* restrict input2) {
@@ -1280,7 +1280,7 @@ __kernel void InceptionV1_Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4f_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4f_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                 __global float* restrict input0, 
                 __global float* restrict input1, 
                 __global float* restrict input2) {
@@ -1298,7 +1298,7 @@ __kernel void InceptionV1_Mixed_4f_Branch_1_Conv2d_0a_1x1_Conv2D(__global float*
 }
 
 
-__kernel void InceptionV1_Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
@@ -1342,7 +1342,7 @@ __kernel void InceptionV1_Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global double
   }
 }
 
-__kernel void InceptionV1_Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                 __global float* restrict input0, 
                 __global float* restrict input1, 
                 __global float* restrict input2) {
@@ -1359,7 +1359,7 @@ __kernel void InceptionV1_Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
@@ -1404,13 +1404,13 @@ __kernel void InceptionV1_Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global double
 }
 
 
-__kernel void Padding_InceptionV1_Mixed_4f_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+__kernel void Padding_Mixed_4f_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 103488; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 528) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
   }
 }
 
-__kernel void InceptionV1_Mixed_4f_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_4f_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 528; ++ax1) {
     for (int ax2 = 0; ax2 < 14; ++ax2) {
       for (int ax3 = 0; ax3 < 14; ++ax3) {
@@ -1426,7 +1426,7 @@ __kernel void InceptionV1_Mixed_4f_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
 }
 
 
-__kernel void InceptionV1_Mixed_4f_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_4f_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, 
                 __global float* restrict input0, 
                 __global float* restrict input1, 
                 __global float* restrict input2) {
@@ -1443,13 +1443,13 @@ __kernel void InceptionV1_Mixed_4f_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_4f_concat(__global float* restrict T_transpose, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_4f_concat(__global float* restrict T_transpose, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 163072; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((137984 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input0[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -137984)] : (float)((112896 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -112896)] : (float)((50176 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -50176)] : input3[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
   }
 }
 
-__kernel void InceptionV1_MaxPool_5a_2x2_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void MaxPool_5a_2x2_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 832; ++ax1) {
     for (int ax2 = 0; ax2 < 7; ++ax2) {
       for (int ax3 = 0; ax3 < 7; ++ax3) {
@@ -1464,7 +1464,7 @@ __kernel void InceptionV1_MaxPool_5a_2x2_MaxPool(__global float* restrict tensor
   }
 }
 
-__kernel void InceptionV1_Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                 __global float* restrict input0, 
                 __global float* restrict input1, 
                 __global float* restrict input2) {
@@ -1481,7 +1481,7 @@ __kernel void InceptionV1_Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
+__kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, 
                 __global float* restrict input0, 
                 __global float* restrict input1, 
                 __global float* restrict input2) {
@@ -1498,7 +1498,7 @@ __kernel void InceptionV1_Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
@@ -1543,7 +1543,7 @@ __kernel void InceptionV1_Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double
 }
 
 
-__kernel void InceptionV1_Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,__global float* restrict input2) {
+__kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,__global float* restrict input2) {
   for (int ff = 0; ff < 32; ++ff) {
     for (int yy = 0; yy < 7; ++yy) {
       for (int xx = 0; xx < 7; ++xx) {
@@ -1557,7 +1557,7 @@ __kernel void InceptionV1_Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global double * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
@@ -1603,13 +1603,13 @@ __kernel void InceptionV1_Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global double
   }
 }
 
-__kernel void Padding_InceptionV1_Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+__kernel void Padding_Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 49) * 832) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49))];
   }
 }
 
-__kernel void InceptionV1_Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 832; ++ax1) {
     for (int ax2 = 0; ax2 < 7; ++ax2) {
       for (int ax3 = 0; ax3 < 7; ++ax3) {
@@ -1624,7 +1624,7 @@ __kernel void InceptionV1_Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
   }
 }
 
-__kernel void InceptionV1_Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,__global float* restrict input2 ) {
+__kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,__global float* restrict input2 ) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 7; ++yy) {
       for (int xx = 0; xx < 7; ++xx) {
@@ -1638,14 +1638,14 @@ __kernel void InceptionV1_Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_5b_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_5b_concat(__global float* restrict T_concat, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((704 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -34496)] : (float)((576 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -28224)] : (float)((256 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -12544)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832))])));
   }
 }
 
 
-__kernel void InceptionV1_Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 384; ++ff) {
     for (int yy = 0; yy < 7; ++yy) {
       for (int xx = 0; xx < 7; ++xx) {
@@ -1659,7 +1659,7 @@ __kernel void InceptionV1_Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,__global float* restrict input2) {
+__kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,__global float* restrict input2) {
   for (int ff = 0; ff < 192; ++ff) {
     for (int yy = 0; yy < 7; ++yy) {
       for (int xx = 0; xx < 7; ++xx) {
@@ -1674,7 +1674,7 @@ __kernel void InceptionV1_Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float*
 }
 
 
-__kernel void InceptionV1_Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
@@ -1721,7 +1721,7 @@ __kernel void InceptionV1_Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double
 }
 
 
-__kernel void InceptionV1_Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 48; ++ff) {
     for (int yy = 0; yy < 7; ++yy) {
       for (int xx = 0; xx < 7; ++xx) {
@@ -1736,7 +1736,7 @@ __kernel void InceptionV1_Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float*
 }
 
 
-__kernel void InceptionV1_Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
@@ -1784,13 +1784,13 @@ __kernel void InceptionV1_Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double
   }
 }
 
-__kernel void Padding_InceptionV1_Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+__kernel void Padding_Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 49) * 832) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49))];
   }
 }
 
-__kernel void InceptionV1_Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 832; ++ax1) {
     for (int ax2 = 0; ax2 < 7; ++ax2) {
       for (int ax3 = 0; ax3 < 7; ++ax3) {
@@ -1805,7 +1805,7 @@ __kernel void InceptionV1_Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool(__global floa
   }
 }
 
-__kernel void InceptionV1_Mixed_5c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,  __global float* restrict input2) {
+__kernel void Mixed_5c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,  __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 7; ++yy) {
       for (int xx = 0; xx < 7; ++xx) {
@@ -1819,13 +1819,13 @@ __kernel void InceptionV1_Mixed_5c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float*
   }
 }
 
-__kernel void InceptionV1_Mixed_5c_concat(__global float* restrict T_transpose, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
+__kernel void Mixed_5c_concat(__global float* restrict T_transpose, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2, __global float* restrict input3) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 50176; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((43904 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input0[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -43904)] : (float)((37632 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -37632)] : (float)((18816 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -18816)] : input3[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
   }
 }
 
-__kernel void InceptionV1_Logits_AvgPool_0a_7x7_AvgPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void Logits_AvgPool_0a_7x7_AvgPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 1024; ++ax1) {
     tensor[ax1] = 0.000000e+00f;
     for (int rv = 0; rv < 7; ++rv) {
@@ -1837,7 +1837,7 @@ __kernel void InceptionV1_Logits_AvgPool_0a_7x7_AvgPool(__global float* restrict
 }
 
 
-__kernel void InceptionV1_Logits_Conv2d_0c_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,  __global float* restrict input2) {
+__kernel void Logits_Conv2d_0c_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,  __global float* restrict input2) {
   for (int ff = 0; ff < 1001; ++ff) {
     compute[ff] = input2[ff];
     for (int rc = 0; rc < 1024; ++rc) {
@@ -1849,13 +1849,13 @@ __kernel void InceptionV1_Logits_Conv2d_0c_1x1_Conv2D(__global float* restrict c
 // TODO InceptionV1/Logits/Conv2d_0c_1x1/Conv2D/Permute_
 
 
-__kernel void InceptionV1_Logits_Predictions_Reshape(__global float* restrict tensor, __global float* restrict input0, __global float* restrict input1) {
+__kernel void Logits_Predictions_Reshape(__global float* restrict tensor, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_inner = 0; ax0_ax1_fused_inner < 1001; ++ax0_ax1_fused_inner) {
     tensor[ax0_ax1_fused_inner] = (input0[ax0_ax1_fused_inner] + input1[ax0_ax1_fused_inner]);
   }
 }
 
-__kernel void InceptionV1_Logits_Predictions_Softmax(__global float* restrict tensor, __global float* restrict input0, __global float* restrict tensor1, __global float* restrict tensor2) {
+__kernel void Logits_Predictions_Softmax(__global float* restrict tensor, __global float* restrict input0, __global float* restrict tensor1, __global float* restrict tensor2) {
   for (int ax1 = 0; ax1 < 1001; ++ax1) {
     tensor[0] = -3.402823e+38f;
     for (int k1 = 0; k1 < 1001; ++k1) {
@@ -1869,7 +1869,7 @@ __kernel void InceptionV1_Logits_Predictions_Softmax(__global float* restrict te
   }
 }
 
-__kernel void InceptionV1_Logits_Predictions_Reshape_1(__global float* restrict T_reshape, __global float* restrict input0) {
+__kernel void Logits_Predictions_Reshape_1(__global float* restrict T_reshape, __global float* restrict input0) {
   for (int ax0_ax1_fused_inner = 0; ax0_ax1_fused_inner < 1001; ++ax0_ax1_fused_inner) {
     T_reshape[ax0_ax1_fused_inner] = input0[ax0_ax1_fused_inner];
   }
