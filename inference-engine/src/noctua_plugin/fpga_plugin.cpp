@@ -930,10 +930,74 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							ch->parentOutBufferIndex=p->layerOutBufferIndex;
 						}
 						buffer_index++;
-						
+					}	
+					else if (p->layerType == "Concat")
+					{
+						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+						assert(err == CL_SUCCESS);
+						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //concat output rows
+						assert(err == CL_SUCCESS);
+						p->layerOutBufferIndex=buffer_index;
+						for(struct layersDetails * ch:p->children){
+							ch->parentOutBufferIndex=p->layerOutBufferIndex;
+						}
+						buffer_index++;
+						//input
+						err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]); //conv 1
+						assert(err == CL_SUCCESS);
+						buffer_index++;
+						err = kernels[kernel_index]->setArg(2, *buffers[buffer_index]); //conv 2
+						assert(err == CL_SUCCESS);
+						buffer_index++;
+						err = kernels[kernel_index]->setArg(3, *buffers[buffer_index]); //conv 3
+						assert(err == CL_SUCCESS);
+						buffer_index++;
 						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
 						kernel_index++;
+						
+						}
+					else if (p->layerType == "Reshape")
+					{
+						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+						assert(err == CL_SUCCESS);
+						if (p->params["layer name"] == "Logits_Predictions_Reshape")
+						{
+							
+							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //reshape output 
+							assert(err == CL_SUCCESS);
+							p->layerOutBufferIndex=buffer_index;
+							for(struct layersDetails * ch:p->children){
+								ch->parentOutBufferIndex=p->layerOutBufferIndex;
+							}
+							buffer_index++;
+							//input
+							err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]); //conv input1
+							assert(err == CL_SUCCESS);
+							buffer_index++;
+							err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]); //conv input2
+							assert(err == CL_SUCCESS);
+							buffer_index++;
+						}
+						
+						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //reshape output 
+						assert(err == CL_SUCCESS);
+						p->layerOutBufferIndex=buffer_index;
+						for(struct layersDetails * ch:p->children){
+							ch->parentOutBufferIndex=p->layerOutBufferIndex;
+						}
+						buffer_index++;
+						//input
+						err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]); //softmax input1
+						assert(err == CL_SUCCESS);
+						buffer_index++;
+						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+						assert(err == CL_SUCCESS);
+						kernel_index++;
+						
+						}				
 					}
 				}
 				// Enqueue all children of the dequeued item
