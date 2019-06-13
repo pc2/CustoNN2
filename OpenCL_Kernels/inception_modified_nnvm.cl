@@ -1,8 +1,8 @@
-__kernel void Conv2d_1a_7x7_Conv2D(__global double * restrict img, 
+__kernel void Conv2d_1a_7x7_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
 
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -16,7 +16,7 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global double * restrict img,
         for (i = 0; i < 224; i+=2){
           for (j = 0; j < 224; j+=2){
         
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 2;
@@ -75,11 +75,11 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float* restrict compute, __global fl
 }
 
 
-__kernel void Conv2d_2c_3x3_Conv2D(__global double * restrict img, 
+__kernel void Conv2d_2c_3x3_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
   
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -92,7 +92,7 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global double * restrict img,
       for(int d=0;d<64;d++){
         for (i = 0; i < 56; i+=1) {
           for (j = 0; j < 56; j+=1) {
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -164,11 +164,11 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict co
 }
 
 
-__kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
   
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -182,7 +182,7 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
         for (i = 0; i < 28; i+=1){
           for (j = 0; j < 28; j+=1) {
         
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -224,11 +224,11 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
   
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -242,7 +242,7 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
         for (i = 0; i < 28; i+=1){
           for (j = 0; j < 28; j+=1){
         
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -341,11 +341,11 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                             __global float * restrict weights, 
                             __global float * restrict bias,
                              int number_of_images,     
-                            __global double * restrict output){
+                            __global float * restrict output){
   
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -359,7 +359,7 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
         for (i = 0; i < 28; i+=1){
           for (j = 0; j < 28; j+=1){
         
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -407,11 +407,11 @@ for (int ff = 0; ff < 32; ++ff) {
 }
 
 
-__kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
-                  __global double * restrict output) {
+                  __global float * restrict output) {
 
 int i,j,k;
   int index, temp_index, filter_index, image_index;
@@ -424,7 +424,7 @@ int i,j,k;
       for(int d=0;d<32;d++){
         for (i = 0; i < 28; i+=1){
           for (j = 0; j < 28; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -555,11 +555,11 @@ for (int ff = 0; ff < 96; ++ff) {
 }
 
 
-__kernel void Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
-                  __global double * restrict output) {
+                  __global float * restrict output) {
 
 int i,j,k;
   int index, temp_index, filter_index, image_index;
@@ -572,7 +572,7 @@ int i,j,k;
       for(int d=0;d<96;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -625,11 +625,11 @@ for (int ff = 0; ff < 16; ++ff) {
 }
 
 
-__kernel void Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
-                  __global double * restrict output) {
+                  __global float * restrict output) {
 
 int i,j,k;
   int index, temp_index, filter_index, image_index;
@@ -642,7 +642,7 @@ int i,j,k;
       for(int d=0;d<16;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -755,11 +755,11 @@ for (int ff = 0; ff < 112; ++ff) {
   }
 }
 
-__kernel void Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
-                  __global double * restrict output) {
+                  __global float * restrict output) {
 
 int i,j,k;
   int index, temp_index, filter_index, image_index;
@@ -772,7 +772,7 @@ int i,j,k;
       for(int d=0;d<112;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -820,11 +820,11 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
               __global float * restrict weights, 
               __global float * restrict bias,
                int number_of_images,     
-              __global double * restrict output){
+              __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -836,7 +836,7 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
       for(int d=0;d<24;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -944,11 +944,11 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
               __global float * restrict weights, 
               __global float * restrict bias,
                int number_of_images,     
-              __global double * restrict output){
+              __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -960,7 +960,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
       for(int d=0;d<128;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1005,11 +1005,11 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
-                      __global double * restrict output){
+                      __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -1021,7 +1021,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
       for(int d=0;d<24;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1131,11 +1131,11 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
-                      __global double * restrict output){
+                      __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -1147,7 +1147,7 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
       for(int d=0;d<144;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1192,11 +1192,11 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
-                      __global double * restrict output){
+                      __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -1208,7 +1208,7 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
       for(int d=0;d<32;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1316,11 +1316,11 @@ __kernel void Mixed_4f_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict co
 }
 
 
-__kernel void Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
-                      __global double * restrict output){
+                      __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -1332,7 +1332,7 @@ __kernel void Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
       for(int d=0;d<160;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1377,11 +1377,11 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
-                      __global double * restrict output){
+                      __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -1393,7 +1393,7 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
       for(int d=0;d<32;d++){
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1516,11 +1516,11 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                       __global float * restrict weights, 
                       __global float * restrict bias,
                        int number_of_images,     
-                      __global double * restrict output){
+                      __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -1532,7 +1532,7 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
       for(int d=0;d<160;d++){
         for (i = 0; i < 7; i+=1){
           for (j = 0; j < 7; j+=1){
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1575,11 +1575,11 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
   
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -1593,7 +1593,7 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global double * restrict 
         for (i = 0; i < 7; i+=1) {
           for (j = 0; j < 7; j+=1) {
         
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1692,11 +1692,11 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict co
 }
 
 
-__kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
   
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -1710,7 +1710,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
         for (i = 0; i < 7; i+=1) {
           for (j = 0; j < 7; j+=1) {
         
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -1754,11 +1754,11 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
 }
 
 
-__kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
   
 
   //printf("Inside conv layer\n");
@@ -1774,7 +1774,7 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
         for (i = 0; i < 7; i+=1){
           for (j = 0; j < 7; j+=1) {
         
-            double temp_conv_val = bias[layer];
+            float temp_conv_val = bias[layer];
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
