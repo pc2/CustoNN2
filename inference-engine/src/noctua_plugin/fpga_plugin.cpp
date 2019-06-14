@@ -48,6 +48,7 @@ struct layersDetails
 	std::vector<int> parentOutBufferIndex;
 	// Output dimension
 	int outH = 0, outW = 0, outDepth = 0;
+	int visited = 0;
 };
 
 unsigned char *images;
@@ -944,12 +945,51 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 					}
 					else if (p->layerType == "Concat")
 					{
+						if(!p->visited)
+						{
+							kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+							assert(err == CL_SUCCESS);
+							std::cout<<"Concat Parents:"<<p->parentOutBufferIndex.size()<<std::endl;
+							std::cout << "output\n";
+							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //concat output rows
+							assert(err == CL_SUCCESS);
+							p->layerOutBufferIndex = buffer_index;
+							for (struct layersDetails *ch : p->children)
+							{
+								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
+							}
+							buffer_index++;
+							std::cout << "conv1\n";
+							//input
+							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //conv 1
+							assert(err == CL_SUCCESS);
+							buffer_index++;
+							std::cout << "conv2\n";
+							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(1)]); //conv 2
+							assert(err == CL_SUCCESS);
+							buffer_index++;
+							std::cout << "conv3\n";
+							err = kernels[kernel_index]->setArg(3, *buffers[p->parentOutBufferIndex.at(2)]); //conv 3
+							assert(err == CL_SUCCESS);
+							buffer_index++;
+							std::cout << "conv4\n";
+							err = kernels[kernel_index]->setArg(4, *buffers[p->parentOutBufferIndex.at(3)]); //conv 2
+							assert(err == CL_SUCCESS);
+							buffer_index++;
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+							assert(err == CL_SUCCESS);
+							kernel_index++;
+							p->visited = 1;
+						}
+					}
+					else if(p->layerType == "SoftMax")
+					{	
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 						assert(err == CL_SUCCESS);
-						std::cout<<"Concat Parents:"<<p->parentOutBufferIndex.size()<<std::endl;
-						std::cout << "output\n";
 						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
-						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //concat output rows
+						err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]); //softmax output
 						assert(err == CL_SUCCESS);
 						p->layerOutBufferIndex = buffer_index;
 						for (struct layersDetails *ch : p->children)
@@ -957,24 +997,16 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
 						}
 						buffer_index++;
-						std::cout << "conv1\n";
 						//input
-						err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //conv 1
-						assert(err == CL_SUCCESS);
-						buffer_index++;
-						std::cout << "conv2\n";
-						err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(1)]); //conv 2
-						assert(err == CL_SUCCESS);
-						buffer_index++;
-						std::cout << "conv3\n";
-						err = kernels[kernel_index]->setArg(3, *buffers[p->parentOutBufferIndex.at(2)]); //conv 3
+						err = kernels[kernel_index]->setArg(0, *buffers[p->parentOutBufferIndex.at(0)]); //reshape input1
 						assert(err == CL_SUCCESS);
 						buffer_index++;
 						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
-						kernel_index++;
-					}
+						kernel_index++;	
+						
+						}
 					else if (p->layerType == "Reshape")
 					{
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
@@ -1019,7 +1051,10 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							kernel_index++;
 						}
 						else
+						{
 							std::cout << " No supporting Reshape layer" << std::endl;
+						}
+					
 					}
 				}
 				// Enqueue all children of the dequeued item
