@@ -962,8 +962,14 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							//input
 							err = kernels[kernel_index]->setArg(1, *buffers[padding_input_index]); //first argument, input, also the output of the previous layer
 							assert(err == CL_SUCCESS);
-							buffer_index++;
 							std::cout << "images passed\n";
+							buffer_index++;
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
+							
+							
 							kernel_index++;
 							p->visited = 1;
 							
@@ -1046,7 +1052,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						{
 							kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 							assert(err == CL_SUCCESS);
-							std::cout<<"Concat Parents:"<<p->parentOutBufferIndex.size()<<std::endl;
+							std::cout<<"Concat Parents:"<<p->parents.size()<<std::endl;
 							std::cout << "output\n";
 							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //concat output rows
@@ -1059,19 +1065,19 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							buffer_index++;
 							std::cout << "conv1\n";
 							//input
-							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //conv 1
+							err = kernels[kernel_index]->setArg(1, *buffers[p->parents.at(0)->layerOutBufferIndex]); //conv 1
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv2\n";
-							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(0)]); //conv 2
+							err = kernels[kernel_index]->setArg(2, *buffers[p->parents.at(1)->layerOutBufferIndex]); //conv 2
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv3\n";
-							err = kernels[kernel_index]->setArg(3, *buffers[p->parentOutBufferIndex.at(0)]); //conv 3
+							err = kernels[kernel_index]->setArg(3, *buffers[p->parents.at(2)->layerOutBufferIndex]); //conv 3
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv4\n";
-							err = kernels[kernel_index]->setArg(4, *buffers[p->parentOutBufferIndex.at(0)]); //conv 4
+							err = kernels[kernel_index]->setArg(4, *buffers[p->parents.at(3)->layerOutBufferIndex]); //conv 4
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
