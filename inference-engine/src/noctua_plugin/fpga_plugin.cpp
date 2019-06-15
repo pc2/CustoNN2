@@ -197,7 +197,7 @@ void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwo
 		imageIndex++;
 	}
 	std::cout << "Images Pixel: " << std::endl;
-	printImage(images, num_images, dim_x, dim_y);
+	//printImage(images, num_images, dim_x, dim_y);
 }
 
 /**
@@ -793,6 +793,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "biases passed\n";
+							
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							assert(err == CL_SUCCESS);
+
+							err = cmd_queues[p->layerID]->finish();
+							assert(err == CL_SUCCESS);
 						}
 						else
 						{
@@ -848,14 +854,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
 							std::cout << " Error code soon after conv layer for kernel:" << kernel_index << " is ===>" << err << std::endl;
+							err = cmd_queues[p->layerID]->finish();
+							assert(err == CL_SUCCESS);
 							kernel_index++;
 						}
-
-						assert(err == CL_SUCCESS);
-
 						std::cout << " Error code  after conv layer finish for kernel:" << kernel_index << " is ===>" << err << std::endl;
-
-						num_pixels *= num_filters;
 					}
 					else if (p->layerType == "Pooling")
 					{
@@ -906,6 +909,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
+						cmd_queues[p->layerID]->finish();
 						kernel_index++;
 					}
 					else if (p->layerType == "FullyConnected")
@@ -942,6 +946,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
 						}
 						buffer_index++;
+						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
+							kernel_index++;
 					}
 					else if (p->layerType == "Concat")
 					{
@@ -966,20 +975,21 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv2\n";
-							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(1)]); //conv 2
+							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(0)]); //conv 2
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv3\n";
-							err = kernels[kernel_index]->setArg(3, *buffers[p->parentOutBufferIndex.at(2)]); //conv 3
+							err = kernels[kernel_index]->setArg(3, *buffers[p->parentOutBufferIndex.at(0)]); //conv 3
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv4\n";
-							err = kernels[kernel_index]->setArg(4, *buffers[p->parentOutBufferIndex.at(3)]); //conv 2
+							err = kernels[kernel_index]->setArg(4, *buffers[p->parentOutBufferIndex.at(0)]); //conv 4
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
 							kernel_index++;
 							p->visited = 1;
 						}
@@ -1004,6 +1014,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
+						cmd_queues[p->layerID]->finish();
 						kernel_index++;	
 						
 						}
@@ -1029,6 +1040,10 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(1)]); //conv input2
 							assert(err == CL_SUCCESS);
 							buffer_index++;
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
 						}
 						else if (p->layerName == "Logits_Predictions_Reshape_1")
 						{
@@ -1048,6 +1063,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
 							kernel_index++;
 						}
 						else
