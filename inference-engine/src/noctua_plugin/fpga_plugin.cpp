@@ -52,7 +52,7 @@ struct layersDetails
 };
 
 unsigned char *images;
-int num_images, dim_x, dim_y;
+int num_images, dim_x, dim_y,dim_depth;
 
 bool isLayerSupported(std::string layer_name)
 {
@@ -180,6 +180,7 @@ void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwo
 		dim_x = inputInfoItem.second->getTensorDesc().getDims()[3];
 		dim_y = inputInfoItem.second->getTensorDesc().getDims()[2];
 		size_t channels_number = inputInfoItem.second->getTensorDesc().getDims()[1];
+		dim_depth = inputInfoItem.second->getTensorDesc().getDims()[1];
 		size_t image_size = inputInfoItem.second->getTensorDesc().getDims()[3] * inputInfoItem.second->getTensorDesc().getDims()[2];
 
 		if (imagesData.empty())
@@ -704,8 +705,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//std::cout<<"Images array size: "<<sizeof(images)/sizeof(images[0])<<"\n";
 
 	//Input image buffer is always mapped to 1st device context(Device ID =0)
-	buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * num_images);
-	err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar) * dim_x * dim_y * num_images, images); //images buffer
+	buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * dim_depth * num_images);
+	err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar) * dim_x * dim_y * dim_depth * num_images, images); //images buffer
 	assert(err == CL_SUCCESS);
 	err = cmd_queues[0]->finish();
 	std::cout << " Error code after image transfer:" << kernel_index << " is ===>" << err << std::endl;
