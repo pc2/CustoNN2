@@ -1,4 +1,4 @@
-__kernel void Conv2d_1a_7x7_Conv2D(__global float * restrict img, 
+__kernel void Conv2d_1a_7x7_Conv2D(__global unsigned char * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
