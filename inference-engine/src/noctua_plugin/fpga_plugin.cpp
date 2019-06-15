@@ -44,6 +44,8 @@ struct layersDetails
 	std::vector<std::string> inputLayerNames;
 	std::vector<std::string> outputLayerNames;
 	std::vector<struct layersDetails *> children;
+	std::vector<struct layersDetails *> parents;
+	
 	int layerOutBufferIndex = 0;
 	std::vector<int> parentOutBufferIndex;
 	// Output dimension
@@ -321,7 +323,7 @@ struct layersDetails *parse_root(InferenceEngine::CNNNetwork network)
 				//return -1;
 			}
 			std::cout << "Parsing Kernel:"
-					  << "  --- " << layer->name << std::endl;
+					  << "  --- " << root->layerName << std::endl;
 			//Insert the Input Layer Names into the vector
 			int inLayer = 0;
 			for (auto &src : layer->insData)
@@ -371,6 +373,7 @@ struct layersDetails *parse_root(InferenceEngine::CNNNetwork network)
 					}
 				}
 			}
+			std::cout<<root->layerName<<" parsed\n";
 			return root;
 			//break;
 		}
@@ -417,7 +420,7 @@ struct layersDetails *findbyID(struct layersDetails *root, int id)
 	return NULL;
 }
 
-struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::string layer_name, struct layersDetails *root)
+struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::string layer_name, struct layersDetails *root,struct layersDetails *parent)
 {
 	const char *l_name = layer_name.c_str();
 	//std::cout << "For layer name: " << l_name << "\n";
@@ -430,6 +433,7 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 		if (isDuplicate(ID))
 		{
 			struct layersDetails *child = findbyID(root, ID);
+			child->parents.push_back(parent);
 			return child;
 		}
 		else
@@ -511,9 +515,10 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 
 			for (std::vector<std::string>::iterator it = child->outputLayerNames.begin(); it != child->outputLayerNames.end(); ++it)
 			{
-				child->children.push_back(parse_child(network, *it, root));
+				child->children.push_back(parse_child(network, *it, root, child));
 			}
-
+			child->parents.push_back(parent);
+			std::cout<<child->layerName<<" parsed\n";
 			return child;
 		}
 	}
@@ -528,7 +533,7 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 		}
 		//std::cout<<"Unsupported Layer name: "<<layer->type<<" outputs vector size: "<<temp.outputLayerNames.size()<<" Child of this layer "<<temp.outputLayerNames.front()<<"\n";
 		if (temp.outputLayerNames.size() > 0)
-			return parse_child(network, temp.outputLayerNames.front(), root);
+			return parse_child(network, temp.outputLayerNames.front(), root,parent);
 		else
 			return NULL;
 	}
@@ -671,7 +676,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	{
 		for (std::vector<std::string>::iterator it = root->outputLayerNames.begin(); it != root->outputLayerNames.end(); ++it)
 		{
-			root->children.push_back(parse_child(network, *it, root));
+			root->children.push_back(parse_child(network, *it, root,root));
 		}
 	}
 
@@ -849,6 +854,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							assert(err == CL_SUCCESS);
 							std::cout << " Error code soon after conv layer for kernel:" << kernel_index << " is ===>" << err << std::endl;
 							kernel_index++;
+							p->visited = 1;
 						}
 
 						assert(err == CL_SUCCESS);
@@ -885,6 +891,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							buffer_index++;
 							std::cout << "images passed\n";
 							kernel_index++;
+							p->visited = 1;
 							
 						}
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
@@ -907,6 +914,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
 						kernel_index++;
+						p->visited = 1;
 					}
 					else if (p->layerType == "FullyConnected")
 					{
@@ -945,7 +953,16 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 					}
 					else if (p->layerType == "Concat")
 					{
-						if(!p->visited)
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if(ch->visited==1)
+							{
+								flag_parents++;
+							}
+						}
+						
+						if(!p->visited&&flag_parents==p->parents.size())
 						{
 							kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 							assert(err == CL_SUCCESS);
@@ -1004,7 +1021,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
-						kernel_index++;	
+						kernel_index++;
+						p->visited = 1;	
 						
 						}
 					else if (p->layerType == "Reshape")
@@ -1029,6 +1047,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(1)]); //conv input2
 							assert(err == CL_SUCCESS);
 							buffer_index++;
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+							assert(err == CL_SUCCESS);
+							kernel_index++;
+							p->visited = 1;
 						}
 						else if (p->layerName == "Logits_Predictions_Reshape_1")
 						{
@@ -1049,6 +1072,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
 							kernel_index++;
+							p->visited = 1; 
+							
 						}
 						else
 						{
