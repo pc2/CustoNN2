@@ -45,7 +45,7 @@ struct layersDetails
 	std::vector<std::string> outputLayerNames;
 	std::vector<struct layersDetails *> children;
 	std::vector<struct layersDetails *> parents;
-	
+	int dummy = 0;
 	int layerOutBufferIndex = 0;
 	std::vector<int> parentOutBufferIndex;
 	// Output dimension
@@ -54,7 +54,7 @@ struct layersDetails
 };
 
 unsigned char *images;
-int num_images, dim_x, dim_y;
+int num_images, dim_x, dim_y,dim_depth;
 
 bool isLayerSupported(std::string layer_name)
 {
@@ -182,6 +182,7 @@ void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwo
 		dim_x = inputInfoItem.second->getTensorDesc().getDims()[3];
 		dim_y = inputInfoItem.second->getTensorDesc().getDims()[2];
 		size_t channels_number = inputInfoItem.second->getTensorDesc().getDims()[1];
+		dim_depth = inputInfoItem.second->getTensorDesc().getDims()[1];
 		size_t image_size = inputInfoItem.second->getTensorDesc().getDims()[3] * inputInfoItem.second->getTensorDesc().getDims()[2];
 
 		if (imagesData.empty())
@@ -199,7 +200,7 @@ void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwo
 		imageIndex++;
 	}
 	std::cout << "Images Pixel: " << std::endl;
-	printImage(images, num_images, dim_x, dim_y);
+	//printImage(images, num_images, dim_x, dim_y);
 }
 
 /**
@@ -383,13 +384,13 @@ struct layersDetails *parse_root(InferenceEngine::CNNNetwork network)
 	return NULL;
 }
 
-// Level order traversal to find node with particular ID
-struct layersDetails *findbyID(struct layersDetails *root, int id)
+void findbyID(struct layersDetails *root, int id, struct layersDetails *parent)
 {
-	if (root == NULL)
-		return NULL;
+	
+		//return NULL;
 
-	std::queue<struct layersDetails *> q;
+	std::queue <struct layersDetails *> q;
+
 
 	q.push(root);
 
@@ -404,8 +405,9 @@ struct layersDetails *findbyID(struct layersDetails *root, int id)
 			q.pop();
 			if (p != NULL)
 			{
-				if (p->layerID == id)
-					return p;
+				//std::cout<<"Current ID: "<<p->layerID<<"\n";
+				if (p->layerID == id&&p->layerName!="dummy")
+					p->parents.push_back(parent);
 			}
 			// Enqueue all children of the dequeued item
 			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
@@ -417,7 +419,58 @@ struct layersDetails *findbyID(struct layersDetails *root, int id)
 		}
 	}
 
-	return NULL;
+	//return NULL;
+}
+
+void remove_dummy_child(struct layersDetails *node)
+{
+	for(int i=0;i<node->children.size();i++)
+	{
+		if(node->children.at(i)->layerName=="dummy")
+		{
+			node->children.erase(node->children.begin()+i);
+		}
+	}	
+
+}
+
+
+// Level order traversal to find node with particular ID
+void find_missing_duplicates(struct layersDetails *root)
+{
+	std::queue<struct layersDetails *> q;
+	//std::cout<<"ID to search: "<<id<<"\n";
+	q.push(root);
+	while (!q.empty())
+	{
+		int n = q.size();
+
+		while (n > 0)
+		{
+			struct layersDetails *p = q.front();
+			q.pop();
+			if (p != NULL)
+			{
+				//std::cout << p->layerID << " -- " << p->layerName << " -- " << p->layerType << std::endl;
+				if(p->layerName=="dummy")
+					{
+						//p->parents.at(0)->children.push_back(findbyID(root,p->layerID));
+						//remove_dummy_child(p->parents.at(0));
+						findbyID(root,p->layerID,p->parents.at(0));
+					}
+				//std::cout <<"\t OutDim H:"<< p->outH << " -- W:" << p->outW << " -- D:" << p->outDepth << std::endl;
+				//std::cout << "\t Num of childrens:" << p->children.size()<<std::endl;
+			}
+			// Enqueue all children of the dequeued item
+			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
+			{
+				if (*it != NULL)
+					q.push(*it);
+			}
+			n--;
+		}
+	}
+	//return NULL;
 }
 
 struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::string layer_name, struct layersDetails *root,struct layersDetails *parent)
@@ -430,11 +483,19 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 	{
 		auto search = layerIDMap.find(layer_name);
 		int ID = search->second;
+		std::cout<<"Inside Layer: "<<layer_name<<"\n";
+		std::cout<<"Duplicate ? "<<isDuplicate(ID)<<"\n";
 		if (isDuplicate(ID))
 		{
-			struct layersDetails *child = findbyID(root, ID);
+			//std::cout<<"No of children of root: "<<root->children.size()<<"\n";
+			//struct layersDetails *child = findbyID(parent->parents.at(0), ID);
+			struct layersDetails *child = new layersDetails;
+			child->layerID = ID;
+			child->layerName = "dummy";
+			child->dummy = 1;
 			child->parents.push_back(parent);
 			return child;
+			
 		}
 		else
 		{
@@ -451,6 +512,7 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 			child->outH = static_cast<int>(layer->outData[0]->getTensorDesc().getDims()[3]);
 			child->outW = static_cast<int>(layer->outData[0]->getTensorDesc().getDims()[2]);
 			child->outDepth = static_cast<int>(layer->outData[0]->getTensorDesc().getDims()[1]);
+			std::cout<<"Basic layer info set\n";
 			//Search the Layer ID in the Map
 			auto search = layerIDMap.find(layer->name);
 			if (search != layerIDMap.end())
@@ -462,7 +524,7 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 				std::cerr << " Layer ID of the layer: '" << layer->name << "' NOT FOUND" << std::endl;
 				//return -1;
 			}
-
+			std::cout<<"Layer ID set\n";
 			ID_list.push_back(child->layerID);
 			//Insert the Input Layer Names into the vector
 			int inLayer = 0;
@@ -476,14 +538,14 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 					inLayer++;
 				}
 			}
-
+			std::cout<<"Input layer names set\n";
 			int outLayer = 0;
 			for (auto it : layer->outData[0]->getInputTo())
 			{
 				child->outputLayerNames.push_back(it.second->name);
 				outLayer++;
 			}
-
+			std::cout<<"Output layer names set\n";
 			//store the bias and weights
 			for (auto const &x : layer->blobs)
 			{
@@ -512,13 +574,14 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 					}
 				}
 			}
-
+			std::cout<<"Weights and biases set\n";
+			child->parents.push_back(parent);
 			for (std::vector<std::string>::iterator it = child->outputLayerNames.begin(); it != child->outputLayerNames.end(); ++it)
 			{
 				child->children.push_back(parse_child(network, *it, root, child));
 			}
-			child->parents.push_back(parent);
-			std::cout<<child->layerName<<" parsed\n";
+			
+			std::cout<<child->layerName<<" parsed\n\n";
 			return child;
 		}
 	}
@@ -558,6 +621,7 @@ void printCNNTree(layersDetails *root)
 				std::cout << p->layerID << " -- " << p->layerName << " -- " << p->layerType << std::endl;
 				std::cout <<"\t OutDim H:"<< p->outH << " -- W:" << p->outW << " -- D:" << p->outDepth << std::endl;
 				std::cout << "\t Num of childrens:" << p->children.size()<<std::endl;
+				std::cout<<"\t Num of parents: "<<p->parents.size()<<std::endl;
 			}
 			// Enqueue all children of the dequeued item
 			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
@@ -681,6 +745,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	}
 
 	std::cout << "Number of children of root: " << root->children.size() << "\n";
+	
+	find_missing_duplicates(root);
 
 	printCNNTree(root);
 
@@ -709,8 +775,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//std::cout<<"Images array size: "<<sizeof(images)/sizeof(images[0])<<"\n";
 
 	//Input image buffer is always mapped to 1st device context(Device ID =0)
-	buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * num_images);
-	err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar) * dim_x * dim_y * num_images, images); //images buffer
+	buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * dim_depth * num_images);
+	err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar) * dim_x * dim_y * dim_depth * num_images, images); //images buffer
 	assert(err == CL_SUCCESS);
 	err = cmd_queues[0]->finish();
 	std::cout << " Error code after image transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -798,13 +864,24 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "biases passed\n";
+							
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							assert(err == CL_SUCCESS);
+
+							err = cmd_queues[p->layerID]->finish();
+							assert(err == CL_SUCCESS);
 						}
 						else
 						{
 							//Conv layers with padding (manually written kernels)
 
 							//input
-							err = kernels[kernel_index]->setArg(0, *buffers[p->parentOutBufferIndex.at(0)]); //first argument, input, also the output of the previous layer
+							int buf_index_first_layer = 0;
+							if(p->parents.size()==0)
+								buf_index_first_layer = 0;
+							else
+								buf_index_first_layer = p->parentOutBufferIndex.at(0);
+							err = kernels[kernel_index]->setArg(0, *buffers[buf_index_first_layer]); //first argument, input, also the output of the previous layer
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "images passed\n";
@@ -853,15 +930,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
 							std::cout << " Error code soon after conv layer for kernel:" << kernel_index << " is ===>" << err << std::endl;
+							err = cmd_queues[p->layerID]->finish();
+							assert(err == CL_SUCCESS);
 							kernel_index++;
 							p->visited = 1;
 						}
-
-						assert(err == CL_SUCCESS);
-
 						std::cout << " Error code  after conv layer finish for kernel:" << kernel_index << " is ===>" << err << std::endl;
-
-						num_pixels *= num_filters;
 					}
 					else if (p->layerType == "Pooling")
 					{
@@ -913,6 +987,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
+						cmd_queues[p->layerID]->finish();
 						kernel_index++;
 						p->visited = 1;
 					}
@@ -950,6 +1025,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
 						}
 						buffer_index++;
+						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
+							kernel_index++;
 					}
 					else if (p->layerType == "Concat")
 					{
@@ -983,20 +1063,21 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv2\n";
-							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(1)]); //conv 2
+							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(0)]); //conv 2
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv3\n";
-							err = kernels[kernel_index]->setArg(3, *buffers[p->parentOutBufferIndex.at(2)]); //conv 3
+							err = kernels[kernel_index]->setArg(3, *buffers[p->parentOutBufferIndex.at(0)]); //conv 3
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "conv4\n";
-							err = kernels[kernel_index]->setArg(4, *buffers[p->parentOutBufferIndex.at(3)]); //conv 2
+							err = kernels[kernel_index]->setArg(4, *buffers[p->parentOutBufferIndex.at(0)]); //conv 4
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
 							kernel_index++;
 							p->visited = 1;
 						}
@@ -1021,8 +1102,13 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 						//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 						assert(err == CL_SUCCESS);
+
 						kernel_index++;
 						p->visited = 1;	
+
+						cmd_queues[p->layerID]->finish();
+						kernel_index++;	
+
 						
 						}
 					else if (p->layerType == "Reshape")
@@ -1050,8 +1136,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
+
 							kernel_index++;
 							p->visited = 1;
+
+							cmd_queues[p->layerID]->finish();
+
 						}
 						else if (p->layerName == "Logits_Predictions_Reshape_1")
 						{
@@ -1071,6 +1161,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
 							kernel_index++;
 							p->visited = 1; 
 							
