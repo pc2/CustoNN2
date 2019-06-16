@@ -1,6 +1,6 @@
 # Performance Modelling for Inception 3b
 
-
+MAC = Multiply and Accumulate are considered as 2 different Operations.
 
 # For 1 image 
 All are approximate values.
