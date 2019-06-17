@@ -1,3 +1,4 @@
+
 __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 384; ++ff) {
     for (int yy = 0; yy < 7; ++yy) {
@@ -27,11 +28,11 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float* restrict co
 }
 
 
-__kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
   
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -41,11 +42,12 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
   image_size = 7*7;
   for (image_number = 0; image_number < number_of_images; image_number++){
     for (layer = 0; layer <384; layer++){
-      for(int d=0;d<192;d++){
+	float temp_conv_val = bias[layer];
+      
         for (i = 0; i < 7; i+=1) {
           for (j = 0; j < 7; j+=1) {
-        
-            double temp_conv_val = bias[layer];
+        	for(int d=0;d<192;d++){
+            
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -64,11 +66,12 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict 
               PaddedY=j;
               paderY = j - 1;
             }
+		}
             output[index] = (temp_conv_val>0) ? temp_conv_val : 0;
             index++;
           }
         }
-      }
+      
     }
   }
 }
@@ -89,11 +92,11 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
 }
 
 
-__kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
         __global float * restrict weights, 
         __global float * restrict bias,
          int number_of_images,     
-        __global double * restrict output){
+        __global float * restrict output){
   
 
   //printf("Inside conv layer\n");
@@ -105,11 +108,12 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
   image_size = 7*7;
   for (image_number = 0; image_number < number_of_images; image_number++){
     for (layer = 0; layer <128; layer++) {
-      for(int d=0;d<128;d++){
+	float temp_conv_val = bias[layer];
+      
         for (i = 0; i < 7; i+=1){
           for (j = 0; j < 7; j+=1) {
-        
-            double temp_conv_val = bias[layer];
+        	for(int d=0;d<128;d++){
+            
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -128,11 +132,12 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
               PaddedY=j;
               paderY = j - 1;
             }
+		}
             output[index] = (temp_conv_val>0) ? temp_conv_val : 0;
             index++;
           }
         }
-      }
+      
     }
   }
 }
@@ -208,17 +213,19 @@ __kernel void Logits_Predictions_Reshape(__global float* restrict tensor, __glob
   }
 }
 
-__kernel void Logits_Predictions_Softmax(__global float* restrict tensor, __global float* restrict input0, __global float* restrict tensor1, __global float* restrict tensor2) {
+__kernel void Logits_Predictions_Softmax(__global float* restrict input0, 
+					__global float* restrict tensor2) {
+  float tensor,tensor1;
   for (int ax1 = 0; ax1 < 1001; ++ax1) {
-    tensor[0] = -3.402823e+38f;
+    tensor = -3.402823e+38f;
     for (int k1 = 0; k1 < 1001; ++k1) {
-      tensor[0] = max(tensor[0], input0[k1]);
+      tensor = max(tensor, input0[k1]);
     }
-    tensor1[0] = 0.000000e+00f;
+    tensor= 0.000000e+00f;
     for (int k2 = 0; k2 < 1001; ++k2) {
-      tensor1[0] = (tensor1[0] + exp((input0[k2] - tensor[0])));
+      tensor1 = (tensor1 + exp((input0[k2] - tensor)));
     }
-    tensor2[ax1] = (exp((input0[ax1] - tensor[0])) / tensor1[0]);
+    tensor2[ax1] = (exp((input0[ax1] - tensor)) / tensor1);
   }
 }
 

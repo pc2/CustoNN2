@@ -31,11 +31,11 @@ for (int ff = 0; ff < 112; ++ff) {
   }
 }
 
-__kernel void Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
                   __global float * restrict weights, 
                   __global float * restrict bias,
                   int number_of_images,    
-                  __global double * restrict output) {
+                  __global float * restrict output) {
 
 int i,j,k;
   int index, temp_index, filter_index, image_index;
@@ -45,10 +45,11 @@ int i,j,k;
   image_size = 14 * 14;
   for (image_number = 0; image_number < number_of_images; image_number++){
     for (layer = 0; layer <224; layer++){
-      for(int d=0;d<112;d++){
+	float temp_conv_val = bias[layer];
+      
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            for(int d=0;d<112;d++){
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -70,11 +71,12 @@ int i,j,k;
                     PaddedY=j;
               paderY = j - 1;
             }
+		}
             output[index] = (temp_conv_val>0) ? temp_conv_val : 0;
             index++;
           }
         }
-      }
+      
     }
   }
 }
@@ -96,11 +98,11 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict co
   }
 }
 
-__kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict img, 
+__kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict img, 
               __global float * restrict weights, 
               __global float * restrict bias,
                int number_of_images,     
-              __global double * restrict output){
+              __global float * restrict output){
   int i,j,k;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -109,10 +111,11 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
   image_size = 14 * 14;
   for (image_number = 0; image_number < number_of_images; image_number++){
     for (layer = 0; layer <64; layer++){
-      for(int d=0;d<24;d++){
+	float temp_conv_val = bias[layer];
+      
         for (i = 0; i < 14; i+=1){
           for (j = 0; j < 14; j+=1){
-            double temp_conv_val = bias[layer];
+            for(int d=0;d<24;d++){
             int PaddedX = i;
             int PaddedY = j;
             int paderX = i - 1;
@@ -131,11 +134,12 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global double * restrict 
                     PaddedY=j;
               paderY = j - 1;
             }
+		}
             output[index] = (temp_conv_val>0) ? temp_conv_val : 0;
             index++;
           }
         }
-      }
+      
     }
   }
 }
@@ -183,6 +187,5 @@ __kernel void Mixed_4c_concat(__global float* restrict T_concat, __global float*
     T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] : (float)((384 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -75264)] : (float)((160 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -31360)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))])));
   }
 }
-
 
 
