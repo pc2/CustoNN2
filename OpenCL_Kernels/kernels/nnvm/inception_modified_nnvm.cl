@@ -1748,7 +1748,6 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict i
         __global float * restrict bias,
          int number_of_images,     
         __global float * restrict output){
-  
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -1813,8 +1812,6 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict i
          int number_of_images,     
         __global float * restrict output){
   
-
-  //printf("Inside conv layer\n");
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
   int layer, current_layer, image_size;
@@ -1827,7 +1824,7 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict i
       
         for (i = 0; i < 7; i+=1){
           for (j = 0; j < 7; j+=1) {
-        	for(int d=0;d<128;d++){
+        	for(int d=0;d<48;d++){
             
             int PaddedX = i;
             int PaddedY = j;
@@ -1837,7 +1834,7 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict i
              for(int filterX=0; filterX<3; filterX++){
               for(int filterY=0; filterY<3; filterY++){
                 if(paderX<0||paderX>=7||paderY<0||paderY>=7){}else{
-                  temp_conv_val  += img[(image_number*7*7*128)+(d*7*7)+(7*PaddedX)+PaddedY] *weights[(layer*3*3*128)+(d*3*3)+(filterX*3)+filterY] ;
+                  temp_conv_val  += img[(image_number*7*7*48)+(d*7*7)+(7*PaddedX)+PaddedY] *weights[(layer*3*3*48)+(d*3*3)+(filterX*3)+filterY] ;
                   PaddedY++;
                 }
                 paderY++;
@@ -1898,7 +1895,7 @@ __kernel void Mixed_5c_concat(__global float* restrict T_transpose, __global flo
   }
 }
 
-__kernel void Logits_AvgPool_0a_7x7_AvgPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void AvgPool_0a_7x7_AvgPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 1024; ++ax1) {
     tensor[ax1] = 0.000000e+00f;
     for (int rv = 0; rv < 7; ++rv) {
@@ -1910,7 +1907,7 @@ __kernel void Logits_AvgPool_0a_7x7_AvgPool(__global float* restrict tensor, __g
 }
 
 
-__kernel void Logits_Conv2d_0c_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,  __global float* restrict input2) {
+__kernel void Conv2d_0c_1x1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,  __global float* restrict input2) {
   for (int ff = 0; ff < 1001; ++ff) {
     compute[ff] = input2[ff];
     for (int rc = 0; rc < 1024; ++rc) {
@@ -1922,13 +1919,13 @@ __kernel void Logits_Conv2d_0c_1x1_Conv2D(__global float* restrict compute, __gl
 // TODO InceptionV1/Logits/Conv2d_0c_1x1/Conv2D/Permute_
 
 
-__kernel void Logits_Predictions_Reshape(__global float* restrict tensor, __global float* restrict input0, __global float* restrict input1) {
+__kernel void Predictions_Reshape(__global float* restrict tensor, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_inner = 0; ax0_ax1_fused_inner < 1001; ++ax0_ax1_fused_inner) {
     tensor[ax0_ax1_fused_inner] = (input0[ax0_ax1_fused_inner] + input1[ax0_ax1_fused_inner]);
   }
 }
 
-__kernel void Logits_Predictions_Softmax(__global float* restrict input0, 
+__kernel void Predictions_Softmax(__global float* restrict input0, 
 					__global float* restrict tensor2) {
   float tensor,tensor1;
   for (int ax1 = 0; ax1 < 1001; ++ax1) {
@@ -1944,7 +1941,7 @@ __kernel void Logits_Predictions_Softmax(__global float* restrict input0,
   }
 }
 
-__kernel void Logits_Predictions_Reshape_1(__global float* restrict T_reshape, __global float* restrict input0) {
+__kernel void Predictions_Reshape_1(__global float* restrict T_reshape, __global float* restrict input0) {
   for (int ax0_ax1_fused_inner = 0; ax0_ax1_fused_inner < 1001; ++ax0_ax1_fused_inner) {
     T_reshape[ax0_ax1_fused_inner] = input0[ax0_ax1_fused_inner];
   }
