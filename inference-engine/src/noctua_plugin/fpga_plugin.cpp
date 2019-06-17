@@ -819,6 +819,17 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 					//code to launch kernels
 					if (p->layerType == "Convolution")
 					{	
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if(ch->visited==1)
+							{
+								flag_parents++;
+							}
+						}
+
+						if(!p->visited&&flag_parents==p->parents.size())
+						{
 						std::cout<<"Kernel Index:"<<kernel_index<<std::endl;
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 						assert(err == CL_SUCCESS);
@@ -867,9 +878,10 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 							assert(err == CL_SUCCESS);
-
+							kernel_index++;
 							err = cmd_queues[p->layerID]->finish();
 							assert(err == CL_SUCCESS);
+							p->visited = 1;
 						}
 						else
 						{
@@ -933,12 +945,23 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						std::cout << " Error code  after conv layer finish for kernel:" << kernel_index << " is ===>" << err << std::endl;
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+						}
+							if(p->visited==0)
+								q.push(p);
 					}
 					else if (p->layerType == "Pooling")
 					{
 						// To check on which device this  layer is mapped to.
-						
-
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if(ch->visited==1)
+							{
+								flag_parents++;
+							}
+						}
+						if(!p->visited&&flag_parents==p->parents.size())
+						{
 						// call padding kernels if padding is not zero.
 						if (p->params["pads_begin"].at(0) == '0' && p->params["pads_begin"].at(2) == '0' && p->params["pads_end"].at(0) == '0' && p->params["pads_end"].at(2) == '0')
 						{
@@ -996,11 +1019,23 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						p->visited = 1;
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+						}
+						if(p->visited==0)
+							q.push(p);
 					}
 					else if (p->layerType == "FullyConnected")
 					{
 						// To check on which device this  layer is mapped to.
-
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if(ch->visited==1)
+							{
+								flag_parents++;
+							}
+						}
+						if(!p->visited&&flag_parents==p->parents.size())
+						{
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 						assert(err == CL_SUCCESS);
 
@@ -1036,6 +1071,10 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							assert(err == CL_SUCCESS);
 							cmd_queues[p->layerID]->finish();
 							kernel_index++;
+						p->visited = 1;
+						}
+						if(p->visited==0)
+							q.push(p);
 					}
 					else if (p->layerType == "Concat")
 					{
@@ -1090,10 +1129,22 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 						}
+						if(p->visited == 0)
+							q.push(p);
 
 					}
 					else if(p->layerType == "SoftMax")
 					{	
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if(ch->visited==1)
+							{
+								flag_parents++;
+							}
+						}
+						if(!p->visited&&flag_parents==p->parents.size())
+						{
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 						assert(err == CL_SUCCESS);
@@ -1121,10 +1172,22 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						kernel_index++;	
 						
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
-						
 						}
+						if(p->visited==0)
+							q.push(p);
+					}
 					else if (p->layerType == "Reshape")
 					{
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if(ch->visited==1)
+							{
+								flag_parents++;
+							}
+						}						
+						if(!p->visited&&flag_parents==p->parents.size())
+						{
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 						assert(err == CL_SUCCESS);
 						if (p->layerName == "Logits_Predictions_Reshape")
@@ -1156,6 +1219,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							cmd_queues[p->layerID]->finish();
 							
 							std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+					
 						}
 						else if (p->layerName == "Logits_Predictions_Reshape_1")
 						{
@@ -1179,17 +1243,27 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							cmd_queues[p->layerID]->finish();
 							kernel_index++;
 							p->visited = 1; 
+							float final_labels[ p->outH * p->outW * p->outDepth];
+							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[buffer_index], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
 							
+							std::cout<<"Labels top 10\n";
+							for(int i=0;i<10;i++)
+								std::cout<<final_labels[i]<<"\n";
+
 							std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 						}
 						else
 						{
 							std::cout << " No supporting Reshape layer" << std::endl;
 						}
-					
+						}
+						if(p->visited==0)
+							q.push(p);
 					}
 				}
 				// Enqueue all children of the dequeued item
+				if(p->visited == 1)
+				{
 				for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
 				{
 					if (*it != NULL)
@@ -1197,10 +1271,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 				}
 				std::cout << "size of queue: " << q.size() << "\n";
 				n--;
+				}
 			}
 		}
 	}
 
+	/*
 	int final_labels[num_images];
 	//Output CMd Queue from last device.
 	err = cmd_queues[DeviceList_Master.size() - 1]->enqueueReadBuffer(*buffers[buffer_index], CL_TRUE, 0, sizeof(cl_int) * num_images, final_labels);
@@ -1213,6 +1289,6 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	{
 		std::cout << "Image " << imageNames[i] << " : " << final_labels[i] << "\n";
 	}
- 
+ 	*/
 	return 0;
 }
