@@ -471,6 +471,14 @@ int i,j,k;
   }
 }
 
+__kernel void Padding_Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
+  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 256) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))];
+  }
+}
+
+
+
 __kernel void Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 256; ++ax1) {
     for (int ax2 = 0; ax2 < 28; ++ax2) {
@@ -1377,7 +1385,7 @@ __kernel void Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict i
              for(int filterX=0; filterX<3; filterX++){
                     for(int filterY=0; filterY<3; filterY++){
                   if(paderX<0||paderX>=14||paderY<0||paderY>=14){}else{
-                            temp_conv_val  += img[(image_number*14*14*320)+(d*14*14)+(14*PaddedX)+PaddedY] *weights[(layer*3*3*320)+(d*3*3)+(filterX*3)+filterY] ;
+                            temp_conv_val  += img[(image_number*14*14*160)+(d*14*14)+(14*PaddedX)+PaddedY] *weights[(layer*3*3*160)+(d*3*3)+(filterX*3)+filterY] ;
                     PaddedY++;
                   }
                   paderY++;
@@ -1941,18 +1949,3 @@ __kernel void Logits_Predictions_Reshape_1(__global float* restrict T_reshape, _
     T_reshape[ax0_ax1_fused_inner] = input0[ax0_ax1_fused_inner];
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
