@@ -24,15 +24,23 @@ class CPrintListener(CListener):
    
     val_start = 0
     val_until = 0
-    val_diff = [1] * 50
+    val_diff_func = [1] * 50
+    
+    val_diff_inside = [1] * 50
+    
      
     val_stride = 1
+
+    for_loop_count_local = 0
     
     inside_for_declaration = 0
     inside_for_condition = 0
   
     inside_for_expession_no = 0 
+
+    loop_block = 0
     
+    iteration_no = 0
     current_loop = 0
     current_func = 0
 
@@ -63,25 +71,51 @@ class CPrintListener(CListener):
 				myEpression = int(myEpression)
 				self.val_stride = myEpression                  
                  		self.inside_for_expession_no = 0
- 
+ 				#print("Val of val stride is {}".format(self.val_stride))
  
                               
     				 
-
  
- 
-    def enterIterationStatement(self, ctx):
- 	pass
         
     def enterFunctionDefinition(self, ctx):
-        self.current_func = self.current_func + 1        
-	self.val_stride = 1
+        self.current_func = self.current_func + 1              
+	
+
+    def exitFunctionDefinition(self, ctx):
  
+	self.val_diff_func[self.current_func] =  sum(self.val_diff_inside[1:self.loop_block +1])
+ 	#print("Current func is {}".format(self.current_func))
+	#print("Val of val diff here is {}".format(self.val_diff_func[self.current_func]))
+        self.val_diff_inside = [1] * 50
+        self.loop_block = 0
+
+    def enterForCondition(self, ctx):	 
+	pass
+
     def exitForCondition(self, ctx): 
-	self.val_diff[self.current_func]  = self.val_diff[self.current_func] * ((self.val_until - self.val_start)/self.val_stride)	 
-	self.val_stride = 1 
+	self.val_diff_inside[self.loop_block]  = self.val_diff_inside[self.loop_block] * ((self.val_until - self.val_start)/self.val_stride)
+        #print("Val of loop_block is {}".format(self.loop_block))
+	#print("Val of val diff for loop block is {}".format(self.val_diff_inside[self.loop_block] ))
+
+	self.val_stride = 1
 	
             
+    
+    def enterIterationStatement(self, ctx):
+        self.iteration_no +=1 
+        if (self.iteration_no == 1) :
+		self.loop_block += 1
+
+    
+    def exitIterationStatement(self, ctx):
+	self.iteration_no -=1
+        #if (self.iteration_no == 0):
+		#self.loop_block -= 1
+        
+
+ 
+				 
+		          
  	
 
 	
@@ -100,8 +134,8 @@ class CPrintListener(CListener):
     def exitCompilationUnit(self, ctx):
 	print("Number of funcs is {}".format(self.current_func))
 	for i in range (1 , self.current_func + 1):
-		print(self.val_diff[i])	
-	sum1 = sum(self.val_diff[1:self.current_func + 1])
+		print(self.val_diff_func[i])	
+	sum1 = sum(self.val_diff_func[1:self.current_func + 1])
 	print("Total number of operations are {}".format(sum1))
 
 
