@@ -110,11 +110,11 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict w
   int layer, current_layer, image_size;
   image_size = 28*28;
   for (layer = 0; layer <128; layer++) {
-    for(int d=0;d<96;d++){
+    float temp_conv_val = bias[layer];	
       for (i = 0; i < 28; i+=1){
         for (j = 0; j < 28; j+=1) {
+	  for(int d=0;d<96;d++){
       
-          float temp_conv_val = bias[layer];
           int PaddedX = i;
           int PaddedY = j;
           int paderX = i - 1;
@@ -133,9 +133,9 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float * restrict w
               PaddedY=j;
               paderY = j - 1;
           }  
-          temp_conv_val = (temp_conv_val>0) ? temp_conv_val : 0;
-          write_channel_intel(conv2_2OutChannel, temp_conv_val);
-        }
+	}
+        temp_conv_val = (temp_conv_val>0) ? temp_conv_val : 0;
+        write_channel_intel(conv2_2OutChannel, temp_conv_val);
       }
     }
   }
@@ -174,11 +174,10 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict w
   index = 0;
   image_size = 28*28;
   for (layer = 0; layer <32; layer++){
-    for(int d=0;d<16;d++){
+      double temp_conv_val = bias[layer];
       for (i = 0; i < 28; i+=1){
         for (j = 0; j < 28; j+=1){
-      
-          double temp_conv_val = bias[layer];
+    	  for(int d=0;d<16;d++){      
           int PaddedX = i;
           int PaddedY = j;
           int paderX = i - 1;
@@ -197,9 +196,9 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict w
               PaddedY=j;
               paderY = j - 1;
           }
-          temp_conv_val = (temp_conv_val>0) ? temp_conv_val : 0;
-          write_channel_intel(conv3_2OutChannel, temp_conv_val);
-        }
+	}
+	temp_conv_val = (temp_conv_val>0) ? temp_conv_val : 0;
+	write_channel_intel(conv3_2OutChannel, temp_conv_val);
       }
     }
   }
