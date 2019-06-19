@@ -24,7 +24,7 @@
 
 using namespace InferenceEngine;
 
-std::string supported_layers[6] = {"Convolution", "Pooling", "FullyConnected", "Concat", "Reshape", "SoftMax"};
+std::string supported_layers[6] = {"Convolution", "Pooling", "FullyConnected", "Concat","Reshape"};
 std::map<std::string, int> layerIDMap;
 std::vector<int> ID_list;
 
@@ -939,9 +939,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							std::cout << "\tconv output passed :"
 									  << p->outH * p->outW * p->outDepth << std::endl;
 							p->layerOutBufferIndex = buffer_index;
+							if(p->children.size()>0)
+							{
 							for (struct layersDetails *ch : p->children)
 							{
 								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
+							}
 							}
 							buffer_index++;
 
@@ -957,6 +960,19 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						std::cout << "\t Error code  after conv layer finish for kernel:" << kernel_index << " is ===>" << err << std::endl;
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+						
+						if(p->layerName=="Conv2d_0c_1x1_Conv2D")
+						{		
+							float final_labels[ p->outH * p->outW * p->outDepth];
+							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float)* p->outH * p->outW * p->outDepth, final_labels);
+							err = cmd_queues[p->layerID]->finish();
+							assert(err == CL_SUCCESS);
+							std::cout<<"\tLabels top 10\n";
+							for(int i=0;i<1001;i++)
+								std::cout<<final_labels[i]<<"\n";
+							break;
+						}
+					
 						}
 							if(p->visited==0)
 								q.push(p);
@@ -1217,16 +1233,20 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //reshape output
 							assert(err == CL_SUCCESS);
 							p->layerOutBufferIndex = buffer_index;
+							if(p->children.size()>0)
+							{
 							for (struct layersDetails *ch : p->children)
 							{
 								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
 							}
+							}
 							buffer_index++;
+							std::cout<<"No of parents: "<<p->parents.size()<<"\n";
 							//input
-							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //conv input1
+							err = kernels[kernel_index]->setArg(1, *buffers[p->parents.at(0)->layerOutBufferIndex]); //conv input1
 							assert(err == CL_SUCCESS);
 							buffer_index++;
-							err = kernels[kernel_index]->setArg(2, *buffers[p->parentOutBufferIndex.at(1)]); //conv input2
+							err = kernels[kernel_index]->setArg(2, *buffers[p->parents.at(1)->layerOutBufferIndex]); //conv input2
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
@@ -1239,8 +1259,16 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							cmd_queues[p->layerID]->finish();
 							
 							std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+
+							float final_labels[ p->outH * p->outDepth];
+							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex ], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outDepth, final_labels);
+							
+							std::cout<<"\tLabels top 10\n";
+							for(int i=0;i<10;i++)
+								std::cout<<final_labels[i]<<"\n";
 					
 						}
+						/*
 						else if (p->layerName == "Predictions_Reshape_1")
 						{
 							std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
@@ -1272,6 +1300,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 							std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 						}
+						*/
 						else
 						{
 							std::cout << "\t No supporting Reshape layer" << std::endl;
