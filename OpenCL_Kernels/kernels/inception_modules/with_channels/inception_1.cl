@@ -1,6 +1,9 @@
 //Enable the channel extension
  #pragma OPENCL EXTENSION cl_intel_channels : enable
 
+// IO input channel
+channel float IO_input __attribute__((depth(192)))
+                           __attribute__((io("kernel_input_ch0"))); 
 
 //output from maxpool
 channel float maxOutChannel1 __attribute__((depth(192)));
@@ -24,8 +27,16 @@ channel float padding4_1OutChannel __attribute__((depth(192)));
 channel float max4_2OutChannel __attribute__((depth(192)));
 channel float conv4_3OutChannel __attribute__((depth(32)));
 
+// IO output channel
+channel float IO_output __attribute__((depth(256)))
+                           __attribute__((io("kernel_output_ch0"))); 
 
-__kernel void MaxPool_3a_3x3_MaxPool(__global float* restrict input0) {
+
+__kernel void MaxPool_3a_3x3_MaxPool() {
+  float input0[192*28*28];
+  for (int i = 0; i < 192*28*28; i++){
+        input0[i] = read_channel_intel(IO_input);
+  }
   float tensor[192 * 28 * 28];
   for (int ax1 = 0; ax1 < 192; ++ax1) {
     for (int ax2 = 0; ax2 < 28; ++ax2) {
@@ -247,7 +258,7 @@ __kernel void Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict in
   }
 }
 
-__kernel void Mixed_3b_concat(__global float* restrict T_concat) {
+__kernel void Mixed_3b_concat() {
   float input0[64*28*28], input1[128*28*28], input2[32*28*28], input3[32*28*28];
   for (int i = 0; i < 64*28*28; i++){
     input0[i] = read_channel_intel(conv1OutChannel);
@@ -260,7 +271,8 @@ __kernel void Mixed_3b_concat(__global float* restrict T_concat) {
     input3[i] = read_channel_intel(conv4_3OutChannel);
   }
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(224 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -175616)] : (float)(192 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -150528)] : (float)(64 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -50176)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256))])));
+    write_channel_intel(IO_output, (float)(224 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -175616)] : (float)(192 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -150528)] : (float)(64 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -50176)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256))]))));
   }
+
 }
 
