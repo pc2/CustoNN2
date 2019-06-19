@@ -52,6 +52,9 @@ static const char custom_cpu_library_message[] = "Required for MKLDNN (CPU)-targ
 /// @brief message for plugin messages
 static const char plugin_message[] = "Enables messages from a plugin";
 
+// @brief message for CNN Model name argument.
+static const char cnn_model[] = "Required. Input CNN Model name. ";
+
 /// @brief Define flag for showing help message <br>
 DEFINE_bool(h, false, help_message);
 
@@ -89,6 +92,9 @@ DEFINE_int32(ni, 1, iterations_count_message);
 /// @brief Enable plugin messages
 DEFINE_bool(p_msg, false, plugin_message);
 
+/// @brief Enable plugin messages
+DEFINE_string(model, "", cnn_model);
+
 /**
 * @brief This function show a help message
 */
@@ -109,4 +115,5 @@ static void showUsage() {
     std::cout << "    -ni \"<integer>\"         " << iterations_count_message << std::endl;
     std::cout << "    -pc                     " << performance_counter_message << std::endl;
     std::cout << "    -p_msg                  " << plugin_message << std::endl;
+    std::cout << "    -model                  " << cnn_model << std::endl;
 }
