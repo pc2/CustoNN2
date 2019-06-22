@@ -93,7 +93,7 @@ class CPrintListener(CListener):
 	pass
 
     def exitForCondition(self, ctx): 
-	self.val_diff_inside[self.loop_block]  = self.val_diff_inside[self.loop_block] * ((self.val_until - self.val_start)/self.val_stride)
+	self.val_diff_inside[self.loop_block]  = self.val_diff_inside[self.loop_block] * (abs(self.val_until - self.val_start)/self.val_stride)
         #print("Val of loop_block is {}".format(self.loop_block))
 	#print("Val of val diff for loop block is {}".format(self.val_diff_inside[self.loop_block] ))
 
