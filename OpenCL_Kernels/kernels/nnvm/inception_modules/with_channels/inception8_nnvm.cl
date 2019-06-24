@@ -33,7 +33,7 @@ channel float max4_2OutChannel __attribute__((depth(16)));
 channel float conv4_3OutChannel __attribute__((depth(16)));
 
 // IO output channel
-channel float IO_output __attribute__((depth(2)))
+channel iob IO_output __attribute__((depth(2)))
                            __attribute__((io("kernel_output_ch0"))); 
 
 __kernel void MaxPool_5a_2x2_MaxPool(){
@@ -267,7 +267,7 @@ __kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict in
 }
 
 __kernel void Mixed_5b_concat() {
-float input0[256*7*7], input1[320*7*7], input2[128*7*7], input3[128*7*7], output[832,7,7];
+float input0[256*7*7], input1[320*7*7], input2[128*7*7], input3[128*7*7], output[832*7*7];
   for (int i = 0; i < 256*7*7; i++){
     input0[i] = read_channel_intel(conv1OutChannel);
   }
@@ -279,7 +279,7 @@ float input0[256*7*7], input1[320*7*7], input2[128*7*7], input3[128*7*7], output
     input3[i] = read_channel_intel(conv4_3OutChannel);
   }
 for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    output[ax0_ax1_fused_ax2_fused_ax3_fused_inner]=(float)(704 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -34496)] : (float)((576 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -28224)] : (float)((256 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -12544)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832))])));
+    output[ax0_ax1_fused_ax2_fused_ax3_fused_inner]=(float)((704 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -34496)] : (float)((576 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -28224)] : (float)((256 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -12544)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832))])));
   }
 
 int index = 0;
