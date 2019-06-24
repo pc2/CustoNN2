@@ -37,7 +37,7 @@ channel iob IO_output __attribute__((depth(2)))
                            __attribute__((io("kernel_output_ch0"))); 
 
 
-/*__kernel void MaxPool_4a_3x3_MaxPool() {
+__kernel void MaxPool_4a_3x3_MaxPool() {
   float input0[480*14*14];
   int index = 0;
   for (int i = 0; i < 480*14*14/8; i++){
@@ -65,7 +65,7 @@ channel iob IO_output __attribute__((depth(2)))
       }
     }
   }
-}*/
+}
 
 __kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict input1, __global float* restrict input2){
   
@@ -155,7 +155,7 @@ __kernel void Mixed_4b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float* restrict in
   
 float input0[480*14*14];
   for (int i = 0; i < 480*14*14; i++){
-        input0[i] = read_channel_intel(maxOutChannel2);
+        input0[i] = read_channel_intel(maxOutChannel3);
   }
 float temp_0;
 for (int ff = 0; ff < 16; ++ff) {
@@ -222,7 +222,7 @@ int i,j,k;
   }
 
 
-/*__kernel void Padding_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool() {
+__kernel void Padding_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool() {
 float input0[480*14*14];
   for (int i = 0; i < 480*14*14; i++){
         input0[i] = read_channel_intel(maxOutChannel4);
@@ -233,6 +233,10 @@ float input0[480*14*14];
 }
 
 __kernel void Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool() {
+float input0[480*14*14], tensor[192*14*14];
+  for (int i = 0; i < 480*14*14; i++){
+    input0[i] = read_channel_intel(padding4_1OutChannel);
+  }
   for (int ax1 = 0; ax1 < 480; ++ax1) {
     for (int ax2 = 0; ax2 < 14; ++ax2) {
       for (int ax3 = 0; ax3 < 14; ++ax3) {
@@ -245,7 +249,10 @@ __kernel void Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool() {
       }
     }
   }
-}*/
+  for (int i = 0; i < 480*14*14; i++){
+    write_channel_intel(max4_2OutChannel, tensor[i]);
+  }
+}
 
 __kernel void Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict input1, __global float* restrict input2){
   
