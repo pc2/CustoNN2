@@ -243,7 +243,7 @@ __kernel void Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool() {
     }
   }
   for (int i = 0; i < 192*28*28; i++){
-    write_channel_intel(max4_2OutChannel, tensor[0]);
+    write_channel_intel(max4_2OutChannel, tensor[i]);
   }
 }
 
