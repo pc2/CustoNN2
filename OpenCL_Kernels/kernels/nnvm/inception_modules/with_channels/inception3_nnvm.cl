@@ -37,7 +37,7 @@ channel iob IO_output __attribute__((depth(2)))
                            __attribute__((io("kernel_output_ch0"))); 
 
 
-__kernel void MaxPool_4a_3x3_MaxPool() {
+/*__kernel void MaxPool_4a_3x3_MaxPool() {
   float input0[480*14*14];
   int index = 0;
   for (int i = 0; i < 480*14*14/8; i++){
@@ -65,7 +65,7 @@ __kernel void MaxPool_4a_3x3_MaxPool() {
       }
     }
   }
-}
+}*/
 
 __kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float* restrict input1, __global float* restrict input2){
   
@@ -222,7 +222,7 @@ int i,j,k;
   }
 
 
-__kernel void Padding_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool() {
+/*__kernel void Padding_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool() {
 float input0[480*14*14];
   for (int i = 0; i < 480*14*14; i++){
         input0[i] = read_channel_intel(maxOutChannel4);
@@ -245,18 +245,16 @@ __kernel void Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool() {
       }
     }
   }
-}
+}*/
 
-__kernel void Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D(
-                  __global float* restrict input1,
-                  __global float* restrict input2 ){
+__kernel void Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict input1, __global float* restrict input2){
   
-float input0[480*14*14];
+  float input0[480*14*14];
   for (int i = 0; i < 480*14*14; i++){
     input0[i] = read_channel_intel(max4_2OutChannel);
   }
-float temp_0;
-for (int ff = 0; ff < 64; ++ff) {
+  float temp_0;
+  for (int ff = 0; ff < 64; ++ff) {
     for (int yy = 0; yy < 14; ++yy) {
       for (int xx = 0; xx < 14; ++xx) {
         temp_0 = input2[ff];
@@ -265,7 +263,6 @@ for (int ff = 0; ff < 64; ++ff) {
         }
   	temp_0 = ( temp_0 > 0) ? temp_0 : 0.000000e+00f;
         write_channel_intel(conv4_3OutChannel, temp_0);
-
       }
     }
   }
