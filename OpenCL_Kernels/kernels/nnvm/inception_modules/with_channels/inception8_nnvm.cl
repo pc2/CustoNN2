@@ -1,8 +1,13 @@
 //Enable the channel extension
  #pragma OPENCL EXTENSION cl_intel_channels : enable
 
+typedef struct IO_buffer {
+        float temp_buffer[8];
+}iob;
+
+
 // IO input channel
-channel float IO_input __attribute__((depth(832)))
+channel iob IO_input __attribute__((depth(832)))
                            __attribute__((io("kernel_input_ch0"))); 
 
 //output from maxpool
@@ -33,8 +38,15 @@ channel float IO_output __attribute__((depth(832)))
 
 __kernel void MaxPool_5a_2x2_MaxPool(){
 float input0[832*7*7];
-for (int i = 0; i < 832*7*7; i++){
-	input0[i]=read_channel_intel(IO_input);
+int index=0;
+for (int i = 0; i < 832*7*7/8; i++){
+	struct IO_buffer temp_iob;
+	temp_iob = read_channel_intel(IO_input);
+  	for (int j = 0; j < 8; j++){
+  		input0[index] = temp_iob.temp_buffer[j];
+  		index++;	
+	}
+	
 }
 
 float tensor[832*7*7];
@@ -70,7 +82,7 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(
       for (int xx = 0; xx < 7; ++xx) {
 	temp_0 = input2[ff];
 	for (int rc = 0; rc < 832; ++rc) {
-	temp_0 += input0[((((rc * 7) + yy) * 7) + xx)] * input1[((ff * 832) + rc)]
+	temp_0 += input0[((((rc * 7) + yy) * 7) + xx)] * input1[((ff * 832) + rc)];
 	}
 	temp_0 = ( temp_0 > 0) ? temp_0 : 0.000000e+00f;
         write_channel_intel(conv1OutChannel, temp_0);
@@ -91,7 +103,7 @@ for (int ff = 0; ff < 160; ++ff) {
       for (int xx = 0; xx < 7; ++xx) {
 temp_0 = input2[ff];
 for (int rc = 0; rc < 832; ++rc) {
-temp_0 += input0[((((rc * 7) + yy) * 7) + xx)] * input1[((ff * 832) + rc)]);
+temp_0 += input0[((((rc * 7) + yy) * 7) + xx)] * input1[((ff * 832) + rc)];
 }
 temp_0 = ( temp_0 > 0) ? temp_0 : 0.000000e+00f;
         write_channel_intel(conv2_1OutChannel, temp_0);
@@ -166,7 +178,7 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global float * restrict w
         						__global float * restrict bias){
 float img[32*7*7];
   for (int i = 0; i < 32*7*7; i++){
-    img[i] = read_channel_intel(conv3_2OutChannel);
+    img[i] = read_channel_intel(conv3_1OutChannel);
   }
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
