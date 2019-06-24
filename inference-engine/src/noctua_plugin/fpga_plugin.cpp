@@ -968,8 +968,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							err = cmd_queues[p->layerID]->finish();
 							assert(err == CL_SUCCESS);
 							std::cout<<"\tLabels top 10\n";
-							for(int i=0;i<1001;i++)
-								std::cout<<final_labels[i]<<"\n";
+							//for(int i=0;i<1001;i++)
+								//std::cout<<final_labels[i]<<"\n";
 							break;
 						}
 					
