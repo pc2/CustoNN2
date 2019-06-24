@@ -4,3 +4,6 @@ board_name = p520_max_sg280l
 
 kernel_emulator :
 	aoc  -v -march=emulator -board=$(board_name)   -o $(design_dir)/$(kernel_name).aocx  ./$(kernel_name).cl
+
+report :
+	aoc -rtl -report -board=$(board_name) ./$(kernel_name).cl
