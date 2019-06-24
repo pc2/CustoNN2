@@ -1,41 +1,52 @@
 //Enable the channel extension
  #pragma OPENCL EXTENSION cl_intel_channels : enable
 
+typedef struct IO_buffer {
+        float temp_buffer[8];
+}iob;
+
+
 // IO input channel
-channel float IO_input __attribute__((depth(192)))
+channel iob IO_input __attribute__((depth(2)))
                            __attribute__((io("kernel_input_ch0"))); 
 
 //output from maxpool
-channel float maxOutChannel1 __attribute__((depth(192)));
-channel float maxOutChannel2 __attribute__((depth(192)));
-channel float maxOutChannel3 __attribute__((depth(192)));
-channel float maxOutChannel4 __attribute__((depth(192)));
+channel float maxOutChannel1 __attribute__((depth(16)));
+channel float maxOutChannel2 __attribute__((depth(16)));
+channel float maxOutChannel3 __attribute__((depth(16)));
+channel float maxOutChannel4 __attribute__((depth(16)));
 
 //first output - 64 
-channel float conv1OutChannel __attribute__((depth(64)));
+channel float conv1OutChannel __attribute__((depth(16)));
 
 //second output - 128
-channel float conv2_1OutChannel __attribute__((depth(96)));
-channel float conv2_2OutChannel __attribute__((depth(128)));
+channel float conv2_1OutChannel __attribute__((depth(16)));
+channel float conv2_2OutChannel __attribute__((depth(16)));
 
 //third output - 32
 channel float conv3_1OutChannel __attribute__((depth(16)));
-channel float conv3_2OutChannel __attribute__((depth(32)));
+channel float conv3_2OutChannel __attribute__((depth(16)));
 
 //forth output - 32
-channel float padding4_1OutChannel __attribute__((depth(192)));
-channel float max4_2OutChannel __attribute__((depth(192)));
-channel float conv4_3OutChannel __attribute__((depth(32)));
+channel float padding4_1OutChannel __attribute__((depth(16)));
+channel float max4_2OutChannel __attribute__((depth(16)));
+channel float conv4_3OutChannel __attribute__((depth(16)));
 
 // IO output channel
-channel float IO_output __attribute__((depth(256)))
+channel iob IO_output __attribute__((depth(2)))
                            __attribute__((io("kernel_output_ch0"))); 
 
 
 __kernel void MaxPool_3a_3x3_MaxPool() {
   float input0[192*28*28];
-  for (int i = 0; i < 192*28*28; i++){
-        input0[i] = read_channel_intel(IO_input);
+  int index = 0;
+  for (int i = 0; i < 192*28*28/8; i++){
+  	struct IO_buffer temp_iob;
+  	temp_iob = read_channel_intel(IO_input);
+  	for (int j = 0; j < 8; j++){
+  		input0[index] = temp_iob.temp_buffer[j];
+  		index++;	
+  	}
   }
   float tensor[192 * 28 * 28];
   for (int ax1 = 0; ax1 < 192; ++ax1) {
@@ -166,7 +177,7 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float * restrict w
   
   float img[16*28*28];
   for (int i = 0; i < 16*28*28; i++){
-    img[i] = read_channel_intel(conv3_2OutChannel);
+    img[i] = read_channel_intel(conv3_1OutChannel);
   }
   int i,j,k,t;
   int index, temp_index, filter_index, image_index;
@@ -258,19 +269,30 @@ __kernel void Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float* restrict in
 }
 
 __kernel void Mixed_3b_concat() {
-  float input0[64*28*28], input1[128*28*28], input2[32*28*28], input3[32*28*28];
+  float input0[64*28*28], input1[128*28*28], input2[32*28*28], input3[32*28*28], output[200704];
   for (int i = 0; i < 64*28*28; i++){
     input0[i] = read_channel_intel(conv1OutChannel);
   }
   for (int i = 0; i < 128*28*28; i++){
     input1[i] = read_channel_intel(conv2_2OutChannel);
   }
-    for (int i = 0; i < 32*28*28; i++){
+  for (int i = 0; i < 32*28*28; i++){
     input2[i] = read_channel_intel(conv3_2OutChannel);
     input3[i] = read_channel_intel(conv4_3OutChannel);
   }
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    write_channel_intel(IO_output, (float)(224 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -175616)] : (float)(192 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -150528)] : (float)(64 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -50176)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256))]))));
+    output[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(224 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input0[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -175616)] : (float)(192 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -150528)] : (float)(64 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256)) + -50176)] : input3[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256))])));
+  }
+
+
+  int index = 0;
+  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ax0_ax1_fused_ax2_fused_ax3_fused_inner += 8) {
+  	struct IO_buffer temp_iob;
+  	for (int j = 0; j < 8; j++){
+  		temp_iob.temp_buffer[j] = output[index];
+      index++;	
+  	}
+	write_channel_intel(IO_output, temp_iob);
   }
 
 }
