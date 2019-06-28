@@ -23,8 +23,7 @@
 
 
 // Directories where the aocx files will be stored
-#define GoogLeNet_DIR "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/GoogLeNet"
-#define ResNet_DIR "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/ResNet"
+
 
 using namespace InferenceEngine;
 using namespace boost;
@@ -33,7 +32,8 @@ using namespace boost::property_tree;
 std::string supported_layers[6] = {"Convolution", "Pooling", "FullyConnected", "Concat","Reshape"};
 std::map<std::string, int> layerIDMap;
 std::vector<int> ID_list;
-
+std::string GoogLeNet_DIR = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/GoogLeNet";
+std::string ResNet_DIR = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/ResNet";
 /**
  * Data structure to store information of each layer
  */
@@ -676,7 +676,7 @@ const ptree& empty_ptree(){
     return t;
 }
 
-void xml_parser(char *filename,std::vector<std::string> kernel_names)
+void xml_parser1(char *filename,std::vector<std::string> kernel_names)
 {
 	ptree tree;
 	read_xml(filename, tree);
@@ -696,6 +696,27 @@ void xml_parser(char *filename,std::vector<std::string> kernel_names)
     }
 	
 
+}
+
+int get_program_num(std::string layerName,std::vector<std::string> first_kernels,std::vector<std::string> second_kernels)
+{
+	for (std::vector<std::string>::iterator it = first_kernels.begin(); it != first_kernels.end(); ++it)
+	{
+		if (layerName == *it)
+		{
+			return 1;
+		}
+	}
+
+	for (std::vector<std::string>::iterator it = second_kernels.begin(); it != second_kernels.end(); ++it)
+	{
+		if (layerName == *it)
+		{
+			return 2;
+		}
+	}
+
+	return 0;
 }
 
 /**
@@ -748,9 +769,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	printDevices(DeviceList_Master);
 	
-	
-	cl::Context context1(DeviceList1);
-	cl::Context context2(DeviceList2);
+	cl::Context *contexts[2];
+	contexts[0] = new cl::Context(DeviceList1);
+	contexts[1] = new cl::Context(DeviceList2);
+	//cl::Context context1(DeviceList1);
+	//cl::Context context2(DeviceList2);
 	//cl::Context mycontext(DeviceList1); //Context
 	//cl::Context mycontext1(DeviceList2);
 	cl::CommandQueue *cmd_queues[250]; // To be dynamically allocated at kernel launch, one per kernel. the index  of cmd queue array is Layer ID.
@@ -809,6 +832,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	//printCNNTree(root);
 	
+	cl::Program *programs[2];
+
 	std::string file1 = GoogLeNet_DIR+"Inception"+std::to_string(2*rank)+".aocx";     //first aocx
 	std::string file2 = GoogLeNet_DIR+"Inception"+std::to_string(2*rank+1)+".aocx";   //second aocx
 	
@@ -816,22 +841,22 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	strcpy(f1,file1.c_str());
 	
 	char f2[file2.length()];
-	strcpy(f2,file2.c_str()];
+	strcpy(f2,file2.c_str());
 	
 	std::ifstream aocx_stream(f1, std::ios::in|std::ios::binary);
         //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
         std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
         cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
-	cl::Program program1(context1, DeviceList1, mybinaries);
-	err = program1.build(DeviceList1);	
+	 programs[0] = new cl::Program(*contexts[0], DeviceList1, mybinaries);
+	err = programs[0]->build(DeviceList1);	
 
 
 	std::ifstream aocx_stream2(f2, std::ios::in|std::ios::binary);
         //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
         std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
         cl::Program::Binaries mybinaries2 (1, std::make_pair(prog2.c_str(), prog2.length()+1));
-	cl::Program program2(context2, DeviceList2, mybinaries);
-	err = program2.build(DeviceList2);
+	programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries);
+	err = programs[1]->build(DeviceList2);	
 
 	std::string file1_xml = GoogLeNet_DIR+"Inception"+std::to_string(2*rank)+".xml";
 	std::string file2_xml = GoogLeNet_DIR+"Inception"+std::to_string(2*rank+1)+".xml";
@@ -839,12 +864,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	char f1_xml[file1.length()];
 	strcpy(f1,file1_xml.c_str());
 	std::vector<std::string> first_kernels;   //kernels from first aocx
-	xml_parser(f1_xml,first_kernels);
+	xml_parser1(f1_xml,first_kernels);
 	
 	char f2_xml[file1.length()];
 	strcpy(f2_xml,file2_xml.c_str());
 	std::vector<std::string> second_kernels;   //kernels from second aocx
-	xml_parser(f2_xml,second_kernels);
+	xml_parser1(f2_xml,second_kernels);
 	
 
 	
@@ -875,7 +900,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//std::cout<<"Images array size: "<<sizeof(images)/sizeof(images[0])<<"\n";
 
 	//Input image buffer is always mapped to 1st device context(Device ID =0)
-	buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * dim_depth * num_images);
+	buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_uchar) * dim_x * dim_y * dim_depth * num_images);
 	err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_uchar) * dim_x * dim_y * dim_depth * num_images, images); //images buffer
 	assert(err == CL_SUCCESS);
 	err = cmd_queues[0]->finish();
@@ -919,8 +944,9 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 				{
 					const char *layerName = p->layerName.c_str();
 					std::cout<<"Launching Layer:"<<layerName<<std::endl;
+					int program_number = get_program_num(p->layerName,first_kernels,second_kernels);
 					//code to launch kernels
-					if (p->layerType == "Convolution")
+					if (p->layerType == "Convolution"&&program_number!=0)
 					{	
 						int flag_parents = 0;
 						for (struct layersDetails *ch : p->parents)
@@ -934,7 +960,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						if(!p->visited&&flag_parents==p->parents.size())
 						{
 						std::cout<<"\t Kernel Index:"<<kernel_index<<std::endl;
-						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+
+						
+						kernels[kernel_index] = new cl::Kernel(*programs[program_number-1], layerName, &err);
+						
+							
 						std::cout << "\t Kernel Created "<<std::endl;
 						assert(err == CL_SUCCESS);
 						std::cout << "\t  pads_begin :"<<p->params["pads_begin"].at(0)<<","<<p->params["pads_begin"].at(2)<<" pads_end :"<< p->params["pads_begin"].at(0)<<","<<p->params["pads_begin"].at(2) <<std::endl;
@@ -943,7 +973,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						{
 							
 							//output
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of conv
 							assert(err == CL_SUCCESS);
 							std::cout << "\tconv output passed :"<< p->outH * p->outW * p->outDepth << std::endl;
@@ -961,7 +991,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							std::cout << "\timages passed\n";
 
 							//weights
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
 							err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
 							err = cmd_queues[p->layerID]->finish();
 							std::cout << "\t Error code after weights transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -971,7 +1001,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							buffer_index++;
 
 							//Bias
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
 							err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
 							err = cmd_queues[p->layerID]->finish();
 							std::cout << "\t Error code after bias transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -1006,7 +1036,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							std::cout << "\tbuffer index:"<<p->parentOutBufferIndex.at(0)<<std::endl;
 
 							//weights
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
 							err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
 							err = cmd_queues[p->layerID]->finish();
 							std::cout << "\t Error code after weights transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -1017,7 +1047,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							std::cout << "\tweights passed\n";
 
 							//Bias
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
 							err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
 							err = cmd_queues[p->layerID]->finish();
 							std::cout << "\t Error code after bias transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -1033,7 +1063,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							std::cout << "\tconv out dim :"
 									  << p->outH * p->outW * p->outDepth << std::endl;
 							//output
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
 							err = kernels[kernel_index]->setArg(4, *buffers[buffer_index]); //output of conv
 							assert(err == CL_SUCCESS);
 							std::cout << "\tconv output passed :"
@@ -1077,7 +1107,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							if(p->visited==0)
 								q.push(p);
 					}
-					else if (p->layerType == "Pooling")
+					else if (p->layerType == "Pooling"&&program_number!=0)
 					{
 						// To check on which device this  layer is mapped to.
 						int flag_parents = 0;
@@ -1098,10 +1128,10 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							std::cout << "\t Padding kernel:"<<paddingKernelNameStr<<std::endl;
 							std::cout << "\t  pads_begin :"<<p->params["pads_begin"].at(0)<<","<<p->params["pads_begin"].at(2)<<" pads_end :"<< p->params["pads_begin"].at(0)<<","<<p->params["pads_begin"].at(2) <<std::endl;
 							const char *paddingKernel = paddingKernelNameStr.c_str();
-							kernels[kernel_index] = new cl::Kernel(program, paddingKernel, &err);
+							kernels[kernel_index] = new cl::Kernel(*programs[program_number-1], paddingKernel, &err);
 							int padding_input_index = p->parentOutBufferIndex.at(0) ;
 							//output
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->parents.at(0)->outW * p->parents.at(0)->outH * p->parents.at(0)->outDepth);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->parents.at(0)->outW * p->parents.at(0)->outH * p->parents.at(0)->outDepth);
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of conv
 							assert(err == CL_SUCCESS);
 							std::cout << "\tconv output passed "
@@ -1126,10 +1156,13 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							 
 						}
 						std::cout << "\t kernel:"<<layerName<<std::endl;
-						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+						
+							kernels[kernel_index] = new cl::Kernel(*programs[program_number-1], layerName, &err);
+						
+							
 						assert(err == CL_SUCCESS);
 						//output
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+						buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
 						err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //conv output rows
 						assert(err == CL_SUCCESS);
 						p->layerOutBufferIndex = buffer_index;
@@ -1155,7 +1188,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						if(p->visited==0)
 							q.push(p);
 					}
-					else if (p->layerType == "FullyConnected")
+					else if (p->layerType == "FullyConnected"&&program_number!=0)
 					{
 						// To check on which device this  layer is mapped to.
 						int flag_parents = 0;
@@ -1168,10 +1201,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						}
 						if(!p->visited&&flag_parents==p->parents.size())
 						{
-						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+						
+							kernels[kernel_index] = new cl::Kernel(*programs[program_number-1], layerName, &err);
+						
 						assert(err == CL_SUCCESS);
 
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+						buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
 						cmd_queues[p->layerID]->finish();
 						assert(err == CL_SUCCESS);
@@ -1179,7 +1214,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						assert(err == CL_SUCCESS);
 						buffer_index++;
 						std::cout << "\tweights passed\n";
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+						buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
 						cmd_queues[p->layerID]->finish();
 						assert(err == CL_SUCCESS);
@@ -1188,7 +1223,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						buffer_index++;
 						std::cout << "\tbiases passed\n";
 
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_int) * num_images);
+						buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_int) * num_images);
 						err = kernels[kernel_index]->setArg(2, *buffers[buffer_index]); //output of FC
 						assert(err == CL_SUCCESS);
 						std::cout << "\toutput of FC passed\n";
@@ -1208,7 +1243,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						if(p->visited==0)
 							q.push(p);
 					}
-					else if (p->layerType == "Concat")
+					else if (p->layerType == "Concat"&&program_number!=0)
 					{
 						std::cout << " \tLauching concat\n";
 						int flag_parents = 0;
@@ -1224,11 +1259,13 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						{
 							std::cout << "\t concat not visited earlier\n";
 							//std::cout << "\t Input buffer index:" << p->parents.at(0)->layerOutBufferIndex  <<", "<<p->parents.at(1)->layerOutBufferIndex <<", "<<p->parents.at(2)->layerOutBufferIndex  <<", "<<p->parents.at(4)->layerOutBufferIndex  <<", " << std::endl;
-							kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+							
+								kernels[kernel_index] = new cl::Kernel(*programs[program_number-1], layerName, &err);
+							
 							assert(err == CL_SUCCESS);
 							std::cout<<"\tConcat Parents:"<<p->parents.size()<<std::endl;
 							std::cout << "\toutput\n";
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //concat output rows
 							assert(err == CL_SUCCESS);
 							p->layerOutBufferIndex = buffer_index;
@@ -1267,7 +1304,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							q.push(p);
 
 					}
-					else if(p->layerType == "SoftMax")
+					else if(p->layerType == "SoftMax"&&program_number!=0)
 					{	
 						int flag_parents = 0;
 						for (struct layersDetails *ch : p->parents)
@@ -1281,9 +1318,11 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						{
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << " outH, OutW, outDepth:"<<p->outH << ","<<p->outW<<","<<p->outDepth<<std::endl;
-						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+						
+							kernels[kernel_index] = new cl::Kernel(*programs[program_number-1], layerName, &err);
+						
 						assert(err == CL_SUCCESS);
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+						buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
 						err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]); //softmax output
 						assert(err == CL_SUCCESS);
 						p->layerOutBufferIndex = buffer_index;
@@ -1311,7 +1350,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						if(p->visited==0)
 							q.push(p);
 					}
-					else if (p->layerType == "Reshape")
+					else if (p->layerType == "Reshape"&&program_number!=0)
 					{
 						int flag_parents = 0;
 						for (struct layersDetails *ch : p->parents)
@@ -1323,13 +1362,15 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 						}						
 						if(!p->visited&&flag_parents==p->parents.size())
 						{
-						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
+						
+							kernels[kernel_index] = new cl::Kernel(*programs[program_number-1], layerName, &err);
+						
 						assert(err == CL_SUCCESS);
 						if (p->layerName == "Predictions_Reshape")
 						{
 							std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 							std::cout << " outH, OutW, outDepth:"<<p->outH << ","<<p->outW<<","<<p->outDepth<<std::endl;
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outDepth);
+							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outDepth);
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //reshape output
 							assert(err == CL_SUCCESS);
 							p->layerOutBufferIndex = buffer_index;
@@ -1439,5 +1480,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 		std::cout << "Image " << imageNames[i] << " : " << final_labels[i] << "\n";
 	}
  	*/
-	return 0;
+return 0;
+}
+	
 }
