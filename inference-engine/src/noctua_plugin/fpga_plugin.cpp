@@ -791,7 +791,16 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//Assing 0 as parent buffer index for root node
 	root->parentOutBufferIndex.push_back(0);
 	
-
+	std::cout<<"Image pixels are as follows:-\n";
+	for(int i=0;i<224;i++)
+	{
+		for(int j=0;j<224;j++)
+		{
+			std::cout<<float(images[(224*224*2)+(i*224)+j])<<"\t";
+		}
+		std::cout<<"\n";
+	}
+			
 
 	// Launching the kernels, the first one with images as input.
 
@@ -968,9 +977,9 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 							err = cmd_queues[p->layerID]->finish();
 							assert(err == CL_SUCCESS);
 							std::cout<<"\tLabels top 10\n";
-							//for(int i=0;i<1001;i++)
-								//std::cout<<final_labels[i]<<"\n";
-							break;
+							for(int i=0;i<1001;i++)
+								std::cout<<final_labels[i]<<"\n";
+							exit(0);
 						}
 					
 						}
