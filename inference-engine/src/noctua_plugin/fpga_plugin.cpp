@@ -686,11 +686,11 @@ void xml_parser1(char *filename,std::vector<std::string> kernel_names)
         const ptree & attributes = formats.get_child(at, empty_ptree());
         //cout << "Extracting attributes from " << at << ":" << endl;
         BOOST_FOREACH(const ptree::value_type &v, attributes)
-	{
+		{
 		if(v.first == "name")
 		{
 			//std::cout << "First: " << v.first.data() << " Second: " << v.second.data() << std::endl;
-			kernel_names.push_back(v.second.data);
+			kernel_names.push_back(v.second.data());
 		}
         }
     }
@@ -1483,4 +1483,4 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 return 0;
 }
 	
-}
+
