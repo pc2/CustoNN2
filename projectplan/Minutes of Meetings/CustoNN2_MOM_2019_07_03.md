@@ -26,11 +26,11 @@
 ### Issues and Actions
 | Issue | Owner | Time |
 |:--- | :--- | :---: |
-| Debugging Network | Suprajit , Rushikesh |
-| Check memory layout of generated conv kernel | Alina |
-| Performance modelling | Aayush , Amey |
-| Replace handwritten Kernels | Adesh |
-| Debugging intermediate inception modules | Chiru , Arathy |
+| Debugging Network | Suprajit , Rushikesh | Monday | 
+| Check memory layout of generated conv kernel | Alina | Monday | 
+| Performance modelling | Aayush , Amey | Monday | 
+| Replace handwritten Kernels | Adesh | Monday | 
+| Debugging intermediate inception modules | Chiru , Arathy | Monday | 
 
 |Action| Owner|Due Date|
 |:--- | :--- | :---: |
