@@ -1,0 +1,74 @@
+## Changelog for Googlenet kernel
+Following changes were made to the inception_nnvm.cl file:
+- Conv2d_1a_7x7_Conv2D:
+	- Replaced the kernel
+	- Added Padding kernel :Padding_Conv2d_1a_7x7_Conv2D
+- MaxPool_2a_3x3_MaxPool :
+	- Added Padding kernel : Padding_MaxPool_2a_3x3_MaxPool
+- Conv2d_2c_3x3_Conv2D :
+	- Added Padding kernel : Padding_Conv2d_2c_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D :
+	- Added Padding and transpose kernel : Should we have both of them?
+	- Replaced the kernel
+- Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D :
+	- Added Padding_Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D :
+	- Replaced the kernel
+	- Added Padding_Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D
+- Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D:
+	- Added Padding_Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D (Transpose kernel)
+Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D: 
+	- Added Padding_Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D:
+	- Replaced the kernel
+	- Added Padding_Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D
+- Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D:
+	- Added conv and transpose layer : Should we need both of them?
+	- Replaced the kernel
+- Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D:
+	- Replaced the kernel
+	- Added Padding kernel : Padding_Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D
+- Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D:
+	- Replaced the kernel
+	- Added Padding kernel : Padding_Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D
+- Mixed_4c_Branch_0_Conv2d_0a_1x1_Conv2D:
+	- Transpose kernel: Padding_Mixed_4c_Branch_0_Conv2d_0a_1x1_Conv2D
+- Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D :
+	- Padding kernel : Padding_Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D: 
+	- Padding kernel : Padding_Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D:
+	- Added Padding_Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Replaced kernel
+- Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D:
+	- Added Padding_Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Added Padding kernel 
+	- Replaced the kernel
+- Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D
+	- Added Padding kernel :Padding_Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Added Padding kernel :Padding_Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D: 
+	- Not able to find this kernel in TVM!!!!!
+- Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D:
+	- Padding kernel :Padding_Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D:
+	- Padding kernel :Padding_Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D:
+	- Padding kernel :Padding_Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+- Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D:
+	- Padding kernel :Padding_Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D
+	- Replaced the kernel
+
