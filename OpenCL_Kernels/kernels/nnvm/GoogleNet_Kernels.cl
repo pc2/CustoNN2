@@ -1,4 +1,3 @@
-
 __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 157323; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
@@ -1005,8 +1004,8 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
     }
 }
 __kernel void Padding_Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float* restrict T_pad, __global float* restrict input0) {
-  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
+  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 6144; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((16 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) < 240)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16) < 15)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256) * 14) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) / 16)) * 14) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16)) + -15)] : 0.000000e+00f);
   }
 }
 __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict compute,
@@ -1014,14 +1013,17 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-   for (int ff = 0; ff < 64; ++ff) {
+    for (int ff = 0; ff < 64; ++ff) {
     for (int yy = 0; yy < 14; ++yy) {
       for (int xx = 0; xx < 14; ++xx) {
-        compute[((((ff * 14) + yy) * 14) + xx)] = input2[ff];
-        for (int rc = 0; rc < 512; ++rc) {
-          compute[((((ff * 14) + yy) * 14) + xx)] = (compute[((((ff * 14) + yy) * 14) + xx)] + (input0[((((rc * 14) + yy) * 14) + xx)] * input1[((ff * 512) + rc)]));
+        compute[((((ff * 14) + yy) * 14) + xx)] = 0.000000e+00f;
+        for (int rc = 0; rc < 24; ++rc) {
+          for (int ry = 0; ry < 3; ++ry) {
+            for (int rx = 0; rx < 3; ++rx) {
+              compute[((((ff * 14) + yy) * 14) + xx)] = (compute[((((ff * 14) + yy) * 14) + xx)] + (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input1[((((((ff * 24) + rc) * 3) + ry) * 3) + rx)]));
+            }
+          }
         }
-        compute[((((ff * 14) + yy) * 14) + xx)] = (compute[((((ff * 14) + yy) * 14) + xx)] > 0) ? compute[((((ff * 14) + yy) * 14) + xx)] : 0.0;
       }
     }
   }
