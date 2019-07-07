@@ -58,7 +58,8 @@ Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D:
 	- Added Padding kernel :Padding_Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D
 	- Replaced the kernel
 - Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D: 
-	- Not able to find this kernel in TVM!!!!!
+	- Not able to find this kernel in TVM!!!!! - Found a similar kernel with same dimension. Used this : fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_11_kernel0
+	- Replaced the kernel 
 - Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D:
 	- Padding kernel :Padding_Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D
 	- Replaced the kernel
