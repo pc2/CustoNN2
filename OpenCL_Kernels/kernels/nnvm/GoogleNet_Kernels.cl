@@ -1362,11 +1362,10 @@ __kernel void Padding_Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float* res
     T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((16 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) < 240)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16) < 15)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256) * 14) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) / 16)) * 14) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16)) + -15)] : 0.000000e+00f);
   }
 }
-__kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict img,
-                                                     __global float *restrict weights,
-                                                     __global float *restrict bias,
-                                                     int number_of_images,
-                                                     __global float *restrict output)
+__kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict compute,
+                                                     __global float *restrict input0,
+                                                     __global float *restrict input1,
+                                                     __global float *restrict input2)
 {
    for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 14; ++yy) {
