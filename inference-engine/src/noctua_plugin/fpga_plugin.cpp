@@ -754,7 +754,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//Print the details of each layers in the network to check their correctness.
 	//print_layersDetails(cnnLayersList);
 
-	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/inception_modified_nnvm/inception_modified_nnvm.aocx", std::ios::in | std::ios::binary);
+	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/inception_modified_nnvm/GoogleNet_Kernels.aocx", std::ios::in | std::ios::binary);
+ 
 
 	//checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
 	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
@@ -843,7 +844,7 @@ float normalized_image[dim_x * dim_y * dim_depth * num_images];
 
 */
 
-
+ 
 
 
 
@@ -851,6 +852,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
     err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images, normalized_image); //images buffer
     assert(err == CL_SUCCESS);
     err = cmd_queues[0]->finish();
+	buffer_index++; 
     std::cout << " Error code after image transfer:" << kernel_index << " is ===>" << err << std::endl;
     assert(err == CL_SUCCESS);
     std::cout << "images copied\n";
@@ -1056,7 +1058,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							int dim2 = p->outW+pad_x+pad_y;
 							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * dim1 * dim2 * p->outDepth);
 							int pad_out_index = buffer_index;
-							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of pad
+							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]);//err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of pad							
 							assert(err == CL_SUCCESS);
 							buffer_index++;							
 							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]);	//input to pad 					
@@ -1354,8 +1356,9 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							std::cout<<"Input Buffer Index : ##"<<  p->parents.at(2)->layerOutBufferIndex <<"  " << p->parents.at(3)->layerOutBufferIndex<<std::endl ;
 							kernel_index++;
 							p->visited = 1;
-							/*  INCEPTION BEGIN */
+							// INCEPTION BEGIN  
 							//Last concat layer to write the results
+							/*
 							if (p->layerName == "Mixed_3b_concat")
 							{
 								float final_labels[p->outH * p->outW * p->outDepth];
@@ -1380,7 +1383,8 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								std::cout << "\tConcat end\n";
 								exit(0);
 							}
-							/*  INCEPTION END */ 
+							   INCEPTION END  
+							*/
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 						}
 						if(p->visited == 0)
