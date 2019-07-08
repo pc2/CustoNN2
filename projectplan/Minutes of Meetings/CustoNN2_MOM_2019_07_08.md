@@ -31,9 +31,9 @@
 ### Issues and Actions
 | Issue | Owner | Time |
 |:--- | :--- | :---: |
-| Debugging Network | Suprajith , Rushikesh , Adesh | Wednesday | 
-| Performance modelling | Aayush , Amey | Monday | 
-| Debugging intermediate inception modules | Chiru , Arathy | Wednesday | 
+| Debugging Network - Why is it not working perfectly ?? | Suprajith , Rushikesh , Adesh | Wednesday | 
+| Performance modelling - more updates  | Aayush , Amey | Wednesday | 
+| Debugging intermediate inception modules - deeper layers | Chiru , Arathy | Wednesday | 
 
 |Action| Owner|Due Date|
 |:--- | :--- | :---: |
