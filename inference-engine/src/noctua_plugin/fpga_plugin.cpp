@@ -869,7 +869,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 
 	
 	/*  INCEPTION BEGIN */
-
+/*
 	//Size of the output dimension of previous inception
 	float inceptionResults[28*28*256];
 	std::ifstream inFile;
@@ -894,7 +894,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 	buffers[249] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * 28*28*256);
     std::cout << "Test Read = " << inceptionResults[1] << std::endl; 
 
- /*
+ 
 
 	//Write buffers for Input of inception
 	err = cmd_queues[22]->enqueueWriteBuffer(*buffers[249], CL_FALSE, 0, sizeof(cl_float) *28*28*256, inceptionResults); //images buffer
@@ -983,6 +983,9 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						//For zero padding conv layer
 						if (p->params["pads_begin"].at(0) == '0' && p->params["pads_begin"].at(2) == '0' && p->params["pads_end"].at(0) == '0' && p->params["pads_end"].at(2) == '0')
 						{
+							
+							static int pad_out_index = 0;
+							
 							std::cout<<"\t Kernel Index:"<<kernel_index<<std::endl;
 							kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 							std::cout << "\t Kernel Created "<<std::endl;
@@ -1000,8 +1003,11 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							}
 							buffer_index++;
 
-							//input
 							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //first argument, input, also the output of the previous layer
+
+
+							//err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //first argument, input, also the output of the previous layer
+						
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "\timages passed\n";
