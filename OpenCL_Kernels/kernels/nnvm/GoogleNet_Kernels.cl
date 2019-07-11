@@ -356,7 +356,7 @@ __kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                 {
                     compute[((((ff * 28) + yy) * 28) + xx)] = (compute[((((ff * 28) + yy) * 28) + xx)] + (input0[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)]));
                 }
-                compute[((((ff * 28) + yy) * 28) + xx)] = (compute[((((ff * 28) + yy) * 28) + xx)] > 0) ? (compute[((((ff * 28) + yy) * 28) + xx)] > 0) : 0.000000e+00f;
+                compute[((((ff * 28) + yy) * 28) + xx)] = (compute[((((ff * 28) + yy) * 28) + xx)] > 0) ? (compute[((((ff * 28) + yy) * 28) + xx)]) : 0.000000e+00f;
             }
         }
     }
