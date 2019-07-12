@@ -7,4 +7,4 @@
 - The output will be stored in  the location specified in ` file_path_xxxx` where xxxx stands for NHWC or NCHW .
 - You can print out the contents of `Session_out` for any layer to see the output.
 - The format used by TF is NHWC in this case. So modify your print statements appropriatley.
-- TODO: The results of all the layers are to be stored in a common directory
+- TODO: The results of all the layers are to be stored in a common directory . Until 4c Branch1 COnv 1x1 done
