@@ -64,7 +64,7 @@ with tf.Graph().as_default() as graph: # Set default graph as graph
                                 #       print("Operation Name :",op.name ,file=open("layers.txt", "a"))         # Operation name
                                 #       print("Tensor Stats :",str(op.values()) , file=open("layers.txt", "a"))      # Tensor name
 
-                                run_until = 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/Relu:0'
+                                run_until = 'InceptionV1/Logits/Predictions/Reshape_1:0'
                                 
                                 # Set the following  to 1 when maxpool is inside inception module
                                 # This is exception override when Maxpool is inside inception module.
@@ -79,12 +79,12 @@ with tf.Graph().as_default() as graph: # Set default graph as graph
                                 #appear out of incpetion modules. This is a list to process such tensor
                                 #ops differently to print their outputs
                                 
-                                exception_list = ["concat","MaxPool"]
+                                exception_list = ["concat","MaxPool","AvgPool","Predictions"]
                                 
                                 
                                  
                                 
-                                if(run_until.find(exception_list[0]) != -1 or run_until.find(exception_list[1]) != -1) :
+                                if(run_until.find(exception_list[0]) != -1 or run_until.find(exception_list[1]) != -1  or run_until.find(exception_list[2]) != -1 or  run_until.find(exception_list[3]) != -1) :
                                     exception_layer = 1
                                     print("Exception is {} so truncated file name will be used".format(exception_layer) )
                                 else:
