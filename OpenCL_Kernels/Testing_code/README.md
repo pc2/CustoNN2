@@ -2,9 +2,9 @@
 - Tensorflow implementation [Googlenet.py](https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018/blob/tvm/OpenCL_Kernels/Testing_code/googlenet.py)(a python file) in this dir allows us to run any frozen pb file
 - Make sure you have Tensorflow , scipy , opencv , numpy packages. 
 - We can take advantage of this to run Googlent for verification of our kernel implementations
-- To run the implementation until any given layer , just change `l_output = graph.get_tensor_by_name('<insert layer name>')` for example `l_output = graph.get_tensor_by_name('InceptionV1/InceptionV1/MaxPool_3a_3x3/MaxPool:0')` will run until layer 3a Maxpool.
+- To run the implementation until any given layer , just change `run_until` ex : `run_until = 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/Relu:0'`  
    Please refer to [TF Googlenet tensor names](https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018/blob/tvm/OpenCL_Kernels/Testing_code/TF_Googlenet_Layers.txt) 
-- The output will be stored in  the variable `Session_out`
+- The output will be stored in  the location specified in ` file_path_xxxx` where xxxx stands for NHWC or NCHW .
 - You can print out the contents of `Session_out` for any layer to see the output.
 - The format used by TF is NHWC in this case. So modify your print statements appropriatley.
 - TODO: The results of all the layers are to be stored in a common directory
