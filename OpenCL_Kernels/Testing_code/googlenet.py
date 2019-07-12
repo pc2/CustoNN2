@@ -57,19 +57,27 @@ with tf.Graph().as_default() as graph: # Set default graph as graph
                                 op_dict=None,
                                 producer_op_list=None
                                 )
-
+                                
+                                #Uncomment the following for loop if you want to generate tensor ops and save to a file named layers.txt
                                 # Print the name of operations in the session
                                 #for op in graph.get_operations():
                                 #       print("Operation Name :",op.name ,file=open("layers.txt", "a"))         # Operation name
                                 #       print("Tensor Stats :",str(op.values()) , file=open("layers.txt", "a"))      # Tensor name
 
                                 run_until = 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/Relu:0'
+                                
+                                # Set the following  to 1 when maxpool is inside inception module
+                                # This is exception override when Maxpool is inside inception module.
                                 exception_override = 0 
                                  
                                 # INFERENCE Here
                                 l_input = graph.get_tensor_by_name('input:0') # Input Tensor
                                 l_output = graph.get_tensor_by_name(run_until) # Output Tensor
                                 
+                                
+                                #the format for run_until is different for maxpools and concat which
+                                #appear out of incpetion modules. This is a list to process such tensor
+                                #ops differently to print their outputs
                                 
                                 exception_list = ["concat","MaxPool"]
                                 
@@ -109,9 +117,11 @@ with tf.Graph().as_default() as graph: # Set default graph as graph
                                 print(file_path_info)
                                 
                                  
+                                #change the path here
+                                file_path_xxxx ="D:\Paderborn\ProjectCNNFPGA\Tensorflow_code\TF_Outpts"
                                 
-                                file_path_NHWC ='D:\Paderborn\ProjectCNNFPGA\Tensorflow_code\TF_Outpts\{}_NHWC.txt'.format(file_path_info)
-                                file_path_NCHW ='D:\Paderborn\ProjectCNNFPGA\Tensorflow_code\TF_Outpts\{}_NCHW.txt'.format(file_path_info)
+                                file_path_NHWC =str(file_path_xxxx)+ "\{}_NHWC.txt".format(file_path_info)
+                                file_path_NCHW =str(file_path_xxxx)+ "\{}_NCHW.txt".format(file_path_info)
 
 
                                 
