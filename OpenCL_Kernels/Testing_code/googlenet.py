@@ -59,33 +59,102 @@ with tf.Graph().as_default() as graph: # Set default graph as graph
                                 )
 
                                 # Print the name of operations in the session
-                                for op in graph.get_operations():
-                                        print("Operation Name :",op.name ,file=open("layers.txt", "a"))         # Operation name
-                                        print("Tensor Stats :",str(op.values()) , file=open("layers.txt", "a"))      # Tensor name
+                                #for op in graph.get_operations():
+                                #       print("Operation Name :",op.name ,file=open("layers.txt", "a"))         # Operation name
+                                #       print("Tensor Stats :",str(op.values()) , file=open("layers.txt", "a"))      # Tensor name
 
+                                run_until = 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/Relu:0'
+                                exception_override = 0 
+                                 
                                 # INFERENCE Here
                                 l_input = graph.get_tensor_by_name('input:0') # Input Tensor
-                                l_output = graph.get_tensor_by_name('InceptionV1/InceptionV1/Mixed_3c/concat:0') # Output Tensor
+                                l_output = graph.get_tensor_by_name(run_until) # Output Tensor
                                 
+                                
+                                exception_list = ["concat","MaxPool"]
+                                
+                                
+                                 
+                                
+                                if(run_until.find(exception_list[0]) != -1 or run_until.find(exception_list[1]) != -1) :
+                                    exception_layer = 1
+                                    print("Exception is {} so truncated file name will be used".format(exception_layer) )
+                                else:
+                                    exception_layer =  0                                   
+                                    print("Exception is {} so normal file name will be used".format(exception_layer) )
+                                    
+                                if(exception_override == 1 and exception_layer == 1):
+                                    exception_layer = 0 
+                                
+                                
+                                if (exception_layer == 0):
+                                    inception_model,inception_model_re,inception_level,branch_level,operation_name,extra_info = run_until.split("/")
+                                    file_path_info = str(inception_level)+"_"+str(branch_level)+"_"+str(operation_name)
+                                elif (exception_layer == 1):
+                                    inception_model,inception_model_re,inception_level,operation_name_mit_extra = run_until.split("/") 
+                                    operation_name = operation_name_mit_extra.split(":")
+                                    branch_level = str("keinbranch")
+                                    file_path_info = str(inception_level)+"_"+str(branch_level)+"_"+str(operation_name[0])
+                                    
+                                    
+                                    
+                                    
+                                    
+                                print(inception_level)
+                                print(branch_level)
+                                print(operation_name)
+                                print(extra_info)
+                                
+                                 
+                                print(file_path_info)
+                                
+                                 
+                                
+                                file_path_NHWC ='D:\Paderborn\ProjectCNNFPGA\Tensorflow_code\TF_Outpts\{}_NHWC.txt'.format(file_path_info)
+                                file_path_NCHW ='D:\Paderborn\ProjectCNNFPGA\Tensorflow_code\TF_Outpts\{}_NCHW.txt'.format(file_path_info)
+
 
                                 
                                 print ("Shape of input : ", tf.shape(l_input))#  , file=open("output.txt", "a"))
+                                
                                 #initialize_all_variables
                                 tf.global_variables_initializer()
 
-                                # Run Kitty model on single image
+                                # Run Googlenet model on single image
                                 Session_out = sess.run( l_output, feed_dict ={l_input : image})
                                 max = -99999
                                 max_ind = 0
+ 
+
+##############################################################################################################################################################
+     
+                                height = len(Session_out[0])
+                                width  = len(Session_out[0][0])
+                                channel_depth  = len(Session_out[0][0][0])
                                 
-                                #for filter_val in range(256) :
+                                print("\nHeight of tensor :{} \nWidth  of tensor :{}\nDepth  of tensor :{}".format(height,width,channel_depth))
+                                 
+
                                 
-                                for i in range (28):                                     
-                                #for j in range(28) :        
-                                    print(str(Session_out[0][0][i][0]) , file=open("output.txt", "a"))
+                                myfile_NCHW = open(file_path_NCHW, 'w')
+                                for i in range (channel_depth): 
+                                    for j in range (height): 
+                                        for k in range (width): 
                                      
-                                  
-                                        
+                                            myfile_NCHW.write(str(Session_out[0][j][k][i]) +'\n')                                
+                                     
+                                myfile_NCHW.close()  
+                                
+
+                                
+                                myfile_NHWC = open(file_path_NHWC, 'w')
+                                for i in range (height): 
+                                    for j in range (width): 
+                                        for k in range (channel_depth): 
+                                     
+                                            myfile_NHWC.write(str(Session_out[0][i][j][k]) +'\n')                                
+                                     
+                                myfile_NHWC.close()                                       
                                 
                                  
                                 '''
