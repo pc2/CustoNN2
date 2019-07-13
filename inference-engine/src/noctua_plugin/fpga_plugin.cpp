@@ -27,7 +27,10 @@ using namespace InferenceEngine;
 std::string supported_layers[6] = {"Convolution", "Pooling", "FullyConnected", "Concat","Reshape"};
 std::map<std::string, int> layerIDMap;
 std::vector<int> ID_list;
-
+// OUTPUT WRITE BEING //
+int outputWriteFlag = 0;
+std:: string resultsFileAppender = "Results__";
+// OUTPUT WRITE END //
 /**
  * Data structure to store information of each layer
  */
@@ -878,7 +881,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 
 	
 	/*  INCEPTION BEGIN */
-
+/*
 	//Size of the output dimension of previous inception
 	float inceptionResults[28*28*256];
 	std::ifstream inFile;
@@ -903,7 +906,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 	buffers[249] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * 28*28*256);
     std::cout << "Test Read = " << inceptionResults[1] << std::endl; 
 
- /*
+ 
 
 	//Write buffers for Input of inception
 	err = cmd_queues[22]->enqueueWriteBuffer(*buffers[249], CL_FALSE, 0, sizeof(cl_float) *28*28*256, inceptionResults); //images buffer
@@ -992,6 +995,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						//For zero padding conv layer
 						if (p->params["pads_begin"].at(0) == '0' && p->params["pads_begin"].at(2) == '0' && p->params["pads_end"].at(0) == '0' && p->params["pads_end"].at(2) == '0')
 						{
+
 							int pad_out_index = 0;
 							/*
 							if(p->layerName == "Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D")
@@ -1024,12 +1028,15 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 
 							}
 							*/
+
+							
+							//static int pad_out_index = 0;
+
 							
 							std::cout<<"\t Kernel Index:"<<kernel_index<<std::endl;
 							kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 							std::cout << "\t Kernel Created "<<std::endl;
 							assert(err == CL_SUCCESS);
-							
 							//output
 							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of conv
@@ -1046,7 +1053,12 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							//if(p->layerName == "Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D")
 								//err = kernels[kernel_index]->setArg(1, *buffers[pad_out_index]);
 							//else 
+
 							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //first argument, input, also the output of the previous layer
+
+
+							//err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //first argument, input, also the output of the previous layer
+						
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "\timages passed\n";
@@ -1070,12 +1082,38 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							err = kernels[kernel_index]->setArg(3, *buffers[buffer_index]);
 							assert(err == CL_SUCCESS);
 							buffer_index++;
+
 							std::cout << "\tbiases passed\n";
 							
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 							assert(err == CL_SUCCESS);
 							kernel_index++;
 							err = cmd_queues[p->layerID]->finish();
+							/*
+							// OUTPUT WRITE BEING //
+							if(outputWriteFlag == 1){ 
+								float final_labels[p->outH * p->outW * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
+								err = cmd_queues[p->layerID]->finish();
+								assert(err == CL_SUCCESS);
+								std::ofstream outdataincep;
+								std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_"+p->layerName+".txt";
+								outdataincep.open(outFileName);
+								if (!outdataincep)
+								{ // file couldn't be opened
+									std::cerr << "Error: file could not be opened" << std::endl;
+										exit(1);
+								}
+								std::cout << "\tConcat output\n";
+								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
+								{
+									//std::cout << final_labels[i] << " ";
+									outdataincep << final_labels[i] << "\n";
+								}
+								outdataincep.close(); 
+							}
+							// OUTPUT WRITE END //
+							*/
 							assert(err == CL_SUCCESS);
 							p->visited = 1;
 						}
@@ -1111,6 +1149,31 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							assert(err == CL_SUCCESS);
 							
 							err = cmd_queues[p->layerID]->finish();
+							/*
+							// OUTPUT WRITE BEING //
+							if(outputWriteFlag == 1){ 
+								float final_labels[dim1 * dim2 * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[pad_out_index], CL_TRUE, 0, sizeof(cl_float) * dim1 * dim2 * p->outDepth, final_labels);
+								err = cmd_queues[p->layerID]->finish();
+								assert(err == CL_SUCCESS);
+								std::ofstream outdataincep;
+								std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_"+pad_kernel_name+".txt";
+								outdataincep.open(outFileName);
+								if (!outdataincep)
+								{ // file couldn't be opened
+									std::cerr << "Error: file could not be opened" << std::endl;
+										exit(1);
+								}
+								std::cout << "\tConcat output\n";
+								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
+								{
+									//std::cout << final_labels[i] << " ";
+									outdataincep << final_labels[i] << "\n";
+								}
+								outdataincep.close(); 
+							}
+							// OUTPUT WRITE END //
+							*/
 							assert(err == CL_SUCCESS);
 							kernel_index++;
 
@@ -1182,6 +1245,31 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							std::cout << "\t Error code soon after conv layer for kernel:" << kernel_index << " is ===>" << err << std::endl;
 							err = cmd_queues[p->layerID]->finish();
 							assert(err == CL_SUCCESS);
+							/*
+							// OUTPUT WRITE BEING //
+							if(outputWriteFlag == 1){ 
+								float final_labels[p->outH * p->outW * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
+								err = cmd_queues[p->layerID]->finish();
+								assert(err == CL_SUCCESS);
+								std::ofstream outdataincep;
+								std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_"+p->layerName+".txt";
+								outdataincep.open(outFileName);
+								if (!outdataincep)
+								{ // file couldn't be opened
+									std::cerr << "Error: file could not be opened" << std::endl;
+										exit(1);
+								}
+								std::cout << "\tConcat output\n";
+								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
+								{
+									//std::cout << final_labels[i] << " ";
+									outdataincep << final_labels[i] << "\n";
+								}
+								outdataincep.close(); 
+							}
+							// OUTPUT WRITE END //
+							*/
 							kernel_index++;
 							p->visited = 1;
 						}
@@ -1229,8 +1317,12 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						{
 						
 						// call padding kernels if padding is not zero.
+
 						/*
 						if (p->params["pads_begin"].at(0) != '0' && p->params["pads_end"].at(0) != '0')
+
+						if (p->params["pads_begin"].at(0) != '0' ||  p->params["pads_end"].at(0) != '0')
+
 						{
 							
 							std::string paddingKernelNameStr = "Padding_" + p->layerName;
@@ -1258,7 +1350,29 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 							assert(err == CL_SUCCESS);
 							cmd_queues[p->layerID]->finish();
-							
+							// OUTPUT WRITE BEING //
+							if(outputWriteFlag == 1){ 
+								float final_labels[ p->parents.at(0)->outW * p->parents.at(0)->outH * p->parents.at(0)->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->parentOutBufferIndex.at(0)], CL_TRUE, 0, sizeof(cl_float) * p->parents.at(0)->outW * p->parents.at(0)->outH * p->parents.at(0)->outDepth, final_labels);
+								err = cmd_queues[p->layerID]->finish();
+								assert(err == CL_SUCCESS);
+								std::ofstream outdataincep;
+								std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_"+p->layerName+".txt";
+								outdataincep.open(outFileName);
+								if (!outdataincep)
+								{ // file couldn't be opened
+									std::cerr << "Error: file could not be opened" << std::endl;
+										exit(1);
+								}
+								std::cout << "\tConcat output\n";
+								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
+								{
+									//std::cout << final_labels[i] << " ";
+									outdataincep << final_labels[i] << "\n";
+								}
+								outdataincep.close(); 
+							}
+							// OUTPUT WRITE END //
 							
 							kernel_index++;
 							p->visited = 1;
@@ -1287,6 +1401,31 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						assert(err == CL_SUCCESS);
 						cmd_queues[p->layerID]->finish();
 						assert(err == CL_SUCCESS);
+						/*
+						// OUTPUT WRITE BEING //
+							if(outputWriteFlag == 1){ 
+								float final_labels[p->outH * p->outW * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
+								err = cmd_queues[p->layerID]->finish();
+								assert(err == CL_SUCCESS);
+								std::ofstream outdataincep;
+								std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_"+p->layerName+".txt";
+								outdataincep.open(outFileName);
+								if (!outdataincep)
+								{ // file couldn't be opened
+									std::cerr << "Error: file could not be opened" << std::endl;
+										exit(1);
+								}
+								std::cout << "\tConcat output\n";
+								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
+								{
+									//std::cout << final_labels[i] << " ";
+									outdataincep << final_labels[i] << "\n";
+								}
+								outdataincep.close(); 
+							}
+							// OUTPUT WRITE END //
+						*/
 						kernel_index++;
 						p->visited = 1;
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
@@ -1428,6 +1567,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							cmd_queues[p->layerID]->finish();
 							std::cout<<"Input Buffer Index : ##"<<  p->parents.at(0)->layerOutBufferIndex <<"  " << p->parents.at(1)->layerOutBufferIndex<<std::endl ;
 							std::cout<<"Input Buffer Index : ##"<<  p->parents.at(2)->layerOutBufferIndex <<"  " << p->parents.at(3)->layerOutBufferIndex<<std::endl ;
+
 							std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 							kernel_index++;
 							p->visited = 1;
@@ -1476,7 +1616,39 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							// INCEPTION BEGIN  
 							//Last concat layer to write the results
 							
+							
+						/*
+							// OUTPUT WRITE BEING //
+							if(outputWriteFlag == 1){ 
+								float final_labels[p->outH * p->outW * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
+								err = cmd_queues[p->layerID]->finish();
+								assert(err == CL_SUCCESS);
+								std::ofstream outdataincep;
+								std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_"+p->layerName+".txt";
+								outdataincep.open(outFileName);
+								if (!outdataincep)
+								{ // file couldn't be opened
+									std::cerr << "Error: file could not be opened" << std::endl;
+										exit(1);
+								}
+								std::cout << "\tConcat output\n";
+								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
+								{
+									//std::cout << final_labels[i] << " ";
+									outdataincep << final_labels[i] << "\n";
+								}
+								outdataincep.close(); 
+							}
+							// OUTPUT WRITE END //
+							*/
+							//kernel_index++;
+							//p->visited = 1;
+							// INCEPTION BEGIN  
+							//Last concat layer to write the results
+							
 							if (p->layerName == "Mixed_4c_concat")
+
 							{
 								float final_labels[p->outH * p->outW * p->outDepth];
 								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
@@ -1500,10 +1672,15 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								std::cout << "\tConcat end\n";
 								exit(0);
 							}
-							
+					
 							  // INCEPTION END  
 							
 						
+
+							    
+							
+						//std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+
 						}
 						if(p->visited == 0)
 							q.push(p);
