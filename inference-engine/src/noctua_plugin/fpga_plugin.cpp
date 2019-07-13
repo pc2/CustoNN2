@@ -151,8 +151,8 @@ void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwo
 
 	auto inputInfoItem = *inputInfo.begin();
 	inputInfoItem.second->setPrecision(Precision::U8);
-	//inputInfoItem.second->setLayout(Layout::NCHW);
-        inputInfoItem.second->setLayout(Layout::NHWC);   
+	inputInfoItem.second->setLayout(Layout::NCHW);
+        //inputInfoItem.second->setLayout(Layout::NHWC);   
 	std::vector<std::shared_ptr<unsigned char>> imagesData;
 	std::string input_name = network.getInputsInfo().begin()->first;
 	int imageIndex = 0;
@@ -754,7 +754,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	//Print the details of each layers in the network to check their correctness.
 	//print_layersDetails(cnnLayersList);
 
-	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/inception_modified_nnvm/inception_modified_nnvm.aocx", std::ios::in | std::ios::binary);
+	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/inception_modified_nnvm/GoogleNet_Kernels.aocx", std::ios::in | std::ios::binary);
+ 
 
 	//checkErr(aocx_stream.is_open() ? CL_SUCCESS:-1, overlay_name);
 	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
@@ -832,6 +833,15 @@ float normalized_image[dim_x * dim_y * dim_depth * num_images];
         }
     }
 
+	float transpose_image[224*224*3];
+    for(int i=0;i<224*224;i++)
+	{
+		for(int j=0;j<3;j++)
+		{
+			transpose_image[(i*3)+j] = normalized_image[(j*224*224)+i]; 
+		}
+	}
+
 /*
    for(int i =0;i<10;i++)
     {
@@ -843,14 +853,15 @@ float normalized_image[dim_x * dim_y * dim_depth * num_images];
 
 */
 
-
+ 
 
 
 
 buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images);
-    err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images, normalized_image); //images buffer
+    err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images, transpose_image); //images buffer
     assert(err == CL_SUCCESS);
     err = cmd_queues[0]->finish();
+	buffer_index++; 
     std::cout << " Error code after image transfer:" << kernel_index << " is ===>" << err << std::endl;
     assert(err == CL_SUCCESS);
     std::cout << "images copied\n";
@@ -981,6 +992,39 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						//For zero padding conv layer
 						if (p->params["pads_begin"].at(0) == '0' && p->params["pads_begin"].at(2) == '0' && p->params["pads_end"].at(0) == '0' && p->params["pads_end"].at(2) == '0')
 						{
+							int pad_out_index = 0;
+							/*
+							if(p->layerName == "Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D")
+							{
+							std::string pad_kernel_name = "Padding_"+p->layerName;
+							const char *pad_name = pad_kernel_name.c_str();
+							//std::cout<<"\t Kernel Index:"<<kernel_index<<std::endl;
+							kernels[kernel_index] = new cl::Kernel(program, pad_name, &err);
+							std::cout << "\t Kernel Created "<<std::endl;
+							assert(err == CL_SUCCESS);
+							//int pad_x = p->params["pads_begin"].at(0) - '0';
+							//int pad_y = p->params["pads_end"].at(0) - '0';
+							//std::cout<<"Pad x: "<<pad_x<<" Pad y: "<<pad_y<<"\n";
+							//int dim1 = p->outH+pad_x+pad_y;
+							//int dim2 = p->outW+pad_x+pad_y;
+							buffer_index++;
+							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float)*200704);
+							int pad_out_index = buffer_index;
+							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]);//err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of pad							
+							assert(err == CL_SUCCESS);
+							buffer_index++;							
+							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]);	//input to pad 					
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							assert(err == CL_SUCCESS);
+							
+							err = cmd_queues[p->layerID]->finish();
+							assert(err == CL_SUCCESS);
+							kernel_index++;
+
+
+							}
+							*/
+							
 							std::cout<<"\t Kernel Index:"<<kernel_index<<std::endl;
 							kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 							std::cout << "\t Kernel Created "<<std::endl;
@@ -999,6 +1043,9 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							buffer_index++;
 
 							//input
+							//if(p->layerName == "Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D")
+								//err = kernels[kernel_index]->setArg(1, *buffers[pad_out_index]);
+							//else 
 							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //first argument, input, also the output of the previous layer
 							assert(err == CL_SUCCESS);
 							buffer_index++;
@@ -1056,7 +1103,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							int dim2 = p->outW+pad_x+pad_y;
 							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * dim1 * dim2 * p->outDepth);
 							int pad_out_index = buffer_index;
-							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of pad
+							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]);//err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of pad							
 							assert(err == CL_SUCCESS);
 							buffer_index++;							
 							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]);	//input to pad 					
@@ -1141,15 +1188,15 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						std::cout << "\t Error code  after conv layer finish for kernel:" << kernel_index << " is ===>" << err << std::endl;
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
-						
-						if(p->layerName=="Conv2d_0c_1x1_Conv2D")
+						/*
+						if(p->layerName=="Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D")
 						{		
 							float final_labels[ p->outH * p->outW * p->outDepth];
 							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float)* p->outH * p->outW * p->outDepth, final_labels);
 							err = cmd_queues[p->layerID]->finish();
 							assert(err == CL_SUCCESS);
 							std::fstream file1;
-							file1.open("Conv2d_0c_1x1_Conv2D.txt",std::ios::out);
+							file1.open("Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D.txt",std::ios::out);
 							std::cout<<"\tLabels top 10\n";
 							int cnt = 0;
 							for(int i=0;i<p->outH * p->outW * p->outDepth;i++)
@@ -1162,7 +1209,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 
 							file1.close();
 						}
-						
+						*/
 						}
 							if(p->visited==0)
 								q.push(p);
@@ -1180,7 +1227,9 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						}
 						if(!p->visited&&flag_parents==p->parents.size())
 						{
+						
 						// call padding kernels if padding is not zero.
+						/*
 						if (p->params["pads_begin"].at(0) != '0' && p->params["pads_end"].at(0) != '0')
 						{
 							
@@ -1215,6 +1264,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							p->visited = 1;
 							 
 						}
+						*/
 						std::cout << "\t kernel:"<<layerName<<std::endl;
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 						assert(err == CL_SUCCESS);
@@ -1241,6 +1291,30 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						p->visited = 1;
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+						
+						/*
+						if(p->layerName=="MaxPool_3a_3x3_MaxPool")
+						{		
+							float final_labels[ p->outH * p->outW * p->outDepth];
+							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float)* p->outH * p->outW * p->outDepth, final_labels);
+							err = cmd_queues[p->layerID]->finish();
+							assert(err == CL_SUCCESS);
+							std::fstream file1;
+							file1.open("MaxPool_3a_3x3_MaxPool.txt",std::ios::out);
+							std::cout<<"\tLabels top 10\n";
+							int cnt = 0;
+							for(int i=0;i<p->outH * p->outW * p->outDepth;i++)
+							{
+								file1<<final_labels[i]<<"\n";
+								cnt++;
+							}
+							std::cout<<"Number of values written to file : "<<cnt<<"\n";
+							exit (0);
+
+							file1.close();
+						}
+						*/
+
 						}
 						if(p->visited==0)
 							q.push(p);
@@ -1300,7 +1374,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 					}
 					else if (p->layerType == "Concat"  && launchFlag)
 					{
-						std::cout << " \tLauching concat\n";
+						std::cout << " \tLaunching concat\n";
 						int flag_parents = 0;
 						for (struct layersDetails *ch : p->parents)
 						{
@@ -1322,10 +1396,12 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //concat output rows
 							assert(err == CL_SUCCESS);
 							p->layerOutBufferIndex = buffer_index;
+							/*
 							for (struct layersDetails *ch : p->children)
 							{
 								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
 							}
+							*/
 							buffer_index++;
 							std::cout << "\tconv1\n";
 							//input
@@ -1352,11 +1428,55 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							cmd_queues[p->layerID]->finish();
 							std::cout<<"Input Buffer Index : ##"<<  p->parents.at(0)->layerOutBufferIndex <<"  " << p->parents.at(1)->layerOutBufferIndex<<std::endl ;
 							std::cout<<"Input Buffer Index : ##"<<  p->parents.at(2)->layerOutBufferIndex <<"  " << p->parents.at(3)->layerOutBufferIndex<<std::endl ;
+							std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 							kernel_index++;
 							p->visited = 1;
-							/*  INCEPTION BEGIN */
+							
+							std::string transpose_name = "Transpose_"+p->layerName;
+							const char *t_name = transpose_name.c_str();
+							
+							kernels[kernel_index] = new cl::Kernel(program, t_name, &err);
+							if(err == 0)
+							{
+							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //transpose output, goes to children of concat
+							assert(err == CL_SUCCESS);
+							
+							for (struct layersDetails *ch : p->children)
+							{
+								ch->parentOutBufferIndex.push_back(buffer_index);
+							}
+
+							
+
+							err = kernels[kernel_index]->setArg(1, *buffers[p->layerOutBufferIndex]); //output of concat, input to transpose
+							assert(err == CL_SUCCESS);
+							std::cout<<"Transpose kernel\n";
+							std::cout << "\t Input buffer index:" << p->layerOutBufferIndex  << std::endl;
+							std::cout << "\t Output buffer index:" << buffer_index<<std::endl;
+						
+							//p->layerOutBufferIndex = buffer_index;
+
+							buffer_index++;
+
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+							assert(err == CL_SUCCESS);
+							cmd_queues[p->layerID]->finish();
+							
+							}
+							else
+							{
+								for (struct layersDetails *ch : p->children)
+								{
+								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
+								}
+							}
+							kernel_index++;
+							// INCEPTION BEGIN  
 							//Last concat layer to write the results
-							if (p->layerName == "Mixed_3b_concat")
+							
+							if (p->layerName == "Mixed_4c_concat")
 							{
 								float final_labels[p->outH * p->outW * p->outDepth];
 								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
@@ -1364,7 +1484,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								assert(err == CL_SUCCESS);
 
 								std::ofstream outdataincep;
-								outdataincep.open("inception_3b_new_results.txt");
+								outdataincep.open("Mixed_4c_concat.txt");
 								if (!outdataincep)
 								{ // file couldn't be opened
 									std::cerr << "Error: file could not be opened" << std::endl;
@@ -1380,8 +1500,10 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								std::cout << "\tConcat end\n";
 								exit(0);
 							}
-							/*  INCEPTION END */ 
-						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+							
+							  // INCEPTION END  
+							
+						
 						}
 						if(p->visited == 0)
 							q.push(p);
