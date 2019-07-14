@@ -24,41 +24,68 @@
 
 using namespace InferenceEngine;
 
+//List of layer types supported by the plugin
 std::string supported_layers[6] = {"Convolution", "Pooling", "FullyConnected", "Concat","Reshape"};
+// Layer Name - Layer ID Hashmap
 std::map<std::string, int> layerIDMap;
+//Vector to hold Layer IDs
 std::vector<int> ID_list;
+unsigned char *images;
+int num_images, dim_x, dim_y,dim_depth;
 // OUTPUT WRITE BEING //
-int outputWriteFlag = 0;
+
+//Set to 1 if you want the outputs of each layers to be written to a file.
+int outputWriteFlag = 1;
+// Results File Prefix
 std:: string resultsFileAppender = "Results__";
 // OUTPUT WRITE END //
+
+
 /**
  * Data structure to store information of each layer
  */
 struct layersDetails
-{
+{	
+	//Layer ID
 	int layerID;
+	// Layer Name
 	std::string layerName;
+	//Type of Layer
 	std::string layerType;
+	//Pointer to the Layer Bias vector
 	float *layerBias;
+	//Pointer to the Layer Weights vector
 	float *layerWeights;
+	//Total number of biases
 	int num_biases;
+	//Total number of weights
 	int num_weights;
+
+	//Hashmap for parameters ( kernel, padding,dilation,precision) with its values.
 	std::map<std::string, std::string> params;
+	//Vector of parent layers
 	std::vector<std::string> inputLayerNames;
+	//Vector of child layers
 	std::vector<std::string> outputLayerNames;
+	//Vector of pointers to the Layers Details Structure of Children nodes
 	std::vector<struct layersDetails *> children;
+	//Vector of pointers to the Layers Details Structure of parent nodes
 	std::vector<struct layersDetails *> parents;
+
 	int dummy = 0;
+	// Buffer index of the output
 	int layerOutBufferIndex = 0;
+	// vector of buffer index
 	std::vector<int> parentOutBufferIndex;
 	// Output dimension
 	int outH = 0, outW = 0, outDepth = 0;
 	int visited = 0;
 };
 
-unsigned char *images;
-int num_images, dim_x, dim_y,dim_depth;
 
+/**
+ *  function to check if the layer is supported by the plugin.
+ */
 bool isLayerSupported(std::string layer_name)
 {
 	for (int i = 0; i < 6; i++)
@@ -70,6 +97,9 @@ bool isLayerSupported(std::string layer_name)
 	return false;
 }
 
+/**
+ *  function to check if the layer is already added in the Tree.
+ */
 bool isDuplicate(int id)
 {
 	for (std::vector<int>::iterator it = ID_list.begin(); it != ID_list.end(); ++it)
@@ -83,14 +113,18 @@ bool isDuplicate(int id)
 	return false;
 }
 
-//Rename the node name
-std::string rename_node_name(std::string strToSplit, char delimeter)
+/**
+ *  Rename the layer name to match it with kernels. 
+ *  Here we replace '/' from layer name in the IR to '_'
+ *  Remove "InceptionV1/InceptionV1/" from the name
+ */
+std::string rename_node_name(std::string strToSplit, char delimiter)
 {
 	std::string nodeName = "";
 	std::stringstream ss(strToSplit);
 	std::string item;
 	std::vector<std::string> splittedStrings;
-	while (std::getline(ss, item, delimeter))
+	while (std::getline(ss, item, delimiter))
 	{
 		splittedStrings.push_back(item);
 	}
@@ -126,24 +160,9 @@ void printImage(unsigned char *image, int numberOfImages, int xdim, int ydim)
 	}
 }
 
-/**
- * Printing the Filter weights
- */
-void printFilterWeights(float *layerWeights)
-{
-	std::cout << "1st Filter weights are:" << std::endl;
-	for (int i = 0; i < 5; i++)
-	{
-		for (int k = 0; k < 5; k++)
-		{
-			std::cout << layerWeights[i * 5 + k] << " ";
-		}
-		std::cout << std::endl;
-	}
-}
 
 /**
- * Parse the input images
+ * Parse the input images using OpenCV
  */
 void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwork network)
 {
@@ -207,51 +226,6 @@ void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwo
 	//printImage(images, num_images, dim_x, dim_y);
 }
 
-/**
- * Print the Layer Details from the layersDetails structure.
- */
-void print_layersDetails(std::vector<layersDetails> cnnlayers)
-{
-
-	for (layersDetails a : cnnlayers)
-	{
-		std::cout << "LayerID:" << a.layerID << std::endl;
-		std::cout << "LayerName: " << a.layerName << std::endl;
-		std::cout << "LayerType: " << a.layerType << std::endl;
-		std::cout << "Bias:";
-		for (int i = 0; i < a.num_biases; i++)
-		{
-			std::cout << a.layerBias[i] << " ";
-		}
-		std::cout << std::endl;
-
-		/*
-		std::cout << "Weights:";
-		for (int i = 0; i < a.num_weights; i++)
-		{
-			//std::cout << a.layerWeights[i] << " ";
-		}
-		*/
-		std::cout << "\t Layer Parameters: " << std::endl;
-		for (auto const &y : a.params)
-		{
-			std::cout << "\t" << y.first << ":" << y.second << std::endl;
-		}
-
-		std::cout << "Input Layers: " << std::endl;
-		for (auto const &inputLayer : a.inputLayerNames)
-		{
-			std::cout << "\t" << inputLayer << std::endl;
-		}
-
-		std::cout << "Output Layers: " << std::endl;
-		for (auto const &outputLayer : a.outputLayerNames)
-		{
-			std::cout << "\t" << outputLayer << std::endl;
-		}
-	}
-	std::cout << std::endl;
-}
 
 /**
  * function to check if the input model's bitstream is present in the Noctua FPGA Bitstream Repo.
@@ -288,6 +262,9 @@ std::string bitstreamFinder(char *filepath)
 	}
 }
 
+/**
+ * Tree Construction logic:
+ */
 struct layersDetails *parse_root(InferenceEngine::CNNNetwork network)
 {
 	struct layersDetails *root = new layersDetails;
@@ -387,12 +364,11 @@ struct layersDetails *parse_root(InferenceEngine::CNNNetwork network)
 
 	return NULL;
 }
-
+/**
+ * Find a layer by its ID
+ */
 void findbyID(struct layersDetails *root, int id, struct layersDetails *parent)
 {
-	
-		//return NULL;
-
 	std::queue <struct layersDetails *> q;
 
 
@@ -409,7 +385,6 @@ void findbyID(struct layersDetails *root, int id, struct layersDetails *parent)
 			q.pop();
 			if (p != NULL)
 			{
-				//std::cout<<"Current ID: "<<p->layerID<<"\n";
 				if (p->layerID == id&&p->layerName!="dummy")
 					p->parents.push_back(parent);
 			}
@@ -422,10 +397,10 @@ void findbyID(struct layersDetails *root, int id, struct layersDetails *parent)
 			n--;
 		}
 	}
-
-	//return NULL;
 }
-
+/**
+ * fucntion to remove dummy layers from the tree.
+ */
 void remove_dummy_child(struct layersDetails *node)
 {
 	for(int i=0;i<node->children.size();i++)
@@ -439,11 +414,12 @@ void remove_dummy_child(struct layersDetails *node)
 }
 
 
-// Level order traversal to find node with particular ID
+/**
+ * Level order traversal to find node with particular ID
+ */
 void find_missing_duplicates(struct layersDetails *root)
 {
 	std::queue<struct layersDetails *> q;
-	//std::cout<<"ID to search: "<<id<<"\n";
 	q.push(root);
 	while (!q.empty())
 	{
@@ -455,15 +431,11 @@ void find_missing_duplicates(struct layersDetails *root)
 			q.pop();
 			if (p != NULL)
 			{
-				//std::cout << p->layerID << " -- " << p->layerName << " -- " << p->layerType << std::endl;
+				
 				if(p->layerName=="dummy")
 					{
-						//p->parents.at(0)->children.push_back(findbyID(root,p->layerID));
-						//remove_dummy_child(p->parents.at(0));
 						findbyID(root,p->layerID,p->parents.at(0));
 					}
-				//std::cout <<"\t OutDim H:"<< p->outH << " -- W:" << p->outW << " -- D:" << p->outDepth << std::endl;
-				//std::cout << "\t Num of childrens:" << p->children.size()<<std::endl;
 			}
 			// Enqueue all children of the dequeued item
 			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
@@ -474,15 +446,16 @@ void find_missing_duplicates(struct layersDetails *root)
 			n--;
 		}
 	}
-	//return NULL;
 }
-
+/**
+ * TREE construction logic:
+ */
 struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::string layer_name, struct layersDetails *root,struct layersDetails *parent)
 {
 	const char *l_name = layer_name.c_str();
-	//std::cout << "For layer name: " << l_name << "\n";
+	std::cout<<" Layer in parse_child:"<<layer_name<<std::endl;
 	CNNLayerPtr layer = network.getLayerByName(l_name);
-	//std::cout << "Inside parse child\n";
+	std::cout<<" Layer obtained:"<<layer->type<<std::endl;
 	if (isLayerSupported(layer->type))
 	{
 		auto search = layerIDMap.find(layer_name);
@@ -491,8 +464,6 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 		std::cout<<"Duplicate ? "<<isDuplicate(ID)<<"\n";
 		if (isDuplicate(ID))
 		{
-			//std::cout<<"No of children of root: "<<root->children.size()<<"\n";
-			//struct layersDetails *child = findbyID(parent->parents.at(0), ID);
 			struct layersDetails *child = new layersDetails;
 			child->layerID = ID;
 			child->layerName = "dummy";
@@ -578,14 +549,14 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 					}
 				}
 			}
-			std::cout<<"Weights and biases set\n";
+			std::cout<<"Weights and biases set\n"<<std::endl;
 			child->parents.push_back(parent);
 			for (std::vector<std::string>::iterator it = child->outputLayerNames.begin(); it != child->outputLayerNames.end(); ++it)
 			{
 				child->children.push_back(parse_child(network, *it, root, child));
 			}
 			
-			std::cout<<child->layerName<<" parsed\n\n";
+			std::cout<<child->layerName<<" parsed\n\n"<<std::endl;
 			return child;
 		}
 	}
@@ -598,14 +569,16 @@ struct layersDetails *parse_child(InferenceEngine::CNNNetwork network, std::stri
 			temp.outputLayerNames.push_back(it.second->name);
 			outLayer++;
 		}
-		//std::cout<<"Unsupported Layer name: "<<layer->type<<" outputs vector size: "<<temp.outputLayerNames.size()<<" Child of this layer "<<temp.outputLayerNames.front()<<"\n";
+		std::cout<<"Unsupported Layer name: "<<layer->type<<" outputs vector size: "<<temp.outputLayerNames.size()<<std::endl;
 		if (temp.outputLayerNames.size() > 0)
 			return parse_child(network, temp.outputLayerNames.front(), root,parent);
 		else
 			return NULL;
 	}
 }
-
+/**
+ * Print the constructed tree
+ */
 void printCNNTree(layersDetails *root)
 {
 	std::cout << " Printing CNN Tree..." << std::endl;
@@ -637,7 +610,9 @@ void printCNNTree(layersDetails *root)
 		}
 	}
 }
-
+/**
+ * Print all the available Platforms
+ */
 void printPlatforms(std::vector<cl::Platform> PlatformList)
 {
 	//Printing the Plaforms
@@ -651,6 +626,9 @@ void printPlatforms(std::vector<cl::Platform> PlatformList)
 	}
 }
 
+/**
+ * Print all the devices.
+ */
 void printDevices(std::vector<cl::Device> DeviceList1)
 {
 
@@ -754,8 +732,6 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	printCNNTree(root);
 
-	//Print the details of each layers in the network to check their correctness.
-	//print_layersDetails(cnnLayersList);
 
 	std::ifstream aocx_stream("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/inception_modified_nnvm/GoogleNet_Kernels.aocx", std::ios::in | std::ios::binary);
  
@@ -878,60 +854,11 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 	root->parentOutBufferIndex.push_back(0);
 
 
-
-	
-	/*  INCEPTION BEGIN */
-/*
-	//Size of the output dimension of previous inception
-	float inceptionResults[28*28*256];
-	std::ifstream inFile;
-    float sum= 0,x=0;
-    inFile.open("/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs/dldt/inference-engine/bin/intel64/DEBUG/inception_3c_results.txt");
-    if (!inFile) {
-        std::cout << "Unable to open file";
-        //exit(1); // terminate with error
-    }
-    
-     if(inFile.is_open())
-    {
-		for(int inc = 0; inc < 28*28*256; inc++)
-        {
-            inFile >> inceptionResults[inc];
-        }
-    }
-    
-    inFile.close();
-
-	// Buffer 249 allocated for intermediate result - change the size accordingly
-	buffers[249] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_float) * 28*28*256);
-    std::cout << "Test Read = " << inceptionResults[1] << std::endl; 
-
- 
-
-	//Write buffers for Input of inception
-	err = cmd_queues[22]->enqueueWriteBuffer(*buffers[249], CL_FALSE, 0, sizeof(cl_float) *28*28*256, inceptionResults); //images buffer
-	assert(err == CL_SUCCESS);
-	err = cmd_queues[22]->finish();
-
-	err = cmd_queues[23]->enqueueWriteBuffer(*buffers[249], CL_FALSE, 0, sizeof(cl_float) *28*28*256, inceptionResults); //images buffer
-	assert(err == CL_SUCCESS);
-	err = cmd_queues[23]->finish();
-
-	err = cmd_queues[24]->enqueueWriteBuffer(*buffers[249], CL_FALSE, 0, sizeof(cl_float) *28*28*256, inceptionResults); //images buffer
-	assert(err == CL_SUCCESS);
-	err = cmd_queues[24]->finish();
-
-	err = cmd_queues[25]->enqueueWriteBuffer(*buffers[249], CL_FALSE, 0, sizeof(cl_float) *28*28*256, inceptionResults); //images buffer
-	assert(err == CL_SUCCESS);
-	err = cmd_queues[25]->finish();
-*/
+	//Flag to launch the layer
 	bool launchFlag = true;
-	int inceptionOutputBufferIndex = 0;
-	/*  INCEPTION END */
 
 
 	// Launching the kernels, the first one with images as input.
-
 	if (root == NULL)
 	{
 		std::cout << "Tree construction error\n";
@@ -957,24 +884,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 					const char *layerName = p->layerName.c_str();
 					std::cout<<"Launching Layer:" << p->layerID << ":" << layerName<<std::endl;
 					
-					/*  INCEPTION BEGIN */
-					//Check if the layer is inbetween the  Layer IDs
-					/*if (p->layerID >= 21 && p->layerID <= 35 )
-					{
-						launchFlag = true;
-						//Set parent concat ID
-						if(p->layerName == "Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool"){
-							p->parentOutBufferIndex.push_back(249);
-						}
-					}
-					else
-					{
-						launchFlag = false;
-						p->visited =1;
-						//continue;
-					}*/
 					std::cout << " Launch flag for this layer:" << launchFlag << std::endl;
-					/*  INCEPTION END */
 
 					//code to launch kernels
 					if (p->layerType == "Convolution"  && launchFlag)
@@ -995,48 +905,13 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						//For zero padding conv layer
 						if (p->params["pads_begin"].at(0) == '0' && p->params["pads_begin"].at(2) == '0' && p->params["pads_end"].at(0) == '0' && p->params["pads_end"].at(2) == '0')
 						{
-
 							int pad_out_index = 0;
-							/*
-							if(p->layerName == "Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D")
-							{
-							std::string pad_kernel_name = "Padding_"+p->layerName;
-							const char *pad_name = pad_kernel_name.c_str();
-							//std::cout<<"\t Kernel Index:"<<kernel_index<<std::endl;
-							kernels[kernel_index] = new cl::Kernel(program, pad_name, &err);
-							std::cout << "\t Kernel Created "<<std::endl;
-							assert(err == CL_SUCCESS);
-							//int pad_x = p->params["pads_begin"].at(0) - '0';
-							//int pad_y = p->params["pads_end"].at(0) - '0';
-							//std::cout<<"Pad x: "<<pad_x<<" Pad y: "<<pad_y<<"\n";
-							//int dim1 = p->outH+pad_x+pad_y;
-							//int dim2 = p->outW+pad_x+pad_y;
-							buffer_index++;
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float)*200704);
-							int pad_out_index = buffer_index;
-							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]);//err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of pad							
-							assert(err == CL_SUCCESS);
-							buffer_index++;							
-							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]);	//input to pad 					
-							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
-							assert(err == CL_SUCCESS);
-							
-							err = cmd_queues[p->layerID]->finish();
-							assert(err == CL_SUCCESS);
-							kernel_index++;
-
-
-							}
-							*/
-
-							
-							//static int pad_out_index = 0;
-
 							
 							std::cout<<"\t Kernel Index:"<<kernel_index<<std::endl;
 							kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 							std::cout << "\t Kernel Created "<<std::endl;
 							assert(err == CL_SUCCESS);
+							
 							//output
 							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of conv
@@ -1049,16 +924,8 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							}
 							buffer_index++;
 
-							//input
-							//if(p->layerName == "Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D")
-								//err = kernels[kernel_index]->setArg(1, *buffers[pad_out_index]);
-							//else 
-
+							
 							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //first argument, input, also the output of the previous layer
-
-
-							//err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //first argument, input, also the output of the previous layer
-						
 							assert(err == CL_SUCCESS);
 							buffer_index++;
 							std::cout << "\timages passed\n";
@@ -1082,14 +949,13 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							err = kernels[kernel_index]->setArg(3, *buffers[buffer_index]);
 							assert(err == CL_SUCCESS);
 							buffer_index++;
-
 							std::cout << "\tbiases passed\n";
 							
 							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
 							assert(err == CL_SUCCESS);
 							kernel_index++;
 							err = cmd_queues[p->layerID]->finish();
-							/*
+							
 							// OUTPUT WRITE BEING //
 							if(outputWriteFlag == 1){ 
 								float final_labels[p->outH * p->outW * p->outDepth];
@@ -1113,13 +979,12 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								outdataincep.close(); 
 							}
 							// OUTPUT WRITE END //
-							*/
+							
 							assert(err == CL_SUCCESS);
 							p->visited = 1;
 						}
 						else
 						{
-							//Conv layers with padding (manually written kernels)
 							int inputIndex= 0;
 							if(root->parents.size() == 0){
 								inputIndex = 0;
@@ -1149,7 +1014,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							assert(err == CL_SUCCESS);
 							
 							err = cmd_queues[p->layerID]->finish();
-							/*
+							
 							// OUTPUT WRITE BEING //
 							if(outputWriteFlag == 1){ 
 								float final_labels[dim1 * dim2 * p->outDepth];
@@ -1173,7 +1038,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								outdataincep.close(); 
 							}
 							// OUTPUT WRITE END //
-							*/
+							
 							assert(err == CL_SUCCESS);
 							kernel_index++;
 
@@ -1245,7 +1110,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							std::cout << "\t Error code soon after conv layer for kernel:" << kernel_index << " is ===>" << err << std::endl;
 							err = cmd_queues[p->layerID]->finish();
 							assert(err == CL_SUCCESS);
-							/*
+							
 							// OUTPUT WRITE BEING //
 							if(outputWriteFlag == 1){ 
 								float final_labels[p->outH * p->outW * p->outDepth];
@@ -1269,35 +1134,18 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								outdataincep.close(); 
 							}
 							// OUTPUT WRITE END //
-							*/
+							
 							kernel_index++;
 							p->visited = 1;
 						}
 						std::cout << "\t Error code  after conv layer finish for kernel:" << kernel_index << " is ===>" << err << std::endl;
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
-						/*
-						if(p->layerName=="Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D")
-						{		
-							float final_labels[ p->outH * p->outW * p->outDepth];
-							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float)* p->outH * p->outW * p->outDepth, final_labels);
-							err = cmd_queues[p->layerID]->finish();
-							assert(err == CL_SUCCESS);
-							std::fstream file1;
-							file1.open("Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D.txt",std::ios::out);
-							std::cout<<"\tLabels top 10\n";
-							int cnt = 0;
-							for(int i=0;i<p->outH * p->outW * p->outDepth;i++)
-							{
-								file1<<final_labels[i]<<"\n";
-								cnt++;
-							}
-							std::cout<<"Number of values written to file : "<<cnt<<"\n";
-							exit (0);
+						
+						//Stop execution after softmax
+						if(p->layerName == "Conv2d_0c_1x1_Conv2D")
+							exit(0);
 
-							file1.close();
-						}
-						*/
 						}
 							if(p->visited==0)
 								q.push(p);
@@ -1316,69 +1164,6 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						if(!p->visited&&flag_parents==p->parents.size())
 						{
 						
-						// call padding kernels if padding is not zero.
-
-						/*
-						if (p->params["pads_begin"].at(0) != '0' && p->params["pads_end"].at(0) != '0')
-
-						if (p->params["pads_begin"].at(0) != '0' ||  p->params["pads_end"].at(0) != '0')
-
-						{
-							
-							std::string paddingKernelNameStr = "Padding_" + p->layerName;
-							std::cout << "\t Padding kernel:"<<paddingKernelNameStr<<std::endl;
-							std::cout << "\t  pads_begin :"<<p->params["pads_begin"].at(0)<<","<<p->params["pads_begin"].at(2)<<" pads_end :"<< p->params["pads_begin"].at(0)<<","<<p->params["pads_begin"].at(2) <<std::endl;
-							const char *paddingKernel = paddingKernelNameStr.c_str();
-							kernels[kernel_index] = new cl::Kernel(program, paddingKernel, &err);
-							int padding_input_index = p->parentOutBufferIndex.at(0) ;
-							//output
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->parents.at(0)->outW * p->parents.at(0)->outH * p->parents.at(0)->outDepth);
-							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of conv
-							assert(err == CL_SUCCESS);
-							std::cout << "\tconv output passed "
-									  << p->outH * p->outW * p->outDepth << std::endl;
-							//Set output of paddint to maxpool's parent buffer index
-							p->parentOutBufferIndex.at(0) = buffer_index;
-							buffer_index++;
-
-							//input
-							err = kernels[kernel_index]->setArg(1, *buffers[padding_input_index]); //first argument, input, also the output of the previous layer
-							assert(err == CL_SUCCESS);
-							std::cout << "\timages passed\n";
-							buffer_index++;
-							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
-							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-							assert(err == CL_SUCCESS);
-							cmd_queues[p->layerID]->finish();
-							// OUTPUT WRITE BEING //
-							if(outputWriteFlag == 1){ 
-								float final_labels[ p->parents.at(0)->outW * p->parents.at(0)->outH * p->parents.at(0)->outDepth];
-								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->parentOutBufferIndex.at(0)], CL_TRUE, 0, sizeof(cl_float) * p->parents.at(0)->outW * p->parents.at(0)->outH * p->parents.at(0)->outDepth, final_labels);
-								err = cmd_queues[p->layerID]->finish();
-								assert(err == CL_SUCCESS);
-								std::ofstream outdataincep;
-								std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_"+p->layerName+".txt";
-								outdataincep.open(outFileName);
-								if (!outdataincep)
-								{ // file couldn't be opened
-									std::cerr << "Error: file could not be opened" << std::endl;
-										exit(1);
-								}
-								std::cout << "\tConcat output\n";
-								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
-								{
-									//std::cout << final_labels[i] << " ";
-									outdataincep << final_labels[i] << "\n";
-								}
-								outdataincep.close(); 
-							}
-							// OUTPUT WRITE END //
-							
-							kernel_index++;
-							p->visited = 1;
-							 
-						}
-						*/
 						std::cout << "\t kernel:"<<layerName<<std::endl;
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 						assert(err == CL_SUCCESS);
@@ -1401,7 +1186,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						assert(err == CL_SUCCESS);
 						cmd_queues[p->layerID]->finish();
 						assert(err == CL_SUCCESS);
-						/*
+						
 						// OUTPUT WRITE BEING //
 							if(outputWriteFlag == 1){ 
 								float final_labels[p->outH * p->outW * p->outDepth];
@@ -1425,35 +1210,12 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								outdataincep.close(); 
 							}
 							// OUTPUT WRITE END //
-						*/
+						
 						kernel_index++;
 						p->visited = 1;
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 						
-						/*
-						if(p->layerName=="MaxPool_3a_3x3_MaxPool")
-						{		
-							float final_labels[ p->outH * p->outW * p->outDepth];
-							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float)* p->outH * p->outW * p->outDepth, final_labels);
-							err = cmd_queues[p->layerID]->finish();
-							assert(err == CL_SUCCESS);
-							std::fstream file1;
-							file1.open("MaxPool_3a_3x3_MaxPool.txt",std::ios::out);
-							std::cout<<"\tLabels top 10\n";
-							int cnt = 0;
-							for(int i=0;i<p->outH * p->outW * p->outDepth;i++)
-							{
-								file1<<final_labels[i]<<"\n";
-								cnt++;
-							}
-							std::cout<<"Number of values written to file : "<<cnt<<"\n";
-							exit (0);
-
-							file1.close();
-						}
-						*/
-
 						}
 						if(p->visited==0)
 							q.push(p);
@@ -1535,12 +1297,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //concat output rows
 							assert(err == CL_SUCCESS);
 							p->layerOutBufferIndex = buffer_index;
-							/*
-							for (struct layersDetails *ch : p->children)
-							{
-								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
-							}
-							*/
+							
 							buffer_index++;
 							std::cout << "\tconv1\n";
 							//input
@@ -1567,57 +1324,15 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 							cmd_queues[p->layerID]->finish();
 							std::cout<<"Input Buffer Index : ##"<<  p->parents.at(0)->layerOutBufferIndex <<"  " << p->parents.at(1)->layerOutBufferIndex<<std::endl ;
 							std::cout<<"Input Buffer Index : ##"<<  p->parents.at(2)->layerOutBufferIndex <<"  " << p->parents.at(3)->layerOutBufferIndex<<std::endl ;
-
 							std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 							kernel_index++;
 							p->visited = 1;
 							
-							std::string transpose_name = "Transpose_"+p->layerName;
-							const char *t_name = transpose_name.c_str();
-							
-							kernels[kernel_index] = new cl::Kernel(program, t_name, &err);
-							if(err == 0)
-							{
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
-							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //transpose output, goes to children of concat
-							assert(err == CL_SUCCESS);
-							
 							for (struct layersDetails *ch : p->children)
 							{
-								ch->parentOutBufferIndex.push_back(buffer_index);
-							}
-
-							
-
-							err = kernels[kernel_index]->setArg(1, *buffers[p->layerOutBufferIndex]); //output of concat, input to transpose
-							assert(err == CL_SUCCESS);
-							std::cout<<"Transpose kernel\n";
-							std::cout << "\t Input buffer index:" << p->layerOutBufferIndex  << std::endl;
-							std::cout << "\t Output buffer index:" << buffer_index<<std::endl;
-						
-							//p->layerOutBufferIndex = buffer_index;
-
-							buffer_index++;
-
-							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
-							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-							assert(err == CL_SUCCESS);
-							cmd_queues[p->layerID]->finish();
-							
-							}
-							else
-							{
-								for (struct layersDetails *ch : p->children)
-								{
 								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
-								}
 							}
-							kernel_index++;
-							// INCEPTION BEGIN  
-							//Last concat layer to write the results
-							
-							
-						/*
+											
 							// OUTPUT WRITE BEING //
 							if(outputWriteFlag == 1){ 
 								float final_labels[p->outH * p->outW * p->outDepth];
@@ -1641,46 +1356,8 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								outdataincep.close(); 
 							}
 							// OUTPUT WRITE END //
-							*/
-							//kernel_index++;
-							//p->visited = 1;
-							// INCEPTION BEGIN  
-							//Last concat layer to write the results
 							
-							if (p->layerName == "Mixed_4c_concat")
-
-							{
-								float final_labels[p->outH * p->outW * p->outDepth];
-								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
-								err = cmd_queues[p->layerID]->finish();
-								assert(err == CL_SUCCESS);
-
-								std::ofstream outdataincep;
-								outdataincep.open("Mixed_4c_concat.txt");
-								if (!outdataincep)
-								{ // file couldn't be opened
-									std::cerr << "Error: file could not be opened" << std::endl;
-									exit(1);
-								}
-								std::cout << "\tConcat output\n";
-								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
-								{
-									//std::cout << final_labels[i] << " ";
-									outdataincep << final_labels[i] << "\n";
-								}
-								outdataincep.close(); 
-								std::cout << "\tConcat end\n";
-								exit(0);
-							}
-					
-							  // INCEPTION END  
-							
-						
-
-							    
-							
-						//std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
-
+												
 						}
 						if(p->visited == 0)
 							q.push(p);
@@ -1704,7 +1381,7 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						std::cout << " outH, OutW, outDepth:"<<p->outH << ","<<p->outW<<","<<p->outDepth<<std::endl;
 						kernels[kernel_index] = new cl::Kernel(program, layerName, &err);
 						assert(err == CL_SUCCESS);
-						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+						buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outDepth);
 						err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]); //softmax output
 						assert(err == CL_SUCCESS);
 						p->layerOutBufferIndex = buffer_index;
@@ -1728,6 +1405,34 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						kernel_index++;	
 						
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
+
+						// OUTPUT WRITE BEING //
+							if(outputWriteFlag == 1){ 
+								float final_labels[p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outDepth, final_labels);
+								err = cmd_queues[p->layerID]->finish();
+								assert(err == CL_SUCCESS);
+								std::ofstream outdataincep;
+								std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_"+p->layerName+".txt";
+								outdataincep.open(outFileName);
+								if (!outdataincep)
+								{ // file couldn't be opened
+									std::cerr << "Error: file could not be opened" << std::endl;
+										exit(1);
+								}
+								std::cout << "\tConcat output\n";
+								for (int i = 0; i < p->outDepth; i++)
+								{
+									//std::cout << final_labels[i] << " ";
+									outdataincep << final_labels[i] << "\n";
+								}
+								outdataincep.close(); 
+							}
+							// OUTPUT WRITE END //
+							//Stop execution after softmax
+							if(p->layerName == "Predictions_Softmax")
+								exit(0);
+
 						}
 						if(p->visited==0)
 							q.push(p);
@@ -1846,19 +1551,5 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 		}
 	}
 
-	/*
-	int final_labels[num_images];
-	//Output CMd Queue from last device.
-	err = cmd_queues[DeviceList_Master.size() - 1]->enqueueReadBuffer(*buffers[buffer_index], CL_TRUE, 0, sizeof(cl_int) * num_images, final_labels);
-	assert(err == CL_SUCCESS);
-
-	err = cmd_queues[DeviceList_Master.size() - 1]->finish();
-	assert(err == CL_SUCCESS);
-
-	for (int i = 0; i < num_images; i++)
-	{
-		std::cout << "Image " << imageNames[i] << " : " << final_labels[i] << "\n";
-	}
- 	*/
 	return 0;
 }
