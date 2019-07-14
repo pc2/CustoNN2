@@ -40,6 +40,8 @@ int outputWriteFlag = 0;
 std:: string resultsFileAppender = "Results__";
 // OUTPUT WRITE END //
 
+// Top N labels classification 
+int TOP_N = 10 ;
 
 /**
  * Data structure to store information of each layer
@@ -1142,9 +1144,21 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 						std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
 						std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
 						
-						//Stop execution after softmax
-						if(p->layerName == "Conv2d_0c_1x1_Conv2D")
-							exit(0);
+						//Stop the execution after last conv
+						if(p->layerName == "Conv2d_0c_1x1_Conv2D"){
+							//Read buffer from the last conv output
+							float convScores[p->outH * p->outW * p->outDepth];
+							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, convScores);
+							err = cmd_queues[p->layerID]->finish();
+
+							//Printing the results after getting Top N Results
+							std::cout<<" TOP- "<<TOP_N<< " Classification"<<std::endl;
+							std::cout<<" --------------------------------"<<std::endl;
+							std::vector<int> results= getTopNResults(convScores,TOP_N);
+							std::cout<<" --------------------------------"<<std::endl;
+							std::cout<<" Please match the above labels with the \"Labels.txt\" of the model to see the classification results."<<std::endl;
+							return 0;
+						}
 
 						}
 							if(p->visited==0)
@@ -1552,4 +1566,29 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 	}
 
 	return 0;
+}
+
+
+
+
+std::vector<int> getTopNResults(float final_labels[],int topN){
+	std::vector<int> results;
+	std::multimap<float, int , std::greater<float>> sorted_map;
+	int N = 0;
+	for(int i=0;i<1001;i++){
+		//convScores.insert(i,final_labels[i]);
+		sorted_map.insert(std::make_pair(final_labels[i],i));
+	}
+	for (auto entry: sorted_map)
+    {
+		if(N<topN){
+			results.push_back(entry.second);
+        	std::cout << "Index: "<<entry.second << " - Score " << entry.first <<std::endl;
+		}else{
+			break;
+		}
+		N++;
+    }
+	return results;
+
 }

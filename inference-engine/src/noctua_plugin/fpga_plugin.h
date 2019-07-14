@@ -89,3 +89,8 @@ void printDevices(std::vector<cl::Device> DeviceList1);
  * OPENVINO FPGA NOCTUA PLUGIN is implemented in this function  
  */
 int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name);
+
+/**
+ * Function to get Top 10 labels
+ */
+std::vector<int> getTopNResults(float final_labels[],int topN);
