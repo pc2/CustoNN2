@@ -354,27 +354,11 @@ __kernel void Mixed_3b_concat(__global float *restrict T_concat, __global float 
 
 
 __kernel void Transpose_Mixed_3b_concat(__global float* restrict T_pad, __global float* restrict input0) {
-
-  printf("Inside transpose with magical concat\n");
  
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) 
   {
     T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner];// input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 256) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))];
   }
-
-    int filternum = 0 ;
-    if(1)
-    {
-        printf(" the output at Transpose_Mixed_3b_concat start \n");   
-            for(int i = 28  * filternum  ; i < 28 * filternum + 28 ; i++)
-            {
-                 
-                printf("%f \n",T_pad[i] );
-            }
-        printf("the output at Transpose_Mixed_3b_concat end \n"); 
-
-    } 
-
 
 }
 
@@ -565,22 +549,6 @@ __kernel void Mixed_3c_concat(__global float *restrict T_transpose, __global flo
     {
         T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((326144 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -326144)] : (float)((250880 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -250880)] : (float)((100352 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -100352)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
     }
-
-
-        int filternum = 0 ;
-    if(1)
-    {
-        printf(" the output at Mixed_3c_concat start \n");   
-            for(int i = 28  * filternum  ; i < 28 * filternum + 28 ; i++)
-            {
-                 
-                printf("%f \n",T_transpose[i] );
-            }
-        printf("the output at Mixed_3c_concat end \n"); 
-
-    }
-
-
 }
 
 __kernel void Padding_MaxPool_4a_3x3_MaxPool(__global float* restrict T_transpose, __global float* restrict input0) {
@@ -803,14 +771,7 @@ __kernel void Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
 
 __kernel void Mixed_4b_concat(__global float *restrict T_concat, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
-     /*
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input3[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] : (float)((400 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -78400)] : (float)((192 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -37632)] : input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))])));
-    }
-    
-     */
-      printf("Magical concat does magic. This one trick can save your time ! \n");
+     //kernel- transposes and concats
      for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
         {   
      T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((87808 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? 
@@ -818,12 +779,12 @@ __kernel void Mixed_4b_concat(__global float *restrict T_concat, __global float 
      input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -78400)] : (float)((37632 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? 
      input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -37632)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
         }
-      
-
 }
-__kernel void Transpose_Mixed_4b_concat(__global float* restrict T_pad, __global float* restrict input0) {
+__kernel void Transpose_Mixed_4b_concat(__global float* restrict T_pad, __global float* restrict input0) 
+{
+    //dummy kernel. Needs to be removed
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner];//input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 
 
@@ -845,10 +806,6 @@ __kernel void Mixed_4c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             }
         }
     }
-
-
-
-
 }
 
 __kernel void Mixed_4c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
@@ -1001,14 +958,8 @@ __kernel void Mixed_4c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
 
 __kernel void Mixed_4c_concat(__global float *restrict T_concat, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
-
-    /*
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input3[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] : (float)((384 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -75264)] : (float)((160 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -31360)] : input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))])));
-    }
-    */
-      printf("Magical concat does magic. This one trick can save your time @ Mixed_4c_concat ! \n");
+ 
+    //concats and transposes
      for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
         {   
      T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((87808 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? 
@@ -1016,11 +967,6 @@ __kernel void Mixed_4c_concat(__global float *restrict T_concat, __global float 
      input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -75264)] : (float)((31360 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? 
      input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -31360)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
         }
-
-
-
-
-
 }
 
 __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
@@ -1043,10 +989,6 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             }
         }
     }
-
-
-
-
 }
 
 __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
@@ -1198,16 +1140,7 @@ __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
 
 __kernel void Mixed_4d_concat(__global float *restrict T_concat, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
-    /* 
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((448 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input3[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -87808)] : (float)((384 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -75264)] : (float)((128 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512)) + -25088)] : input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))])));
-    }
-    */ 
-
-     
-      printf("Magical concat does magic. This one trick can save your time @ Mixed_4d_concat ! \n");
-
+     //kernel concats and transposes
      for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
         {   
      T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((87808 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? 
@@ -1223,34 +1156,7 @@ __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-
-    int filternum = 0 ;
-    if(1)
-    {
-        printf(" the input0 at Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D start \n");   
-            for(int i = 14 *14* filternum  ; i < 14 *14* filternum + 14 ; i++)
-            {
-                 
-                printf("%f \n",input0[i] );
-            }
-        printf("the input0 at Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D end \n"); 
-
-    }
-
-        if(1)
-    {
-        printf(" the input1 at Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D start \n");   
-            for(int i = 14 *14* filternum  ; i < 14 *14* filternum + 14 ; i++)
-            {
-                 
-                printf("%f \n",input1[i] );
-            }
-        printf("the input1 at Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D end \n"); 
-
-    }
-
-
-
+ 
     for (int ff = 0; ff < 112; ++ff)
     {
         for (int yy = 0; yy < 14; ++yy)
@@ -1265,19 +1171,6 @@ __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                 compute[((((ff * 14) + yy) * 14) + xx)] = (compute[((((ff * 14) + yy) * 14) + xx)] > 0) ? compute[((((ff * 14) + yy) * 14) + xx)] : 0.000000e+00f;
             }
         }
-    }
-
-    
-    if(1)
-    {
-        printf(" the output at Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D start \n");   
-            for(int i = 14 *14* filternum  ; i < 14 *14* filternum + 14 ; i++)
-            {
-                 
-                printf("%f \n",compute[i] );
-            }
-        printf("the output at Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D end \n"); 
-
     }
 
 }
@@ -1431,13 +1324,7 @@ __kernel void Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
 
 __kernel void Mixed_4e_concat(__global float *restrict T_concat, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
-    /*
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 103488; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((464 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528)) ? input3[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 528)) + -90944)] : (float)((400 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 528)) + -78400)] : (float)((112 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 528)) + -21952)] : input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 528) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 528))])));
-    }
-    */
-
+     //concats and transposes
      for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 103488; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
         {   
      T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((90944 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? 
@@ -1445,25 +1332,7 @@ __kernel void Mixed_4e_concat(__global float *restrict T_concat, __global float 
      input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -78400)] : (float)((21952 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? 
      input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -21952)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
         }
-    
-
-
-    int filternum = 0 ;
-    if(1)
-    {
-        printf(" the output at Mixed_4e_concat start \n");   
-            for(int i = 14 *14* filternum  ; i < 14 *14* filternum + 14 ; i++)
-            {
-                 
-                printf("%f \n",T_concat[i] );
-            }
-        printf("the output at Mixed_4e_concat end \n"); 
-
-    }
-
-
-
-
+ 
 }
 
 __kernel void Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
@@ -1830,13 +1699,8 @@ __kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
 
 __kernel void Mixed_5b_concat(__global float *restrict T_concat, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
-    /*
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((704 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input3[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -34496)] : (float)((576 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input2[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -28224)] : (float)((256 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832)) ? input1[((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832)) + -12544)] : input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 832) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 832))])));
-    }
-     */
-      printf("Magical concat does magic. This one trick can save your time @ Mixed_5b_concat ! \n");
+ 
+     //kernel concats and transposes
 
      for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
         {   
@@ -2036,6 +1900,7 @@ __kernel void Conv2d_0c_1x1_Conv2D(__global float *restrict compute, __global fl
         {
             compute[ff] = (compute[ff] + (input0[rc] * input1[((ff * 1024) + rc)]));
         }
+        //do we need Relu in this ? 
         compute[ff] = (compute[ff] > 0) ? compute[ff] : 0.0;
     }
 }
