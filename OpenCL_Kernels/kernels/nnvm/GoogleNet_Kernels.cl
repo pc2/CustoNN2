@@ -575,29 +575,11 @@ __kernel void MaxPool_4a_3x3_MaxPool(__global float *restrict tensor, __global f
     }
 }
 
-//TODO: Transpose kernel. Do we have to merge it?
-__kernel void fuse_transpose_51_kernel0(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 94080; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 480) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 480))];
-    }
-}
-
-__kernel void Padding_Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 94080; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 480) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
-    }
-}
-
 __kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
                                                      __global float *restrict input0,
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-
     for (int ff = 0; ff < 192; ++ff)
     {
         for (int yy = 0; yy < 14; ++yy)
@@ -1469,7 +1451,7 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
         }
     }
 }
-//TODO: THIS NEEDS TO BE CHECKED!!
+
 __kernel void Padding_Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 8192; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
@@ -1981,6 +1963,7 @@ __kernel void Conv2d_0c_1x1_Conv2D(__global float *restrict compute, __global fl
 
 __kernel void Predictions_Reshape(__global float *restrict tensor, __global float *restrict input0, __global float *restrict input1)
 {
+
     for (int ax0_ax1_fused_inner = 0; ax0_ax1_fused_inner < 1001; ++ax0_ax1_fused_inner)
     {
         tensor[ax0_ax1_fused_inner] = (input0[ax0_ax1_fused_inner] + input1[ax0_ax1_fused_inner]);
