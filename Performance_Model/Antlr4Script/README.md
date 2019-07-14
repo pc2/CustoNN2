@@ -14,7 +14,7 @@
 - We build lexer and parser for OpenCL file using the C.g4 grammar file.
 - Antlr4 creates the lexer and parser for us.
 - It generates these lexers and parsers in many languages. We have used Python2.7 for our tool.
-- We make us of the CListner to be able to walk the parse tree.
+- We make us of the CListner to walk the parse tree.
 
 
 TODO: Need to make this more generic
