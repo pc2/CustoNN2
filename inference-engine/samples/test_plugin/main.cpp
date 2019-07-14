@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
         char *inputModel = new char[length_str+1];
         strcpy(inputModel, modelName.c_str());
         
-        std::cout<<" Starting FPGA Launcher\n"<<modelName<<std::endl;
+         slog::info <<" Starting FPGA Launcher\n"<<modelName<<slog::endl;
         //std::vector<std::string> input_imagePath;
        // input_imagePath.push_back(input_image_path.c_str());
 
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
         fsec fs = t1 - t0;
         ms d = std::chrono::duration_cast<ms>(fs);
         total += d.count();
-        std::cout << std::endl << "total inference time(ms): " << total << std::endl; 
+         slog::info<< "total inference time(ms): " << total << slog::endl; 
 
     }
     catch (const std::exception& error) {
