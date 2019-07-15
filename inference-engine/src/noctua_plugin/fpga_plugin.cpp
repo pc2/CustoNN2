@@ -35,7 +35,7 @@ int num_images, dim_x, dim_y,dim_depth;
 // OUTPUT WRITE BEING //
 
 //Set to 1 if you want the outputs of each layers to be written to a file.
-int outputWriteFlag = 0;
+int outputWriteFlag = 1;
 // Results File Prefix
 std:: string resultsFileAppender = "Results__";
 // OUTPUT WRITE END //
