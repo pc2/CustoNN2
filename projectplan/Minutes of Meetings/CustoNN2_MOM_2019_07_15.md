@@ -1,5 +1,4 @@
 # CustoNN2 : Minutes of the meeting
-# CustoNN2 : Minutes of the meeting
 <br/>
 
 | Date of Meeting (YYYY/MM/DD)  | (2019/07/15 )  |  
