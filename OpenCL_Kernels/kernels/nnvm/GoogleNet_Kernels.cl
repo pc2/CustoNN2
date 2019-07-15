@@ -31,13 +31,6 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global fl
     }
 }
 
-__kernel void Padding_MaxPool_2a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 802816; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner]), 0.000000e+00f);
-    }
-}
 
 __kernel void MaxPool_2a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
@@ -109,14 +102,6 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict compute, __global fl
                 compute[((((ff * 56) + yy) * 56) + xx)] = (compute[((((ff * 56) + yy) * 56) + xx)] > 0) ? compute[((((ff * 56) + yy) * 56) + xx)] : 0.000000e+00f;
             }
         }
-    }
-}
-
-__kernel void Padding_MaxPool_3a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 150528; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 192) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))];
     }
 }
 
@@ -282,13 +267,6 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     }
 }
 
-__kernel void Padding_Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 150528; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 192) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))];
-    }
-}
 
 __kernel void Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
@@ -482,14 +460,6 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     }
 }
 
-__kernel void Padding_Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 256) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))];
-    }
-}
-
 __kernel void Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
     for (int ax1 = 0; ax1 < 256; ++ax1)
@@ -546,13 +516,6 @@ __kernel void Mixed_3c_concat(__global float *restrict T_transpose, __global flo
     }
 }
 
-__kernel void Padding_MaxPool_4a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 94080; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 480) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
-    }
-}
 
 __kernel void MaxPool_4a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
@@ -714,13 +677,6 @@ __kernel void Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     }
 }
 
-__kernel void Padding_Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 94080; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 480) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
-    }
-}
 
 __kernel void Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
@@ -906,14 +862,6 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     }
 }
 
-__kernel void Padding_Mixed_4c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
-    }
-}
-
 __kernel void Mixed_4c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
     for (int ax1 = 0; ax1 < 512; ++ax1)
@@ -1096,14 +1044,6 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                 compute[((((ff * 14) + yy) * 14) + xx)] = (compute[((((ff * 14) + yy) * 14) + xx)] > 0) ? compute[((((ff * 14) + yy) * 14) + xx)] : 0.000000e+00f;
             }
         }
-    }
-}
-
-__kernel void Padding_Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
     }
 }
 
@@ -1293,14 +1233,6 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     }
 }
 
-__kernel void Padding_Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
-    }
-}
-
 __kernel void Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
     for (int ax1 = 0; ax1 < 512; ++ax1)
@@ -1487,13 +1419,6 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     }
 }
 
-__kernel void Padding_Mixed_4f_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 103488; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 528) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))];
-    }
-}
 
 __kernel void Mixed_4f_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
@@ -1698,13 +1623,6 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global float *restrict co
     }
 }
 
-__kernel void Padding_Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 49) * 832) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49))];
-    }
-}
 
 __kernel void Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
@@ -1872,14 +1790,6 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                 compute[((((ff * 7) + yy) * 7) + xx)] = (compute[((((ff * 7) + yy) * 7) + xx)] > 0) ? compute[((((ff * 7) + yy) * 7) + xx)] : 0.0;
             }
         }
-    }
-}
-
-__kernel void Padding_Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict T_transpose, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 49) * 832) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49))];
     }
 }
 
