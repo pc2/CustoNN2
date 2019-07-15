@@ -13,7 +13,7 @@
 
 ### Notes and Decisions 
 ##### Project organization updates
-- 
+- Meeting time during the semester break will be Mondays(9:15-12:15) in the lab and on Wednesdays(9:15-12:15) in the regular meeting room.
 ##### Research/Individual Task Updates: Task Updates
 - Team was still getting wrong results in the Googlenet network 
 - The intermediate results obtained from googlenet kernels were presented to Tobias and we found out that outputs from the first conv layer were wrong.
@@ -21,7 +21,7 @@
 - Tobias suggested to come up with test scenarios with sample data to test the functional correctness of the conv/maxpool/concat kernels.
 - Performance modelling : Gave updates on number of operations of inception modules as per Antlr4 tool.
 ##### Project decisions
-- Meeting time during the semester break will be Mondays(9:15-12:15) in the lab and on Wednesdays(9:15-12:15) in the regular meeting room.
+- 
 
 ### Issues and Actions
 | Issue | Owner | Time |
