@@ -228,41 +228,6 @@ void parse_images(std::vector<std::string> imageNames, InferenceEngine::CNNNetwo
 
 
 /**
- * function to check if the input model's bitstream is present in the Noctua FPGA Bitstream Repo.
- */
-std::string bitstreamFinder(char *filepath)
-{
-	std::cout << "Finding the bitstream" << std::endl;
-	char *full_filename;
-	char *filenameFromPath;
-
-	strtok(filepath, "/");
-	while ((filenameFromPath = strtok(NULL, "/")) != NULL)
-	{
-		full_filename = filenameFromPath;
-	}
-	std::string str = "";
-	str = full_filename;
-	std::cout << " AOCX File is:" << str << std::endl;
-	size_t lastindex = str.length();
-	std::string filename = str.substr(0, lastindex);
-	filename += ".aocx";
-	std::string str1 = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/adeshs/dldt/kernels/" + filename;
-	std::cout << "Final AOCX File is:" << str1 << std::endl;
-	char *char1 = new char[str1.length() + 1];
-	strcpy(char1, str1.c_str());
-	FILE *fp = fopen(char1, "r");
-	if (fp != NULL)
-	{
-		return filename;
-	}
-	else
-	{
-		return "not found";
-	}
-}
-
-/**
  * Tree Construction logic:
  */
 struct layersDetails *parse_root(InferenceEngine::CNNNetwork network)
@@ -393,7 +358,7 @@ void findbyID(struct layersDetails *root, int id, struct layersDetails *parent)
 	}
 }
 /**
- * fucntion to remove dummy layers from the tree.
+ * function to remove dummy layers from the tree.
  */
 void remove_dummy_child(struct layersDetails *node)
 {
@@ -644,18 +609,7 @@ void printDevices(std::vector<cl::Device> DeviceList1)
 int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name)
 {
 	std::cout << "In FPGA Launcher" << std::endl;
-	//std::string overlay_name = bitstreamFinder(model_path); //Checking the availability of bitstream
-	std::string overlay_name = " ";
-	if (overlay_name == "not found")
-	{
-		std::cout << " Bitstream not found\n";
-		//return -1;
-		//exit(0);
-	}
-	else
-	{
-		std::cout << " Bitstream found\n";
-	}
+	
 	parse_images(imageNames, network);
 
 	cl_int err;
@@ -667,7 +621,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	std::cout << " Error code after Get Platform:"
 			  << " is ===>" << err << std::endl;
 
-	printPlatforms(PlatformList);
+	//printPlatforms(PlatformList);
 
 	std::vector<cl::Device> DeviceList_Master, DeviceList1;
 	//std::vector<std::vector<cl::Device>> Devices_to_flash; //Devices
@@ -682,7 +636,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	//Printing the Devices
 
-	printDevices(DeviceList_Master);
+	//printDevices(DeviceList_Master);
 
 	cl::Context mycontext(DeviceList1); //Context
 	cl::CommandQueue *cmd_queues[500];  // To be dynamically allocated at kernel launch, one per kernel. the index  of cmd queue array is Layer ID.
@@ -1467,39 +1421,6 @@ buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_ONLY, sizeof(cl_fl
 								std::cout<<final_labels[i]<<"\n";
 					
 						}
-						/*
-						else if (p->layerName == "Predictions_Reshape_1")
-						{
-							std::cout << "\t Input buffer index:" << p->parentOutBufferIndex.at(0)  << std::endl;
-							buffers[buffer_index] = new cl::Buffer(mycontext, CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
-							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //reshape output
-							assert(err == CL_SUCCESS);
-							p->layerOutBufferIndex = buffer_index;
-							for (struct layersDetails *ch : p->children)
-							{
-								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
-							}
-							buffer_index++;
-							//input
-							err = kernels[kernel_index]->setArg(1, *buffers[p->parentOutBufferIndex.at(0)]); //softmax input1
-							assert(err == CL_SUCCESS);
-							buffer_index++;
-							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
-							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-							assert(err == CL_SUCCESS);
-							cmd_queues[p->layerID]->finish();
-							kernel_index++;
-							p->visited = 1; 
-							float final_labels[ p->outH * p->outW * p->outDepth];
-							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[buffer_index], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, final_labels);
-							
-							std::cout<<"\tLabels top 10\n";
-							for(int i=0;i<10;i++)
-								std::cout<<final_labels[i]<<"\n";
-
-							std::cout << "\t Output buffer index:" << p->layerOutBufferIndex  << std::endl;
-						}
-						*/
 						else
 						{
 							std::cout << "\t No supporting Reshape layer" << std::endl;
