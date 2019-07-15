@@ -4,7 +4,7 @@
 | Date of Meeting (YYYY/MM/DD)  | (2019/07/15 )  |  
 |:--- | :---: |  
 | Time  |  09:15 - 11:45 |  
-| MOM Prepared by  | <Arathy>  |  
+| MOM Prepared by  | Arathy  |  
 
 | Team | |
 | --- | :---: |
@@ -32,10 +32,10 @@
 
 |Action| Owner|Due Date|
 |:--- | :--- | :---: |
-| Action1 | MPI Integration with plugin | Rushikesh | Wednesday |
-| Action2 | Kernel Optimizations - I/O Channels | Adesh | Wednesday |
-| Action3 | Kernel Optimizations - Internal channels | Arathy | Wednesday |
-| Action4 | ResNet Implementation - Tensorflow | Suprajith | Wednesday |
+| MPI Integration with plugin | Rushikesh |Wednesday |  
+| Kernel Optimizations - I/O Channels | Adesh |Wednesday  |  
+| Kernel Optimizations - Internal channels | Arathy  |   Wednesday |
+| ResNet Implementation - Tensorflow | Suprajith | Wednesday |
 
 
 
