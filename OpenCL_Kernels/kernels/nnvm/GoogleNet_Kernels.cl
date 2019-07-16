@@ -125,15 +125,6 @@ __kernel void MaxPool_3a_3x3_MaxPool(__global float *restrict tensor, __global f
     }
 }
 
-__kernel void Padding_Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
-{
-
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 150528; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
-    {
-        T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 192) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))];
-    }
-}
-
 __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
 {
     for (int ff = 0; ff < 64; ++ff)
