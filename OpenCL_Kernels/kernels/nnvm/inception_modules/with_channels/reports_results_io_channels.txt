@@ -1,0 +1,261 @@
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception0.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception0/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   73%                     ;
+; ALUTs                                  ;   39%                     ;
+; Dedicated logic registers              ;   36%                     ;
+; Memory blocks                          ;   42%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception1.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception1/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   64%                     ;
+; ALUTs                                  ;   34%                     ;
+; Dedicated logic registers              ;   32%                     ;
+; Memory blocks                          ;   47%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception2.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception2/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   65%                     ;
+; ALUTs                                  ;   34%                     ;
+; Dedicated logic registers              ;   33%                     ;
+; Memory blocks                          ;   45%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception3.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception3/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   63%                     ;
+; ALUTs                                  ;   33%                     ;
+; Dedicated logic registers              ;   32%                     ;
+; Memory blocks                          ;   42%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception4.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception4/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   63%                     ;
+; ALUTs                                  ;   33%                     ;
+; Dedicated logic registers              ;   32%                     ;
+; Memory blocks                          ;   42%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception5.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception5/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   63%                     ;
+; ALUTs                                  ;   33%                     ;
+; Dedicated logic registers              ;   32%                     ;
+; Memory blocks                          ;   42%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception6.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception6/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   64%                     ;
+; ALUTs                                  ;   33%                     ;
+; Dedicated logic registers              ;   32%                     ;
+; Memory blocks                          ;   41%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception7.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception7/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   65%                     ;
+; ALUTs                                  ;   34%                     ;
+; Dedicated logic registers              ;   33%                     ;
+; Memory blocks                          ;   41%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.
+aoc  -v -rtl -report -board=p520_max_sg280l   ./GoogleNet_Kernels_io_channels_inception8.cl
+aoc: Environment checks are completed successfully.
+aoc: Cached files in /var/tmp/aocl/ may be used to reduce compilation time
+aoc: Selected target board p520_max_sg280l
+aoc: Running OpenCL parser....
+aoc: OpenCL parser completed successfully.
+aoc: Linking Object files....
+aoc: Optimizing and doing static analysis of code...
+aoc: Linking with IP library ...
+aoc: Checking if memory usage is larger than 100%...
+aoc: Memory usage is not above 100.
+
+!===========================================================================
+! The report below may be inaccurate. A more comprehensive           
+! resource usage report can be found at GoogleNet_Kernels_io_channels_inception8/reports/report.html    
+!===========================================================================
+
++--------------------------------------------------------------------+
+; Estimated Resource Usage Summary                                   ;
++----------------------------------------+---------------------------+
+; Resource                               + Usage                     ;
++----------------------------------------+---------------------------+
+; Logic utilization                      ;   67%                     ;
+; ALUTs                                  ;   35%                     ;
+; Dedicated logic registers              ;   34%                     ;
+; Memory blocks                          ;   41%                     ;
+; DSP blocks                             ;   23%                     ;
++----------------------------------------+---------------------------;
+aoc: First stage compilation completed successfully.

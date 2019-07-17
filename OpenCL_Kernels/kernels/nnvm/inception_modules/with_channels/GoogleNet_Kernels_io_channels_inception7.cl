@@ -1,5 +1,46 @@
+/**
+ * 8th Inception module - 5a and Inception 5b
+ */
+//Enable the channel extension
+ #pragma OPENCL EXTENSION cl_intel_channels : enable
+
+//256 bits io channel struct
+typedef struct concat_4f_buffer {
+        float concat_4f_out_buffer[8];
+} concat_4f_struct;
+
+typedef struct concat_5b_buffer {
+        float concat_5b_out_buffer[8];
+} concat_5b_struct;
+
+// IO Channels for inception 4f to 5a
+channel concat_4f_struct concat_5a_in_channel __attribute__((depth(10))) __attribute__((io("kernel_input_ch0"))); // Channel Rx
+channel concat_5b_struct concat_5b_out_channel __attribute__((depth(10))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
+
+channel concat_4f_struct concat_5a_in_b0_channel __attribute__((depth(10))) ; // internal channel maxpool
+
+//Auto run kernel to feed 4f results to 4 branches
+
+__kernel void feeder_5a() {
+	struct concat_4f_buffer input = read_channel_intel(concat_5a_in_channel);
+	write_channel_intel(concat_5a_in_b0_channel, input);
+}
 __kernel void MaxPool_5a_2x2_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
+    //Read Input from IO channel 
+    float maxInput[163072];
+    // 163072/8 = 20384
+    for(int i=0;i<20384;i++)
+    {
+        //struct to store 256 bits of data
+        struct concat_4f_buffer in;
+        in = read_channel_intel(concat_5a_in_b0_channel);
+        
+        #pragma unroll
+        for(int k=0;k<8;k++){
+            maxInput[(i*20384)+k] = in.concat_4f_out_buffer[k];
+        }
+    }
     for (int ax1 = 0; ax1 < 832; ++ax1)
     {
         for (int ax2 = 0; ax2 < 7; ++ax2)
@@ -11,7 +52,7 @@ __kernel void MaxPool_5a_2x2_MaxPool(__global float *restrict tensor, __global f
                 {
                     for (int rv1 = 0; rv1 < 2; ++rv1)
                     {
-                        tensor[((((ax1 * 7) + ax2) * 7) + ax3)] = max(tensor[((((ax1 * 7) + ax2) * 7) + ax3)], input0[((((((((ax1 * 7) + ax2) * 2) + rv) * 7) + ax3) * 2) + rv1)]);
+                        tensor[((((ax1 * 7) + ax2) * 7) + ax3)] = max(tensor[((((ax1 * 7) + ax2) * 7) + ax3)], maxInput[((((((((ax1 * 7) + ax2) * 2) + rv) * 7) + ax3) * 2) + rv1)]);
                     }
                 }
             }
@@ -195,6 +236,14 @@ __kernel void Mixed_5b_concat(__global float *restrict T_concat, __global float 
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 40768; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
     {
-        T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((34496 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -34496)] : (float)((28224 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -28224)] : (float)((12544 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -12544)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
+        //struct to store 256 bits of data
+        struct concat_5b_buffer out;
+        //T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((34496 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -34496)] : (float)((28224 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -28224)] : (float)((12544 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -12544)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
+        float result = (float)((34496 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -34496)] : (float)((28224 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -28224)] : (float)((12544 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -12544)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
+        out.concat_5b_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner%8] = result;
+        //After accumlating 256 bits, send the data through IO channel.
+        if(ax0_ax1_fused_ax2_fused_ax3_fused_inner%8 == 7){
+            write_channel_intel(concat_5b_out_channel,out);
+        }
     }
 }
