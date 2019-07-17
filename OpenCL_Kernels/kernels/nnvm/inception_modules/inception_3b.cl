@@ -1,3 +1,16 @@
+//enable channel extension
+#pragma OPENCL EXTENSION cl_intel_channels : enable
+
+typedef struct concat_3b_buffer {
+    float concat_3b_out_buffer[8];
+} concat_3b_struct;
+
+// IO channels for inception 3b to 3c
+channel concat_3b_struct concat_3b_out_channel __attribute__((depth(10)))
+                                        __attribute__((io("kernel_output_ch0")));
+
+
+
 __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 157323; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
@@ -7,6 +20,10 @@ __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict T_pad, __glo
 }
 
 __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
+
+
+    
+
 {
     for (int ff = 0; ff < 64; ++ff)
     {
