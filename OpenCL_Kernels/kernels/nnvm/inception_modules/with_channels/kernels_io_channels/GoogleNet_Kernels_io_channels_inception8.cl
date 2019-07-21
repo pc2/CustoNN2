@@ -18,30 +18,34 @@ channel concat_5b_struct concat_5b_in_b1_channel __attribute__((depth(10))) ; //
 channel concat_5b_struct concat_5b_in_b2_channel __attribute__((depth(10))) ; // internal channel Branch 3
 channel concat_5b_struct concat_5b_in_b3_channel __attribute__((depth(10))) ; // internal channel Branch 4
 
-//Auto run kernel to feed 5b results to 4 branches
-
-__kernel void feeder_5b() {
-	struct concat_5b_buffer input = read_channel_intel(concat_5b_in_channel);
-	write_channel_intel(concat_5b_in_b0_channel, input);
-    write_channel_intel(concat_5b_in_b1_channel, input);
-    write_channel_intel(concat_5b_in_b2_channel, input);
-    write_channel_intel(concat_5b_in_b3_channel, input);
+//Feeder kernels to read data from IO and feed it into internal channnels
+__kernel void feeder_5c()
+{
+    for (int i = 0; i < 5096; i++)
+    {
+        struct concat_5b_buffer input = read_channel_intel(concat_5b_in_channel);
+        write_channel_intel(concat_5b_in_b0_channel, input);
+        write_channel_intel(concat_5b_in_b1_channel, input);
+        write_channel_intel(concat_5b_in_b2_channel, input);
+        write_channel_intel(concat_5b_in_b3_channel, input);
+    }
 }
 
 __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float convInput[40768];
     // 40768/8 = 5096
-    for(int i=0;i<5096;i++)
+    for (int i = 0; i < 5096; i++)
     {
         //struct to store 256 bits of data
         struct concat_5b_buffer in;
         in = read_channel_intel(concat_5b_in_b0_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            convInput[(i*5096)+k] = in.concat_5b_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            convInput[(i * 8) + k] = in.concat_5b_out_buffer[k];
         }
     }
     for (int ff = 0; ff < 384; ++ff)
@@ -63,18 +67,19 @@ __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
 
 __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float convInput[40768];
     // 40768/8 = 5096
-    for(int i=0;i<5096;i++)
+    for (int i = 0; i < 5096; i++)
     {
         //struct to store 256 bits of data
         struct concat_5b_buffer in;
         in = read_channel_intel(concat_5b_in_b1_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            convInput[(i*5096)+k] = in.concat_5b_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            convInput[(i * 8) + k] = in.concat_5b_out_buffer[k];
         }
     }
     for (int ff = 0; ff < 192; ++ff)
@@ -128,18 +133,19 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
 
 __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float convInput[40768];
     // 40768/8 = 5096
-    for(int i=0;i<5096;i++)
+    for (int i = 0; i < 5096; i++)
     {
         //struct to store 256 bits of data
         struct concat_5b_buffer in;
         in = read_channel_intel(concat_5b_in_b2_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            convInput[(i*5096)+k] = in.concat_5b_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            convInput[(i * 8) + k] = in.concat_5b_out_buffer[k];
         }
     }
     for (int ff = 0; ff < 48; ++ff)
@@ -193,18 +199,19 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
 
 __kernel void Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float maxInput[40768];
     // 40768/8 = 5096
-    for(int i=0;i<5096;i++)
+    for (int i = 0; i < 5096; i++)
     {
         //struct to store 256 bits of data
         struct concat_5b_buffer in;
         in = read_channel_intel(concat_5b_in_b3_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            maxInput[(i*5096)+k] = in.concat_5b_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            maxInput[(i * 8) + k] = in.concat_5b_out_buffer[k];
         }
     }
     for (int ax1 = 0; ax1 < 832; ++ax1)

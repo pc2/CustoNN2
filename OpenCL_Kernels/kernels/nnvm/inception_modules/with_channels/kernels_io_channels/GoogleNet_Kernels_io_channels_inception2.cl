@@ -19,28 +19,31 @@ channel concat_4b_struct concat_4b_out_channel __attribute__((depth(10))) __attr
 
 channel concat_3c_struct concat_4a_in_max_channel __attribute__((depth(10))) ; // internal channel maxpool
 
-
-//Auto run kernel to feed 3b results to 4 branches
-
-__kernel void feeder_4a() {
-	struct concat_3c_buffer input = read_channel_intel(concat_4a_in_channel);
-	write_channel_intel(concat_4a_in_max_channel, input);
+//Feeder kernels to read data from IO and feed it into internal channnels
+__kernel void feeder_4a()
+{
+    for (int i = 0; i < 47040; i++)
+    {
+        struct concat_3c_buffer input = read_channel_intel(concat_4a_in_channel);
+        write_channel_intel(concat_4a_in_max_channel, input);
+    }
 }
 
 __kernel void MaxPool_4a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float maxInput[376320];
     // 376320/8 = 47040
-    for(int i=0;i<47040;i++)
+    for (int i = 0; i < 47040; i++)
     {
         //struct to store 256 bits of data
         struct concat_3c_buffer in;
         in = read_channel_intel(concat_4a_in_max_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            maxInput[(i*47040)+k] = in.concat_3c_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            maxInput[(i * 8) + k] = in.concat_3c_out_buffer[k];
         }
     }
     for (int ax1 = 0; ax1 < 480; ++ax1)
@@ -89,7 +92,6 @@ __kernel void Mixed_4b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-
     for (int ff = 0; ff < 96; ++ff)
     {
         for (int yy = 0; yy < 14; ++yy)
@@ -120,7 +122,6 @@ __kernel void Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-
     for (int ff = 0; ff < 208; ++ff)
     {
         for (int yy = 0; yy < 14; ++yy)
@@ -149,7 +150,6 @@ __kernel void Mixed_4b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-
     for (int ff = 0; ff < 16; ++ff)
     {
         for (int yy = 0; yy < 14; ++yy)
@@ -201,7 +201,6 @@ __kernel void Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     }
 }
 
-
 __kernel void Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
     for (int ax1 = 0; ax1 < 480; ++ax1)
@@ -252,12 +251,12 @@ __kernel void Mixed_4b_concat(__global float *restrict T_concat, __global float 
     struct concat_4b_buffer out;
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
     {
-       // T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((87808 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -87808)] : (float)((78400 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -78400)] : (float)((37632 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -37632)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
-       float result = T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((87808 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -87808)] : (float)((78400 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -78400)] : (float)((37632 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -37632)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
-       out.concat_4b_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner%8] = result;
+        float result = T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((87808 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -87808)] : (float)((78400 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -78400)] : (float)((37632 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -37632)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
+        out.concat_4b_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8] = result;
         //After accumlating 256 bits, send the data through IO channel.
-        if(ax0_ax1_fused_ax2_fused_ax3_fused_inner%8 == 7){
-            write_channel_intel(concat_4b_out_channel,out);
+        if (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8 == 7)
+        {
+            write_channel_intel(concat_4b_out_channel, out);
         }
     }
 }

@@ -22,34 +22,37 @@ channel concat_4d_struct concat_4e_in_b1_channel __attribute__((depth(10))) ; //
 channel concat_4d_struct concat_4e_in_b2_channel __attribute__((depth(10))) ; // internal channel Branch 3
 channel concat_4d_struct concat_4e_in_b3_channel __attribute__((depth(10))) ; // internal channel Branch 4
 
-//Auto run kernel to feed 3b results to 4 branches
-
-__kernel void feeder_4e() {
-	struct concat_4d_buffer input = read_channel_intel(concat_4e_in_channel);
-	write_channel_intel(concat_4e_in_b0_channel, input);
-    write_channel_intel(concat_4e_in_b1_channel, input);
-    write_channel_intel(concat_4e_in_b2_channel, input);
-    write_channel_intel(concat_4e_in_b3_channel, input);
+//Feeder kernels to read data from IO and feed it into internal channnels
+__kernel void feeder_4e()
+{
+    for (int i = 0; i < 12544; i++)
+    {
+        struct concat_4d_buffer input = read_channel_intel(concat_4e_in_channel);
+        write_channel_intel(concat_4e_in_b0_channel, input);
+        write_channel_intel(concat_4e_in_b1_channel, input);
+        write_channel_intel(concat_4e_in_b2_channel, input);
+        write_channel_intel(concat_4e_in_b3_channel, input);
+    }
 }
-
 
 __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
                                                      __global float *restrict input0,
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float convInput[100352];
     // 100352/8 = 12544
-    for(int i=0;i<12544;i++)
+    for (int i = 0; i < 12544; i++)
     {
         //struct to store 256 bits of data
         struct concat_4d_buffer in;
         in = read_channel_intel(concat_4e_in_b0_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            convInput[(i*12544)+k] = in.concat_4d_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            convInput[(i * 8) + k] = in.concat_4d_out_buffer[k];
         }
     }
     for (int ff = 0; ff < 112; ++ff)
@@ -74,18 +77,19 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float convInput[100352];
     // 100352/8 = 12544
-    for(int i=0;i<12544;i++)
+    for (int i = 0; i < 12544; i++)
     {
         //struct to store 256 bits of data
         struct concat_4d_buffer in;
         in = read_channel_intel(concat_4e_in_b1_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            convInput[(i*12544)+k] = in.concat_4d_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            convInput[(i * 8) + k] = in.concat_4d_out_buffer[k];
         }
     }
     for (int ff = 0; ff < 144; ++ff)
@@ -144,18 +148,19 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                                                      __global float *restrict input1,
                                                      __global float *restrict input2)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float convInput[100352];
     // 100352/8 = 12544
-    for(int i=0;i<12544;i++)
+    for (int i = 0; i < 12544; i++)
     {
         //struct to store 256 bits of data
         struct concat_4d_buffer in;
         in = read_channel_intel(concat_4e_in_b2_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            convInput[(i*12544)+k] = in.concat_4d_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            convInput[(i * 8) + k] = in.concat_4d_out_buffer[k];
         }
     }
     for (int ff = 0; ff < 32; ++ff)
@@ -211,18 +216,19 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
 
 __kernel void Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
-    //Read Input from IO channel 
+    //Read Input from IO channel
     float maxInput[100352];
     // 100352/8 = 12544
-    for(int i=0;i<12544;i++)
+    for (int i = 0; i < 12544; i++)
     {
         //struct to store 256 bits of data
         struct concat_4d_buffer in;
         in = read_channel_intel(concat_4e_in_b3_channel);
-        
+
         #pragma unroll
-        for(int k=0;k<8;k++){
-            maxInput[(i*12544)+k] = in.concat_4d_out_buffer[k];
+        for (int k = 0; k < 8; k++)
+        {
+            maxInput[(i * 8) + k] = in.concat_4d_out_buffer[k];
         }
     }
     for (int ax1 = 0; ax1 < 512; ++ax1)
@@ -272,12 +278,12 @@ __kernel void Mixed_4e_concat(__global float *restrict T_concat, __global float 
     struct concat_4e_buffer out;
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 103488; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
     {
-        //T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((90944 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -90944)] : (float)((78400 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -78400)] : (float)((21952 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -21952)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
         float result = (float)((90944 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -90944)] : (float)((78400 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -78400)] : (float)((21952 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -21952)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
-        out.concat_4e_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner%8] = result;
+        out.concat_4e_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8] = result;
         //After accumlating 256 bits, send the data through IO channel.
-        if(ax0_ax1_fused_ax2_fused_ax3_fused_inner%8 == 7){
-            write_channel_intel(concat_4e_out_channel,out);
+        if (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8 == 7)
+        {
+            write_channel_intel(concat_4e_out_channel, out);
         }
     }
 }
