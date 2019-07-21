@@ -23,3 +23,4 @@ io_report_5c :
 	aoc  -v -rtl -report -board=$(board_name)   ./GoogleNet_Kernels_io_channels_inception8.cl
 io_emulation :
 	aoc  -v -march=emulator -board=$(board_name) -o $(test_dir)/GooleNet_Kernels_IO.aocx   ./GooleNet_Kernels_IO.cl
+	aoc  -v -march=emulator -board=$(board_name) -o $(test_dir)/GooleNet_Kernels_IO_1.aocx   ./GooleNet_Kernels_IO_1.cl
