@@ -207,9 +207,10 @@ __kernel void Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict 
                             for (int rv1 = 0; rv1 < 3; ++rv1)
                             {
                                 tensor[((((ax1 * 28) + ax2) * 28) + ax3)] = max(tensor[((((ax1 * 28) + ax2) * 28) + ax3)], (float)((((((1 - rv) <= ax2) && (ax2 < (29 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (29 - rv1))) ? input0[(((((((ax1 * 28) + ax2) + rv) * 28) + ax3) + rv1) + -29)] : -3.402823e+38f));
-                                write_channel_intel(maxpool_3c_out_b3_channel, tensor[((((ax1 * 28) + ax2) * 28) + ax3)]);
+                                
                             }
                         }
+                        write_channel_intel(maxpool_3c_out_b3_channel, tensor[((((ax1 * 28) + ax2) * 28) + ax3)]);
                     }
                 }
             }
