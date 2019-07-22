@@ -3,17 +3,15 @@
  */
 
 //Enable the channel extension
- #pragma OPENCL EXTENSION cl_intel_channels : enable
+#pragma OPENCL EXTENSION cl_intel_channels : enable
 
 //256 bits io channel struct
-typedef struct concat_3b_buffer {
-        float concat_3b_out_buffer[8];
+typedef struct concat_3b_buffer
+{
+    float concat_3b_out_buffer[8];
 } concat_3b_struct;
 // IO Channels for inception 3b to 3c
 channel concat_3b_struct concat_3b_out_channel __attribute__((depth(10))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
-
-
-
 
 __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
@@ -47,7 +45,6 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global fl
         }
     }
 }
-
 
 __kernel void MaxPool_2a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
@@ -266,7 +263,6 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     }
 }
 
-
 __kernel void Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
     for (int ax1 = 0; ax1 < 192; ++ax1)
@@ -315,11 +311,11 @@ __kernel void Mixed_3b_concat(__global float *restrict T_concat, __global float 
     {
         //T_concat[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)((175616 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -175616)] : (float)((150528 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -150528)] : (float)((50176 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -50176)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
         float result = (float)((175616 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -175616)] : (float)((150528 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -150528)] : (float)((50176 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -50176)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
-        
-        out.concat_3b_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner%8] = result;
+        out.concat_3b_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8] = result;
         //After accumlating 256 bits, send the data through IO channel.
-        if(ax0_ax1_fused_ax2_fused_ax3_fused_inner%8 == 7){
-            write_channel_intel(concat_3b_out_channel,out);
+        if (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8 == 7)
+        {
+            write_channel_intel(concat_3b_out_channel, out);
         }
     }
 }
