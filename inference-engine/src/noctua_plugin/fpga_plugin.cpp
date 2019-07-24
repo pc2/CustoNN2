@@ -806,6 +806,14 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	// std::cout << "path1: " << f1 << "\n";
 	// std::cout << "path2: " << f2 << "\n";
 
+	std::ifstream aocx_stream(f1, std::ios::in|std::ios::binary);
+        //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
+        std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+        cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
+	 programs[0] = new cl::Program(*contexts[0], DeviceList1, mybinaries);
+	err = programs[0]->build(DeviceList1);	
+
+	// std::cout << err << "\n";
 
 	std::ifstream aocx_stream2(f2, std::ios::in|std::ios::binary);
         //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
@@ -813,15 +821,6 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
         cl::Program::Binaries mybinaries2 (1, std::make_pair(prog2.c_str(), prog2.length()+1));
 	programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries2);
 	err = programs[1]->build(DeviceList2);	
-
-	// std::cout << err << "\n";
-
-	std::ifstream aocx_stream(f1, std::ios::in|std::ios::binary);
-        //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
-        std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
-        cl::Program::Binaries mybinaries (1, std::make_pair(prog.c_str(), prog.length()+1));
-	 programs[0] = new cl::Program(*contexts[0], DeviceList1, mybinaries);
-	err = programs[0]->build(DeviceList1);	
 
 	// std::cout << err << "\n";
 
