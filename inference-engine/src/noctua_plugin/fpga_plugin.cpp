@@ -1496,7 +1496,7 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
 							}
 							// MPI write to the next host instance
-							if(rank<com_sz-1)
+							if(rank<com_sz-1&&program_number == 2)
 							{
 								std::string concat_layer_name = p->layerName;
 								MPI_Send(concat_layer_name.c_str(), concat_layer_name.size(), MPI_CHAR, rank+1, 0, MPI_COMM_WORLD);
