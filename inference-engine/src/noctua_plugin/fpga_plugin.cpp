@@ -720,6 +720,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	std::vector<cl::Device> DeviceList_Master,DeviceList1,DeviceList2;
 
+
 	//std::vector<cl::Device> DeviceList_Master, DeviceList1;
 
 	//std::vector<std::vector<cl::Device>> Devices_to_flash; //Devices
@@ -733,8 +734,6 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	DeviceList2.push_back(DeviceList_Master[1]);
 	//Printing the Devices
-
-
 	
 	
 	cl::Context *contexts[2];
@@ -804,6 +803,19 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	char f2[file2.length()];
 	strcpy(f2,file2.c_str());
 	
+	// std::cout << "path1: " << f1 << "\n";
+	// std::cout << "path2: " << f2 << "\n";
+
+
+	std::ifstream aocx_stream2(f2, std::ios::in|std::ios::binary);
+        //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
+        std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
+        cl::Program::Binaries mybinaries2 (1, std::make_pair(prog2.c_str(), prog2.length()+1));
+	programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries2);
+	err = programs[1]->build(DeviceList2);	
+
+	// std::cout << err << "\n";
+
 	std::ifstream aocx_stream(f1, std::ios::in|std::ios::binary);
         //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
         std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
@@ -811,28 +823,24 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	 programs[0] = new cl::Program(*contexts[0], DeviceList1, mybinaries);
 	err = programs[0]->build(DeviceList1);	
 
-
-	std::ifstream aocx_stream2(f2, std::ios::in|std::ios::binary);
-        //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
-        std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
-        cl::Program::Binaries mybinaries2 (1, std::make_pair(prog2.c_str(), prog2.length()+1));
-	programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries);
-	err = programs[1]->build(DeviceList2);	
+	// std::cout << err << "\n";
 
 	std::string file1_xml = GoogLeNet_DIR+"inception"+std::to_string(2*rank)+".xml";
 	std::string file2_xml = GoogLeNet_DIR+"inception"+std::to_string(2*rank+1)+".xml";
 	
-	char f1_xml[file1.length()];
-	strcpy(f1,file1_xml.c_str());
+	// std::cout << "xml_path: " <<  file1_xml<< "\n";
+
+	char f1_xml[file1_xml.length()];
+	strcpy(f1_xml,file1_xml.c_str());
+	// std::cout << "xml_path1: " << f1_xml << "\n";
 	std::vector<std::string> first_kernels;   //kernels from first aocx
 	xml_parser1(f1_xml,first_kernels);
 	
-	char f2_xml[file1.length()];
+	char f2_xml[file2_xml.length()];
 	strcpy(f2_xml,file2_xml.c_str());
+	// std::cout << "xml_path2: " << f2_xml << "\n";
 	std::vector<std::string> second_kernels;   //kernels from second aocx
 	xml_parser1(f2_xml,second_kernels);
-	
-
 	
 
 	//Print the details of each layers in the network to check their correctness.
