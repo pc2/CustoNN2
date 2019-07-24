@@ -14,13 +14,13 @@
 #include <queue>
 #include <sys/types.h>
 #include <dirent.h>
-
+#include<mpi.h>
 #include <inference_engine.hpp>
 #include <opencv2/opencv.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/foreach.hpp>
-#include "mpi.h"
+
 
 // Directories where the aocx files will be stored
 
@@ -36,7 +36,7 @@ std::map<std::string, int> layerIDMap;
 //Vector to hold Layer IDs
 std::vector<int> ID_list;
 
-std::string GoogLeNet_DIR = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/GoogLeNet";
+std::string GoogLeNet_DIR = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/googlenet_bitstreams/";
 std::string ResNet_DIR = "/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/ResNet";
 
 unsigned char *images;
@@ -44,7 +44,7 @@ int num_images, dim_x, dim_y,dim_depth;
 // OUTPUT WRITE BEING //
 
 //Set to 1 if you want the outputs of each layers to be written to a file.
-int outputWriteFlag = 1;
+int outputWriteFlag = 0;
 // Results File Prefix
 std:: string resultsFileAppender = "Results__";
 // OUTPUT WRITE END //
@@ -416,6 +416,42 @@ void find_missing_duplicates(struct layersDetails *root)
 		}
 	}
 }
+
+void find_by_name(struct layersDetails *root, std::string layer_name, int buffer_index)
+{
+	std::queue<struct layersDetails *> q;
+	q.push(root);
+	while (!q.empty())
+	{
+		int n = q.size();
+
+		while (n > 0)
+		{
+			struct layersDetails *p = q.front();
+			q.pop();
+			if (p != NULL)
+			{
+				
+				if(p->layerName==layer_name)
+					{
+						for (struct layersDetails *ch : p->children)
+						{
+							ch->parentOutBufferIndex.push_back(buffer_index);
+						}
+					}
+			}
+			// Enqueue all children of the dequeued item
+			for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
+			{
+				if (*it != NULL)
+					q.push(*it);
+			}
+			n--;
+		}
+	}
+
+
+}
 /**
  * TREE construction logic:
  */
@@ -714,7 +750,7 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	
 
-
+	
 
 	Builder::Network originalNetwork(network);
 
@@ -759,8 +795,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	
 	cl::Program *programs[2];
 
-	std::string file1 = GoogLeNet_DIR+"Inception"+std::to_string(2*rank)+".aocx";     //first aocx
-	std::string file2 = GoogLeNet_DIR+"Inception"+std::to_string(2*rank+1)+".aocx";   //second aocx
+	std::string file1 = GoogLeNet_DIR+"inception"+std::to_string(2*rank)+".aocx";     //first aocx
+	std::string file2 = GoogLeNet_DIR+"inception"+std::to_string(2*rank+1)+".aocx";   //second aocx
 	
 	char f1[file1.length()];
 	strcpy(f1,file1.c_str());
@@ -783,8 +819,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries);
 	err = programs[1]->build(DeviceList2);	
 
-	std::string file1_xml = GoogLeNet_DIR+"Inception"+std::to_string(2*rank)+".xml";
-	std::string file2_xml = GoogLeNet_DIR+"Inception"+std::to_string(2*rank+1)+".xml";
+	std::string file1_xml = GoogLeNet_DIR+"inception"+std::to_string(2*rank)+".xml";
+	std::string file2_xml = GoogLeNet_DIR+"inception"+std::to_string(2*rank+1)+".xml";
 	
 	char f1_xml[file1.length()];
 	strcpy(f1,file1_xml.c_str());
@@ -825,8 +861,8 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	cl::Buffer *buffers[500];
 	int buffer_index = 0;
 
-
-
+	int com_sz;
+	MPI_Comm_size(MPI_COMM_WORLD, &com_sz);
 
 float normalized_image[dim_x * dim_y * dim_depth * num_images];
     
@@ -881,6 +917,31 @@ float normalized_image[dim_x * dim_y * dim_depth * num_images];
 		}
 	}
 
+
+
+	if(rank!=0)
+	{
+		char layer_name[50];
+		MPI_Recv(layer_name, 50, MPI_CHAR, rank - 1, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+
+		std::string previous_l_name(layer_name);
+		int dims_prev;
+		MPI_Recv(&dims_prev, 1, MPI_INT, rank - 1, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+
+		float prev_data[dims_prev];
+		MPI_Recv(prev_data, dims_prev, MPI_FLOAT, rank - 1, 0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+
+		buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_float) * dims_prev);
+    		err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dims_prev, prev_data); //images buffer
+    		assert(err == CL_SUCCESS);
+    		err = cmd_queues[0]->finish();
+	
+		find_by_name(root,previous_l_name,buffer_index);
+	
+		buffer_index++; 	
+
+
+	}
 
 
 buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images);
@@ -1434,6 +1495,17 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 							{
 								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
 							}
+							// MPI write to the next host instance
+							if(rank<com_sz-1)
+							{
+								std::string concat_layer_name = p->layerName;
+								MPI_Send(concat_layer_name.c_str(), concat_layer_name.size(), MPI_CHAR, rank+1, 0, MPI_COMM_WORLD);
+								int dims1 = p->outH * p->outW * p->outDepth;
+								MPI_Send(&dims1, 1, MPI_INT, rank+1, 0, MPI_COMM_WORLD);
+								float concat_out[p->outH * p->outW * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, concat_out);
+								MPI_Send(concat_out, p->outH * p->outW * p->outDepth, MPI_FLOAT, rank+1, 0, MPI_COMM_WORLD);
+							}
 											
 							// OUTPUT WRITE BEING //
 							if(outputWriteFlag == 1){ 
@@ -1459,6 +1531,30 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 							}
 							// OUTPUT WRITE END //
 							
+
+							if(p->layerName == "Mixed_3c_concat"){
+							//Read buffer from the last conv output
+							float convScores[p->outH * p->outW * p->outDepth];
+							cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, convScores);
+							err = cmd_queues[p->layerID]->finish();
+							std::ofstream outdataincep;
+							//Printing the results after getting Top N Results
+							std::string outFileName = resultsFileAppender+std::to_string(p->layerID)+"_mpi_"+p->layerName+".txt";
+								outdataincep.open(outFileName);
+								if (!outdataincep)
+								{ // file couldn't be opened
+									std::cerr << "Error: file could not be opened" << std::endl;
+										exit(1);
+								}
+								//std::cout << "\tConcat output\n";
+								for (int i = 0; i < p->outH * p->outW * p->outDepth; i++)
+								{
+									//std::cout << final_labels[i] << " ";
+									outdataincep << convScores[i] << "\n";
+								}
+								outdataincep.close(); 
+							return 0;
+						}
 												
 						}
 						if(p->visited == 0)

@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
                 "\n\t" << FLAGS_m <<
                 "\n\t" << binFileName <<
         slog::endl;
-	MPI_Init(&argc, &argv);
+	MPI_Init(NULL, NULL);
         CNNNetReader networkReader;
         /** Reading network model **/
         networkReader.ReadNetwork(FLAGS_m);
