@@ -1,4 +1,3 @@
-
 # CustoNN2 : Minutes of the meeting
 <br/>
 
