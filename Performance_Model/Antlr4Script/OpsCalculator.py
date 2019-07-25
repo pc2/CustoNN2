@@ -33,13 +33,17 @@ class CPrintListener(CListener):
 
     for_loop_count_local = 0
     
+    inside_function = 0 
     inside_for_declaration = 0
     inside_for_condition = 0
   
     inside_for_expession_no = 0 
 
     loop_block = 0
+    entertwice = 0
     
+    func_name = []
+
     iteration_no = 0
     current_loop = 0
     current_func = 0
@@ -78,16 +82,32 @@ class CPrintListener(CListener):
  
         
     def enterFunctionDefinition(self, ctx):
-        self.current_func = self.current_func + 1              
-	
+        self.inside_function = 1
+        self.current_func = self.current_func + 1  
+        
+
+
+ 
+    def enterDirectDeclarator(self, ctx):         
+        self.entertwice = self.entertwice + 1
+        if self.entertwice == 2 and self.inside_function == 1:
+            self.func_name.append(ctx.getText())              
+	    self.entertwice = 0
+
+    def exitDirectDeclarator(self, ctx):         
+        self.entertwice = 0
+
+
 
     def exitFunctionDefinition(self, ctx):
  
 	self.val_diff_func[self.current_func] =  sum(self.val_diff_inside[1:self.loop_block +1])
  	#print("Current func is {}".format(self.current_func))
-	#print("Val of val diff here is {}".format(self.val_diff_func[self.current_func]))
+	 
         self.val_diff_inside = [1] * 50
         self.loop_block = 0
+        self.entertwice = 0
+        self.inside_function = 0
 
     def enterForCondition(self, ctx):	 
 	pass
@@ -113,7 +133,7 @@ class CPrintListener(CListener):
 		#self.loop_block -= 1
         
 
- 
+
 				 
 		          
  	
@@ -132,11 +152,23 @@ class CPrintListener(CListener):
  
      
     def exitCompilationUnit(self, ctx):
+         
+        sum_convs = 0
 	print("Number of funcs is {}".format(self.current_func))
-	for i in range (1 , self.current_func + 1):
-		print(self.val_diff_func[i])	
+        print("funcs are {}".format(self.func_name))
+
+	for i in range (1 , self.current_func+1):
+		print(self.val_diff_func[i])
+	
 	sum1 = sum(self.val_diff_func[1:self.current_func + 1])
 	print("Total number of operations are {}".format(sum1))
+        
+        for index,funcs in enumerate(self.func_name) :
+        	if "Conv" in funcs and "Pad" not in funcs:
+			print (str(index) +" is "+ str(funcs) + "with Ops :" + str(self.val_diff_func[index+1]))
+                        sum_convs = sum_convs + self.val_diff_func[index+1]
+
+        print("Total number of MAC ops are " +str(sum_convs))
 
 
 def main():
