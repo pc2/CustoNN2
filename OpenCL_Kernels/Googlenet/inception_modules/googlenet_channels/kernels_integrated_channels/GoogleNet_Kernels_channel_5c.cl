@@ -363,7 +363,7 @@ __kernel void AvgPool_0a_7x7_AvgPool()
     }
 }
 
-__kernel void Conv2d_0c_1x1_Conv2D(__global float *restrict compute, __global float *restrict input1, __global float *restrict input2)
+__kernel void Conv2d_0c_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2, __global float *restrict compute)
 {
     float input0[1024];
     for (int i = 0; i < 1024; i++){
