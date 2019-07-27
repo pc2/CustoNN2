@@ -1,4 +1,5 @@
 # Work instructions for testing GoogLeNet with channels
+Here we are executing Googlenet with channels implementation inbetween the layers to avoid writing intermediate results into global memory. In Emulation mode, the IO channels are emulated as files. So every inception will write the intermediate results into a file via IO channel and next inception module will read the data from file. The architecture is shown below in this document.
 ### Googlenet with only IO channels:
 - Plugin code for testing kernels with only IO channels is in `io_channels_testing_branch` branch
 - GoogLeNet kernels with IO channels are saved in `pg-custonn2-2018/OpenCL_Kernels/Googlenet/inception_modules/googlenet_channels/kernels_testing_io_channels`
