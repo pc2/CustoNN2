@@ -311,7 +311,7 @@ __kernel void Mixed_5b_concat()
     struct concat_5b_buffer out;
     
     float input0[256*7*7];
-    for (int i = 0; i < 192*14*14; i++ ){
+    for (int i = 0; i < 256*7*7; i++ ){
         input0[i] = read_channel_intel(conv1_5b_out_b0_channel);
     }
     float input1[320*7*7];
