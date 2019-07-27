@@ -1,4 +1,5 @@
 From report.html in emulation mode
+
 | Layer Name   | # Ops Calculated | # Ops Litreature | Difference  | Logic Utilization | ALUTs | Dedicated Logic Registers | Memory blocks | DSP Blocks |
 |--------------|------------------|------------------|-------------|-------------------|-------|---------------------------|---------------|------------|
 | Inception_3b | 123433408        | 128000000        | 4566592     | 74                | 39    | 37                        | 42            | 23         |
