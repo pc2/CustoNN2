@@ -317,11 +317,11 @@ __kernel void Mixed_4e_concat()
     struct concat_4e_buffer out;
     
     float input0[112*14*14];
-    for (int i = 0; i < 160*14*14; i++ ){
+    for (int i = 0; i < 112*14*14; i++ ){
         input0[i] = read_channel_intel(conv1_4e_out_b0_channel);
     }
     float input1[288*14*14];
-    for (int i = 0; i < 224*14*14; i++){
+    for (int i = 0; i < 288*14*14; i++){
         input1[i] = read_channel_intel(conv2_2_4e_out_b1_channel);
     }
     float input2[64*14*14], input3[64*14*14];
