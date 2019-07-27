@@ -322,8 +322,8 @@ __kernel void Mixed_5b_concat()
     for (int i = 0; i < 128*7*7; i++){
         input2[i] = read_channel_intel(conv3_2_5b_out_b2_channel);
     }
-    float input3[832*7*7];
-    for (int i = 0; i < 832*7*7; i++){
+    float input3[128*7*7];
+    for (int i = 0; i < 128*7*7; i++){
         input3[i] = read_channel_intel(conv4_1_5b_out_b3_channel);
     }
     
