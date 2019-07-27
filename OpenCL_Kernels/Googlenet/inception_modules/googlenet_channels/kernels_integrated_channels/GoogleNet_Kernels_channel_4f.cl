@@ -195,7 +195,7 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 float temp_0 = input2[ff];
                 for (int rc = 0; rc < 528; ++rc)
                 {
-                    temp_0 = (convInput[((((rc * 14) + yy) * 14) + xx)] * input1[((ff * 528) + rc)]);
+                    temp_0 += (convInput[((((rc * 14) + yy) * 14) + xx)] * input1[((ff * 528) + rc)]);
                 }
                 temp_0 = (temp_0 > 0) ? temp_0: 0.000000e+00f;
                 write_channel_intel(conv3_1_4f_out_b2_channel, temp_0);

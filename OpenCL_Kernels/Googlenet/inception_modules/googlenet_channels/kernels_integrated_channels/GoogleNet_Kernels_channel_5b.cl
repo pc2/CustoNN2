@@ -42,6 +42,7 @@ channel float conv3_2_5b_out_b2_channel __attribute__((depth(32)));
 channel float maxpool_5b_out_b3_channel __attribute__((depth(32)));
 channel float conv4_1_5b_out_b3_channel __attribute__((depth(32)));
 
+channel concat_4f_struct concat_5a_in_b0_channel __attribute__((depth(10))) ; // internal channel maxpool
 //Feeder kernels to read data from IO and feed it into internal channnels
 __kernel void feeder_5a()
 {
@@ -59,7 +60,7 @@ __kernel void MaxPool_5a_2x2_MaxPool()
     //Read Input from IO channel
     float maxInput[163072];
     // 163072/8 = 20384
-
+    
     for (int i = 0; i < 20384; i++)
     {
         //struct to store 256 bits of data
@@ -123,8 +124,8 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
                                                      __global float *restrict input2)
 {
-    float input0[256*7*7];
-    for (int i = 0; i < 256*7*7; i++){
+    float input0[832*7*7];
+    for (int i = 0; i < 832*7*7; i++){
         input0[i] = read_channel_intel(maxpool_5a_out_channel2);
     }
     for (int ff = 0; ff < 160; ++ff)
@@ -190,8 +191,8 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 
 __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
-    float input0[320*7*7];
-    for (int i = 0; i < 320*7*7; i++){
+    float input0[832*7*7];
+    for (int i = 0; i < 832*7*7; i++){
         input0[i] = read_channel_intel(maxpool_5a_out_channel3);
     }
     for (int ff = 0; ff < 32; ++ff)
@@ -256,8 +257,8 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global float *restrict in
 
 __kernel void Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
-    float input0[128*7*7];
-    for (int i = 0; i < 128*7*7; i++){
+    float input0[832*7*7];
+    for (int i = 0; i < 832*7*7; i++){
         input0[i] = read_channel_intel(maxpool_5a_out_channel4);
     }
     for (int ax1 = 0; ax1 < 832; ++ax1)
@@ -311,7 +312,7 @@ __kernel void Mixed_5b_concat()
     struct concat_5b_buffer out;
     
     float input0[256*7*7];
-    for (int i = 0; i < 192*14*14; i++ ){
+    for (int i = 0; i < 256*7*7; i++ ){
         input0[i] = read_channel_intel(conv1_5b_out_b0_channel);
     }
     float input1[320*7*7];
@@ -322,8 +323,8 @@ __kernel void Mixed_5b_concat()
     for (int i = 0; i < 128*7*7; i++){
         input2[i] = read_channel_intel(conv3_2_5b_out_b2_channel);
     }
-    float input3[832*7*7];
-    for (int i = 0; i < 832*7*7; i++){
+    float input3[128*7*7];
+    for (int i = 0; i < 128*7*7; i++){
         input3[i] = read_channel_intel(conv4_1_5b_out_b3_channel);
     }
     
@@ -338,6 +339,5 @@ __kernel void Mixed_5b_concat()
         }
     }
 }
-
 
 
