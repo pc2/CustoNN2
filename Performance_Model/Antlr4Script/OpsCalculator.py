@@ -150,13 +150,7 @@ class CPrintListener(CListener):
         #if (self.iteration_no == 0):
                 #self.loop_block -= 1
         
-
-
-                                 
-                          
-         
-
-        
+   
     
     def enterForDeclaration(self, ctx):
         self.inside_for_declaration = 1
