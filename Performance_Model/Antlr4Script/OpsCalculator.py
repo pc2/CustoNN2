@@ -191,9 +191,7 @@ class CPrintListener(CListener):
 
 def main():
 
-    parser = \
-        argparse.ArgumentParser(description='Generate performance model part a'
-                                )
+    parser = argparse.ArgumentParser(description='Generate performance model part a')
     parser.add_argument('-kernelfile', type=str, nargs=1,
                         help='Input file (OpenCL)', required=True)
     parser.add_argument('-v', action='store_true',
