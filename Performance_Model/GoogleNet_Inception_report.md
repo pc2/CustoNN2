@@ -15,7 +15,7 @@ From report.html in emulation mode
 
 
 
-Estimated Result from synthesized kernels on FPGA
+Estimated Result from synthesized kernels on FPGA using Global Memory
 
 |              |                  |              |           |                 |           |                     |          | 
 |--------------|------------------|--------------|-----------|-----------------|-----------|---------------------|----------| 
