@@ -340,7 +340,7 @@ __kernel void Mixed_3b_concat()
     {
         float result =(float)((175616 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -175616)] : (float)((150528 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -150528)] : (float)((50176 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -50176)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
         out.concat_3b_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8] = result;
-        printf("\t 3b %d - %d --- %f \n",ax0_ax1_fused_ax2_fused_ax3_fused_inner,ax0_ax1_fused_ax2_fused_ax3_fused_inner%8,result);
+        //printf("\t 3b %d - %d --- %f \n",ax0_ax1_fused_ax2_fused_ax3_fused_inner,ax0_ax1_fused_ax2_fused_ax3_fused_inner%8,result);
         if (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8 == 7)
         {
             write_channel_intel(concat_3b_out_channel, out);
@@ -348,8 +348,3 @@ __kernel void Mixed_3b_concat()
     }
     printf("Done Mixed_3b_concat \n");
 }
-
-
-
-
-
