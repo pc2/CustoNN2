@@ -44,7 +44,7 @@ channel float conv4_1_4f_out_b3_channel __attribute__((depth(32)));
 //Feeder kernels to read data from IO and feed it into internal channnels
 __kernel void feeder_4f()
 {
-    for (int i = 0; i < 12544; i++)
+    for (int i = 0; i < 12936; i++)
     {
         struct concat_4e_buffer input = read_channel_intel(concat_4f_in_channel);
         write_channel_intel(concat_4f_in_b0_channel, input);
@@ -58,9 +58,9 @@ __kernel void Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                                                      __global float *restrict input2)
 {
     //Read Input from IO channel
-    float convInput[100352];
-    // 100352/8 = 12544
-    for (int i = 0; i < 12544; i++)
+    float convInput[103488];
+    // 103488/8 = 12936
+    for (int i = 0; i < 12936; i++)
     {
         //struct to store 256 bits of data
         struct concat_4e_buffer in;
@@ -94,9 +94,9 @@ __kernel void Mixed_4f_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                                                      __global float *restrict input2)
 {
     //Read Input from IO channel
-    float convInput[100352];
-    // 100352/8 = 12544
-    for (int i = 0; i < 12544; i++)
+    float convInput[103488];
+    // 103488/8 = 12936
+    for (int i = 0; i < 12936; i++)
     {
         //struct to store 256 bits of data
         struct concat_4e_buffer in;
@@ -171,9 +171,10 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                                                      __global float *restrict input2)
 {
     //Read Input from IO channel
-    float convInput[100352];
-    // 100352/8 = 12544
-    for (int i = 0; i < 12544; i++)
+    float convInput[103488];
+    // 103488/8 = 12936
+
+    for (int i = 0; i < 12936; i++)
     {
         //struct to store 256 bits of data
         struct concat_4e_buffer in;
@@ -250,9 +251,10 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 __kernel void Mixed_4f_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
     //Read Input from IO channel
-    float maxInput[100352];
-    // 100352/8 = 12544
-    for (int i = 0; i < 12544; i++)
+    float maxInput[103488];
+    // 103488/8 = 12936
+
+    for (int i = 0; i < 12936; i++)
     {
         //struct to store 256 bits of data
         struct concat_4e_buffer in;
