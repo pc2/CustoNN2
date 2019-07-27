@@ -17,9 +17,6 @@ import antlr4
 from CLexer import CLexer
 from CListener import CListener
 from CParser import CParser
-import sys
-
-
 
 
 class CPrintListener(CListener):
@@ -224,8 +221,5 @@ def main():
 
     walker = antlr4.ParseTreeWalker()
     walker.walk(printer, tree)
-
- 
- 
 
 main()
