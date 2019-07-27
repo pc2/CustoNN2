@@ -49,7 +49,7 @@ __kernel void feeder_5a()
     for (int i = 0; i < 20384; i++)
     {
         struct concat_4f_buffer input = read_channel_intel(concat_5a_in_channel);
-        write_channel_intel(concat_5a_in_b0_channel, input);
+        write_channel_intel(concat_5a_in_max_channel, input);
     }
 }
 
@@ -60,7 +60,7 @@ __kernel void MaxPool_5a_2x2_MaxPool()
     //Read Input from IO channel
     float maxInput[163072];
     // 163072/8 = 20384
-
+    
     for (int i = 0; i < 20384; i++)
     {
         //struct to store 256 bits of data
@@ -339,6 +339,5 @@ __kernel void Mixed_5b_concat()
         }
     }
 }
-
 
 
