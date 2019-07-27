@@ -2,7 +2,7 @@
 #include<math.h>
 using namespace std;
 
-float Performance_calculator(float fmax, float clock,int total_cycles, float time,int total_ops, float ops_per_cycle )
+float Performance_calculator(float fmax, float clock,int total_cycles, float time,int total_ops, float ops_per_cycle, int bytes, float ops_per_byte )
 {
     cout << "Enter Fmax value: ";
     cin >> fmax;
@@ -20,6 +20,11 @@ float Performance_calculator(float fmax, float clock,int total_cycles, float tim
     cin >> total_ops;
     ops_per_cycle = total_ops / total_cycles;
     cout << "Operations per cycle are: " << ops_per_cycle <<endl;
+    
+    cout << "Enter total number of bytes: ";
+    cin >> bytes;
+    ops_per_byte = total_ops / bytes;
+    cout << "Operations per byte are: " << ops_per_byte <<endl;
 }
 
 int main()
@@ -30,5 +35,8 @@ int main()
 	int total_ops=0;
 	float ops_per_cycle=0.0;
 	float fmax=0.0;
-	Performance_calculator(fmax, clock, total_cycles, time, total_ops, ops_per_cycle);	
+	int bytes=0;
+	float ops_per_byte = 0.0;
+	Performance_calculator(fmax, clock, total_cycles, time, total_ops, ops_per_cycle,bytes,ops_per_byte);	
 }
+
