@@ -113,7 +113,7 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                     temp_0 += (input0[((((rc * 7) + yy) * 7) + xx)] * input1[((ff * 832) + rc)]);
                 }
                 temp_0 = (temp_0 > 0) ? + temp_0 : 0.000000e+00f;
-                write_channel_intel(conv2_1_5b_out_b1_channel, temp_0);
+                write_channel_intel(conv1_5b_out_b0_channel, temp_0);
             }
         }
     }
@@ -124,7 +124,7 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 {
     float input0[256*7*7];
     for (int i = 0; i < 256*7*7; i++){
-        input0[i] = read_channel_intel(conv2_1_5b_out_b1_channel);
+        input0[i] = read_channel_intel(maxpool_5a_out_channel2);
     }
     for (int ff = 0; ff < 160; ++ff)
     {
@@ -152,7 +152,7 @@ __kernel void Padding_Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D()
     
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 12960; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
     {
-         write_channel_intel(padding_5b_out_b1_channel, (float)(((((9 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) < 72)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9) < 8)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 81) * 7) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) / 9)) * 7) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9)) + -8)] : 0.000000e+00f));
+        write_channel_intel(padding_5b_out_b1_channel, (float)(((((9 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) < 72)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9) < 8)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 81) * 7) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) / 9)) * 7) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9)) + -8)] : 0.000000e+00f));
     }
 }
 __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict input1,
@@ -202,7 +202,7 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 float temp_0 = input2[ff];
                 for (int rc = 0; rc < 832; ++rc)
                 {
-                     temp_0 += (input0[((((rc * 7) + yy) * 7) + xx)] * input1[((ff * 832) + rc)]);
+                    temp_0 += (input0[((((rc * 7) + yy) * 7) + xx)] * input1[((ff * 832) + rc)]);
                 }
                 temp_0 = (temp_0 > 0) ? + temp_0 : 0.000000e+00f;
                 write_channel_intel(conv3_1_5b_out_b2_channel, temp_0);
@@ -337,3 +337,6 @@ __kernel void Mixed_5b_concat()
         }
     }
 }
+
+
+
