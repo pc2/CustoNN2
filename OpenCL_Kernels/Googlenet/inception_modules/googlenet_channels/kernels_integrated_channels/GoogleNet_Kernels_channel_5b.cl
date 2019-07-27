@@ -42,6 +42,7 @@ channel float conv3_2_5b_out_b2_channel __attribute__((depth(32)));
 channel float maxpool_5b_out_b3_channel __attribute__((depth(32)));
 channel float conv4_1_5b_out_b3_channel __attribute__((depth(32)));
 
+channel concat_4f_struct concat_5a_in_b0_channel __attribute__((depth(10))) ; // internal channel maxpool
 //Feeder kernels to read data from IO and feed it into internal channnels
 __kernel void feeder_5a()
 {
