@@ -45,7 +45,7 @@ channel float conv4_1_5b_out_b3_channel __attribute__((depth(32)));
 //Feeder kernels to read data from IO and feed it into internal channnels
 __kernel void feeder_5a()
 {
-    for (int i = 0; i < 47040; i++)
+    for (int i = 0; i < 20384; i++)
     {
         struct concat_4f_buffer input = read_channel_intel(concat_5a_in_channel);
         write_channel_intel(concat_5a_in_max_channel, input);
@@ -57,9 +57,10 @@ __kernel void feeder_5a()
 __kernel void MaxPool_5a_2x2_MaxPool()
 {
     //Read Input from IO channel
-    float maxInput[376320];
-    // 376320/8 = 47040
-    for (int i = 0; i < 47040; i++)
+    float maxInput[163072];
+    // 163072/8 = 20384
+
+    for (int i = 0; i < 20384; i++)
     {
         //struct to store 256 bits of data
         struct concat_4f_buffer in;
