@@ -654,26 +654,18 @@ const ptree& empty_ptree(){
     return t;
 }
 
-void xml_parser1(char *filename,std::vector<std::string> kernel_names)
+std::vector<std::string> xml_parser1(char *filename)
 {
+	std::vector<std::string> kernel_names;
 	ptree tree;
 	read_xml(filename, tree);
-	const ptree & formats = tree.get_child("board", empty_ptree());
-	BOOST_FOREACH(const ptree::value_type & f, formats){
-        std::string at = f.first + ".<xmlattr>";
-        const ptree & attributes = formats.get_child(at, empty_ptree());
-        //cout << "Extracting attributes from " << at << ":" << endl;
-        BOOST_FOREACH(const ptree::value_type &v, attributes)
-		{
-		if(v.first == "name")
-		{
-			//std::cout << "First: " << v.first.data() << " Second: " << v.second.data() << std::endl;
-			kernel_names.push_back(v.second.data());
+	BOOST_FOREACH( ptree::value_type const& v, tree.get_child("board") ) {
+		if ( v.first == "kernel"){
+			kernel_names.push_back(v.second.get<std::string>("<xmlattr>.name"));
+			// std::cout << kernel_names.back() << "\n";
 		}
-        }
     }
-	
-
+    return kernel_names;
 }
 
 int get_program_num(std::string layerName,std::vector<std::string> first_kernels,std::vector<std::string> second_kernels)
@@ -832,14 +824,12 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	char f1_xml[file1_xml.length()];
 	strcpy(f1_xml,file1_xml.c_str());
 	// std::cout << "xml_path1: " << f1_xml << "\n";
-	std::vector<std::string> first_kernels;   //kernels from first aocx
-	xml_parser1(f1_xml,first_kernels);
+	std::vector<std::string> first_kernels = xml_parser1(f1_xml);   //kernels from first aocx
 	
 	char f2_xml[file2_xml.length()];
 	strcpy(f2_xml,file2_xml.c_str());
 	// std::cout << "xml_path2: " << f2_xml << "\n";
-	std::vector<std::string> second_kernels;   //kernels from second aocx
-	xml_parser1(f2_xml,second_kernels);
+	std::vector<std::string> second_kernels = xml_parser1(f2_xml);   //kernels from second aocx
 	
 
 	//Print the details of each layers in the network to check their correctness.
@@ -1760,4 +1750,3 @@ std::vector<int> getTopNResults(float final_labels[],int topN){
 	return results;
 
 }
-
