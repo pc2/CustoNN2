@@ -929,6 +929,7 @@ float normalized_image[dim_x * dim_y * dim_depth * num_images];
 		MPI_Recv(prev_data, dims_prev, MPI_FLOAT, rank - 1, 0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 
 		buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_float) * dims_prev);
+    		cmd_queues[0] = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
     		err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dims_prev, prev_data); //images buffer
     		assert(err == CL_SUCCESS);
     		err = cmd_queues[0]->finish();
@@ -942,6 +943,7 @@ float normalized_image[dim_x * dim_y * dim_depth * num_images];
 
 
 buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images);
+    cmd_queues[0] = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
     err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images, transpose_image); //images buffer
     assert(err == CL_SUCCESS);
     err = cmd_queues[0]->finish();
@@ -1044,6 +1046,11 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 
 							//weights
 							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+							if (program_number == 1){
+								cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList1[0]);
+							}else{
+								cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList2[0]);
+							}
 							err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
 							err = cmd_queues[p->layerID]->finish();
 							//std::cout << "\t Error code after weights transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -1054,6 +1061,11 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 
 							//Bias
 							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+							if (program_number == 1){
+								cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList1[0]);
+							}else{
+								cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList2[0]);
+							}
 							err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
 							err = cmd_queues[p->layerID]->finish();
 							//std::cout << "\t Error code after bias transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -1210,6 +1222,11 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 
 							//weights
 							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+							if (program_number == 1){
+								cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList1[0]);
+							}else{
+								cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList2[0]);
+							}
 							err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
 							err = cmd_queues[p->layerID]->finish();
 							//std::cout << "\t Error code after weights transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -1221,6 +1238,11 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 
 							//Bias
 							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+							if (program_number == 1){
+								cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList1[0]);
+							}else{
+								cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList2[0]);
+							}
 							err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
 							err = cmd_queues[p->layerID]->finish();
 							//std::cout << "\t Error code after bias transfer:" << kernel_index << " is ===>" << err << std::endl;
@@ -1391,6 +1413,11 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 						assert(err == CL_SUCCESS);
 
 						buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+						if (program_number == 1){
+							cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList1[0]);
+						}else{
+							cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList2[0]);
+						}
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
 						cmd_queues[p->layerID]->finish();
 						assert(err == CL_SUCCESS);
@@ -1399,6 +1426,11 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 						buffer_index++;
 						std::cout << "\tweights passed\n";
 						buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+						if (program_number == 1){
+							cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList1[0]);
+						}else{
+							cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList2[0]);
+						}
 						err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
 						cmd_queues[p->layerID]->finish();
 						assert(err == CL_SUCCESS);
