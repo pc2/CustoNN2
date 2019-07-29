@@ -11,3 +11,11 @@
 - The results of all the major tensor operations are placed in [pc2-cc-user\custonn2\designs\Tensorflow_outputs](\\fs-cifs.uni-paderborn.de\upb\scratch\departments\pc2\groups\pc2-cc-user\custonn2\designs\Tensorflow_outputs)
 - Googlenet kernel- softmax results are not placed.
 - We can directly work with results of the last conv in our plugin 
+- 
+
+
+## Tensorflow execution of Resnet50
+- Steps to grab output files is same as the steps given for Googlenet  
+- Just change  `run_until = 'resnet_v2_50/block1/unit_1/bottleneck_v2/preact/Relu:0'
+- Refer to : https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018/blob/tvm/OpenCL_Kernels/Testing_code/TF_Resnet_Layers.txt for info about layers suppored by Resnet
+- The results of all the major tensor operations are placed in [pc2-cc-user\custonn2\designs\Tensorflow_outputs](\\fs-cifs.uni-paderborn.de\upb\scratch\departments\pc2\groups\pc2-cc-user\custonn2\designs\Tensorflow_outputs)
