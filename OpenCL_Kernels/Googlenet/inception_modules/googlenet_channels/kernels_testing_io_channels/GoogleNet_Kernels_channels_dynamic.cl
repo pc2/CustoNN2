@@ -7,10 +7,10 @@ typedef struct concat_3a_buffer
     float concat_3a_out_buffer[8];
 } concat_3a_struct;
 // IO Channels for inception 3b to 3c
-channel concat_3a_struct concat_3a_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_output_3a_ch0"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_output_3a_ch1"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_output_3a_ch2"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_output_3a_ch3"))); // Channel Tx
+channel concat_3a_struct concat_3a_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_3a_ch0"))); // Channel Tx
+channel concat_3a_struct concat_3a_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_3a_ch1"))); // Channel Tx
+channel concat_3a_struct concat_3a_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_3a_ch2"))); // Channel Tx
+channel concat_3a_struct concat_3a_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_3a_ch3"))); // Channel Tx
 
 //branch 1a
 channel float padding_1a_out_channel __attribute__((depth(32)));
@@ -236,15 +236,15 @@ typedef struct concat_3b_buffer
 } concat_3b_struct;
 
 // IO Channels for inception 3b to 3c
-channel concat_3a_struct concat_3a_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_input_3a_ch0"))); // Channel Rx
-channel concat_3a_struct concat_3a_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_input_3a_ch1"))); // Channel Rx
-channel concat_3a_struct concat_3a_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_input_3a_ch2"))); // Channel Rx
-channel concat_3a_struct concat_3a_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_input_3a_ch3"))); // Channel Rx
+channel concat_3a_struct concat_3a_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_3a_ch0"))); // Channel Rx
+channel concat_3a_struct concat_3a_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_3a_ch1"))); // Channel Rx
+channel concat_3a_struct concat_3a_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_3a_ch2"))); // Channel Rx
+channel concat_3a_struct concat_3a_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_3a_ch3"))); // Channel Rx
 
-channel concat_3b_struct concat_3b_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_output_3b_ch0"))); // Channel Tx
-channel concat_3b_struct concat_3b_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_output_3b_ch1"))); // Channel Tx
-channel concat_3b_struct concat_3b_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_output_3b_ch2"))); // Channel Tx
-channel concat_3b_struct concat_3b_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_output_3b_ch3"))); // Channel Tx
+channel concat_3b_struct concat_3b_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_3b_ch0"))); // Channel Tx
+channel concat_3b_struct concat_3b_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_3b_ch1"))); // Channel Tx
+channel concat_3b_struct concat_3b_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_3b_ch2"))); // Channel Tx
+channel concat_3b_struct concat_3b_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_3b_ch3"))); // Channel Tx
 
 channel concat_3a_struct concat_3b_in_b0_channel __attribute__((depth(10))); // internal channel Branch 1
 channel concat_3a_struct concat_3b_in_b1_channel __attribute__((depth(10))); // internal channel Branch 2
@@ -620,15 +620,15 @@ typedef struct concat_3c_buffer
 } concat_3c_struct;
 
 // IO Channels for inception 3b to 3c
-channel concat_3b_struct concat_3c_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_input_3b_ch0"))); // Channel Rx
-channel concat_3b_struct concat_3c_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_input_3b_ch1"))); // Channel Rx
-channel concat_3b_struct concat_3c_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_input_3b_ch2"))); // Channel Rx
-channel concat_3b_struct concat_3c_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_input_3b_ch3"))); // Channel Rx
+channel concat_3b_struct concat_3c_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_3b_ch0"))); // Channel Rx
+channel concat_3b_struct concat_3c_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_3b_ch1"))); // Channel Rx
+channel concat_3b_struct concat_3c_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_3b_ch2"))); // Channel Rx
+channel concat_3b_struct concat_3c_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_3b_ch3"))); // Channel Rx
 
-channel concat_3c_struct concat_3c_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_output_3c_ch0"))); // Channel Tx
-channel concat_3c_struct concat_3c_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_output_3c_ch1"))); // Channel Tx
-channel concat_3c_struct concat_3c_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_output_3c_ch2"))); // Channel Tx
-channel concat_3c_struct concat_3c_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_output_3c_ch3"))); // Channel Tx
+channel concat_3c_struct concat_3c_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_3c_ch0"))); // Channel Tx
+channel concat_3c_struct concat_3c_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_3c_ch1"))); // Channel Tx
+channel concat_3c_struct concat_3c_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_3c_ch2"))); // Channel Tx
+channel concat_3c_struct concat_3c_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_3c_ch3"))); // Channel Tx
 
 channel concat_3b_struct concat_3c_in_b0_channel __attribute__((depth(10))); // internal channel Branch 1
 channel concat_3b_struct concat_3c_in_b1_channel __attribute__((depth(10))); // internal channel Branch 2
@@ -1028,15 +1028,15 @@ typedef struct concat_4b_buffer
 } concat_4b_struct;
 
 // IO Channels for inception 3c to 4a
-channel concat_3c_struct concat_4a_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_input_3c_ch0"))); // Channel Rx
-channel concat_3c_struct concat_4a_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_input_3c_ch1"))); // Channel Rx
-channel concat_3c_struct concat_4a_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_input_3c_ch2"))); // Channel Rx
-channel concat_3c_struct concat_4a_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_input_3c_ch3"))); // Channel Rx
+channel concat_3c_struct concat_4a_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_3c_ch0"))); // Channel Rx
+channel concat_3c_struct concat_4a_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_3c_ch1"))); // Channel Rx
+channel concat_3c_struct concat_4a_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_3c_ch2"))); // Channel Rx
+channel concat_3c_struct concat_4a_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_3c_ch3"))); // Channel Rx
 
-channel concat_4b_struct concat_4b_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_output_4b_ch0"))); // Channel Tx
-channel concat_4b_struct concat_4b_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_output_4b_ch1"))); // Channel Tx
-channel concat_4b_struct concat_4b_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_output_4b_ch2"))); // Channel Tx
-channel concat_4b_struct concat_4b_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_output_4b_ch3"))); // Channel Tx
+channel concat_4b_struct concat_4b_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_4b_ch0"))); // Channel Tx
+channel concat_4b_struct concat_4b_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_4b_ch1"))); // Channel Tx
+channel concat_4b_struct concat_4b_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_4b_ch2"))); // Channel Tx
+channel concat_4b_struct concat_4b_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_4b_ch3"))); // Channel Tx
 
 channel concat_3c_struct concat_4a_in_max_channel __attribute__((depth(10))); // internal channel maxpool
 
@@ -1427,15 +1427,15 @@ typedef struct concat_4c_buffer
 } concat_4c_struct;
 
 // IO Channels for inception 4b to 4c
-channel concat_4b_struct concat_4c_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_input_4b_ch0"))); // Channel Rx
-channel concat_4b_struct concat_4c_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_input_4b_ch1"))); // Channel Rx
-channel concat_4b_struct concat_4c_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_input_4b_ch2"))); // Channel Rx
-channel concat_4b_struct concat_4c_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_input_4b_ch3"))); // Channel Rx
+channel concat_4b_struct concat_4c_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_4b_ch0"))); // Channel Rx
+channel concat_4b_struct concat_4c_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_4b_ch1"))); // Channel Rx
+channel concat_4b_struct concat_4c_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_4b_ch2"))); // Channel Rx
+channel concat_4b_struct concat_4c_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_4b_ch3"))); // Channel Rx
 
-channel concat_4c_struct concat_4c_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_output_4c_ch0"))); // Channel Tx
-channel concat_4c_struct concat_4c_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_output_4c_ch1"))); // Channel Tx
-channel concat_4c_struct concat_4c_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_output_4c_ch2"))); // Channel Tx
-channel concat_4c_struct concat_4c_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_output_4c_ch3"))); // Channel Tx
+channel concat_4c_struct concat_4c_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_4c_ch0"))); // Channel Tx
+channel concat_4c_struct concat_4c_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_4c_ch1"))); // Channel Tx
+channel concat_4c_struct concat_4c_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_4c_ch2"))); // Channel Tx
+channel concat_4c_struct concat_4c_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_4c_ch3"))); // Channel Tx
 
 channel concat_4b_struct concat_4c_in_b0_channel __attribute__((depth(10))); // internal channel Branch 1
 channel concat_4b_struct concat_4c_in_b1_channel __attribute__((depth(10))); // internal channel Branch 2
