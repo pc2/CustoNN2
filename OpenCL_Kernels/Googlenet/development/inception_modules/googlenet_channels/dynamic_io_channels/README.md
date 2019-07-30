@@ -29,4 +29,3 @@ __Contents of myscript.sh__
 - t = It is the maximum time limit for our job execution 
 - --mail = Send email notification to the user regarding events
 - run = here we specify the commands which we want to execute. So for e.g. we can create a Makefile for synthesis process and then specify the target here 
-- 
