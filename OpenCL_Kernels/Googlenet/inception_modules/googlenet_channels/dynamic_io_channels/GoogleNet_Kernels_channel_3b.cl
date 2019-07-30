@@ -13,20 +13,20 @@ typedef struct concat_3b_buffer
 } concat_3b_struct;
 
 // IO Channels for inception 3b to 3c
-channel concat_3a_struct concat_3a_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_input_ch0"))); // Channel Rx
-channel concat_3a_struct concat_3a_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_input_ch1"))); // Channel Rx
-channel concat_3a_struct concat_3a_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_input_ch2"))); // Channel Rx
-channel concat_3a_struct concat_3a_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_input_ch3"))); // Channel Rx
+channel concat_3a_struct concat_3a_in_channel_0 __attribute__((depth(8))) __attribute__((io("kernel_input_ch0"))); // Channel Rx
+channel concat_3a_struct concat_3a_in_channel_1 __attribute__((depth(8))) __attribute__((io("kernel_input_ch1"))); // Channel Rx
+channel concat_3a_struct concat_3a_in_channel_2 __attribute__((depth(8))) __attribute__((io("kernel_input_ch2"))); // Channel Rx
+channel concat_3a_struct concat_3a_in_channel_3 __attribute__((depth(8))) __attribute__((io("kernel_input_ch3"))); // Channel Rx
 
-channel concat_3b_struct concat_3b_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
-channel concat_3b_struct concat_3b_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_output_ch1"))); // Channel Tx
-channel concat_3b_struct concat_3b_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_output_ch2"))); // Channel Tx
-channel concat_3b_struct concat_3b_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_output_ch3"))); // Channel Tx
+channel concat_3b_struct concat_3b_out_channel_0 __attribute__((depth(8))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
+channel concat_3b_struct concat_3b_out_channel_1 __attribute__((depth(8))) __attribute__((io("kernel_output_ch1"))); // Channel Tx
+channel concat_3b_struct concat_3b_out_channel_2 __attribute__((depth(8))) __attribute__((io("kernel_output_ch2"))); // Channel Tx
+channel concat_3b_struct concat_3b_out_channel_3 __attribute__((depth(8))) __attribute__((io("kernel_output_ch3"))); // Channel Tx
 
-channel concat_3a_struct concat_3b_in_b0_channel __attribute__((depth(10))); // internal channel Branch 1
-channel concat_3a_struct concat_3b_in_b1_channel __attribute__((depth(10))); // internal channel Branch 2
-channel concat_3a_struct concat_3b_in_b2_channel __attribute__((depth(10))); // internal channel Branch 3
-channel concat_3a_struct concat_3b_in_b3_channel __attribute__((depth(10))); // internal channel Branch 4
+channel concat_3a_struct concat_3b_in_b0_channel __attribute__((depth(32))); // internal channel Branch 1
+channel concat_3a_struct concat_3b_in_b1_channel __attribute__((depth(32))); // internal channel Branch 2
+channel concat_3a_struct concat_3b_in_b2_channel __attribute__((depth(32))); // internal channel Branch 3
+channel concat_3a_struct concat_3b_in_b3_channel __attribute__((depth(32))); // internal channel Branch 4
 
 //branch 0
 channel float conv1_3b_out_b0_channel __attribute__((depth(32)));
@@ -46,7 +46,6 @@ channel float conv3_1_3b_out_b3_channel __attribute__((depth(32)));
 //Added an argument to decide from which channel to read
 __kernel void feeder_3b(unsigned int route_from)
 {
-    printf(" In Feeder 3b");
     for (int i = 0; i < 18816; i++)
     {
         struct concat_3a_buffer input;
@@ -72,7 +71,6 @@ __kernel void feeder_3b(unsigned int route_from)
         write_channel_intel(concat_3b_in_b2_channel, input);
         write_channel_intel(concat_3b_in_b3_channel, input);
     }
-    printf(" Done Feeder 3b");
 }
 
 __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
@@ -360,7 +358,6 @@ __kernel void Mixed_3b_concat(unsigned int route_to)
     {
         float result = (float)((175616 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -175616)] : (float)((150528 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -150528)] : (float)((50176 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -50176)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
         out.concat_3b_out_buffer[ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8] = result;
-        //printf("\t 3b %d - %d --- %f \n",ax0_ax1_fused_ax2_fused_ax3_fused_inner,ax0_ax1_fused_ax2_fused_ax3_fused_inner%8,result);
         if (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 8 == 7)
         {
             //route to different channels depending on topology determined at plug in

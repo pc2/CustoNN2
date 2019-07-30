@@ -7,10 +7,10 @@ typedef struct concat_3a_buffer
     float concat_3a_out_buffer[8];
 } concat_3a_struct;
 // IO Channels for inception 3b to 3c
-channel concat_3a_struct concat_3a_out_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_output_ch1"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_output_ch2"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_output_ch3"))); // Channel Tx
+channel concat_3a_struct concat_3a_out_channel_0 __attribute__((depth(8))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
+channel concat_3a_struct concat_3a_out_channel_1 __attribute__((depth(8))) __attribute__((io("kernel_output_ch1"))); // Channel Tx
+channel concat_3a_struct concat_3a_out_channel_2 __attribute__((depth(8))) __attribute__((io("kernel_output_ch2"))); // Channel Tx
+channel concat_3a_struct concat_3a_out_channel_3 __attribute__((depth(8))) __attribute__((io("kernel_output_ch3"))); // Channel Tx
 
 //branch 1a
 channel float padding_1a_out_channel __attribute__((depth(32)));
