@@ -2,7 +2,7 @@ All the synthesis job on the Noctua Cluster should be done on **FPGA nodes** and
 
 1. Connect to noctua cluster via `ssh fe.noctua.pc2.uni-paderborn.de`
 2. Type `ssh noctua` to connect to the noctua frontend
-3. Load the toolchain for the BSP `module load intelFPGA_pro/19.0.1 nalla_pcie/19.0.1`
+3. Load the toolchain for the BSP `module load intelFPGA_pro/19.0.1 nalla_pcie/19.1.0`
 4. To connect to one of the fpga nodes `srun --partition=fpga -A hpc-lco-kenter --constraint=19.1.0 --pty bash` type 
 
 Now to submit the jobs we will use an shell script which will be executed using a command line tool **sbatch**
