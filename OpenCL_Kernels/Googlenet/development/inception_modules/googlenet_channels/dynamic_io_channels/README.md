@@ -10,13 +10,13 @@ For e.g. `sbatch myscript.sh`
 __Contents of myscript.sh__
 
 #!/bin/bash
-#SBATCH -N 1
-#SBATCH -J cp2k_water_128
-#SBATCH -A hpc-prf-ldft
-#SBATCH -p fpga
-#SBATCH -t 10:00:00
-#SBATCH --mail-type all
-#SBATCH --mail-user test@example.com
+- #SBATCH -N 1
+- #SBATCH -J cp2k_water_128
+- #SBATCH -A hpc-prf-ldft
+- #SBATCH -p fpga
+- #SBATCH -t 10:00:00
+- #SBATCH --mail-type all
+- #SBATCH --mail-user test@example.com
 
 #run your application here
 
