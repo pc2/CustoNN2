@@ -24,8 +24,8 @@ __Contents of myscript.sh__
 
 - N 1 = Tells that it is a one node job
 - J = Job name given by the user 
-- A = Account name. In our case it is `hpc-lco-k+`
-- p = It is the partition that we will use for our synthesis processes. The partition which we will use is `fpga`
+- A = Account name. In our case it is `hpc-lco-kenter`
+- p = It is the partition that we will use for our synthesis processes. The partition which we will use is `fpgasyn`
 - t = It is the maximum time limit for our job execution 
 - --mail = Send email notification to the user regarding events
 - run = here we specify the commands which we want to execute. So for e.g. we can create a Makefile for synthesis process and then specify the target here 
