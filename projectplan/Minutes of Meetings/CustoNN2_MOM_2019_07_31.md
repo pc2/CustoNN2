@@ -21,6 +21,7 @@
 -   Amey will generate kernels for InceptionV4.
 -   Aayush will performance model from the generated profile.mon for entire GoogleNet.
 -   Alina was successful in implementing the MPI version for baseline architecture and it outputs proper results.
+-   Dr.Kenter informed the team about the upcoming maintainence on Noctua cluster from 16th September - 20th September
 
 
 ##### Project decisions
