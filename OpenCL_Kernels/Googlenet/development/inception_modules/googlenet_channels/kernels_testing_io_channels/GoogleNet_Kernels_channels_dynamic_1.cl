@@ -393,11 +393,7 @@ __kernel void Mixed_4d_concat(unsigned int route_to)
 //Enable the channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
 
-//256 bits io channel struct
-typedef struct concat_4d_buffer
-{
-    float concat_4d_out_buffer[8];
-} concat_4d_struct;
+
 
 typedef struct concat_4e_buffer
 {
@@ -781,11 +777,7 @@ __kernel void Mixed_4e_concat(unsigned int route_to)
 //Enable the channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
 
-//256 bits io channel struct
-typedef struct concat_4e_buffer
-{
-    float concat_4e_out_buffer[8];
-} concat_4e_struct;
+
 
 typedef struct concat_4f_buffer
 {
@@ -1171,11 +1163,7 @@ __kernel void Mixed_4f_concat(unsigned int route_to)
 //enable channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
 
-//256 bits io channel struct
-typedef struct concat_4f_buffer
-{
-    float concat_4f_out_buffer[8];
-} concat_4f_struct;
+
 
 typedef struct concat_5b_buffer
 {
@@ -1564,15 +1552,6 @@ __kernel void Mixed_5b_concat(unsigned int route_to)
 //Enable the channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
 
-//256 bits io channel struct
-typedef struct concat_5b_buffer
-{
-    float concat_5b_out_buffer[8];
-} concat_5b_struct;
-
-/*typedef struct concat_5c_buffer {
-    float concat_5c_out_buffer[8];
-} concat_5c_struct;*/
 
 // IO Channels for inception 5b to 5c
 channel concat_5b_struct concat_5c_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch0"))); // Channel Rx
@@ -1616,6 +1595,7 @@ channel float avgpool_out_channel __attribute__((depth(32)));
 //Feeder kernels to read data from IO and feed it into internal channnels
 __kernel void feeder_5c(unsigned int route_from)
 {
+    
     for (int i = 0; i < 5096; i++)
     {
         struct concat_5b_buffer input;

@@ -25,7 +25,7 @@ channel float conv1_2c_out_channel __attribute__((depth(32)));
 
 __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict input0)
 {
-
+    printf("Inside Padding_Conv2d_1a_7x7_Conv2D \n");
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 157323; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
     {
         write_channel_intel(padding_1a_out_channel, (float)(((((458 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441) < 51754)) && (2 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229) < 226)) ? input0[(((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441) / 229) * 224) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229)) * 3) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 52441)) + -1350)] : 0.000000e+00f));
@@ -34,7 +34,7 @@ __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict input0)
 
 __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
-
+    printf("Inside Conv2d_1a_7x7_Conv2D \n");
     float input0[157323];
     for (int i = 0; i < 157323; i++)
     {
@@ -88,6 +88,7 @@ __kernel void MaxPool_2a_3x3_MaxPool()
                     }
                 }
                 write_channel_intel(maxpool_2a_out_channel, tensor);
+                
             }
         }
     }
@@ -132,6 +133,7 @@ __kernel void Padding_Conv2d_2c_3x3_Conv2D()
     {
         float result = (float)(((((58 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) < 3306)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58) < 57)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3364) * 56) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) / 58)) * 56) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58)) + -57)] : 0.000000e+00f);
         write_channel_intel(padding_2c_out_channel, result);
+        
     }
 }
 
@@ -162,6 +164,7 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global flo
                 }
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv1_2c_out_channel, temp_0);
+                 
             }
         }
     }
@@ -171,12 +174,15 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global flo
 //determined in plugin
 __kernel void MaxPool_3a_3x3_MaxPool(unsigned int route_to)
 {
-
+    printf("Inside MaxPool_3a_3x3_MaxPool \n");
+    printf("Parameter is %d \n", route_to);
+     
     float input0[192 * 56 * 56];
     for (int i = 0; i < 192 * 56 * 56; i++)
     {
         input0[i] = read_channel_intel(conv1_2c_out_channel);
     }
+     printf("\n I am here \n");
     //struct to store 256 bits of data
     struct concat_3a_buffer out;
 
@@ -191,16 +197,18 @@ __kernel void MaxPool_3a_3x3_MaxPool(unsigned int route_to)
                 {
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
+                        
                         tensor = max(tensor, (float)((((ax2 * 2) < (56 - rv)) && ((ax3 * 2) < (56 - rv1))) ? input0[((((((((ax1 * 28) + ax2) * 2) + rv) * 28) + ax3) * 2) + rv1)] : -3.402823e+38f));
                     }
                 }
                 out.concat_3a_out_buffer[((((ax1 * 28) + ax2) * 28) + ax3) % 8] = tensor;
+                
                 //After accumlating 256 bits, send the data through IO channel.
                 if (((((ax1 * 28) + ax2) * 28) + ax3) % 8 == 7)
                 {
                     //route to different IO channels depending on topology determined in plugin
                     if (route_to == 0)
-                    {
+                    {                         
                         write_channel_intel(concat_3a_out_channel_0, out);
                     }
                     else if (route_to == 1)
@@ -219,16 +227,11 @@ __kernel void MaxPool_3a_3x3_MaxPool(unsigned int route_to)
             }
         }
     }
+    printf("\n Wrote to channel \n");
 }
 //Second file
 //Enable the channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
-
-//256 bits io channel struct
-typedef struct concat_3a_buffer
-{
-    float concat_3a_out_buffer[8];
-} concat_3a_struct;
 
 typedef struct concat_3b_buffer
 {
@@ -269,7 +272,7 @@ channel float conv3_1_3b_out_b3_channel __attribute__((depth(32)));
 //Added an argument to decide from which channel to read
 __kernel void feeder_3b(unsigned int route_from)
 {
-    printf(" In Feeder 3b");
+    printf("\n In feeder_3b \n");
     for (int i = 0; i < 18816; i++)
     {
         struct concat_3a_buffer input;
@@ -295,12 +298,12 @@ __kernel void feeder_3b(unsigned int route_from)
         write_channel_intel(concat_3b_in_b2_channel, input);
         write_channel_intel(concat_3b_in_b3_channel, input);
     }
-    printf(" Done Feeder 3b");
+    printf("\n Done Feeder 3b \n");
 }
 
 __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
-
+    printf(" In Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D");
     float input0[192 * 28 * 28];
     for (int i = 0; i < 18816; i++)
     {
@@ -558,6 +561,8 @@ __kernel void Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
 
 __kernel void Mixed_3b_concat(unsigned int route_to)
 {
+     printf("\n In Mixed_3b_concat \n");
+     printf("\n Parameter is %d \n",route_to );
 
     //struct to store 256 bits of data
     struct concat_3b_buffer out;
@@ -605,14 +610,10 @@ __kernel void Mixed_3b_concat(unsigned int route_to)
             }
         }
     }
+    printf("\nDone writing to channel by  Mixed_3b_concat\n");
 }
 //Third file
 #pragma OPENCL EXTENSION cl_intel_channels : enable
-//256 bits io channel struct
-typedef struct concat_3b_buffer
-{
-    float concat_3b_out_buffer[8];
-} concat_3b_struct;
 
 typedef struct concat_3c_buffer
 {
@@ -1016,12 +1017,6 @@ __kernel void Mixed_3c_concat(unsigned int route_to)
 //enable channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
 
-//256 bits io channel struct
-typedef struct concat_3c_buffer
-{
-    float concat_3c_out_buffer[8];
-} concat_3c_struct;
-
 typedef struct concat_4b_buffer
 {
     float concat_4b_out_buffer[8];
@@ -1414,12 +1409,6 @@ __kernel void Mixed_4b_concat(unsigned int route_to)
  */
 //Enable the channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
-
-//256 bits io channel struct
-typedef struct concat_4b_buffer
-{
-    float concat_4b_out_buffer[8];
-} concat_4b_struct;
 
 typedef struct concat_4c_buffer
 {
