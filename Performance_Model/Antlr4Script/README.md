@@ -23,6 +23,6 @@
 - We make us of the CListener to walk the parse tree.
 - We visit every node in the tree to check where we are in the tree
 - If we are inside a function definition , we grab the name of the function and put it in a list.
-- If we enter a for loop , we check for its nestedness using flags (which are updated as and when we enter and exait nodes). The implementation details are complicated. But suffice to say that we know the nestedness of loops.
+- If we enter a for loop , we check for its nestedness using flags (which are updated as and when we enter and exit nodes). The implementation details are complicated. But suffice to say that we know the nestedness of loops.
 - We grab loop limits and put them in a data strucutre to tell how many times a loop will be executed.
 - Finally , we filter out Conv functions and display the operations - We need to multiply this by two if we consider MAC as two separate operations (the way it should be in HPC)
