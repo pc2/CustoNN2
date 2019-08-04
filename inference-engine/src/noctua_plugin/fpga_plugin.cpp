@@ -44,7 +44,7 @@ int num_images, dim_x, dim_y,dim_depth;
 // OUTPUT WRITE BEING //
 
 //Set to 1 if you want the outputs of each layers to be written to a file.
-int outputWriteFlag = 0;
+int outputWriteFlag = 1;
 // Results File Prefix
 std:: string resultsFileAppender = "Results__";
 // OUTPUT WRITE END //
@@ -431,7 +431,6 @@ void find_by_name(struct layersDetails *root, std::string layer_name, int buffer
 			q.pop();
 			if (p != NULL)
 			{
-				
 				if(p->layerName==layer_name)
 					{
 						for (struct layersDetails *ch : p->children)
@@ -449,9 +448,9 @@ void find_by_name(struct layersDetails *root, std::string layer_name, int buffer
 			n--;
 		}
 	}
-
-
 }
+
+
 /**
  * TREE construction logic:
  */
@@ -689,12 +688,14 @@ int get_program_num(std::string layerName,std::vector<std::string> first_kernels
 	return 0;
 }
 
+
 /**
  * OPENVINO FPGA NOCTUA PLUGIN is implemented in this function  
  */
 int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name,int rank)
 {
 	std::cout << "In FPGA Launcher" << std::endl;
+	std::cout << "Rank: " << rank << "\n";
 	
 	parse_images(imageNames, network);
 
@@ -774,8 +775,6 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	std::cout << "Number of children of root: " << root->children.size() << "\n";
 	find_missing_duplicates(root);
 
-	//printCNNTree(root);
-
 
 	// Code for assigning affinity to layers, device numbering starts at 0
 	
@@ -807,13 +806,14 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 
 	// std::cout << err << "\n";
 
+    if (2*rank+1 != 9) {
 	std::ifstream aocx_stream2(f2, std::ios::in|std::ios::binary);
         //checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
         std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
         cl::Program::Binaries mybinaries2 (1, std::make_pair(prog2.c_str(), prog2.length()+1));
 	programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries2);
 	err = programs[1]->build(DeviceList2);	
-
+    }
 	// std::cout << err << "\n";
 
 	std::string file1_xml = GoogLeNet_DIR+"inception"+std::to_string(2*rank)+".xml";
@@ -826,11 +826,13 @@ int fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::ve
 	// std::cout << "xml_path1: " << f1_xml << "\n";
 	std::vector<std::string> first_kernels = xml_parser1(f1_xml);   //kernels from first aocx
 	
+    std::vector<std::string> second_kernels;
+    if (2*rank+1 != 9) {
 	char f2_xml[file2_xml.length()];
 	strcpy(f2_xml,file2_xml.c_str());
 	// std::cout << "xml_path2: " << f2_xml << "\n";
-	std::vector<std::string> second_kernels = xml_parser1(f2_xml);   //kernels from second aocx
-	
+        second_kernels = xml_parser1(f2_xml);   //kernels from second aocx
+    }
 
 	//Print the details of each layers in the network to check their correctness.
 	//print_layersDetails(cnnLayersList);
@@ -933,16 +935,12 @@ float normalized_image[dim_x * dim_y * dim_depth * num_images];
     		err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dims_prev, prev_data); //images buffer
     		assert(err == CL_SUCCESS);
     		err = cmd_queues[0]->finish();
-	
 		find_by_name(root,previous_l_name,buffer_index);
-	
 		buffer_index++; 	
 
-
-	}
-
-
-buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images);
+	}else{
+	
+	buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images);
 	cmd_queues[0] = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
     err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images, transpose_image); //images buffer
     assert(err == CL_SUCCESS);
@@ -950,6 +948,7 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 	buffer_index++; 
     //std::cout << " Error code after image transfer:" << kernel_index << " is ===>" << err << std::endl;
     assert(err == CL_SUCCESS);
+}
 
 	int num_filters = 0;
 	int num_classes = 0;
@@ -982,15 +981,28 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 
 			while (n > 0)
 			{
-
 				struct layersDetails *p = q.front();
 				q.pop();
-				if (p != NULL)
+
+				while (p != NULL and p->layerName == "dummy"){
+					p = q.front();
+					q.pop();
+					n--;
+				}
+
+				int program_number = get_program_num(p->layerName,first_kernels,second_kernels);
+				if (p != NULL and program_number != 0)
 				{
 					const char *layerName = p->layerName.c_str();
 
 					std::cout<<"Launching Layer:"<<layerName<<std::endl;
-					int program_number = get_program_num(p->layerName,first_kernels,second_kernels);
+					std::cout << get_program_num(p->layerName,first_kernels,second_kernels) << "\n";
+					if (program_number == 1){
+						cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList1[0]);
+					}else{
+						cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList2[0]);
+					}
+					std::cout << "layer id = " << p->layerID << "\n";
 					//code to launch kernels
 					if (p->layerType == "Convolution"&&program_number!=0)
 
@@ -998,10 +1010,10 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 						int flag_parents = 0;
 						for (struct layersDetails *ch : p->parents)
 						{
-							if(ch->visited==1)
-							{
-								flag_parents++;
-							}
+                            if(ch->visited==1 or get_program_num(ch->layerName,first_kernels,second_kernels) == 0)
+                            {
+                                flag_parents++;
+                            }
 						}
 
 						if(!p->visited&&flag_parents==p->parents.size())
@@ -1016,12 +1028,6 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 						std::cout << "\t Kernel Created "<<std::endl;
 						assert(err == CL_SUCCESS);
 						std::cout << "\t  pads_begin :"<<p->params["pads_begin"].at(0)<<","<<p->params["pads_begin"].at(2)<<" pads_end :"<< p->params["pads_begin"].at(0)<<","<<p->params["pads_begin"].at(2) <<std::endl;
-
-						if (program_number == 1){
-							cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList1[0]);
-						}else{
-							cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number-1], DeviceList2[0]);
-						}
 						
 						//For zero padding conv layer
 						if (p->params["pads_begin"].at(0) == '0' && p->params["pads_begin"].at(2) == '0' && p->params["pads_end"].at(0) == '0' && p->params["pads_end"].at(2) == '0')
@@ -1191,7 +1197,7 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 							//output
 
 							buffers[buffer_index] = new cl::Buffer(*contexts[program_number-1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
-							err = kernels[kernel_index]->setArg(4, *buffers[buffer_index]); //output of conv
+							err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]); //output of conv
 
 							assert(err == CL_SUCCESS);
 							std::cout << "\tconv output passed :"
@@ -1310,11 +1316,12 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 						int flag_parents = 0;
 						for (struct layersDetails *ch : p->parents)
 						{
-							if(ch->visited==1)
+							if(ch->visited==1 or get_program_num(ch->layerName,first_kernels,second_kernels) == 0)
 							{
 								flag_parents++;
 							}
 						}
+                        
 						if(!p->visited&&flag_parents==p->parents.size())
 						{
 
@@ -1504,6 +1511,7 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 							if(rank<com_sz-1&&program_number == 2)
 							{
 								std::string concat_layer_name = p->layerName;
+								std::cout << "we are here\n"; 
 								MPI_Send(concat_layer_name.c_str(), concat_layer_name.size(), MPI_CHAR, rank+1, 0, MPI_COMM_WORLD);
 								int dims1 = p->outH * p->outW * p->outDepth;
 								MPI_Send(&dims1, 1, MPI_INT, rank+1, 0, MPI_COMM_WORLD);
@@ -1712,8 +1720,9 @@ buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl
 							q.push(p);
 					}
 				}
+
 				// Enqueue all children of the dequeued item
-				if(p->visited == 1)
+				if(p->visited == 1 or program_number == 0)
 				{
 				for (std::vector<struct layersDetails *>::iterator it = p->children.begin(); it != p->children.end(); ++it)
 				{
