@@ -105,7 +105,7 @@ __kernel void MaxPool_2a_3x3_MaxPool()
     }
 }
 
-# define SR 36
+# define SR 16
 __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
 
@@ -132,7 +132,7 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
                 
                 float temp_0 = input2[ff];
                 float temp_1 = 0;
-                #pragma unroll 8
+                #pragma unroll 4
                 for (int rc = 0; rc < 64; ++rc)
                 {
                     //temp_1 += (input0[((((rc * 56) + yy) * 56) + xx)] * input1[((ff * 64) + rc)]);
@@ -142,10 +142,10 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
                     for (unsigned j = SR-1; j >0; j--)
                         temp_copies[j] = temp_copies[j-1];
                     
-                    temp_copies[0] = temp;
+                    temp_copies[0] = temp; 
 
                 }
-                #pragma unroll
+                 #pragma unroll
                 for (unsigned i= 0; i< SR; i++)
                     temp_1 += temp_copies[i];
                 
