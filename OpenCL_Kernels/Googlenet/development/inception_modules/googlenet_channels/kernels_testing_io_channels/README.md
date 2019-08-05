@@ -14,9 +14,10 @@ Here we are executing Googlenet with channels implementation inbetween the layer
 ### Googlenet with IO and internal channels integrated:
 - Plugin code for testing kernels with only IO channels is in `channels_testing` branch
 - GoogLeNet kernels with IO channels are saved in `pg-custonn2-2018/OpenCL_Kernels/Googlenet/inception_modules/googlenet_channels/kernels_testing_io_channels`
-    - GoogleNet_Kernels_channels.cl (Kernels till Inception 4c)
-    - GoogleNet_Kernels_channels_1.cl (Inception 4d to 5c and output layers)
-- Use the make command to compile the kernels : `make emulate_kernels`
+    - GoogleNet_Kernels_channels_dynamic.cl (Kernels till Inception 4c)
+    - GoogleNet_Kernels_channels_dynamic_1.cl (Inception 4d to 5c and output layers)
+- We have the makefile to generate emulation bitstreams for these kernels. Please change the `test_dir` variable in the makefile. 
+- Use the make command to compile the kernels : `make dynchan`
 - Build the plugin
 - initialize stratix 19.1 BSP : `source /opt/intelFPGA_pro/19.1/init_env_bittware_pcie.sh`
 - emulate 2 devices : `export CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=2`
