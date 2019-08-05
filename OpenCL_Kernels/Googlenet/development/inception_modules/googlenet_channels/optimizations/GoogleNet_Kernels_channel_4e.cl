@@ -161,7 +161,6 @@ __kernel void Padding_Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D()
     }
 }
 
- 
 __kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict input1,
                                                      constant float *restrict input2)
 {
@@ -170,7 +169,7 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     {
         input0[i] = read_channel_intel(padding_4e_out_b1_channel);
     }
-    #pragma loop_coalesce
+#pragma loop_coalesce
     for (int ff = 0; ff < 288; ++ff)
     {
         for (int yy = 0; yy < 14; ++yy)
@@ -178,26 +177,24 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 14; ++xx)
             {
                 float temp_2 = input2[ff];
-                 
+
                 for (int rc = 0; rc < 144; ++rc)
                 {
-                    float temp_1 = 0 ;
-                 
+                    float temp_1 = 0;
 
-                    #pragma unroll 
+#pragma unroll
                     for (int ry = 0; ry < 3; ++ry)
                     {
-                        float temp_0 = 0 ;
-                        #pragma unroll 
+                        float temp_0 = 0;
+#pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
                             temp_0 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input1[((((((ff * 144) + rc) * 3) + ry) * 3) + rx)]);
                         }
-                      
-                     temp_1 +=temp_0 ;                 
 
+                        temp_1 += temp_0;
                     }
-                    temp_2 +=temp_1 ;
+                    temp_2 += temp_1;
                 }
                 temp_2 = (temp_2 > 0) ? temp_2 : 0.0;
                 write_channel_intel(conv2_2_4e_out_b1_channel, temp_2);
@@ -207,7 +204,7 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 }
 
 __kernel void Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
-                                                    constant float *restrict input2)
+                                                     constant float *restrict input2)
 {
     //Read Input from IO channel
     float convInput[100352];
@@ -253,8 +250,8 @@ __kernel void Padding_Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D()
     }
 }
 __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(
-                                                        __global float *restrict input1,
-                                                        constant float *restrict input2)
+    __global float *restrict input1,
+    constant float *restrict input2)
 {
     float input0[8192];
     for (int i = 0; i < 8192; i++)
@@ -323,8 +320,8 @@ __kernel void Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool()
 }
 
 __kernel void Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(
-                                                    __global float *restrict input1,
-                                                    constant float *restrict input2)
+    __global float *restrict input1,
+    constant float *restrict input2)
 {
     float input0[512 * 14 * 14];
     for (int i = 0; i < 512 * 14 * 14; i++)
@@ -393,8 +390,7 @@ __kernel void Mixed_4e_concat(unsigned int route_to)
             else if (route_to == 3)
             {
                 write_channel_intel(concat_4e_out_channel_3, out);
-            }                        
-            
+            }
         }
     }
 }
