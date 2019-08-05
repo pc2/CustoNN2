@@ -90,6 +90,8 @@ __kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
 
+
+#pragma loop_coalesce
     for (int ff = 0; ff < 128; ++ff)
     {
         for (int yy = 0; yy < 28; ++yy)
@@ -98,9 +100,15 @@ __kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             {
 
                 float temp_0 = input2[ff];
+                float temp_rc[256];
+                #pragma unroll
                 for (int rc = 0; rc < 256; ++rc)
                 {
-                    temp_0 += (convInput[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)]);
+                    temp_rc[rc] += (convInput[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)]);
+                }
+                #pragma unroll
+                for (int rc = 0; rc < 256; ++rc){
+                    temp_0 += temp_rc[rc];
                 }
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv1_3c_out_b0_channel, temp_0);
@@ -127,6 +135,7 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
 
+#pragma loop_coalesce
     for (int ff = 0; ff < 128; ++ff)
     {
         for (int yy = 0; yy < 28; ++yy)
@@ -134,9 +143,16 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 28; ++xx)
             {
                 float temp_0 = input2[ff];
+
+                float temp_rc[256];
+                #pragma unroll
                 for (int rc = 0; rc < 256; ++rc)
                 {
-                    temp_0 += (convInput[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)]);
+                    temp_rc[rc] += (convInput[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)]);
+                }
+                #pragma unroll
+                for (int rc = 0; rc < 256; ++rc){
+                    temp_0 += temp_rc[rc];
                 }
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv2_1_3c_out_b1_channel, temp_0);
@@ -178,12 +194,21 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 {
                     for (int ry = 0; ry < 3; ++ry)
                     {
+                        float temp_rx[3];
+                        #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_0 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input1[((((((ff * 128) + rc) * 3) + ry) * 3) + rx)]);
+                            temp_rx[rx] += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input1[((((((ff * 128) + rc) * 3) + ry) * 3) + rx)]);
                         }
+
+                        #pragma unroll
+                        for (int rc = 0; rc < 3; ++rc){
+                            temp_0 += temp_rx[rc];
+                        }
+
                     }
                 }
+
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.0;
                 write_channel_intel(conv2_2_3c_out_b1_channel, temp_0);
             }
@@ -209,7 +234,7 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             convInput[(i * 8) + k] = in.concat_3b_out_buffer[k];
         }
     }
-
+#pragma loop_coalesce
     for (int ff = 0; ff < 32; ++ff)
     {
         for (int yy = 0; yy < 28; ++yy)
@@ -217,10 +242,18 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 28; ++xx)
             {
                 float temp_0 = input2[ff];
+
+                float temp_rc[256];
+                #pragma unroll
                 for (int rc = 0; rc < 256; ++rc)
                 {
-                    temp_0 += (convInput[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)]);
+                    temp_rc[rc] += convInput[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)];
                 }
+                #pragma unroll
+                for (int rc = 0; rc < 256; ++rc){
+                    temp_0 += temp_rc[rc];
+                }
+
                 temp_0 = (temp_0 > 0) ? +temp_0 : 0.000000e+00f;
                 write_channel_intel(conv3_1_3c_out_b2_channel, temp_0);
             }
@@ -262,9 +295,16 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 {
                     for (int ry = 0; ry < 3; ++ry)
                     {
+                        float temp_rx[3];
+                        #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_0 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input1[((((((ff * 32) + rc) * 3) + ry) * 3) + rx)]);
+                            temp_rx[rx] += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input1[((((((ff * 32) + rc) * 3) + ry) * 3) + rx)]);
+                        }
+
+                        #pragma unroll
+                        for (int rc = 0; rc < 3; ++rc){
+                            temp_0 += temp_rx[rc];
                         }
                     }
                 }
@@ -303,10 +343,18 @@ __kernel void Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool()
                 float tensor = -3.402823e+38f;
                 for (int rv = 0; rv < 3; ++rv)
                 {
+                    float temp_rv1[3];
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (29 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (29 - rv1))) ? maxInput[(((((((ax1 * 28) + ax2) + rv) * 28) + ax3) + rv1) + -29)] : -3.402823e+38f));
+                        temp_rv1[rv1] = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (29 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (29 - rv1))) ? maxInput[(((((((ax1 * 28) + ax2) + rv) * 28) + ax3) + rv1) + -29)] : -3.402823e+38f));
                     }
+
+                    for (int rv1 = 0; rv1 < 3; ++rv1)
+                    {
+                        tensor = max(tensor, temp_rv1[rv1]);
+                    }
+
+
                 }
                 write_channel_intel(maxpool_3c_out_b3_channel, tensor);
             }
@@ -323,6 +371,8 @@ __kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
     {
         input0[i] = read_channel_intel(maxpool_3c_out_b3_channel);
     }
+
+#pragma loop_coalesce
     for (int ff = 0; ff < 64; ++ff)
     {
         for (int yy = 0; yy < 28; ++yy)
@@ -334,10 +384,17 @@ __kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
 
                 float temp_0 = input2[ff];
 
+                float temp_rc[256];
+                #pragma unroll
                 for (int rc = 0; rc < 256; ++rc)
                 {
-                    temp_0 += (input0[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)]);
+                    temp_rc[rc] += input0[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 256) + rc)];
                 }
+                #pragma unroll
+                for (int rc = 0; rc < 256; ++rc){
+                    temp_0 += temp_rc[rc];
+                }
+
                 temp_0 = (temp_0 > 0) ? +temp_0 : 0.000000e+00f;
                 write_channel_intel(conv3_1_3c_out_b3_channel, temp_0);
             }
