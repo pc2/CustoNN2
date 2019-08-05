@@ -76,6 +76,7 @@ __kernel void feeder_4e(unsigned int route_from)
     }
 }
 
+#define ShiftReg_4e_1x1 50
 __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
                                                      constant float *restrict input2)
 {
@@ -94,20 +95,42 @@ __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             convInput[(i * 8) + k] = in.concat_4d_out_buffer[k];
         }
     }
-
+    
+#pragma loop_coalesce
     for (int ff = 0; ff < 112; ++ff)
     {
         for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
             {
-                float temp_0 = input2[ff];
+                float conv_output = input2[ff];
+
+                // Step 1: Definition of shift register and temp val to hold conv outputs
+                float fa_shiftreg[ShiftReg_4e_1x1] = {0};
+                float conv_temp_acc = 0;
+
+                #pragma unroll 16
                 for (int rc = 0; rc < 512; ++rc)
                 {
-                    temp_0 += (convInput[((((rc * 14) + yy) * 14) + xx)] * input1[((ff * 512) + rc)]);
+                    // Step 2: Accumulation of Conv  value for one  loop iteration into a temp variable
+                    float temp = fa_shiftreg[ShiftReg_4e_1x1 - 1] + (convInput[((((rc * 14) + yy) * 14) + xx)] * input1[((ff * 512) + rc)]); 
+#pragma unroll
+                    for (unsigned j = ShiftReg_4e_1x1 - 1; j > 0; j--)
+                        fa_shiftreg[j] = fa_shiftreg[j - 1];
+
+                    fa_shiftreg[0] = temp;                                      
                 }
-                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
-                write_channel_intel(conv1_4e_out_b0_channel, temp_0);
+#pragma unroll
+                for (unsigned i = 0; i < ShiftReg_4e_1x1; i++)
+                {
+                    conv_temp_acc += fa_shiftreg[i];
+                }
+
+                // Step 3: Update value for an outer loop iteration
+                conv_output += conv_temp_acc;
+                conv_output = (conv_output > 0) ? conv_output : 0.000000e+00f;
+
+                write_channel_intel(conv1_4e_out_b0_channel, conv_output);
             }
         }
     }
