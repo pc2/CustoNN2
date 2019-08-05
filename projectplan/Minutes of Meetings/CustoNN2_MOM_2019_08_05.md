@@ -20,7 +20,7 @@
     - Inception 3c and 4f - assigned to Alina - 3c is optimized with optimizations like unrolling, data dependencies and Loop coalescing. Weights and biases are still in global memory, this needs to be copied to local memory. 4f optimization is not started.
     - Inception 4b and 4c - assinged to Arathy - Data dependencies and II optimizations are done. 
     - Inception 4d and 4e - assinged to Suprajith - Optimizations are completed.
-    - Inception 5b and 5c - assinged to Nikitha - II was reduced to 1 and Loop unrolling and Loop coalescing techniques were used. 5c optimization is not started.
+    - Inception 5b and 5c - assinged to Nikitha - II was reduced to 1 and Loop unrolling and Loop coalescing techniques were used. 5c optimization is not started.  
 **All of these optimized kernels are yet to be tested**.
 - **Resnet** : Debugging is in progress. Debug till 3 layers has been completed.
 - **Batch support** : Batch support for Googlenet conv and maxpooling are done, concat and padding is yet to be completed.
