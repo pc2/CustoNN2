@@ -88,7 +88,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         struct concat_4c_buffer in;
         in = read_channel_intel(concat_4d_in_b0_channel);
 
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
             convInput[(i * 8) + k] = in.concat_4c_out_buffer[k];
@@ -97,7 +97,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 
     //Local memory for Biases:
     __local  float input_bias[128];
-    #pragma unroll 64
+    #pragma unroll 32
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
@@ -117,11 +117,12 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             {
                 float temp_0 = input_bias[ff];
                 float temp_1 = 0;
+                #pragma unroll 4
                 for (int rc = 0; rc < 512; ++rc)
                 {
                     temp_1 += (convInput[((((rc * 14) + yy) * 14) + xx)] * input_weights[(rc)]);
                 }
-                temp_0 += temp1; 
+                temp_0 += temp_1; 
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv1_4d_out_b0_channel, temp_0);
             }
@@ -129,12 +130,11 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     }
 }
 
-#define ShiftReg 50
-__kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
-                                                     constant float *restrict input2)
+
+__kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, constant float *restrict input2)
 {
     //Read Input from IO channel
-    float convInput[100352];
+    float input0[100352];
     // 100352/8 = 12544
     for (int i = 0; i < 12544; i++)
     {
@@ -142,10 +142,10 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         struct concat_4c_buffer in;
         in = read_channel_intel(concat_4d_in_b1_channel);
 
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
-            convInput[(i * 8) + k] = in.concat_4c_out_buffer[k];
+            input0[(i * 8) + k] = in.concat_4c_out_buffer[k];
         }
     }
      //Local memory for Biases:
@@ -154,7 +154,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
-#pragma loop_coalesce
+
     for (int ff = 0; ff < 128; ++ff)
     {
          //Local weights 
@@ -162,6 +162,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         #pragma unroll 32
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
+        }
         for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
@@ -175,11 +176,12 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                }
                temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
-                write_channel_intel(conv2_1_4d_out_b1_channel, conv_output);
+                write_channel_intel(conv2_1_4d_out_b1_channel, temp_0);
             }
         }
     }
 }
+
 __kernel void Padding_Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D()
 {
     float input0[128 * 14 * 14];
@@ -206,6 +208,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     #pragma unroll 32
     for(int b = 0; b < 256; b++){
         input_bias[b] = input2[b];
+    }
 
     for (int ff = 0; ff < 256; ++ff)
     {
@@ -228,6 +231,8 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                     #pragma unroll
                     for (int ry = 0; ry < 3; ++ry)
                     {
+                        float temp_1 = 0.0;
+                        #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
                             temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[((((((ff * 128) + rc) * 3) + ry) * 3) + rx)]);
