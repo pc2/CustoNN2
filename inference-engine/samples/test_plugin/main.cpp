@@ -16,8 +16,8 @@
 #include <samples/slog.hpp>
 #include <samples/args_helper.hpp>
 #include "fpga_plugin.cpp"
-
-#include "classification_sample_test.h"
+#include "mpi.h"
+#include "test_plugin.h"
 
 using namespace InferenceEngine;
 
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
                 "\n\t" << FLAGS_m <<
                 "\n\t" << binFileName <<
         slog::endl;
-
+	MPI_Init(NULL, NULL);
         CNNNetReader networkReader;
         /** Reading network model **/
         networkReader.ReadNetwork(FLAGS_m);
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
         char *inputModel = new char[length_str+1];
         strcpy(inputModel, modelName.c_str());
         
-        std::cout<<" Starting FPGA Launcher\n"<<modelName<<std::endl;
+         slog::info <<" Starting FPGA Launcher\n"<<modelName<<slog::endl;
         //std::vector<std::string> input_imagePath;
        // input_imagePath.push_back(input_image_path.c_str());
 
@@ -141,13 +141,14 @@ int main(int argc, char *argv[]) {
 
         double total = 0.0;
         auto t0 = Time::now();
-        
-        fpga_launcher(network,inputModel,imageNames,cnn_model);
+        int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+        fpga_launcher(network,inputModel,imageNames,cnn_model,rank);
         auto t1 = Time::now();
         fsec fs = t1 - t0;
         ms d = std::chrono::duration_cast<ms>(fs);
         total += d.count();
-        std::cout << std::endl << "total inference time(ms): " << total << std::endl; 
+         slog::info<< "total inference time(ms): " << total << slog::endl; 
 
     }
     catch (const std::exception& error) {
@@ -160,6 +161,7 @@ int main(int argc, char *argv[]) {
     }
 
     slog::info << "Execution successful" << slog::endl;
+    MPI_Finalize();
     return 0;
 }
 
