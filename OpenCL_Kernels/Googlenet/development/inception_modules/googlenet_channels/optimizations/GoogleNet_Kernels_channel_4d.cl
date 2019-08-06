@@ -80,7 +80,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                                                      constant float *restrict input2)
 {
     //Read Input from IO channel
-    float convInput[100352];
+    float input0[100352];
     // 100352/8 = 12544
     for (int i = 0; i < 12544; i++)
     {
@@ -91,7 +91,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         #pragma unroll
         for (int k = 0; k < 8; k++)
         {
-            convInput[(i * 8) + k] = in.concat_4c_out_buffer[k];
+            input0[(i * 8) + k] = in.concat_4c_out_buffer[k];
         }
     }
 
@@ -120,7 +120,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 #pragma unroll 4
                 for (int rc = 0; rc < 512; ++rc)
                 {
-                    temp_1 += (convInput[((((rc * 14) + yy) * 14) + xx)] * input_weights[(rc)]);
+                    temp_1 += (input0[((((rc * 14) + yy) * 14) + xx)] * input_weights[(rc)]);
                 }
                 temp_0 += temp_1; 
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
@@ -254,7 +254,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                                                      constant float *restrict input2)
 {
     //Read Input from IO channel
-    float convInput[100352];
+    float input0[100352];
     // 100352/8 = 12544
     for (int i = 0; i < 12544; i++)
     {
@@ -265,7 +265,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 #pragma unroll
         for (int k = 0; k < 8; k++)
         {
-            convInput[(i * 8) + k] = in.concat_4c_out_buffer[k];
+            input0[(i * 8) + k] = in.concat_4c_out_buffer[k];
         }
     }
 
@@ -293,7 +293,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 # pragma unroll 4
                 for (int rc = 0; rc < 512; ++rc)
                 {
-                    temp_1  += (convInput[((((rc * 14) + yy) * 14) + xx)] * input_weights[(rc)]);
+                    temp_1  += (input0[((((rc * 14) + yy) * 14) + xx)] * input_weights[(rc)]);
                 }
                 temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
@@ -370,7 +370,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 __kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
     //Read Input from IO channel
-    float maxInput[100352];
+    float input0[100352];
     // 100352/8 = 12544
     for (int i = 0; i < 12544; i++)
     {
@@ -381,7 +381,7 @@ __kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool()
         #pragma unroll
         for (int k = 0; k < 8; k++)
         {
-            maxInput[(i * 8) + k] = in.concat_4c_out_buffer[k];
+            input0[(i * 8) + k] = in.concat_4c_out_buffer[k];
         }
     }
 
@@ -396,7 +396,7 @@ __kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool()
                 {
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? maxInput[(((((((ax1 * 14) + ax2) + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
+                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? input0[(((((((ax1 * 14) + ax2) + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
                     }
                 }
                 write_channel_intel(maxpool_4d_out_b3_channel, tensor);
