@@ -8,7 +8,7 @@ getcontext().prec = 5
 
 
 
-tf_path = '/home/amey/Masters/project/tvm/pretrainedmodels/newresnet/resnetoutput/'
+tf_path = 'tvm/pretrainedmodels/newresnet/resnetoutput/'
 
 tf_filename = 'block1_unit_2_bottleneck_v2_conv1_Relu_NCHW.txt'
 
