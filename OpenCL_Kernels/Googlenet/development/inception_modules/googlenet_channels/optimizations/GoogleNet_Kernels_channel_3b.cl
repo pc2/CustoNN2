@@ -89,9 +89,9 @@ __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     }
 
     //Local memory for Biases:
-    __local  float input_bias[192];
-    #pragma unroll 64
-    for(int b = 0; b < 192; b++){
+    __local  float input_bias[64];
+    #pragma unroll 32
+    for(int b = 0; b < 64; b++){
         input_bias[b] = input2[b];
     }
 
