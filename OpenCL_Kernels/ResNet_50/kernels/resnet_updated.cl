@@ -3,7 +3,17 @@
 // 230x230x3 Mul1_/Fused_Mul_/FusedScaleShift_
 //padding kernels
 // fusedscaleshift along with padding tvm_kernel name fuse_pad_transpose_kernel0
+
+__kernel void  Mul1__Fused_Mul__FusedScaleShift(__global float* restrict T_relu, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 150528; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_relu[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = ((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 50176)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 50176)]);
+  }
+}
+
+
 __kernel void  Padding_conv1_Conv2D(__global float* restrict T_transpose, __global float* restrict input0) {
+
+printf("i was here in padding");
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 158700; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_transpose[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((690 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52900) < 52210)) && (3 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 230))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 230) < 227)) ? input0[(((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52900) / 230) * 224) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 230)) * 3) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 52900)) + -2025)] : 0.000000e+00f);
   }
@@ -59,7 +69,7 @@ __kernel void  pool1_MaxPool(__global float* restrict tensor, __global float* re
 
 __kernel void  Mul1_1520_Fused_Mul__FusedScaleShift(__global float* restrict T_relu, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_relu[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 64) * 3136) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 64))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 64)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 64)]), 0.000000e+00f);
+    T_relu[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]), 0.000000e+00f);
   }
 }
 
@@ -184,7 +194,7 @@ __kernel void  block1_unit_1_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void  block1_unit_1_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 802816; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] =  input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 3136) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256)];
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] =  input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -196,7 +206,7 @@ __kernel void  block1_unit_1_bottleneck_v2_add(__global float* restrict T_add, _
 
 __kernel void Mul1_1547_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 802816; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3136) * 256) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]), 0.000000e+00f);
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]), 0.000000e+00f);
   }
 }
 
@@ -235,6 +245,7 @@ __kernel void Padding_block1_unit_2_bottleneck_v2_conv2_Conv2D(__global float *r
     {
         T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((58 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) < 3306)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58) < 57)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3364) * 56) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) / 58)) * 56) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58)) + -57)] : 0.000000e+00f);
     }
+
 }
 //17
 
@@ -286,7 +297,7 @@ __kernel void  block1_unit_2_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void block1_unit_2_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 802816; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 3136) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -316,7 +327,7 @@ __kernel void  block1_unit_3_bottleneck_v2_shortcut_MaxPool(__global float* rest
 
 __kernel void Mul1_1574_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 802816; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3136) * 256) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]), 0.000000e+00f);
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3136)]), 0.000000e+00f);
   }
 }
 
@@ -355,6 +366,7 @@ __kernel void Padding_block1_unit_3_bottleneck_v2_conv2_Conv2D(__global float *r
     {
         T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((58 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) < 3306)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58) < 57)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3364) * 56) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) / 58)) * 56) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58)) + -57)] : 0.000000e+00f);
     }
+
 }
 //26
 
@@ -415,17 +427,17 @@ __kernel void block1_unit_3_bottleneck_v2_add(__global float* restrict T_relu, _
 
 //29
 __kernel void  block1_unit_3_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
-  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] =  input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256)];
+   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] =  input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner ] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
 
 //updated 30 //31
-__kernel void Mul1_1601_Fused_Mul_FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void Mul1_1601_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 256) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
+ }
 }
 
 
@@ -540,7 +552,7 @@ __kernel void  block2_unit_1_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void  block2_unit_1_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -551,8 +563,8 @@ __kernel void  block2_unit_1_bottleneck_v2_add(__global float* restrict T_add, _
 
 __kernel void Mul1_1628_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
+ }
 }
 
 
@@ -637,7 +649,7 @@ __kernel void  block2_unit_2_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void block2_unit_2_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner ] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -645,8 +657,8 @@ __kernel void block2_unit_2_bottleneck_v2_add(__global float* restrict T_add, __
 
 __kernel void Mul1_1655_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
+ }
 }
 
 //49
@@ -725,9 +737,9 @@ __kernel void  block2_unit_3_bottleneck_v2_conv3_Conv2D(__global float* restrict
 }
 
 //54
-__kernel void  block2_unit_3_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input2, __global float* restrict input0, __global float* restrict input1) {
+__kernel void  block2_unit_3_bottleneck_v2_add(__global float* restrict T_add,  __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 784) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -758,8 +770,8 @@ __kernel void  block2_unit_4_bottleneck_v2_shortcut_MaxPool(__global float* rest
 
 __kernel void Mul1_1682_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 784) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
+ }
 }
 
 
@@ -856,16 +868,16 @@ __kernel void block2_unit_4_bottleneck_v2_add(__global float* restrict T_relu, _
 //63
 __kernel void block2_unit_4_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 512))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 512)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner ] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
 //64 //65
 
-__kernel void Mul1_1709_Fused_Mul_FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void Mul1_1709_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 512) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 784)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
+ }
 }
 
 //66
@@ -983,8 +995,8 @@ __kernel void  block3_unit_1_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 
 __kernel void  block3_unit_1_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
-  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 1024))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024)]);
+   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -994,8 +1006,8 @@ __kernel void  block3_unit_1_bottleneck_v2_add(__global float* restrict T_add, _
 //block3_unit_2_bottleneck_v2_preact_Relu
 __kernel void Mul1_1736_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 1024) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
+ }
 }
 
 //75
@@ -1079,7 +1091,7 @@ __kernel void  block3_unit_2_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void  block3_unit_2_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 1024))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -1088,8 +1100,8 @@ __kernel void  block3_unit_2_bottleneck_v2_add(__global float* restrict T_add, _
 
 __kernel void  Mul1_1763_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 1024) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
+ }
 }
 
 //83
@@ -1170,8 +1182,8 @@ __kernel void  block3_unit_3_bottleneck_v2_conv3_Conv2D(__global float* restrict
 //88
 
 __kernel void  block3_unit_3_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
-  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 1024))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024)]);
+   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -1180,8 +1192,8 @@ __kernel void  block3_unit_3_bottleneck_v2_add(__global float* restrict T_add, _
 
 __kernel void  Mul1_1790_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 1024) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
+ }
 }
 
 //91
@@ -1265,7 +1277,7 @@ __kernel void  block3_unit_4_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void block3_unit_4_bottleneck_v2_add(__global float* restrict T_add,  __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 1024))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -1274,8 +1286,8 @@ __kernel void block3_unit_4_bottleneck_v2_add(__global float* restrict T_add,  _
 //resnet_v2_50/block3/unit_5/bottleneck_v2/preact/Relu
 __kernel void Mul1_1817_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 1024) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
+ }
 }
 
 
@@ -1360,7 +1372,7 @@ __kernel void  block3_unit_5_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void  block3_unit_5_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] =  (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024) * 196) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 1024))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] =  input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -1390,8 +1402,8 @@ __kernel void  block3_unit_6_bottleneck_v2_shortcut_MaxPool(__global float* rest
 
 __kernel void  Mul1_1844_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 200704; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 196) * 1024) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
+ }
 }
 
 
@@ -1423,8 +1435,8 @@ __kernel void  block3_unit_6_bottleneck_v2_conv1_Relu(__global float* restrict T
 //padding kernel
 __kernel void Padding_block3_unit_6_bottleneck_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
-    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 41472; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((9 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) < 72)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9) < 8)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 81) * 7) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) / 9)) * 7) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9)) + -8)] : 0.000000e+00f);
+    for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 65536; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((16 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) < 240)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16) < 15)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 256) * 14) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 256) / 16)) * 14) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 16)) + -15)] : 0.000000e+00f);
   }
 }
 
@@ -1487,15 +1499,15 @@ __kernel void block3_unit_6_bottleneck_v2_add(__global float* restrict T_relu, _
 //113
 __kernel void  block3_unit_6_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 50176; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] =  (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 1024))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 1024)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] =  input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
 //114 //115
-__kernel void  Mul1_1871_Fused_Mul_FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  Mul1_1871_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 50176; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 49) * 1024) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 196)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]), 0.000000e+00f);
+ }
 }
 
 
@@ -1616,7 +1628,7 @@ for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax
 
 __kernel void  block4_unit_1_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 2048) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 2048))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 2048)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -1625,8 +1637,8 @@ __kernel void  block4_unit_1_bottleneck_v2_add(__global float* restrict T_add, _
 //resnet_v2_50_block4_unit_2_bottleneck_v2_preact_Relu
 __kernel void Mul1_1898_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 49) * 2048) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]), 0.000000e+00f);
+ }
 }
 
 
@@ -1656,7 +1668,7 @@ __kernel void  block4_unit_2_bottleneck_v2_conv1_Relu(__global float* restrict T
 }
 */
 //padding kernel
-__kernel void Padding_block4_unit_2_bottleneck_v2_conv2_conv2D(__global float *restrict T_pad, __global float *restrict input0)
+__kernel void Padding_block4_unit_2_bottleneck_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 41472; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((9 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) < 72)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9) < 8)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 81) * 7) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) / 9)) * 7) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9)) + -8)] : 0.000000e+00f);
@@ -1664,7 +1676,7 @@ __kernel void Padding_block4_unit_2_bottleneck_v2_conv2_conv2D(__global float *r
 }
 //127
 
-__kernel void  block4_unit_2_bottleneck_v2_conv2_conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block4_unit_2_bottleneck_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 512; ++ff) {
     for (int yy = 0; yy < 7; ++yy) {
       for (int xx = 0; xx < 7; ++xx) {
@@ -1712,7 +1724,7 @@ __kernel void  block4_unit_2_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void block4_unit_2_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 2048) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 2048))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 2048)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner ] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
@@ -1720,9 +1732,9 @@ __kernel void block4_unit_2_bottleneck_v2_add(__global float* restrict T_add, __
 // Mul1_1925/Fused_Mul_/FusedScaleShift_
 //block4/unit_3/bottleneck_v2/preact/Relu
 __kernel void  Mul1_1925_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
-  for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 49) * 2048) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]), 0.000000e+00f);
-  }
+ for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]), 0.000000e+00f);
+ }
 }
 
 
@@ -1825,16 +1837,15 @@ __kernel void  block4_unit_3_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 __kernel void block4_unit_3_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 2048) * 49) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 2048))] + input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner % 2048)]);
+    T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
 //139 //140
-
-__kernel void  Mul1_1952_Fused_Mul_FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  Mul1_1952_Fused_Mul__FusedScaleShift(__global float* restrict T_pad, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
-    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[(((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 49) * 2048) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49))] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]), 0.000000e+00f);
-  }
+    T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = max(((input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] * input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]) + input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner / 49)]), 0.000000e+00f);
+ }
 }
 
 
