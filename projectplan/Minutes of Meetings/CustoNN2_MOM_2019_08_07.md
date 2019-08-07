@@ -1,7 +1,7 @@
 # CustoNN2 : Minutes of the meeting
 <br/>
 
-| Date of Meeting (YYYY/MM/DD)  | (2019/ / )  |  
+| Date of Meeting (YYYY/MM/DD)  | (2019/08/07 )  |  
 |:--- | :---: |  
 | Time  |  09:15 - 11:45 |  
 | MOM Prepared by  | Alina  |  
