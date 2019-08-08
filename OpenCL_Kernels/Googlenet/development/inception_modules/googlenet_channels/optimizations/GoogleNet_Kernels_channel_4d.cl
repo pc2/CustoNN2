@@ -93,7 +93,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 
     //Local memory for Biases:
     __local  float input_bias[128];
-    #pragma unroll 16
+    #pragma unroll 64
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
@@ -102,7 +102,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[512];
-        #pragma unroll 16
+        #pragma unroll 32
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -113,7 +113,6 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             {
                 float temp_0 = input_bias[ff];
                 float temp_1 = 0;
-                #pragma unroll 8 
                 for (int rc = 0; rc < 512; ++rc)
                 {
                     temp_1 += (input0[((((rc * 14) + yy) * 14) + xx)] * input_weights[(rc)]);
@@ -146,7 +145,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     }
      //Local memory for Biases:
     __local  float input_bias[128];
-    #pragma unroll 16
+    #pragma unroll 64
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
@@ -155,7 +154,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
          //Local weights 
         float input_weights[512];
-        #pragma unroll 16
+        #pragma unroll 32
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -165,12 +164,11 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             {
                 float temp_0 = input_bias[ff];
                 float temp_1 = 0.0;
-                #pragma unroll 8 
                 for (int rc = 0; rc < 512; ++rc)
                 {
                    temp_1 += (input0[((((rc * 14) + yy) * 14) + xx)] * input_weights[(rc)]);
                }
-               temp_0 += temp_1;
+				temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv2_1_4d_out_b1_channel, temp_0);
             }
@@ -201,7 +199,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 
     //Local memory for Biases:
     __local  float input_bias[256];
-    #pragma unroll 16
+    #pragma unroll 32
     for(int b = 0; b < 256; b++){
         input_bias[b] = input2[b];
     }
@@ -210,7 +208,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[3*3*128];
-        #pragma unroll 16
+        #pragma unroll 32
         for(int m = 0 ; m < 3*3*128 ; m++){
             input_weights[m] = input1[((ff * 3*3*128) + m)];
         }
@@ -267,7 +265,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 
     //Local memory for Biases:
     __local  float input_bias[24];
-    #pragma unroll 16
+    #pragma unroll 32
     for(int b = 0; b < 24; b++){
         input_bias[b] = input2[b];
     }
@@ -276,7 +274,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[512];
-        #pragma unroll 16
+        #pragma unroll 32
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -286,7 +284,6 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             {
                 float temp_0 = input_bias[ff];
                 float temp_1 = 0.0;
-                # pragma unroll 8
                 for (int rc = 0; rc < 512; ++rc)
                 {
                     temp_1  += (input0[((((rc * 14) + yy) * 14) + xx)] * input_weights[(rc)]);
@@ -321,7 +318,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 
     //Local memory for Biases:
     __local  float input_bias[64];
-    #pragma unroll 16
+    #pragma unroll 32
     for(int b = 0; b < 64; b++){
         input_bias[b] = input2[b];
     }
@@ -329,7 +326,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     {
          //Local weights 
         float input_weights[3*3*24];
-        #pragma unroll 16
+        #pragma unroll 32
         for(int m = 0 ; m < 3*3*24 ; m++){
             input_weights[m] = input1[((ff * 3*3*24) + m)];
         }
@@ -339,7 +336,6 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
             {
                 float temp_0 = input_bias[ff];
                 float temp_3 = 0.0;
-				# pragma unroll 16
                 for (int rc = 0; rc < 24; ++rc)
                 {
                     float temp_2 = 0.0;
@@ -389,8 +385,10 @@ __kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool()
             for (int ax3 = 0; ax3 < 14; ++ax3)
             {
                 float tensor = -3.402823e+38f;
+		#pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
+		#pragma unroll
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
                         tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? input0[(((((((ax1 * 14) + ax2) + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
@@ -412,7 +410,7 @@ __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
     }
     //Local memory for Biases:
     __local  float input_bias[64];
-    #pragma unroll 16
+    #pragma unroll 64
     for(int b = 0; b < 64; b++){
         input_bias[b] = input2[b];
     }
@@ -420,7 +418,7 @@ __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[512];
-        #pragma unroll 16
+        #pragma unroll 32
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
