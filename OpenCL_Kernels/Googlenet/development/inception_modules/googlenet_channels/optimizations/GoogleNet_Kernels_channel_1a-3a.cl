@@ -123,7 +123,7 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
         {
             for (int xx = 0; xx < 56; ++xx)
             {
-                 float temp_copies[SR];
+                float temp_copies[SR];
 
 	            //Initialize the array with 0
 	            #pragma unroll
