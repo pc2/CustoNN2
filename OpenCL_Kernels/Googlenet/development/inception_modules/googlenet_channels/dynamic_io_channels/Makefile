@@ -9,7 +9,8 @@ kernel_name_inception4e = GoogleNet_Kernels_channel_4e
 kernel_name_inception4f = GoogleNet_Kernels_channel_4f
 kernel_name_inception5b = GoogleNet_Kernels_channel_5b
 kernel_name_inception5c = GoogleNet_Kernels_channel_5c
-design_dir = /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/googlenet_channels_bitstreams
+#design_dir = /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/googlenet_channels_bitstreams
+design_dir = ./
 board_name = p520_max_sg280l
 
  

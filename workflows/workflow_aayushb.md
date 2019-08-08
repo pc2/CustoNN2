@@ -1,4 +1,3 @@
-
 ## Do you prefer ssh or xrdp for your normal workflow ?
 - I prefer xrpd for connecting to the CC frontend as it provides a GUI to work with.
 But xrdp is slow in opeartion as its less responsive. We need a VPN for using an xrdp connection when operating from home. Whereas in SSH we do not need a VPN and also its faster tham xrdp but does not provide a GUI
@@ -89,6 +88,9 @@ It is a good practice to run git status after adding  file(s) to check if they h
 - git log: It provides the commit history of the repository in a sequential time ordered fashion. Each commit, its author, their commit message and time is displayed.
 
 
+## Genrating profile.mon file 
 
+Command : 
+>  aocl report /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/googlenet_bitstreams/inception0.aocx  profile_inception0.mon /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/googlenet_bitstreams/inception0.source
 
 
