@@ -515,7 +515,7 @@ __local  float input_bias[1001];
 	float temp_1 = 0.0;  
         for (int rc = 0; rc < 1024; ++rc)
         {
-            temp_1 = (compute[ff] + (input0[rc] * input_weights[rc]));
+            temp_1 += (input0[rc] * input_weights[rc]);
         }
 	compute[ff] += temp_1;
         compute[ff] = (compute[ff] > 0) ? compute[ff] : 0.0;
