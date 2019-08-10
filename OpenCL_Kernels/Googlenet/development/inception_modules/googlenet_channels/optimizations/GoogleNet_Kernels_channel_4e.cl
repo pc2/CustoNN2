@@ -234,7 +234,7 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 			#pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[((((((ff * 144) + rc) * 3) + ry) * 3) + rx)]);
+                            temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
 
                         temp_2 += temp_1;
@@ -351,7 +351,7 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(
                         #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[((((((ff * 32) + rc) * 3) + ry) * 3) + rx)]);
+                            temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
 						temp_2 += temp_1;
                     }
