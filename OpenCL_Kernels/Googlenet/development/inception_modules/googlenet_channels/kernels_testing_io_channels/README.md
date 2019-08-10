@@ -22,6 +22,7 @@ Here we are executing Googlenet with channels implementation inbetween the layer
 - initialize stratix 19.1 BSP : `source /opt/intelFPGA_pro/19.1/init_env_bittware_pcie.sh`
 - emulate 2 devices : `export CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=2`
 - Run the plugin :
-    ./test_plugin -m /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/frozen_quant.xml -i /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/pepper.png -route /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/route.xml
+    ./test_plugin -m /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/frozen_quant.xml -i /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/pepper.png -route /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/route.xml -label /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/labels.txt -nt 5
+
 ### Testing Architecture:
 ![Testing block diagram](Testing_infra.png)
