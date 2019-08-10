@@ -7,10 +7,6 @@ __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict T_pad, __glo
 }
 
 __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
-
-
-    
-
 {
     for (int ff = 0; ff < 64; ++ff)
     {
