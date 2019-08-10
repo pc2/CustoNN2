@@ -264,7 +264,7 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                         {
                             temp_1 += (input0[((((((rc * 9) + yy) + ry) * 9) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
-                            temp_2 += temp1;
+                            temp_2 += temp_1;
                         }
                         temp_3 += temp_2;
                     }
