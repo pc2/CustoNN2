@@ -285,7 +285,7 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     }
     
     __local  float input_bias[32];
-#pragma unroll 64
+#pragma unroll
     for(int b = 0; b < 32; b++){
         input_bias[b] = input2[b];
     } 
