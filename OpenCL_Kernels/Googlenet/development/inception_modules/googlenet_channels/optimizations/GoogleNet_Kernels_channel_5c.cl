@@ -94,7 +94,7 @@ __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
     __local  float input_bias[384];
-#pragma unroll 64
+#pragma unroll 128
     for(int b = 0; b < 384; b++){
         input_bias[b] = input2[b];
     }
@@ -102,7 +102,7 @@ __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 384; ++ff)
     {
         float input_weights[832];
-#pragma unroll 32
+#pragma unroll 128
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -151,7 +151,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 192; ++ff)
     {
         float input_weights[832];
-#pragma unroll 32
+#pragma unroll 128
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -194,7 +194,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_5c_out_b1_channel);
     }
     __local  float input_bias[384];
-#pragma unroll 32
+#pragma unroll 64
     for(int b = 0; b < 384; b++){
         input_bias[b] = input2[b];
     }
@@ -202,7 +202,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 384; ++ff)
     {	
 	float input_weights[192*3*3];
-	#pragma unroll 32
+	#pragma unroll 64
         for(int w = 0 ; w < 192*3*3 ;w++){
             input_weights[w] = input1[((ff * 192*3*3) + w)];
         }
@@ -262,7 +262,7 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 48; ++ff)
     {
         float input_weights[832];
-#pragma unroll 32
+#pragma unroll 64
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -305,14 +305,14 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_5c_out_b2_channel);
     }
     __local  float input_bias[128];
-#pragma unroll 32
+#pragma unroll 64
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
     
     for (int ff = 0; ff < 128; ++ff)
     {	float input_weights[48*3*3];
-#pragma unroll 32
+#pragma unroll 64
         for(int w = 0 ; w < 48*3*3 ;w++){
             input_weights[w] = input1[((ff * 48*3*3) + w)];
         }
@@ -402,13 +402,13 @@ __kernel void Mixed_5c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(maxpool_5c_out_b3_channel);
     }
     __local  float input_bias[128];
-#pragma unroll 4
+#pragma unroll
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     } 
     for (int ff = 0; ff < 128; ++ff)
     {		float input_weights[832];
-#pragma unroll 8
+#pragma unroll 128
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
