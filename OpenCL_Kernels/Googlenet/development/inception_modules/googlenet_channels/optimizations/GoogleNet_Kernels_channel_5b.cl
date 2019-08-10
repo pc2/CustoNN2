@@ -157,17 +157,15 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 7; ++xx)
             {
                 float temp_0 = input_bias[ff];
-                float temp_rc = 0.0;
+                float temp_1 = 0.0;
                 for (int rc = 0; rc < 832; ++rc)
                 {
                     
-                    temp_rc += (input0[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
+                    temp_1 += (input0[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
                 }
              
                 
-                temp_0 += temp_rc;
-                
-                
+                temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? +temp_0 : 0.000000e+00f;
                 write_channel_intel(conv1_5b_out_b0_channel, temp_0);
             }
@@ -201,16 +199,14 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 7; ++xx)
             {
                 float temp_0 = input_bias[ff];
-                float temp_rc = 0.0;
+                float temp_1 = 0.0;
                 
                 for (int rc = 0; rc < 832; ++rc)
                 {
-                    temp_rc += (input0[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
+                    temp_1 += (input0[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
                 }
                 
-                temp_0 += temp_rc;
-                
-                
+                temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? +temp_0 : 0.000000e+00f;
                 write_channel_intel(conv2_1_5b_out_b1_channel, temp_0);
             }
@@ -255,25 +251,24 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 7; ++xx)
             {
                 float temp_0 = input_bias[ff];
-#pragma unroll 4
+                float temp_3= 0.0;
                 for (int rc = 0; rc < 160; ++rc)
                 {
-#pragma unroll 
+                    float temp_2 = 0.0;
+                    #pragma unroll 
                     for (int ry = 0; ry < 3; ++ry)
                     {
-                        float temp_rx[3];
+                        float temp_1 = 0.0;
 #pragma unroll 
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_rx[rx] += (input0[((((((rc * 9) + yy) + ry) * 9) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
+                            temp_1 += (input0[((((((rc * 9) + yy) + ry) * 9) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
-#pragma unroll 
-                        for (int rc = 0; rc < 3; ++rc){
-                            temp_0 += temp_rx[rc];
+                            temp_2 += temp1;
                         }
+                        temp_3 += temp_2;
                     }
-                }
-                
+                temp_0 += temp_3;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.0;
                 write_channel_intel(conv2_2_5b_out_b1_channel, temp_0);
             }
@@ -306,17 +301,15 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 7; ++xx)
             {
                 float temp_0 = input_bias[ff];
-                float temp_rc = 0.0;
+                float temp_1 = 0.0;
                 
                 for (int rc = 0; rc < 832; ++rc)
                 {
-                    temp_rc += (input0[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
+                    temp_1 += (input0[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
                 }
 
-                temp_0 += temp_rc;
-                
-                
-                temp_0 = (temp_0 > 0) ? +temp_0 : 0.000000e+00f;
+                temp_0 += temp_1;
+                 temp_0 = (temp_0 > 0) ? +temp_0 : 0.000000e+00f;
                 write_channel_intel(conv3_1_5b_out_b2_channel, temp_0);
             }
         }
@@ -360,23 +353,25 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 7; ++xx)
             {
                 float temp_0 = input_bias[ff];
-#pragma unroll 
+                float temp_3 = 0.0;
                 for (int rc = 0; rc < 32; ++rc)
                 {
-#pragma unroll 
+                float temp_2 = 0.0;
+                    #pragma unroll 
                     for (int ry = 0; ry < 3; ++ry)
                     {
-                        float temp_rx = 0.0;
-#pragma unroll
-                        
+                        float temp_1 = 0.0;
+                        #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_rx += (input0[((((((rc * 9) + yy) + ry) * 9) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
+                            temp_1 += (input0[((((((rc * 9) + yy) + ry) * 9) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
                         
-                        temp_0 += temp_rx;
+                        temp_2 += temp_1;
                     }
+                    temp_3 += temp_2;
                 }
+                temp_0 += temp_3;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.0;
                 write_channel_intel(conv3_2_5b_out_b2_channel, temp_0);
             }
@@ -446,16 +441,14 @@ __kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 7; ++xx)
             {
                 float temp_0 = input_bias[ff];
-                float temp_rc=0.0;
+                float temp_1 =0.0;
                 
                 for (int rc = 0; rc < 832; ++rc)
                 {
-                    temp_rc += (input0[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
+                    temp_1 += (input0[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
                 }
                 
-                temp_0 += temp_rc;
-                
-                
+                temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? +temp_0 : 0.000000e+00f;
                 write_channel_intel(conv4_1_5b_out_b3_channel, temp_0);
             }
