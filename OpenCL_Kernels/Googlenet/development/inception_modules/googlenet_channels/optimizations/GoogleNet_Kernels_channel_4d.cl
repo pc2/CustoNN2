@@ -229,7 +229,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                         #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[((((((ff * 128) + rc) * 3) + ry) * 3) + rx)]);
+                            temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
                         temp_2 += temp_1;
                     }
@@ -346,7 +346,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                         #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[((((((ff * 24) + rc) * 3) + ry) * 3) + rx)]);
+                            temp_1 += (input0[((((((rc * 16) + yy) + ry) * 16) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
                         temp_2 += temp_1;
                     }
@@ -363,7 +363,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 __kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
     //Read Input from IO channel
-    float input0[100352];
+    float maxInput[100352];
     // 100352/8 = 12544
     for (int i = 0; i < 12544; i++)
     {
@@ -374,7 +374,7 @@ __kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool()
         #pragma unroll
         for (int k = 0; k < 8; k++)
         {
-            input0[(i * 8) + k] = in.concat_4c_out_buffer[k];
+            maxInput[(i * 8) + k] = in.concat_4c_out_buffer[k];
         }
     }
 
@@ -391,7 +391,7 @@ __kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool()
 		#pragma unroll
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? input0[(((((((ax1 * 14) + ax2) + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
+                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? maxInput[(((((((ax1 * 14) + ax2) + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
                     }
                 }
                 write_channel_intel(maxpool_4d_out_b3_channel, tensor);
