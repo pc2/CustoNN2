@@ -90,6 +90,7 @@ __kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
 
+    #pragma loop_coalesce
     for (int ff = 0; ff < 128; ++ff)
     {
 
@@ -113,6 +114,7 @@ __kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 
 
                 float temp_1 = 0.0;
+                // #pragma unroll 2
                 for (int rc = 0; rc < 256; rc++){
                     temp_1 += temp_rc[rc];
                 }
@@ -144,6 +146,7 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     }
 
 
+    #pragma loop_coalesce
     for (int ff = 0; ff < 128; ++ff)
     {
         
@@ -166,6 +169,7 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 
 
                 float temp_1 = 0.0;
+                // #pragma unroll 2
                 for (int rc = 0; rc < 256; rc++){
                     temp_1 += temp_rc[rc];
                 }
@@ -199,6 +203,7 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_3c_out_b1_channel);
     }
 
+    #pragma loop_coalesce
     for (int ff = 0; ff < 192; ++ff)
     {
         float local_input1[3*3*128];
@@ -255,6 +260,7 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
 
+    #pragma loop_coalesce
     for (int ff = 0; ff < 32; ++ff)
     {
         
@@ -278,6 +284,7 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 
 
                 float temp_1 = 0.0;
+                // #pragma unroll 2
                 for (int rc = 0; rc < 256; rc++){
                     temp_1 += temp_rc[rc];
                 }
@@ -313,6 +320,7 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_3c_out_b2_channel);
     }
 
+    #pragma loop_coalesce
     for (int ff = 0; ff < 96; ++ff)
     {
 
@@ -370,6 +378,7 @@ __kernel void Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool()
         }
     }
 
+    #pragma loop_coalesce
     for (int ax1 = 0; ax1 < 256; ++ax1)
     {
         for (int ax2 = 0; ax2 < 28; ++ax2)
@@ -400,6 +409,8 @@ __kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
     {
         input0[i] = read_channel_intel(maxpool_3c_out_b3_channel);
     }
+
+    #pragma loop_coalesce
     for (int ff = 0; ff < 64; ++ff)
     {
         
@@ -416,7 +427,7 @@ __kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
             {
                 float temp_0 = input2[ff];
                 float temp_rc[256];
-                #pragma unroll 4
+                #pragma unroll 2
                 for (int rc = 0; rc < 256; rc++)
                 {
                     temp_rc[rc] = (input0[((((rc * 28) + yy) * 28) + xx)] * local_input1[rc]);
@@ -424,6 +435,7 @@ __kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
                 
 
                 float temp_1 = 0.0;
+                // #pragma unroll 2
                 for (int rc = 0; rc < 256; rc++){
                     temp_1 += temp_rc[rc];
                 }
