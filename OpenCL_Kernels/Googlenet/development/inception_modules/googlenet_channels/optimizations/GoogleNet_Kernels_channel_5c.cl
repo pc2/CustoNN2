@@ -87,14 +87,14 @@ __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         //struct to store 256 bits of data
         struct concat_5b_buffer in;
         in = read_channel_intel(concat_5c_in_b0_channel);
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
             convInput[(i * 8) + k] = in.concat_5b_out_buffer[k];
         }
     }
     __local  float input_bias[384];
-#pragma unroll 128
+    #pragma unroll 128
     for(int b = 0; b < 384; b++){
         input_bias[b] = input2[b];
     }
@@ -102,7 +102,7 @@ __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 384; ++ff)
     {
         float input_weights[832];
-#pragma unroll 128
+        #pragma unroll 128
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -116,7 +116,6 @@ __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 {
                     temp_1 += (convInput[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
                 }
-                
                 temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv1_5c_out_b0_channel, temp_0);
@@ -136,14 +135,14 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         //struct to store 256 bits of data
         struct concat_5b_buffer in;
         in = read_channel_intel(concat_5c_in_b1_channel);
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
             convInput[(i * 8) + k] = in.concat_5b_out_buffer[k];
         }
     }
     __local  float input_bias[192];
-#pragma unroll 64
+    #pragma unroll 64
     for(int b = 0; b < 192; b++){
         input_bias[b] = input2[b];
     }
@@ -151,7 +150,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 192; ++ff)
     {
         float input_weights[832];
-#pragma unroll 128
+        #pragma unroll 128
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -166,7 +165,6 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                     temp_1 += (convInput[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
                 }
                 temp_0 += temp_1;
-                
                 temp_0 = (temp_0 > 0) ? +temp_0 : 0.000000e+00f;
                 write_channel_intel(conv2_1_5c_out_b1_channel, temp_0);
             }
@@ -194,7 +192,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_5c_out_b1_channel);
     }
     __local  float input_bias[384];
-#pragma unroll 64
+    #pragma unroll 64
     for(int b = 0; b < 384; b++){
         input_bias[b] = input2[b];
     }
@@ -247,14 +245,14 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         //struct to store 256 bits of data
         struct concat_5b_buffer in;
         in = read_channel_intel(concat_5c_in_b2_channel);
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
             convInput[(i * 8) + k] = in.concat_5b_out_buffer[k];
         }
     }
     __local  float input_bias[48];
-#pragma unroll 32
+    #pragma unroll 32
     for(int b = 0; b < 48; b++){
         input_bias[b] = input2[b];
     }
@@ -262,7 +260,7 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 48; ++ff)
     {
         float input_weights[832];
-#pragma unroll 64
+        #pragma unroll 64
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -276,7 +274,6 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 {
                     temp_1 += (convInput[((((rc * 7) + yy) * 7) + xx)] * input_weights[(rc)]);
                 }
-                
                 temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv3_1_5c_out_b2_channel, temp_0);
@@ -305,14 +302,14 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_5c_out_b2_channel);
     }
     __local  float input_bias[128];
-#pragma unroll 64
+    #pragma unroll 64
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
     
     for (int ff = 0; ff < 128; ++ff)
     {	float input_weights[48*3*3];
-#pragma unroll 64
+        #pragma unroll 64
         for(int w = 0 ; w < 48*3*3 ;w++){
             input_weights[w] = input1[((ff * 48*3*3) + w)];
         }
@@ -359,7 +356,7 @@ __kernel void Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool()
         //struct to store 256 bits of data
         struct concat_5b_buffer in;
         in = read_channel_intel(concat_5c_in_b3_channel);
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
             maxInput[(i * 8) + k] = in.concat_5b_out_buffer[k];
@@ -396,13 +393,14 @@ __kernel void Mixed_5c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(maxpool_5c_out_b3_channel);
     }
     __local  float input_bias[128];
-#pragma unroll
+    #pragma unroll
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     } 
     for (int ff = 0; ff < 128; ++ff)
-    {		float input_weights[832];
-#pragma unroll 128
+    {		
+        float input_weights[832];
+        #pragma unroll 128
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -465,21 +463,14 @@ __kernel void AvgPool_0a_7x7_AvgPool()
     for (int ax1 = 0; ax1 < 1024; ++ax1)
     {
         float tensor = 0.000000e+00f;
-#pragma unroll 
+        #pragma unroll 
         for (int rv = 0; rv < 7; ++rv)
         {
-            float temp_rv1[7];
-#pragma unroll 
+            #pragma unroll 
             for (int rv1 = 0; rv1 < 7; ++rv1)
             {
-                temp_rv1[rv1] = (temp_rv1[rv1] + (input0[((((ax1 * 7) + rv) * 7) + rv1)] * 2.040816e-02f));
+                tensor = (tensor + (input0[((((ax1 * 7) + rv) * 7) + rv1)] * 2.040816e-02f));
             }
-#pragma unroll 
-            for (int rv1 = 0; rv1 < 7; ++rv1)
-            {
-                tensor = temp_rv1[rv1];
-            }
-            
         }
         write_channel_intel(avgpool_out_channel, tensor);
     }
@@ -493,25 +484,25 @@ __kernel void Conv2d_0c_1x1_Conv2D(__global float *restrict input1, __global flo
         input0[i] = read_channel_intel(avgpool_out_channel);
     }
 __local  float input_bias[1001];
-#pragma unroll 8
+    #pragma unroll 8
     for(int b = 0; b < 1001; b++){
         input_bias[b] = input2[b];
     }
     for (int ff = 0; ff < 1001; ++ff)
     {
-	float input_weights[1024];
-	#pragma unroll 8
+	    float input_weights[1024];
+    	#pragma unroll 8
     	for(int w = 0; w < 1024; w++){
         	input_weights[w] = input1[((ff * 1024) + w)];
     	}
 	
         compute[ff] = input_bias[ff];
-	float temp_1 = 0.0;  
+	    float temp_1 = 0.0;  
         for (int rc = 0; rc < 1024; ++rc)
         {
             temp_1 += (input0[rc] * input_weights[rc]);
         }
-	compute[ff] += temp_1;
+    	compute[ff] += temp_1;
         compute[ff] = (compute[ff] > 0) ? compute[ff] : 0.0;
     }
 }
