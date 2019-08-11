@@ -2002,19 +2002,18 @@ __kernel void Mixed_5b_concat(unsigned int route_to)
  */
 //Enable the channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
-
-
-
 // IO Channels for inception 5b to 5c
-channel concat_5b_struct concat_5c_in_channel_0 __attribute__((depth(8))) __attribute__((io("kernel_input_ch0"))); // Channel Rx
-channel concat_5b_struct concat_5c_in_channel_1 __attribute__((depth(8))) __attribute__((io("kernel_input_ch1"))); // Channel Rx
-channel concat_5b_struct concat_5c_in_channel_2 __attribute__((depth(8))) __attribute__((io("kernel_input_ch2"))); // Channel Rx
-channel concat_5b_struct concat_5c_in_channel_3 __attribute__((depth(8))) __attribute__((io("kernel_input_ch3"))); // Channel Rx
+channel concat_5b_struct concat_5c_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch0"))); // Channel Rx
+channel concat_5b_struct concat_5c_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch1"))); // Channel Rx
+channel concat_5b_struct concat_5c_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch2"))); // Channel Rx
+channel concat_5b_struct concat_5c_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch3"))); // Channel Rx
+//channel concat_5c_struct concat_5c_out_channel __attribute__((depth(10))) __attribute__((io("kernel_io_ch0"))); // Channel Tx
 
-channel concat_5b_struct concat_5c_in_b0_channel __attribute__((depth(32))); // internal channel Branch 1
-channel concat_5b_struct concat_5c_in_b1_channel __attribute__((depth(32))); // internal channel Branch 2
-channel concat_5b_struct concat_5c_in_b2_channel __attribute__((depth(32))); // internal channel Branch 3
-channel concat_5b_struct concat_5c_in_b3_channel __attribute__((depth(32))); // internal channel Branch 4
+channel concat_5b_struct concat_5c_in_b0_channel __attribute__((depth(10))); // internal channel Branch 1
+channel concat_5b_struct concat_5c_in_b1_channel __attribute__((depth(10))); // internal channel Branch 2
+channel concat_5b_struct concat_5c_in_b2_channel __attribute__((depth(10))); // internal channel Branch 3
+channel concat_5b_struct concat_5c_in_b3_channel __attribute__((depth(10))); // internal channel Branch 4
+
 
 //internal channles
 //branch 0
