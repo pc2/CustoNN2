@@ -2003,11 +2003,6 @@ __kernel void Mixed_5b_concat(unsigned int route_to)
 //Enable the channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
 
-//256 bits io channel struct
-typedef struct concat_5b_buffer
-    {
-        float concat_5b_out_buffer[8];
-    } concat_5b_struct;
 
 
 // IO Channels for inception 5b to 5c
