@@ -373,19 +373,13 @@ __kernel void Mixed_5c_Branch_3_MaxPool_0a_3x3_MaxPool()
             for (int ax3 = 0; ax3 < 7; ++ax3)
             {
                 float tensor = -3.402823e+38f;
-#pragma unroll
+                #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
-                    float temp_rv1[3];
-#pragma unroll
+                    #pragma unroll
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        temp_rv1[rv1] = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (8 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (8 - rv1))) ? maxInput[(((((((ax1 * 7) + ax2) + rv) * 7) + ax3) + rv1) + -8)] : -3.402823e+38f));
-                    }
-#pragma unroll
-                    for (int rv1 = 0; rv1 < 3; ++rv1)
-                    {
-                        tensor = max(tensor, temp_rv1[rv1]);
+                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (8 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (8 - rv1))) ? maxInput[(((((((ax1 * 7) + ax2) + rv) * 7) + ax3) + rv1) + -8)] : -3.402823e+38f));
                     }
                 }
                 write_channel_intel(maxpool_5c_out_b3_channel, tensor);
