@@ -1997,25 +1997,29 @@ __kernel void Mixed_5b_concat(unsigned int route_to)
 }
 
 
-//Fifth file
 /**
  * 9th Inception module - Inception 5c
  */
 //Enable the channel extension
 #pragma OPENCL EXTENSION cl_intel_channels : enable
 
+//256 bits io channel struct
+typedef struct concat_5b_buffer
+    {
+        float concat_5b_out_buffer[8];
+    } concat_5b_struct;
+
 
 // IO Channels for inception 5b to 5c
-channel concat_5b_struct concat_5c_in_channel_0 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch0"))); // Channel Rx
-channel concat_5b_struct concat_5c_in_channel_1 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch1"))); // Channel Rx
-channel concat_5b_struct concat_5c_in_channel_2 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch2"))); // Channel Rx
-channel concat_5b_struct concat_5c_in_channel_3 __attribute__((depth(10))) __attribute__((io("kernel_io_5b_ch3"))); // Channel Rx
-//channel concat_5c_struct concat_5c_out_channel __attribute__((depth(10))) __attribute__((io("kernel_io_ch0"))); // Channel Tx
+channel concat_5b_struct concat_5c_in_channel_0 __attribute__((depth(8))) __attribute__((io("kernel_input_ch0"))); // Channel Rx
+channel concat_5b_struct concat_5c_in_channel_1 __attribute__((depth(8))) __attribute__((io("kernel_input_ch1"))); // Channel Rx
+channel concat_5b_struct concat_5c_in_channel_2 __attribute__((depth(8))) __attribute__((io("kernel_input_ch2"))); // Channel Rx
+channel concat_5b_struct concat_5c_in_channel_3 __attribute__((depth(8))) __attribute__((io("kernel_input_ch3"))); // Channel Rx
 
-channel concat_5b_struct concat_5c_in_b0_channel __attribute__((depth(10))); // internal channel Branch 1
-channel concat_5b_struct concat_5c_in_b1_channel __attribute__((depth(10))); // internal channel Branch 2
-channel concat_5b_struct concat_5c_in_b2_channel __attribute__((depth(10))); // internal channel Branch 3
-channel concat_5b_struct concat_5c_in_b3_channel __attribute__((depth(10))); // internal channel Branch 4
+channel concat_5b_struct concat_5c_in_b0_channel __attribute__((depth(32))); // internal channel Branch 1
+channel concat_5b_struct concat_5c_in_b1_channel __attribute__((depth(32))); // internal channel Branch 2
+channel concat_5b_struct concat_5c_in_b2_channel __attribute__((depth(32))); // internal channel Branch 3
+channel concat_5b_struct concat_5c_in_b3_channel __attribute__((depth(32))); // internal channel Branch 4
 
 //internal channles
 //branch 0
@@ -2041,8 +2045,6 @@ channel float concat_5c_out_channel __attribute__((depth(32)));
 //avgpool
 channel float avgpool_out_channel __attribute__((depth(32)));
 
-//final conv
-//channel float conv1_0c_out_channel __attribute__((depth(32)));
 
 //Feeder kernels to read data from IO and feed it into internal channnels
 __kernel void feeder_5c(unsigned int route_from)
@@ -2139,7 +2141,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
     __local  float input_bias[192];
-    #pragma unroll 64
+    #pragma unroll 128
     for(int b = 0; b < 192; b++){
         input_bias[b] = input2[b];
     }
@@ -2189,7 +2191,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_5c_out_b1_channel);
     }
     __local  float input_bias[384];
-    #pragma unroll 64
+    #pragma unroll 128
     for(int b = 0; b < 384; b++){
         input_bias[b] = input2[b];
     }
@@ -2197,7 +2199,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 384; ++ff)
     {	
 	float input_weights[192*3*3];
-	#pragma unroll 64
+	#pragma unroll 128
         for(int w = 0 ; w < 192*3*3 ;w++){
             input_weights[w] = input1[((ff * 192*3*3) + w)];
         }
@@ -2257,7 +2259,7 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     for (int ff = 0; ff < 48; ++ff)
     {
         float input_weights[832];
-        #pragma unroll 64
+        #pragma unroll 128
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -2299,14 +2301,14 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_5c_out_b2_channel);
     }
     __local  float input_bias[128];
-    #pragma unroll 64
+    #pragma unroll 32
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
     
     for (int ff = 0; ff < 128; ++ff)
     {	float input_weights[48*3*3];
-        #pragma unroll 64
+        #pragma unroll 32
         for(int w = 0 ; w < 48*3*3 ;w++){
             input_weights[w] = input1[((ff * 48*3*3) + w)];
         }
@@ -2390,14 +2392,14 @@ __kernel void Mixed_5c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(maxpool_5c_out_b3_channel);
     }
     __local  float input_bias[128];
-    #pragma unroll
+    #pragma unroll 32
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     } 
     for (int ff = 0; ff < 128; ++ff)
     {		
         float input_weights[832];
-        #pragma unroll 128
+        #pragma unroll 32
         for(int w = 0 ; w < 832 ;w++){
             input_weights[w] = input1[((ff * 832) + w)];
         }
@@ -2460,10 +2462,8 @@ __kernel void AvgPool_0a_7x7_AvgPool()
     for (int ax1 = 0; ax1 < 1024; ++ax1)
     {
         float tensor = 0.000000e+00f;
-        #pragma unroll 
         for (int rv = 0; rv < 7; ++rv)
         {
-            #pragma unroll 
             for (int rv1 = 0; rv1 < 7; ++rv1)
             {
                 tensor = (tensor + (input0[((((ax1 * 7) + rv) * 7) + rv1)] * 2.040816e-02f));
@@ -2480,15 +2480,15 @@ __kernel void Conv2d_0c_1x1_Conv2D(__global float *restrict input1, __global flo
     {
         input0[i] = read_channel_intel(avgpool_out_channel);
     }
-__local  float input_bias[1001];
-    #pragma unroll 8
+    __local  float input_bias[1001];
+    #pragma unroll 32
     for(int b = 0; b < 1001; b++){
         input_bias[b] = input2[b];
     }
     for (int ff = 0; ff < 1001; ++ff)
     {
 	    float input_weights[1024];
-    	#pragma unroll 8
+    	#pragma unroll 32
     	for(int w = 0; w < 1024; w++){
         	input_weights[w] = input1[((ff * 1024) + w)];
     	}
