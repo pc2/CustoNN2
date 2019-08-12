@@ -107,10 +107,10 @@ DEFINE_string(model, "", cnn_model);
 /// @brief Absolute path to the Routing Configuration XML
 DEFINE_string(route, "", route_xml_message);
 
-/// @brief Absolute path to the Routing Configuration XML
+/// @brief Absolute path to the Labels.txt file
 DEFINE_string(label, "", label_message);
 
-/// @brief Absolute path to the Routing Configuration XML
+/// @brief Absolute path to the Directory of Bitstreams
 DEFINE_string(bitstream, "", bitstream_message);
 
 

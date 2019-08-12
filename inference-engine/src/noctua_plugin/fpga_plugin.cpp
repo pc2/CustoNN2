@@ -1107,11 +1107,11 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 								cmd_queues[p->layerID]->enqueueReadBuffer( *buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, convScores);
 								err = cmd_queues[p->layerID]->finish();
 								//Printing the results after getting Top N Results
-								std::cout << " TOP- " << TOP_N << " Classification" << std::endl;
+								std::cout << " TOP- " << TOP_N << " Classification Scores" << std::endl;
 								std::cout << " --------------------------------" << std::endl;
 								results = getTopNResults( convScores, TOP_N);
 								std::cout << " --------------------------------" << std::endl;
-								std::cout << " Please match the above labels with the \"Labels.txt\" of the model to see the classification results."<< std::endl;
+								//std::cout << " Please match the above labels with the \"Labels.txt\" of the model to see the classification results."<< std::endl;
 								return results;
 							}
 						}
