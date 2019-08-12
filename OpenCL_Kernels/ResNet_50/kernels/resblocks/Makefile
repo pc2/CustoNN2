@@ -4,7 +4,7 @@ kernel_name_block3_1 = block3_1
 kernel_name_block3_2 = block3_2
 kernel_name_block4 = block4
 
-design_dir = /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/resnet_bitstreams
+design_dir = /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/resnet_emulation
 board_name = p520_max_sg280l
 						 
 block1 :               
