@@ -7,13 +7,15 @@ from decimal import *
 getcontext().prec = 5
 
 
+# Place your tensorflow path here.
+tf_path = '//path/to/tf/output/'
+#Place tensorflow filename here.
+tf_filename = 'tf_filename.txt'
 
-tf_path = 'tvm/pretrainedmodels/newresnet/resnetoutput/'
-
-tf_filename = 'block1_unit_2_bottleneck_v2_conv1_Relu_NCHW.txt'
-
-kernel_path = '/mnt/custonn1/inference-engine/bin/intel64/Release/'
-kernel_filename = 'Results__18_block1_unit_2_bottleneck_v2_conv1_Conv2D.txt'
+# place your kernel generated output file name
+kernel_path = '/path/to/kernel/output/from/plugin'
+# Filename to compare output with
+kernel_filename = 'kernel_output_filename.txt'
 
 
 file1 = open(tf_path+tf_filename,"r") 
