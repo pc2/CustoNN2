@@ -55,6 +55,15 @@ static const char plugin_message[] = "Enables messages from a plugin";
 // @brief message for CNN Model name argument.
 static const char cnn_model[] = "Required. Input CNN Model name. ";
 
+// @brief message for Route XML argument.
+static const char route_xml_message[] = "Required. Path to an .xml file with a routing configurations. ";
+
+// @brief message for Labels file.
+static const char label_message[] = "Path to the labels.txt file of the model with label indicies and names  ";
+
+// @brief message for Labels file.
+static const char bitstream_message[] = "Required. Path to the bitstreams directory ";
+
 /// @brief Define flag for showing help message <br>
 DEFINE_bool(h, false, help_message);
 
@@ -95,12 +104,22 @@ DEFINE_bool(p_msg, false, plugin_message);
 /// @brief Enable plugin messages
 DEFINE_string(model, "", cnn_model);
 
+/// @brief Absolute path to the Routing Configuration XML
+DEFINE_string(route, "", route_xml_message);
+
+/// @brief Absolute path to the Routing Configuration XML
+DEFINE_string(label, "", label_message);
+
+/// @brief Absolute path to the Routing Configuration XML
+DEFINE_string(bitstream, "", bitstream_message);
+
+
 /**
 * @brief This function show a help message
 */
 static void showUsage() {
     std::cout << std::endl;
-    std::cout << "classification_sample [OPTION]" << std::endl;
+    std::cout << "Noctua Plugin's user application [OPTION]" << std::endl;
     std::cout << "Options:" << std::endl;
     std::cout << std::endl;
     std::cout << "    -h                      " << help_message << std::endl;
@@ -109,11 +128,10 @@ static void showUsage() {
     std::cout << "      -l \"<absolute_path>\"    " << custom_cpu_library_message << std::endl;
     std::cout << "          Or" << std::endl;
     std::cout << "      -c \"<absolute_path>\"    " << custom_cldnn_message << std::endl;
-    std::cout << "    -pp \"<path>\"            " << plugin_path_message << std::endl;
-    std::cout << "    -d \"<device>\"           " << target_device_message << std::endl;
     std::cout << "    -nt \"<integer>\"         " << ntop_message << std::endl;
-    std::cout << "    -ni \"<integer>\"         " << iterations_count_message << std::endl;
-    std::cout << "    -pc                     " << performance_counter_message << std::endl;
-    std::cout << "    -p_msg                  " << plugin_message << std::endl;
     std::cout << "    -model                  " << cnn_model << std::endl;
+    std::cout << "    -route                  " << route_xml_message << std::endl;
+    std::cout << "    -label                  " << label_message << std::endl;
+    std::cout << "    -bitstream                  " << bitstream_message << std::endl;
+
 }
