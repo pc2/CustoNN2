@@ -53,7 +53,7 @@ static const char custom_cpu_library_message[] = "Required for MKLDNN (CPU)-targ
 static const char plugin_message[] = "Enables messages from a plugin";
 
 // @brief message for CNN Model name argument.
-static const char cnn_model[] = "Required. Input CNN Model name. ";
+static const char cnn_model[] = "Required. Input CNN Model name. \n supported models : googlenet, resnet ";
 
 // @brief message for Route XML argument.
 static const char route_xml_message[] = "Required. Path to an .xml file with a routing configurations. ";
