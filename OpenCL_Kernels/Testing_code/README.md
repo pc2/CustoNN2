@@ -19,3 +19,10 @@
 - Just change  `run_until = 'resnet_v2_50/block1/unit_1/bottleneck_v2/preact/Relu:0'
 - Refer to : https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018/blob/tvm/OpenCL_Kernels/Testing_code/TF_Resnet_Layers.txt for info about layers suppored by Resnet
 - The results of all the major tensor operations are placed in [pc2-cc-user\custonn2\designs\Tensorflow_outputs](\\fs-cifs.uni-paderborn.de\upb\scratch\departments\pc2\groups\pc2-cc-user\custonn2\designs\Tensorflow_outputs)
+- 
+
+## Profile.sh
+- Shell script to rename profile.mon file during executing on fpga
+- Steps to execute profile.sh
+  - `chmod u+x profile.sh` make file executable
+  - `./profile.sh &` to run it in background and start executing make file for running plugin on fpga.
