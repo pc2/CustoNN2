@@ -109,7 +109,7 @@ __kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 l_input[i] = convInput[28*28*rc+i];
             }
 
-            #pragma unroll 2
+            #pragma unroll 4
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
@@ -238,6 +238,7 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 l_input[i] = input0[30*30*rc+i];
             }
 
+            #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
@@ -393,7 +394,7 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
             }
 
 
-            #pragma unroll 8
+            #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
