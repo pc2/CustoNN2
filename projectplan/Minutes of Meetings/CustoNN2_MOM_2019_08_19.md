@@ -19,7 +19,7 @@
 -  Alina has come up with a design structure to increase dsp.
 -  Resnet Block 2 has been optimized and tested by Nikitha.
 -  Resnet Block 4 has been optimized and tested by Aayush.
--  Resnet Block 1, Block 3_1 and Block 3_2 are in progress.
+-  Optimizations for Resnet Block 1, Block 3_1 and Block 3_2 are in progress.
 
 ##### Project decisions
 -
