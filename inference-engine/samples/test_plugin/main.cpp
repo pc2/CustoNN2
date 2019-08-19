@@ -52,6 +52,10 @@ bool ParseAndCheckCommandLine(int argc, char *argv[])
         showUsage();
         throw std::logic_error("Parameter -bitstream is not set");
     }
+    if(FLAGS_bitstream.empty()){
+        showUsage();
+        throw std::logic_error("Parameter -model is not set");
+    }
 
     return true;
 }
@@ -148,6 +152,10 @@ int main(int argc, char *argv[])
         // input_imagePath.push_back(input_image_path.c_str());
 
         std::string cnn_modelArg = FLAGS_model;
+        if(!(cnn_modelArg=="googlenet" || cnn_modelArg=="resnet")){
+            showUsage();
+            slog::err<<" Provided model is not supported."<<slog::endl;
+        }
         const int model_name_str = cnn_modelArg.length();
         char *cnn_model = new char[model_name_str + 1];
         strcpy(cnn_model, cnn_modelArg.c_str());

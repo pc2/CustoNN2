@@ -95,7 +95,7 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 		int buffer_index, int rank, int com_sz, struct layersDetails* root,
 		cl::CommandQueue* cmd_queues[250], cl::Context* contexts[2],
 		cl::Kernel* kernels[250], cl::Program* programs[2],
-		cl::Buffer* buffers[500] , std::vector<std::string> first_kernels,std::vector<std::string> second_kernels, int TOP_N);
+		cl::Buffer* buffers[500] , std::vector<std::string> first_kernels,std::vector<std::string> second_kernels, int TOP_N, std::string model_name);
 
 /**
  * Function to get Top 10 labels
