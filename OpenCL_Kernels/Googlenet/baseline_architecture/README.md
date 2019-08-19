@@ -54,14 +54,16 @@ If you are building the Inference Engine for the first time , please refer to th
 6. Execute the model using mpirun  
     To simplify the following command, please initialize a temporary variable with the project group's file directory. <br> `export CUSTONN2=/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2`   <br><br>
     `mpirun -npernode 1 ./test_plugin -m $CUSTONN2/intermediate_representation/GoogLeNet/frozen_quant.xml -i $CUSTONN2/intermediate_representation/pepper.png -label $CUSTONN2/intermediate_representation/GoogLeNet/labels.txt -nt 10 -bitstream $CUSTONN2/designs/googlenet_bitstreams/ -model googlenet`  
-    - `-npernode` Number of process per node.
-<br><br>  
-Test Plugin is the user application for executing the plugin. execute help command to get to know the description of each arguments `./test_plugin -h`
+    <br>Test Plugin is the user application for executing the plugin. execute help command to get to know the description of each arguments `./test_plugin -h`  
     - `-m` is the path for IR XML
     - `-i` is the path of the Image
     - `-model` Input CNN Model name. Supported models : googlenet, resnet
     - `-label` Path to the labels.txt file of the model with label indicies and names
     - `-nt`  Number of top results (default 10)
-    - `-bitstream` Path to the bitstreams directory
+    - `-bitstream` Path to the bitstreams directory  
+    MPI Run options 
+    - `-npernode` Number of process per node.  
+
+
 
 
