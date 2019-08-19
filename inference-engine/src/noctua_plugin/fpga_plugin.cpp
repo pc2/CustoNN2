@@ -264,7 +264,10 @@ struct layersDetails *parse_root(InferenceEngine::CNNNetwork network,std::string
 	{
 		//std::cout<<
 		CNNLayer::Ptr layer = *it;
-		if (isLayerSupported(layer->type))
+		if (layer->name != "Mul1_/Fused_Mul_/FusedScaleShift_")
+		{
+
+		if (isLayerSupported(layer->type) )
 		{
 			root->layerName = layer->name;
 			if (root->layerName == "Mul1")
@@ -346,6 +349,7 @@ struct layersDetails *parse_root(InferenceEngine::CNNNetwork network,std::string
 			}
 			return root;
 			//break;
+		}
 		}
 		it++;
 	}
@@ -792,7 +796,7 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 	//std::cout << "Number of children of root: " << root->children.size() << "\n";
 	find_missing_duplicates(root);
 
-	//printCNNTree(root);
+	printCNNTree(root);
 
 	cl::Program *programs[2];
 	std::string aocx_name = "";
