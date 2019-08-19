@@ -4,7 +4,7 @@
 | Date of Meeting (YYYY/MM/DD)  | (2019/08 /19 )  |  
 |:--- | :---: |  
 | Time  |  09:15 - 12:00 |  
-| MOM Prepared by  | <Arathy>  |  
+| MOM Prepared by  | Arathy |  
 
 | Team | |
 | --- | :---: |
