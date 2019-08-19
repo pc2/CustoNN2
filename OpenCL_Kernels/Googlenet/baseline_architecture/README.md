@@ -33,29 +33,35 @@ results between kernels inside the OpenCL file will be transferred using Global 
  OpenVINO noctua plugin is built to integrate IR from Model Optimizer with OpenCL Kernels generated from TVM and launch these kernels on multiple FPGA's using MPI send and recv functions .
 We have developed the plugin for this in `noctua_plugin_develop` branch of `dldt` project. Please switch to this branch if you are in different branch.
 
+If you are building the Inference Engine for the first time , please refer to this documentation: https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018-3rd-party/dldt/blob/noctua_plugin_develop/inference-engine/build_instructions_pc2.md.  
  1. Navigate to build directory of OpenVINO inference engine:  
     `cd $<dldt>/inference-engine/build`
 2. Run the CMake command. Please skip this step if the plugin is already built  
 	`cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_CLDNN=OFF -DENABLE_GNA=OFF ..`
-4. Build the plugin  
+3. Build the plugin  
     `make -j16`  
-    If you are building the Inference Engine for the first time , please run Cmake command given this documentation: https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018-3rd-party/dldt/blob/noctua_plugin_develop/inference-engine/build_instructions_pc2.md.
-
- 3. After building the plugin, navigate to bin directory of inference engine:  
+4. After building the plugin, navigate to bin directory of inference engine:  
     `cd $<dldt>/inference-engine/bin/intel64/DEBUG` If you have built the project in Debug mode   
     `cd $<dldt>/inference-engine/bin/intel64/Release` if the project is built in Release mode.
 
- 4. Request for FPGA nodes using salloc 
+5. Request for FPGA nodes using salloc 
     For this implementation we are require 5 Noctua nodes each having 2 FPGAs. Out of 10 FPGAs, we will be using only 9 in this baseline design.
 	 `salloc -N 5 --partition=fpga -A hpc-lco-kenter -w fpga-[0005-0009]`
     - `-N` number of nodes
-    - `partition` noctua node type
+    - `-partition` noctua node type
     - `-A` account
     - `-w` selecting particular nodes in the noctua cluster.
- 6. Execute the model using mpirun  
-    `mpirun -npernode 1 ./test_plugin -m /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/hakathur/misc/IR/frozen_quant.xml -i /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/pepper.png -label /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/labels.txt -nt 10 -bitstream /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/googlenet_bitstreams/ -model googlenet`  
-    - Test Plugin is the user application for executing the plugin
+6. Execute the model using mpirun  
+    To simplify the following command, please initialize a temporary variable with the project group's file directory. <br> `export CUSTONN2=/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2`   <br><br>
+    `mpirun -npernode 1 ./test_plugin -m $CUSTONN2/intermediate_representation/GoogLeNet/frozen_quant.xml -i $CUSTONN2/intermediate_representation/pepper.png -label $CUSTONN2/intermediate_representation/GoogLeNet/labels.txt -nt 10 -bitstream $CUSTONN2/designs/googlenet_bitstreams/ -model googlenet`  
+    - `-npernode` Number of process per node.
+<br><br>  
+Test Plugin is the user application for executing the plugin. execute help command to get to know the description of each arguments `./test_plugin -h`
     - `-m` is the path for IR XML
     - `-i` is the path of the Image
+    - `-model` Input CNN Model name. Supported models : googlenet, resnet
+    - `-label` Path to the labels.txt file of the model with label indicies and names
+    - `-nt`  Number of top results (default 10)
+    - `-bitstream` Path to the bitstreams directory
 
 
