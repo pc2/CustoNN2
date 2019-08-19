@@ -6,8 +6,6 @@ We have generated bitstreams for each of these files and these bitstreams will b
 results between kernels inside the OpenCL file will be transferred using Global memory and we plan to use MPI for transfer of intermediate results between devices and nodes.
 
 - Bitstream location : `/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/googlenet_bitstreams`
-- Command to generate bitstream : `make inception_<module_name>`  
-    If you wish to change the directory of bitstream, please change the value of `design_dir` in the Makefile.
 
 
 ## Steps to run GoogLenet using OpenVINO FPGA Plugin with MPI on Stratix 10 FPGAs
