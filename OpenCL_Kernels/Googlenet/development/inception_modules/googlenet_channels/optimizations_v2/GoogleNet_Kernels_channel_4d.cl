@@ -93,7 +93,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 	for (int ff = 0; ff < 128; ++ff)
     {
         float input_weights[512];
-		#pragma unroll 16
+		#pragma unroll 8
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -155,7 +155,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
          //Local weights 
         float input_weights[512];
-		#pragma unroll 16
+		#pragma unroll 8
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -218,7 +218,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[3*3*128];
-		#pragma unroll 64
+		#pragma unroll 8
         for(int m = 0 ; m < 3*3*128 ; m++){
             input_weights[m] = input1[((ff * 3*3*128) + m)];
         }
@@ -228,12 +228,13 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0;
             }
         }
+		#pragma unroll 4
 		for (int rc = 0; rc < 128; ++rc)
         {
             for (int i = 0; i < 16*16; i++){
                 l_input[i] = input0[16*16*rc+i];
             }
-			#pragma unroll 
+			#pragma unroll 2
 			for (int yy = 0; yy < 14; ++yy)
 			{
 			#pragma unroll
@@ -367,7 +368,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     {
          //Local weights 
         float input_weights[3*3*24];
-		#pragma unroll 64
+		#pragma unroll 8
         for(int m = 0 ; m < 3*3*24 ; m++){
             input_weights[m] = input1[((ff * 3*3*24) + m)];
         }
@@ -377,6 +378,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0;
             }
         }
+		#pragma unroll 4
 		for (int rc = 0; rc < 24; ++rc)
         {
 			for (int i = 0; i < 16*16; i++){
