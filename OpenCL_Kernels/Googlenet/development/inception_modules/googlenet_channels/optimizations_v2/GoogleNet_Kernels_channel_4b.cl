@@ -122,7 +122,7 @@ __kernel void MaxPool_4a_3x3_MaxPool()
 }
 
 __kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
-                                                     __global float *restrict input2)
+                                                     constant float *restrict input2)
 {
     float input0[480 * 14 * 14];
     
@@ -188,7 +188,7 @@ __kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 
 
 __kernel void Mixed_4b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
-                                                     __global float *restrict input2)
+                                                     constant float *restrict input2)
 {
     float input0[480 * 14 * 14];
     for (int i = 0; i < 480 * 14 * 14; i++)
@@ -265,7 +265,7 @@ __kernel void Padding_Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D()
 }
 
 __kernel void Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict input1,
-                                                     __global float *restrict input2)
+                                                     constant float *restrict input2)
 {
     float input0[24576];
     for (int i = 0; i < 24576; i++)
@@ -349,7 +349,7 @@ __kernel void Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 
 
 __kernel void Mixed_4b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
-                                                     __global float *restrict input2)
+                                                     constant float *restrict input2)
 {
     float input0[480 * 14 * 14];
     for (int i = 0; i < 480 * 14 * 14; i++)
@@ -424,7 +424,7 @@ __kernel void Padding_Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D()
     }
 }
 __kernel void Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict input1,
-                                                     __global float *restrict input2)
+                                                     constant float *restrict input2)
 {
     float input0[4096];
     for (int i = 0; i < 4096; i++)
@@ -541,7 +541,7 @@ __kernel void Mixed_4b_Branch_3_MaxPool_0a_3x3_MaxPool()
 }
 
 __kernel void Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict input1,
-                                                     __global float *restrict input2)
+                                                     constant float *restrict input2)
 {
     float input0[480 * 14 * 14];
     for (int i = 0; i < 480 * 14 * 14; i++)
