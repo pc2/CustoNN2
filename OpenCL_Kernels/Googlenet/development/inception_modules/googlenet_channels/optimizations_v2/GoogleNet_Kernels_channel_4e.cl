@@ -488,7 +488,7 @@ __kernel void Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(
     {
 		//Local weights 
         float input_weights[512];
-        #pragma unroll 16
+        #pragma unroll 8
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
