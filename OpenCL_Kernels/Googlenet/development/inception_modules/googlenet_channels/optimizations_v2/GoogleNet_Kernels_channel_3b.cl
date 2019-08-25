@@ -125,10 +125,11 @@ __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 #pragma unroll
                 for (int xx = 0; xx < 28; ++xx)
                 {
-                    temp_out[yy][xx] += (image_slice[yy * 28 + xx] * input_weights[rc]);
+                    temp_out[yy][xx] += (image_slice[(yy * 28) + xx] * input_weights[rc]);
                 }
 
             }
+        }
             //Summarize the results depthwise.
             #pragma loop_coalesce
             for (int yy = 0; yy < 28; ++yy)
@@ -141,7 +142,6 @@ __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                     write_channel_intel(conv1_3b_out_b0_channel, temp_out[yy][xx]);
                 }
             }
-        }
     }
 }
 
@@ -197,12 +197,13 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 #pragma unroll
                 for (int xx = 0; xx < 28; ++xx)
                 {
-                    temp_out[yy][xx] += (image_slice[yy * 28 + xx] * input_weights[rc]);
+                    temp_out[yy][xx] += (image_slice[(yy * 28) + xx] * input_weights[rc]);
                 }
 
             }
-            //Summarize the results depthwise.
-            #pragma loop_coalesce
+        }
+        //Summarize the results depthwise.
+        #pragma loop_coalesce
             for (int yy = 0; yy < 28; ++yy)
             {
                 for (int xx = 0; xx < 28; ++xx)
@@ -214,7 +215,6 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 }
             }
 
-        }
     }
 }
 
@@ -300,6 +300,7 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                         temp_out[yy][xx] += temp_0;
                 }
             }
+        }
             //Summarize the results depthwise.
              #pragma loop_coalesce
             for (int yy = 0; yy < 28; ++yy)
@@ -313,7 +314,6 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 }
             }
 
-        }
     }
 }
 
@@ -373,6 +373,7 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                     temp_out[yy][xx] += (image_slice[yy * 28 + xx] * input_weights[rc]);
                 }
             }
+        }
             //Summarize the results depthwise.
             #pragma loop_coalesce
             for (int yy = 0; yy < 28; ++yy)
@@ -386,7 +387,7 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 }
             }
 
-        }
+        
     }
 }
 
@@ -469,6 +470,7 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                         temp_out[yy][xx] += temp_0;
                 }
             }
+        }
             //Summarize the results depthwise.
              #pragma loop_coalesce
             for (int yy = 0; yy < 28; ++yy)
@@ -481,7 +483,6 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                     write_channel_intel(conv3_2_3b_out_b2_channel, temp_out[yy][xx]);
                 }
             }
-        }
     }
 }
 
@@ -569,7 +570,7 @@ __kernel void Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
                     temp_out[yy][xx] += (image_slice[yy * 28 + xx] * input_weights[rc]);
                 }
             }
-        
+        }
             //Summarize the results depthwise.
             #pragma loop_coalesce
             for (int yy = 0; yy < 28; ++yy)
@@ -582,7 +583,6 @@ __kernel void Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
                     write_channel_intel(conv3_1_3b_out_b3_channel, temp_out[yy][xx]);
                 }
             }
-        }
     }
 }
 
