@@ -388,6 +388,7 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(
     {
         input0[i] = read_channel_intel(padding_4e_out_b2_channel);
     }
+	
 	//Local memory for Biases:
     __local  float input_bias[64]; 
     for(int b = 0; b < 64; b++){
@@ -445,7 +446,7 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(
 					#pragma unroll
                     for (int rx = 0; rx < 3; ++rx)
                     {
-                        temp_out[yy][xx] += l_input[(yy+2) * 16 + xx + rx] * input_weights[(((((rc) * 3) + 2) * 3) + rx)];
+                        temp_2 += l_input[(yy+2) * 16 + xx + rx] * input_weights[(((((rc) * 3) + 2) * 3) + rx)];
                     }
 					temp_out[yy][xx] += temp_2;
                 }
