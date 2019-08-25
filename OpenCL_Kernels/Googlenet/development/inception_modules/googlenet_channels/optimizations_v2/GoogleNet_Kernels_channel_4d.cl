@@ -88,6 +88,12 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             input0[(i * 8) + k] = in.concat_4c_out_buffer[k];
         }
     }
+	//Local memory for Biases:
+    __local  float input_bias[128];
+    for(int b = 0; b < 128; b++){
+        input_bias[b] = input2[b];
+    }
+
 
     float l_input[196];
 	for (int ff = 0; ff < 128; ++ff)
@@ -123,7 +129,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 		{
             for (int xx = 0; xx < 14; ++xx)
             {
-                temp_out[yy][xx] += input2[ff]; 
+                temp_out[yy][xx] += input_bias[ff]; 
                 temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
                 write_channel_intel(conv1_4d_out_b0_channel, temp_out[yy][xx]);
             }
@@ -150,6 +156,12 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
    
+    //Local memory for Biases:
+    __local  float input_bias[128];
+    for(int b = 0; b < 128; b++){
+        input_bias[b] = input2[b];
+    }
+
 	float l_input[196];
     for (int ff = 0; ff < 128; ++ff)
     {
@@ -184,7 +196,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         {
             for (int xx = 0; xx < 14; ++xx)
             {
-                temp_out[yy][xx] += input2[ff]; 
+                temp_out[yy][xx] += input_bias[ff]; 
                 temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
                 write_channel_intel(conv2_1_4d_out_b1_channel, temp_out[yy][xx]);
             }
@@ -212,6 +224,12 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     {
         input0[i] = read_channel_intel(padding_4d_out_b1_channel);
     }
+	//Local memory for Biases:
+    __local  float input_bias[256];
+    for(int b = 0; b < 256; b++){
+        input_bias[b] = input2[b];
+    }
+
 
     float l_input[16*16];
     for (int ff = 0; ff < 256; ++ff)
@@ -271,7 +289,7 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         {
             for (int xx = 0; xx < 14; ++xx)
             {
-                temp_out[yy][xx] += input2[ff];
+                temp_out[yy][xx] += input_bias[ff];
                 temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
                 write_channel_intel(conv2_2_4d_out_b1_channel, temp_out[yy][xx]);
             }
@@ -296,6 +314,11 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         {
             input0[(i * 8) + k] = in.concat_4c_out_buffer[k];
         }
+    }
+	 //Local memory for Biases:
+    __local  float input_bias[24];
+    for(int b = 0; b < 24; b++){
+        input_bias[b] = input2[b];
     }
 
   
@@ -335,7 +358,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             for (int xx = 0; xx < 14; ++xx)
             {
 		
-                temp_out[yy][xx] += input2[ff];
+                temp_out[yy][xx] += input_bias[ff];
                 temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
                 write_channel_intel(conv3_1_4d_out_b2_channel, temp_out[yy][xx]);
             }
@@ -361,6 +384,12 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     for (int i = 0; i < 6144; i++)
     {
         input0[i] = read_channel_intel(padding_4d_out_b2_channel);
+    }
+	
+	 //Local memory for Biases:
+    __local  float input_bias[64];
+    for(int b = 0; b < 64; b++){
+        input_bias[b] = input2[b];
     }
 
 	float l_input[16*16];
@@ -421,7 +450,7 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         {
             for (int xx = 0; xx < 14; ++xx)
             {		
-                temp_out[yy][xx] += input2[ff];
+                temp_out[yy][xx] += input_bias[ff];
                 temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
                 write_channel_intel(conv3_2_4d_out_b2_channel, temp_out[yy][xx]);
             }
@@ -479,7 +508,12 @@ __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
     {
         input0[i] = read_channel_intel(maxpool_4d_out_b3_channel);
     }
-	
+	//Local memory for Biases:
+    __local  float input_bias[64];
+    for(int b = 0; b < 64; b++){
+        input_bias[b] = input2[b];
+    }
+
 	float l_input[196];
     for (int ff = 0; ff < 64; ++ff)
     {
@@ -518,7 +552,7 @@ __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
         {
             for (int xx = 0; xx < 14; ++xx)
             {	  
-               temp_out[yy][xx] += input2[ff];
+               temp_out[yy][xx] += input_bias[ff];
                 temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
                 write_channel_intel(conv4_1_4d_out_b3_channel, temp_out[yy][xx]);
             }
