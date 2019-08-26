@@ -156,7 +156,7 @@ __kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
             }
         }
 //#pragma unroll 4
-        for (int rc = 0; rc < 481; rc++)
+        for (int rc = 0; rc < 480; rc++)
         {
             for (int i = 0; i < 14*14; i++){
                 l_input[i] = input0[14*14*rc+i];
