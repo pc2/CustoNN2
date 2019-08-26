@@ -34,7 +34,6 @@ __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict input0)
 
 __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
-
     float input0[157323];
     for (int i = 0; i < 157323; i++)
     {
@@ -50,7 +49,7 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global flo
     for (int ff = 0; ff < 64; ++ff)
     {
         //Local weights 
-        float local_weight[7*7*3];
+        float  local_weight[7*7*3];
         #pragma unroll 7*7
         for(int m = 0 ; m < 7*7*3 ;m++){
             local_weight[m] = input1[((ff * 7*7*3) + m)];
@@ -67,14 +66,23 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global flo
         for (int rc = 0; rc < 3; ++rc)
         {
             //Store 1 slice of input image
-            float __attribute__((numbanks(256),bankwidth(4))) image_slice[256][256];
+            /* float image_slice[229][229];
             for (int in = 0; in < 229; in++){
                 for(int in1 = 0 ; in1 < 229 ; in1++){
                     image_slice[in][in1] = input0[(229*229*rc)+in];
                 }
-            }
+            } */
             for (int yy = 0; yy < 112; ++yy)
             {
+                //Store 228*7 of input image
+                float image_slice1[7][229];
+                #pragma loop_coalesce
+                for (int in = 0; in < 7; in++){
+                    for(int in1 = 0 ; in1 < 229 ; in1++){
+                        image_slice1[in][in1] = input0[(229*229*rc)+(yy*2*229)+(in*229)+in1]; // image_slice[in+(yy*2)][in1];
+                    }
+                }
+
                 for (int xx = 0; xx < 112; ++xx)
                 {
                     float temp_0 = 0;
@@ -82,10 +90,10 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global flo
                         for (int ry = 0; ry < 7; ++ry)
                         {
                             float temp_1 = 0;
-                            #pragma unroll
                             for (int rx = 0; rx < 7; ++rx)
-                            {
-                                temp_1 +=  (image_slice[(yy * 2) + (ry * 1)][(xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
+                            {   
+                                //temp_1 +=  (image_slice[(yy * 458) + (ry * 229) + (xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
+                                temp_1 +=  (image_slice1[(ry * 1)][(xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
                             }
                             temp_2 +=temp_1;
                         }
@@ -107,6 +115,7 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global flo
                 }
             }
     }
+
 }
 
 __kernel void MaxPool_2a_3x3_MaxPool()
@@ -127,7 +136,7 @@ __kernel void MaxPool_2a_3x3_MaxPool()
             for (int ax3 = 0; ax3 < 56; ++ax3)
             {
                 float tensor = -3.402823e+38f;
-                #pragma unroll
+           //     #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
@@ -261,10 +270,10 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global flo
             for (int in = 0; in < 58*58; in++){
                 image_slice[in] = input0[(58*58*rc)+in];
             }
-            #pragma unroll 4
+            #pragma unroll 2
             for (int yy = 0; yy < 56; ++yy)
             {
-                #pragma unroll
+                #pragma unroll 
                 for (int xx = 0; xx < 56; ++xx)
                 {
                     float temp_0 = 0;
@@ -322,7 +331,7 @@ __kernel void MaxPool_3a_3x3_MaxPool(unsigned int route_to)
             for (int ax3 = 0; ax3 < 28; ++ax3)
             {
                 float tensor = -3.402823e+38f;
-                #pragma unroll
+ //               #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
