@@ -173,7 +173,7 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
         float input_weights[64];
         #pragma unroll
         for(int m = 0 ; m < 64 ;m++){
-            input_weights[m] = input1[((ff * 192) + m)];
+            input_weights[m] = input1[((ff * 64) + m)];
         }
         //2D array to store Temporary results of 1 slice.
         float temp_out[56][56];
