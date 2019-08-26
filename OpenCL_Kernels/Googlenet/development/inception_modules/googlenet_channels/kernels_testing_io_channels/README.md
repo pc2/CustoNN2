@@ -23,6 +23,6 @@ Here we are executing Googlenet with channels implementation inbetween the layer
 - emulate 2 devices : `export CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=2`
 - Run the plugin :
     ./test_plugin -m /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/frozen_quant.xml -i /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/pepper.png -route /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/route.xml -label /upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/intermediate_representation/GoogLeNet/labels.txt -nt 5
-- **NOTE** : Please remove the emulated IO files before rerunning the plugin. `rm kernel_io_`
+- **NOTE** : Please remove the emulated IO files before rerunning the plugin. `rm kernel_io_*`
 ### Testing Architecture:
 ![Testing block diagram](Testing_infra.png)
