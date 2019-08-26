@@ -173,7 +173,7 @@ __kernel void Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 
             }
         }
-        
+        #pragma loop_coalesce
         for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
@@ -236,7 +236,7 @@ __kernel void Mixed_4b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 
             }
         }
-        
+        #pragma loop_coalesce
         for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
