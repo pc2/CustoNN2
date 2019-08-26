@@ -99,7 +99,7 @@ __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[192];
-        #pragma unroll 64
+        #pragma unroll 128
         for(int m = 0 ; m < 192 ;m++){
             input_weights[m] = input1[((ff * 192) + m)];
         }
@@ -277,6 +277,7 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 image_slice[in] = input0[(30*30*rc)+in];
             }
              //Convultion 3*3
+             #pragma unroll 4
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll 
@@ -447,6 +448,7 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
             for (int in = 0; in < 30*30; in++){
                 image_slice[in] = input0[(30*30*rc)+in];
             }
+            #pragma unroll 4
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll

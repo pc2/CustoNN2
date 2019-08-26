@@ -47,7 +47,7 @@ If you are building the Inference Engine for the first time , please refer to th
     - `-w` selecting particular nodes in the noctua cluster.
 6. Execute the model using mpirun  
     To simplify the following command, please initialize a temporary variable with the project group's file directory. <br> `export CUSTONN2=/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2`   <br><br>
-    `mpirun -npernode 1 ./test_plugin -m $CUSTONN2/intermediate_representation/ResNet/resnet_frozen.xml -i $CUSTONN2/intermediate_representation/pepper.png -label $CUSTONN2/intermediate_representation/GoogLeNet/labels.txt -nt 10 -bitstream $CUSTONN2/custonn2/designs/resnet_bitstreams/ -model resnet`  
+    `mpirun -npernode 1 ./test_plugin -m $CUSTONN2/intermediate_representation/ResNet/resnet_frozen.xml -i $CUSTONN2/intermediate_representation/pepper.png -label $CUSTONN2/intermediate_representation/GoogLeNet/labels.txt -nt 10 -bitstream $CUSTONN2/designs/resnet_bitstreams/ -model resnet`  
     <br>Test Plugin is the user application for executing the plugin. execute help command to get to know the description of each arguments `./test_plugin -h`  
     - `-m` is the path for IR XML
     - `-i` is the path of the Image
