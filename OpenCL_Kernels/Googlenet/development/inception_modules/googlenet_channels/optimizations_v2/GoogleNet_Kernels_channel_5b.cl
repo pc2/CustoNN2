@@ -97,7 +97,7 @@ __kernel void MaxPool_5a_2x2_MaxPool()
             maxInput[(i * 8) + k] = in.concat_4f_out_buffer[k];
         }
     }
-    #pragma loop_coalesce
+    #pragma loop_coalesce 3
     for (int ax1 = 0; ax1 < 832; ++ax1)
     {
         for (int ax2 = 0; ax2 < 7; ++ax2)
@@ -127,7 +127,7 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                                                      constant float *restrict input2)
 {
     float input0[832 * 7 * 7];
-    
+    #pragma unroll
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
         input0[i] = read_channel_intel(maxpool_5a_out_channel1);
@@ -144,12 +144,13 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[832];
-		#pragma unroll 8
+		#pragma unroll 64
         for(int m = 0 ; m < 832 ;m++){
             input_weights[m] = input1[((ff * 832) + m)];
         }
         
         float temp_out[7][7];
+        #pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
@@ -173,7 +174,7 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 
             }
         }
-        
+        #pragma loop_coalesce
         for (int yy = 0; yy < 7; ++yy)
         {
             for (int xx = 0; xx < 7; ++xx)
@@ -190,10 +191,10 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                                                      constant float *restrict input2)
 {
     float input0[832 * 7 * 7];
-    
+    #pragma unroll
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
-        input0[i] = read_channel_intel(maxpool_5a_out_channel1);
+        input0[i] = read_channel_intel(maxpool_5a_out_channel2);
     }
     //Local memory for Biases:
     __local  float input_bias[160];
@@ -213,6 +214,7 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
         
         float temp_out[7][7];
+        #pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
@@ -236,7 +238,7 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 
             }
         }
-        
+        #pragma loop_coalesce
         for (int yy = 0; yy < 7; ++yy)
         {
             for (int xx = 0; xx < 7; ++xx)
@@ -266,6 +268,7 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                                                      constant float *restrict input2)
 {
     float input0[12960];
+    #pragma unroll
     for (int i = 0; i < 12960; i++)
     {
         input0[i] = read_channel_intel(padding_5b_out_b1_channel);
@@ -343,10 +346,10 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, constant float *restrict input2)
 {
     float input0[832 * 7 * 7];
-    
+    #pragma unroll
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
-        input0[i] = read_channel_intel(maxpool_5a_out_channel1);
+        input0[i] = read_channel_intel(maxpool_5a_out_channel3);
     }
     //Local memory for Biases:
     __local  float input_bias[32];
@@ -366,6 +369,7 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
         
         float temp_out[7][7];
+        #pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
@@ -389,7 +393,7 @@ __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 
             }
         }
-        
+        #pragma loop_coalesce
         for (int yy = 0; yy < 7; ++yy)
         {
             for (int xx = 0; xx < 7; ++xx)
@@ -526,10 +530,10 @@ __kernel void Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool()
 __kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict input1, constant float *restrict input2)
 {
     float input0[832 * 7 * 7];
-    
+    #pragma unroll
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
-        input0[i] = read_channel_intel(maxpool_5a_out_channel1);
+        input0[i] = read_channel_intel(maxpool_5b_out_b3_channel);
     }
     //Local memory for Biases:
     __local  float input_bias[128];
@@ -549,6 +553,7 @@ __kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
         }
         
         float temp_out[7][7];
+        #pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
@@ -572,7 +577,7 @@ __kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
                 
             }
         }
-        
+        #pragma loop_coalesce
         for (int yy = 0; yy < 7; ++yy)
         {
             for (int xx = 0; xx < 7; ++xx)
