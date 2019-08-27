@@ -7,14 +7,14 @@ __kernel void Mul1_1601_Fused_Mul__FusedScaleShift(__global float* restrict T_pa
 
 __kernel void  block2_unit_1_bt_v2_shortcut_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
     __local float input_bias[512];
-#pragma unroll 32
+#pragma unroll 64
     for (int b = 0; b < 512; ++b) {
         input_bias[b] = input2[b];
     }
     
     for (int ff = 0; ff < 512; ++ff) {
         float input_weights[256];
-#pragma unroll 16
+#pragma unroll 32
         for (int w = 0; w < 256; ++w) {
             input_weights[w] = input1[((ff * 256) + w)];
         }
@@ -33,9 +33,10 @@ __kernel void  block2_unit_1_bt_v2_shortcut_Conv2D(__global float* restrict comp
 }
 
 
+
 __kernel void  block2_unit_1_bt_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
     __local float input_bias[128];
-#pragma unroll 16
+#pragma unroll 32
     for (int b = 0; b < 128; ++b) {
         input_bias[b] = input2[b];
     }
@@ -72,14 +73,14 @@ __kernel void P_block2_unit_1_bt_v2_conv2_Conv2D(__global float *restrict T_pad,
 
 __kernel void  block2_unit_1_bt_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
     __local float input_bias[128];
-#pragma unroll 16
+#pragma unroll 32
     for (int b = 0; b < 128; ++b) {
         input_bias[b] = input2[b];
     }
     
     for (int ff = 0; ff < 128; ++ff) {
         float input_weights[3*3*128];
-#pragma unroll 32
+#pragma unroll 64
         for (int w = 0; w < 3*3*128; ++w) {
             input_weights[w] = input1[((ff * 3*3*128) + w)];
         }
@@ -89,8 +90,11 @@ __kernel void  block2_unit_1_bt_v2_conv2_Conv2D(__global float* restrict compute
                 float temp_3 = 0.0;
                 for (int rc = 0; rc < 128; ++rc) {
                     float temp_2 = 0.0;
+#pragma unroll
                     for (int ry = 0; ry < 3; ++ry) {
+
                         float temp_1 = 0.0;
+#pragma unroll
                         for (int rx = 0; rx < 3; ++rx) {
                             temp_1 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
@@ -110,7 +114,7 @@ __kernel void  block2_unit_1_bt_v2_conv2_Conv2D(__global float* restrict compute
 
 __kernel void  block2_unit_1_bt_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
     __local float input_bias[512];
-#pragma unroll 16
+#pragma unroll 32
     for (int b = 0; b < 512; ++b) {
         input_bias[b] = input2[b];
     }
@@ -157,13 +161,13 @@ __kernel void Mul1_1628_Fused_Mul__FusedScaleShift(__global float* restrict T_pa
 
 __kernel void  block2_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
     __local float input_bias[128];
-#pragma unroll 16
+#pragma unroll 32
     for (int b = 0; b < 128; ++b) {
         input_bias[b] = input2[b];
     }
     for (int ff = 0; ff < 128; ++ff) {
         float input_weights[512];
-#pragma unroll 32
+#pragma unroll 64
         for(int w = 0 ; w < 512 ;++w)
         {
             input_weights[w] = input1[((ff * 512) + w)];
@@ -211,10 +215,13 @@ __kernel void  block2_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
             for (int xx = 0; xx < 28; ++xx) {
                 float temp_3 = 0.0;
                 float temp_0 = input_bias[ff];
+		
                 for (int rc = 0; rc < 128; ++rc) {
                     float temp_2 = 0.0;
+#pragma unroll 
                     for (int ry = 0; ry < 3; ++ry) {
                         float temp_1 = 0.0;
+#pragma unroll 
                         for (int rx = 0; rx < 3; ++rx) {
                             temp_1 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
@@ -335,8 +342,10 @@ __kernel void  block2_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute
                 float temp_0 = input_bias[ff];
                 for (int rc = 0; rc < 128; ++rc) {
                     float temp_2 = 0.0;
+#pragma unroll
                     for (int ry = 0; ry < 3; ++ry) {
                         float temp_1 = 0.0;
+#pragma unroll
                         for (int rx = 0; rx < 3; ++rx) {
                             temp_1 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
@@ -466,8 +475,10 @@ __kernel void  block2_unit_4_bt_v2_conv2_Conv2D(__global float* restrict compute
                 float temp_0 = input_bias[ff];
                 for (int rc = 0; rc < 128; ++rc) {
                     float temp_2 = 0.0;
+#pragma unroll
                     for (int ry = 0; ry < 3; ++ry) {
                         float temp_1 = 0.0;
+#pragma unroll
                         for (int rx = 0; rx < 3; ++rx) {
                             temp_1 += (input0[((((((((rc * 15) + yy) * 2) + ry) * 15) + xx) * 2) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
