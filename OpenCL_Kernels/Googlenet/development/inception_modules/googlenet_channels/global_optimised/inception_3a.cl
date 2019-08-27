@@ -257,7 +257,7 @@ __kernel void MaxPool_3a_3x3_MaxPool(__global float *restrict tensor, __global f
   for (int ax1 = 0; ax1 < 192; ++ax1)
     {
         float inputl[56 * 56];
-        #pragma unroll 56
+        #pragma unroll 32
         for (int i = 0; i < 56 * 56; i++)
         {
             inputl[i] = input0[(ax1*56*56)+i];
@@ -273,7 +273,7 @@ __kernel void MaxPool_3a_3x3_MaxPool(__global float *restrict tensor, __global f
                     #pragma unroll
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor1 = max(tensor1, (float)((((ax2 * 2) < (56 - rv)) && ((ax3 * 2) < (56 - rv1))) ? input0[((((((( ax2) * 2) + rv) * 28) + ax3) * 2) + rv1)] : -3.402823e+38f));
+                        tensor1 = max(tensor1, (float)((((ax2 * 2) < (56 - rv)) && ((ax3 * 2) < (56 - rv1))) ? inputl[((((((( ax2) * 2) + rv) * 28) + ax3) * 2) + rv1)] : -3.402823e+38f));
                     }
                 }
                 tensor[((((ax1 * 28) + ax2) * 28) + ax3)] = tensor1;
