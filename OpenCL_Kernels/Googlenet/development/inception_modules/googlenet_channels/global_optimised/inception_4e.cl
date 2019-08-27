@@ -340,16 +340,24 @@ __kernel void Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict 
 {
     for (int ax1 = 0; ax1 < 512; ++ax1)
     {
+		float input1[14*14];
+        for (int i = 0; i < 14 * 14; i++)
+        {
+            input1[i] = input0[(ax1*14*14)+i];
+        }
         for (int ax2 = 0; ax2 < 14; ++ax2)
         {
+			#pragma unroll
             for (int ax3 = 0; ax3 < 14; ++ax3)
             {
                 tensor[((((ax1 * 14) + ax2) * 14) + ax3)] = -3.402823e+38f;
+				#pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
+					#pragma unroll
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor[((((ax1 * 14) + ax2) * 14) + ax3)] = max(tensor[((((ax1 * 14) + ax2) * 14) + ax3)], (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? input0[(((((((ax1 * 14) + ax2) + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
+                        tensor[((((ax1 * 14) + ax2) * 14) + ax3)] = max(tensor[((((ax1 * 14) + ax2) * 14) + ax3)], (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? input1[((((((ax2) + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
                     }
                 }
             }
