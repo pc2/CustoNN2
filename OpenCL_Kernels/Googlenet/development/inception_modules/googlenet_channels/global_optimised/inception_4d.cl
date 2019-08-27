@@ -1,7 +1,7 @@
 __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
                                                      __global float *restrict input0,
-                                                     __global const float *restrict input1,
-                                                     __global const float *restrict input2)
+                                                     __global float *restrict input1,
+                                                     __global float *restrict input2)
 {
    //Local memory for Biases:
     __local  float input_bias[128];
@@ -55,8 +55,8 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
 
 __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
                                                      __global float *restrict input0,
-                                                     __global const float *restrict input1,
-                                                     __global const float *restrict input2)
+                                                     __global float *restrict input1,
+                                                     __global float *restrict input2)
 {
    //Local memory for Biases:
     __local  float input_bias[128];
@@ -115,8 +115,8 @@ __kernel void Padding_Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *res
 }
 __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict compute,
                                                      __global float *restrict input0,
-                                                     __global const float *restrict input1,
-                                                     __global const float *restrict input2)
+                                                     __global float *restrict input1,
+                                                     __global float *restrict input2)
 {
    	//Local memory for Biases:
     __local  float input_bias[256];
@@ -194,8 +194,8 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
 
 __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict compute,
                                                      __global float *restrict input0,
-                                                     __global const float *restrict input1,
-                                                     __global const float *restrict input2)
+                                                     __global float *restrict input1,
+                                                     __global float *restrict input2)
 {
     //Local memory for Biases:
     __local  float input_bias[24];
@@ -258,8 +258,8 @@ __kernel void Padding_Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *res
 }
 __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict compute,
                                                      __global float *restrict input0,
-                                                     __global const float *restrict input1,
-                                                     __global const float *restrict input2)
+                                                     __global float *restrict input1,
+                                                     __global float *restrict input2)
 {
     //Local memory for Biases:
     __local  float input_bias[64];
@@ -365,8 +365,8 @@ __kernel void Mixed_4d_Branch_3_MaxPool_0a_3x3_MaxPool(__global float *restrict 
 
 __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict compute,
                                                      __global float *restrict input0,
-                                                     __global const float *restrict input1,
-                                                     __global const float *restrict input2)
+                                                     __global float *restrict input1,
+                                                     __global float *restrict input2)
 {
    //Local memory for Biases:
     __local  float input_bias[64];
