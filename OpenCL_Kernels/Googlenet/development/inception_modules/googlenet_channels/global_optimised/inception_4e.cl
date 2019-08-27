@@ -277,7 +277,6 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
         for(int m = 0 ; m < 3*3*32 ; m++){
             input_weights[m] = input1[((ff * 3*3*32) + m)];
         }
-		
 		float temp_out[14][14];
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
