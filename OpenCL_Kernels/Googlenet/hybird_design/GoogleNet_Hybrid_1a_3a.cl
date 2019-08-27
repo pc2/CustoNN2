@@ -34,91 +34,42 @@ __kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict input0)
 
 __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
+
     float input0[157323];
     for (int i = 0; i < 157323; i++)
     {
         input0[i] = read_channel_intel(padding_1a_out_channel);
     }
-    //Local memory for Biases:
-    __local  float input_bias[64];
-    #pragma unroll
-    for(int b = 0; b < 64; b++){
-        input_bias[b] = input2[b];
-    }
-
     for (int ff = 0; ff < 64; ++ff)
     {
-        //Local weights 
-        float  local_weight[7*7*3];
-        #pragma unroll 7*7
-        for(int m = 0 ; m < 7*7*3 ;m++){
-            local_weight[m] = input1[((ff * 7*7*3) + m)];
-        }
-        //2D array to store Temporary results of 1 slice.
-        float temp_out[112][112];
-        //Initialize values with 0
-        #pragma loop_coalesce
-        for (int l = 0; l < 112; l++ ){
-            for (int j = 0; j < 112; j++){
-                temp_out[l][j] = 0;
-            }
-        }
-        for (int rc = 0; rc < 3; ++rc)
+        for (int yy = 0; yy < 112; ++yy)
         {
-            //Store 1 slice of input image
-            /* float image_slice[229][229];
-            for (int in = 0; in < 229; in++){
-                for(int in1 = 0 ; in1 < 229 ; in1++){
-                    image_slice[in][in1] = input0[(229*229*rc)+in];
-                }
-            } */
-            for (int yy = 0; yy < 112; ++yy)
+            for (int xx = 0; xx < 112; ++xx)
             {
-                //Store 228*7 of input image
-                float image_slice1[7][229];
-                //#pragma loop_coalesce
-                for (int in = 0; in < 7; in++){
-                    #pragma unroll 2
-                    for(int in1 = 0 ; in1 < 229 ; in1++){
-                        image_slice1[in][in1] = input0[(229*229*rc)+(yy*2*229)+(in*229)+in1]; // image_slice[in+(yy*2)][in1];
-                    }
-                }
-                #pragma unroll 56
-                for (int xx = 0; xx < 112; ++xx)
+                float temp_0 = input2[ff];
+                float temp_3 = 0;
+                for (int rc = 0; rc < 3; ++rc)
                 {
-                    float temp_0 = 0;
                     float temp_2 = 0;
+                    //#pragma unroll
+                    for (int ry = 0; ry < 7; ++ry)
+                    {
+                        float temp_1 = 0;
                         #pragma unroll
-                        for (int ry = 0; ry < 7; ++ry)
+                        for (int rx = 0; rx < 7; ++rx)
                         {
-                            float temp_1 = 0;
-                            #pragma unroll
-                            for (int rx = 0; rx < 7; ++rx)
-                            {   
-                                //temp_1 +=  (image_slice[(yy * 458) + (ry * 229) + (xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
-                                temp_1 +=  (image_slice1[(ry * 1)][(xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
-                            }
-                            temp_2 +=temp_1;
+                            temp_1 += (input0[(((((rc * 52441) + (yy * 458)) + (ry * 229)) + (xx * 2)) + rx)] * input1[((((((ff * 3) + rc) * 7) + ry) * 7) + rx)]);
                         }
-                        temp_0 += temp_2;
-                        temp_out[yy][xx] += temp_0;
+                        temp_2 +=temp_1;
+                    }
+                    temp_3 += temp_2;
                 }
+                temp_0 += temp_3;
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
+                write_channel_intel(conv1_1a_out_channel, temp_0);
             }
         }
-        //Summarize the results depthwise.
-             #pragma loop_coalesce
-            for (int yy = 0; yy < 112; ++yy)
-            {
-                for (int xx = 0; xx < 112; ++xx)
-                {
-                    temp_out[yy][xx] += input_bias[ff];
-                    //RELU
-                    temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f; 
-                    write_channel_intel(conv1_1a_out_channel, temp_out[yy][xx]);
-                }
-            }
     }
-
 }
 
 __kernel void MaxPool_2a_3x3_MaxPool()
@@ -139,7 +90,7 @@ __kernel void MaxPool_2a_3x3_MaxPool()
             for (int ax3 = 0; ax3 < 56; ++ax3)
             {
                 float tensor = -3.402823e+38f;
-           //     #pragma unroll
+                #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
@@ -154,6 +105,7 @@ __kernel void MaxPool_2a_3x3_MaxPool()
     }
 }
 
+# define SR 16
 __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
 
@@ -163,58 +115,45 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
         input0[i] = read_channel_intel(maxpool_2a_out_channel);
     }
     
-    //Local memory for Biases:
-    __local  float input_bias[64];
-    #pragma unroll
-    for(int b = 0; b < 64; b++){
-        input_bias[b] = input2[b];
-    }
+   
 
     for (int ff = 0; ff < 64; ++ff)
     {
-        //Local weights 
-        float input_weights[64];
-        #pragma unroll
-        for(int m = 0 ; m < 64 ;m++){
-            input_weights[m] = input1[((ff * 64) + m)];
-        }
-        //2D array to store Temporary results of 1 slice.
-        float temp_out[56][56];
-        //Initialize values with 0
-        #pragma loop_coalesce
-        for (int l = 0; l < 56; l++ ){
-            for (int j = 0; j < 56; j++){
-                temp_out[l][j] = 0;
-            }
-        }
-        for (int rc = 0; rc < 64; ++rc)
-        {
-            //Store 1 slice of input image
-            float image_slice[56*56];
-            for (int in = 0; in < 56*56; in++){
-                image_slice[in] = input0[(56*56*rc)+in];
-            }
-            #pragma unroll 4
-            for (int yy = 0; yy < 56; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 56; ++xx)
-                {
-                    temp_out[yy][xx] += (image_slice[(yy * 56) + xx] * input_weights[rc]);
-                }
-            }
-        }
-        //Summarize the results depthwise.
-        #pragma loop_coalesce
         for (int yy = 0; yy < 56; ++yy)
         {
-                for (int xx = 0; xx < 56; ++xx)
-                {   
-                    temp_out[yy][xx] += input_bias[ff];
-                    //Relu
-                    temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                    write_channel_intel(conv1_2b_out_channel, temp_out[yy][xx]);
+            for (int xx = 0; xx < 56; ++xx)
+            {
+                float temp_copies[SR];
+
+	            //Initialize the array with 0
+	            #pragma unroll
+	            for(int i=0;i<SR;i++)
+		            temp_copies[i]=0.0;
+                
+                float temp_0 = input2[ff];
+                float temp_1 = 0;
+                #pragma unroll 4
+                for (int rc = 0; rc < 64; ++rc)
+                {
+                    //temp_1 += (input0[((((rc * 56) + yy) * 56) + xx)] * input1[((ff * 64) + rc)]);
+                    float temp = temp_copies[SR-1] + (input0[((((rc * 56) + yy) * 56) + xx)] * input1[((ff * 64) + rc)]);
+
+                    #pragma unroll
+                    for (unsigned j = SR-1; j >0; j--)
+                        temp_copies[j] = temp_copies[j-1];
+                    
+                    temp_copies[0] = temp; 
+
                 }
+                 #pragma unroll
+                for (unsigned i= 0; i< SR; i++)
+                    temp_1 += temp_copies[i];
+                
+                
+                temp_0 += temp_1;
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
+                write_channel_intel(conv1_2b_out_channel, temp_0);
+            }
         }
     }
 }
@@ -236,78 +175,41 @@ __kernel void Padding_Conv2d_2c_3x3_Conv2D()
 
 __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
-       float input0[215296];
+
+    float input0[215296];
     for (int i = 0; i < 215296; i++)
     {
         input0[i] = read_channel_intel(padding_2c_out_channel);
     }
-
-     //Local memory for Biases:
-    __local  float input_bias[192];
-    #pragma unroll
-    for(int b = 0; b < 192; b++){
-        input_bias[b] = input2[b];
-    }
-
     for (int ff = 0; ff < 192; ++ff)
     {
-        //Local weights 
-        float local_weight[3*3*64];
-        #pragma unroll 64
-        for(int m = 0 ; m < 3*3*64 ; m++){
-            local_weight[m] = input1[((ff * 3*3*64) + m)];
-        }
-        //2D array to store Temporary results of 1 slice.
-        float temp_out[56][56];
-        //Initialize values with 0
-        #pragma loop_coalesce
-        for (int l = 0; l < 56; l++ ){
-            for (int j = 0; j < 56; j++){
-                temp_out[l][j] = 0.0;
-            }
-        }
-        for (int rc = 0; rc < 64; ++rc)
+        for (int yy = 0; yy < 56; ++yy)
         {
-            //Store 1 slice of input image
-            float image_slice[58*58];
-            for (int in = 0; in < 58*58; in++){
-                image_slice[in] = input0[(58*58*rc)+in];
-            }
-            for (int yy = 0; yy < 56; ++yy)
+            for (int xx = 0; xx < 56; ++xx)
             {
-                for (int xx = 0; xx < 56; ++xx)
+                float temp_0 = input2[ff];
+                float temp_1 = 0.0;
+                for (int rc = 0; rc < 64; ++rc)
                 {
-                    float temp_0 = 0;
-                        //Convultion 3*3
-                        float temp_2 = 0;
+                    float temp_2 = 0;
+                    //#pragma unroll
+                    for (int ry = 0; ry < 3; ++ry)
+                    {
+                        float temp_3 = 0;
                         #pragma unroll
-                        for (int ry = 0; ry < 3; ++ry)
+                        for (int rx = 0; rx < 3; ++rx)
                         {
-                            float temp_1 = 0;
-                            #pragma unroll
-                            for (int rx = 0; rx < 3; ++rx)
-                            {
-                                temp_1 +=  (image_slice[((yy+ry) * 58) + (xx) + rx ] * local_weight[(((((rc) * 3) + ry) * 3) + rx)]);
-                            }
-                            temp_2 +=temp_1;
+                            temp_3 += (input0[((((((rc * 58) + yy) + ry) * 58) + xx) + rx)] * input1[((((((ff * 64) + rc) * 3) + ry) * 3) + rx)]);
                         }
-                        temp_0 += temp_2;
-                        temp_out[yy][xx] += temp_0;
+                        temp_2 +=temp_3;
+                    }
+                    temp_1 += temp_2;
                 }
+                temp_0 += temp_1;
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
+                write_channel_intel(conv1_2c_out_channel, temp_0);
             }
         }
-            //Summarize the results depthwise.
-             #pragma loop_coalesce
-            for (int yy = 0; yy < 56; ++yy)
-            {
-                for (int xx = 0; xx < 56; ++xx)
-                {
-                    temp_out[yy][xx] += input_bias[ff];
-                    //RELU
-                    temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f; 
-                    write_channel_intel(conv1_2c_out_channel, temp_out[yy][xx]);
-                }
-            }
     }
 }
 
@@ -332,7 +234,7 @@ __kernel void MaxPool_3a_3x3_MaxPool(unsigned int route_to)
             for (int ax3 = 0; ax3 < 28; ++ax3)
             {
                 float tensor = -3.402823e+38f;
- //               #pragma unroll
+                #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
