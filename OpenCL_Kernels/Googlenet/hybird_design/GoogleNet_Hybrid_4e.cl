@@ -128,7 +128,7 @@ __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 
                 temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
-               // write_channel_intel(conv1_4e_out_b0_channel, temp_0);
+                // write_channel_intel(conv1_4e_out_b0_channel, temp_0);
                 output[((((ff * 14) + yy) * 14) + xx)] = temp_0;
             }
         }
@@ -483,7 +483,7 @@ __kernel void Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
     printf("Kernel fnshd Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D \n");
 }
 
-__kernel void Mixed_4e_concat(unsigned int route_to)
+__kernel void Mixed_4e_concat(unsigned int route_to, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
     printf("Kernel started Mixed_4e_concat \n");
     //struct to store 256 bits of data
