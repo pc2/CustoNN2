@@ -83,7 +83,6 @@ __kernel void feeder_4f(unsigned int route_from)
 
 __kernel void Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
                                                      __global float *restrict input2,
-                                                     __global float *restrict input2,
                                                      __global float *restrict output)
 {
     printf("Kernel started Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D \n");
