@@ -151,7 +151,7 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[832];
-		#pragma unroll 8
+	    #pragma unroll 8
         for(int m = 0 ; m < 832 ;m++){
             input_weights[m] = input1[((ff * 832) + m)];
         }
@@ -317,21 +317,21 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                   {
                       temp_0 += l_input[(yy+0) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 0) * 3) + rx)];
                   }
-                  temp_out[yy][xx] += temp_0;
-                  float temp_1 = 0;
+                        temp_out[yy][xx] += temp_0;
+                        float temp_1 = 0;
                   #pragma unroll
                   for (int rx = 0; rx < 3; ++rx)
                   {
                       temp_1 += l_input[(yy+1) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 1) * 3) + rx)];
                   }
-                  temp_out[yy][xx] += temp_1;
-                  float temp_2 = 0;
+                        temp_out[yy][xx] += temp_1;
+                        float temp_2 = 0;
                   #pragma unroll
                   for (int rx = 0; rx < 3; ++rx)
                   {
                       temp_2 += l_input[(yy+2) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 2) * 3) + rx)];
                   }
-                  temp_out[yy][xx] += temp_2;
+                        temp_out[yy][xx] += temp_2;
               }
           }
       }
