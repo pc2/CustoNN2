@@ -28,10 +28,10 @@ __kernel void  block4_unit_1_bt_v2_shortcut_Conv2D(__global float* restrict comp
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
-            #pragma unroll 2
+            #pragma unroll 
             for (int yy = 0; yy < 7; ++yy)
             {
-				#pragma unroll 
+		#pragma unroll 
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     temp_out[yy][xx] += (l_input[yy * 7 + xx] * input_weights[rc]);
@@ -39,8 +39,10 @@ __kernel void  block4_unit_1_bt_v2_shortcut_Conv2D(__global float* restrict comp
                 
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
+		#pragma unroll
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -74,8 +76,10 @@ __kernel void  block4_unit_1_bt_v2_conv1_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
+#pragma unroll
             for (int yy = 0; yy < 7; ++yy)
             {
+#pragma unroll
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     temp_out[yy][xx] += (l_input[yy * 7 + xx] * input_weights[rc]);
@@ -83,8 +87,10 @@ __kernel void  block4_unit_1_bt_v2_conv1_Conv2D(__global float* restrict compute
                 
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
+#pragma unroll
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -129,7 +135,7 @@ __kernel void  block4_unit_1_bt_v2_conv2_Conv2D(__global float* restrict compute
             for (int i = 0; i < 9*9; i++){
                 l_input[i] = input0[9*9*rc+i];
             }
-            #pragma unroll 2
+            #pragma unroll 
             for (int yy = 0; yy < 7; ++yy)
             {
 				#pragma unroll
@@ -163,8 +169,10 @@ __kernel void  block4_unit_1_bt_v2_conv2_Conv2D(__global float* restrict compute
                 }
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
+#pragma unroll
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -200,8 +208,10 @@ __kernel void  block4_unit_1_bt_v2_conv3_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
+#pragma unroll
             for (int yy = 0; yy < 7; ++yy)
             {
+#pragma unroll
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     temp_out[yy][xx] += (l_input[yy * 7 + xx] * input_weights[rc]);
@@ -209,6 +219,7 @@ __kernel void  block4_unit_1_bt_v2_conv3_Conv2D(__global float* restrict compute
                 
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
 		#pragma unroll
@@ -259,8 +270,10 @@ __kernel void  block4_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
+#pragma unroll
             for (int yy = 0; yy < 7; ++yy)
             {
+#pragma unroll
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     temp_out[yy][xx] += (l_input[yy * 7 + xx] * input_weights[rc]);
@@ -268,6 +281,7 @@ __kernel void  block4_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute
                 
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
 		#pragma unroll
@@ -289,7 +303,6 @@ __kernel void P_block4_unit_2_bt_v2_conv2_Conv2D(__global float *restrict T_pad,
     }
 }
 
-
 __kernel void  block4_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
     
     float l_input[9*9];
@@ -310,7 +323,7 @@ __kernel void  block4_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
             for (int i = 0; i < 9*9; i++){
                 l_input[i] = input0[9*9*rc+i];
             }
-			#pragma unroll 2
+			#pragma unroll 
             for (int yy = 0; yy < 7; ++yy)
             {
 				#pragma unroll
@@ -344,8 +357,10 @@ __kernel void  block4_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
                 }
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         { 
+#pragma unroll
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -378,8 +393,10 @@ __kernel void  block4_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
+#pragma unroll
             for (int yy = 0; yy < 7; ++yy)
             {
+#pragma unroll
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     temp_out[yy][xx] += (l_input[yy * 7 + xx] * input_weights[rc]);
@@ -387,6 +404,7 @@ __kernel void  block4_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute
                 
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
 		#pragma unroll 
@@ -432,8 +450,10 @@ __kernel void  block4_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
+#pragma unroll
             for (int yy = 0; yy < 7; ++yy)
             {
+#pragma unroll
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     temp_out[yy][xx] += (l_input[yy * 7 + xx] * input_weights[rc]);
@@ -441,6 +461,7 @@ __kernel void  block4_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
                 
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
 		#pragma unroll
@@ -461,7 +482,6 @@ __kernel void P_block4_unit_3_bt_v2_conv2_Conv2D(__global float *restrict T_pad,
         T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((9 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) < 72)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9) < 8)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 81) * 7) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 81) / 9)) * 7) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 9)) + -8)] : 0.000000e+00f);
     }
 }
-
 
 __kernel void  block4_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
     
@@ -485,7 +505,7 @@ __kernel void  block4_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute
             for (int i = 0; i < 9*9; i++){
                 l_input[i] = input0[9*9*rc+i];
             }
-			#pragma unroll 2
+			#pragma unroll 
             for (int yy = 0; yy < 7; ++yy)
             {
 				#pragma unroll
@@ -519,8 +539,10 @@ __kernel void  block4_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute
                 }
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
+#pragma unroll
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -532,6 +554,8 @@ __kernel void  block4_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute
         }
     }
 }
+
+
 
 
 __kernel void  block4_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
@@ -554,8 +578,10 @@ __kernel void  block4_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
+#pragma unroll
             for (int yy = 0; yy < 7; ++yy)
             {
+#pragma unroll
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     temp_out[yy][xx] += (l_input[yy * 7 + xx] * input_weights[rc]);
@@ -563,6 +589,7 @@ __kernel void  block4_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
                 
             }
         }
+#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
 		#pragma unroll
@@ -630,10 +657,4 @@ __kernel void  logits_Conv2D(__global float* restrict compute, __global float* r
     }
 }
 
-//143 //144
 
-__kernel void logits_Conv2D_Permute_(__global float* restrict tensor, __global float* restrict input0, __global float* restrict input1) {
-    for (int ax0_ax1_fused_inner = 0; ax0_ax1_fused_inner < 1001; ++ax0_ax1_fused_inner) {
-        tensor[ax0_ax1_fused_inner] = (input0[ax0_ax1_fused_inner] + input1[ax0_ax1_fused_inner]);
-    }
-}
