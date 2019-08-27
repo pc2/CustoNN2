@@ -477,7 +477,7 @@ __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
      printf("Kernel fnshd Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D \n");
 }
 
-__kernel void Mixed_4d_concat(unsigned int route_to)
+__kernel void Mixed_4d_concat(unsigned int route_to, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
     printf("Kernel started Mixed_4d_concat \n");
     //struct to store 256 bits of data
