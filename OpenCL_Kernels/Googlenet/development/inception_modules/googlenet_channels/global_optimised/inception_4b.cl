@@ -356,8 +356,7 @@ __kernel void Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                     temp_out[yy][xx] += temp_2;
                 }
             }
-        }
-        
+        } 
         for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
@@ -409,7 +408,7 @@ __kernel void Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
     {
         //local memory for weights
         float input_weight[480];
-#pragma unroll 64
+#pragma unroll 32
         for (int k = 0; k < 480; k++){
             input_weight[k] = input1[((ff * 480) + k)];
         }
