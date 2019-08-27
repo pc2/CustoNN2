@@ -7,7 +7,7 @@ __kernel void Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
     __local float input_bias[256];
 #pragma unroll 64
     for (int j = 0; j < 256; j++){
-        input_bias[b] = input2[b];
+        input_bias[j] = input2[j];
     }
     float l_input[196];
     for (int ff = 0; ff < 256; ++ff)
@@ -68,7 +68,7 @@ __kernel void Mixed_4f_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict co
     __local float input_bias[160];
     #pragma unroll 64
     for (int j = 0; j < 160; j++){
-        input_bias[b] = input2[b];
+        input_bias[j] = input2[j];
     }
     float l_input[196];
     for (int ff = 0; ff < 160; ++ff)
