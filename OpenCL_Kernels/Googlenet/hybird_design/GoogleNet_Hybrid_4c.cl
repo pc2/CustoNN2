@@ -38,16 +38,16 @@ channel concat_4b_struct concat_4c_in_b3_channel __attribute__((depth(32))); // 
 //branch 1
 channel float conv2_1_4c_out_b1_channel __attribute__((depth(32)));
 channel float padding_4c_out_b1_channel __attribute__((depth(32)));
-channel float conv2_2_4c_out_b1_channel __attribute__((depth(32)));
+//channel float conv2_2_4c_out_b1_channel __attribute__((depth(32)));
 
 //branch 2
 channel float conv3_1_4c_out_b2_channel __attribute__((depth(32)));
 channel float padding_4c_out_b2_channel __attribute__((depth(32)));
-channel float conv3_2_4c_out_b2_channel __attribute__((depth(32)));
+//channel float conv3_2_4c_out_b2_channel __attribute__((depth(32)));
 
 //branch 3
 channel float maxpool_4c_out_b3_channel __attribute__((depth(32)));
-channel float conv4_1_4c_out_b3_channel __attribute__((depth(32)));
+//channel float conv4_1_4c_out_b3_channel __attribute__((depth(32)));
 
 //Feeder kernels to read data from IO and feed it into internal channnels
 __kernel void feeder_4c(unsigned int route_from)
@@ -386,7 +386,7 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 temp_0 += temp_3;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.0;
                 // write_channel_intel(conv3_2_4c_out_b2_channel, temp_0);
-                output[((((ff * 14) + yy) * 14) + xx)]
+                output[((((ff * 14) + yy) * 14) + xx)] = temp_0;
             }
         }
     }
