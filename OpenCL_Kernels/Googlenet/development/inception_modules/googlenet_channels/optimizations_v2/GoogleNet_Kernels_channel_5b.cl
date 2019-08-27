@@ -97,7 +97,7 @@ __kernel void MaxPool_5a_2x2_MaxPool()
             maxInput[(i * 8) + k] = in.concat_4f_out_buffer[k];
         }
     }
-    #pragma loop_coalesce 3
+    
     for (int ax1 = 0; ax1 < 832; ++ax1)
     {
         for (int ax2 = 0; ax2 < 7; ++ax2)
@@ -108,12 +108,18 @@ __kernel void MaxPool_5a_2x2_MaxPool()
 #pragma unroll
                 for (int rv = 0; rv < 2; ++rv)
                 {
-                   
+                    float temp_rv1[2];
+#pragma unroll
                     for (int rv1 = 0; rv1 < 2; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (8 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (8 - rv1))) ? maxInput[(((((((ax1 * 7) + ax2) + rv) * 7) + ax3) + rv1) + -8)] : -3.402823e+38f));
+                        temp_rv1[rv1] = max(tensor, maxInput[((((((((ax1 * 7) + ax2) * 2) + rv) * 7) + ax3) * 2) + rv1)]);
                     }
-                   
+#pragma unroll
+                    for (int rv1 = 0; rv1 < 2; ++rv1)
+                    {
+                        tensor = max(tensor, temp_rv1[rv1]);
+                    }
+                    
                 }
                 write_channel_intel(maxpool_5a_out_channel1, tensor);
                 write_channel_intel(maxpool_5a_out_channel2, tensor);
@@ -123,36 +129,38 @@ __kernel void MaxPool_5a_2x2_MaxPool()
         }
     }
 }
+
+
 __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
                                                      constant float *restrict input2)
 {
     float input0[832 * 7 * 7];
-    #pragma unroll
+    
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
         input0[i] = read_channel_intel(maxpool_5a_out_channel1);
     }
     //Local memory for Biases:
-    __local  float input_bias[416];
-    #pragma unroll
-    for(int b = 0; b < 416; b++){
+    __local  float input_bias[256];
+    
+    for(int b = 0; b < 256; b++){
         input_bias[b] = input2[b];
     }
 
     float l_input[49];
-       for (int ff = 0; ff < 416; ++ff)
+       for (int ff = 0; ff < 256; ++ff)
     {
         //Local weights 
         float input_weights[832];
-		#pragma unroll 64
+		#pragma unroll 8
         for(int m = 0 ; m < 832 ;m++){
             input_weights[m] = input1[((ff * 832) + m)];
         }
         
         float temp_out[7][7];
         #pragma loop_coalesce
-        for (int l = 0; l < 14; l++ ){
-            for (int j = 0; j < 14; j++){
+        for (int l = 0; l < 7; l++ ){
+            for (int j = 0; j < 7; j++){
                 temp_out[l][j] = 0;
             }
         }
@@ -168,7 +176,7 @@ __kernel void Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
 #pragma unroll
                 for (int xx = 0; xx < 7; ++xx)
                 {
-                    temp_out[yy][xx] += (l_input[ yy * 14 + xx] * input_weights[rc]);
+                    temp_out[yy][xx] += (l_input[ yy * 7 + xx] * input_weights[rc]);
                 }
              
                 
@@ -191,14 +199,14 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                                                      constant float *restrict input2)
 {
     float input0[832 * 7 * 7];
-    #pragma unroll
+
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
         input0[i] = read_channel_intel(maxpool_5a_out_channel2);
     }
     //Local memory for Biases:
     __local  float input_bias[160];
-    #pragma unroll
+    
     for(int b = 0; b < 160; b++){
         input_bias[b] = input2[b];
     }
@@ -265,95 +273,95 @@ __kernel void Padding_Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D()
     }
 }
 __kernel void Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict input1,
-                                                     constant float *restrict input2)
+                                                   constant float *restrict input2)
 {
-    float input0[12960];
-    #pragma unroll
-    for (int i = 0; i < 12960; i++)
-    {
-        input0[i] = read_channel_intel(padding_5b_out_b1_channel);
-    }
-    __local  float input_bias[320];
-#pragma unroll 64
-    for(int b = 0; b < 320; b++){
-        input_bias[b] = input2[b];
-    } 
-    float l_input[7*7];
-    for (int ff = 0; ff < 320; ++ff)
-    {
-        float input_weights[160*3*3];
- 	for (int k = 0; k < 160*3*3; k++){
-            l_input[k] = input1[((ff * 160*3*3) + k)];
-	}
-     float temp_out[7][7];
-        #pragma loop_coalesce
-        for (int l = 0; l < 7; l++ ){
-            for (int j = 0; j < 7; j++){
-                temp_out[l][j] = 0.0;
-            }
-        }
-        for (int rc = 0; rc < 160; ++rc)
-        {
-            for (int i = 0; i < 7*7; i++){
-                l_input[i] = input0[7*7*rc+i];
-		}
-                #pragma unroll 4
-            for (int yy = 0; yy < 7; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 7; ++xx)
-                {
-                    float temp_0 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_0 += l_input[(yy+0) * 30 + xx + rx] * input_weights[(((((rc) * 3) + 0) * 3) + rx)];
-                    }
-                    temp_out[yy][xx] += temp_0;
-                    
+  float input0[12960];
+ 
+  for (int i = 0; i < 12960; i++)
+  {
+      input0[i] = read_channel_intel(padding_5b_out_b1_channel);
+  }
+  __local  float input_bias[320];
 
-                    float temp_1 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_1 += l_input[(yy+1) * 30 + xx + rx] * input_weights[(((((rc) * 3) + 1) * 3) + rx)];
-                    }
-                    temp_out[yy][xx] += temp_1;
-
-                    float temp_2 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_2 += l_input[(yy+2) * 30 + xx + rx] * input_weights[(((((rc) * 3) + 2) * 3) + rx)];
-                    } 
-                    temp_out[yy][xx] += temp_2;                                    
-                }
-            }
-        }
-        #pragma loop_coalesce
-        for (int yy = 0; yy < 7; ++yy)
-        {
-            for (int xx = 0; xx < 7; ++xx)
-            {
-                temp_out[yy][xx] += input_bias[ff];
-                temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                write_channel_intel(conv2_2_5b_out_b1_channel, temp_out[yy][xx]);
-            }
-        }
-    }
+  for(int b = 0; b < 320; b++){
+      input_bias[b] = input2[b];
+  }
+  float l_input[9*9];
+  for (int ff = 0; ff < 320; ++ff)
+  {
+      float input_weights[3*3*160];
+      #pragma unroll 8
+   for (int k = 0; k < 3*3*160; k++){
+          input_weights[k] = input1[((ff *3*3*160) + k)];
+   }
+   float temp_out[7][7];
+      #pragma loop_coalesce
+      for (int l = 0; l < 7; l++ ){
+          for (int j = 0; j < 7; j++){
+              temp_out[l][j] = 0.0;
+          }
+      }
+      for (int rc = 0; rc < 160; ++rc)
+      {
+          for (int i = 0; i < 9*9; i++){
+              l_input[i] = input0[9*9*rc+i];
+       }
+              #pragma unroll 4
+          for (int yy = 0; yy < 7; ++yy)
+          {
+              #pragma unroll
+              for (int xx = 0; xx < 7; ++xx)
+              {
+                  float temp_0 = 0;
+                  #pragma unroll
+                  for (int rx = 0; rx < 3; ++rx)
+                  {
+                      temp_0 += l_input[(yy+0) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 0) * 3) + rx)];
+                  }
+                  temp_out[yy][xx] += temp_0;
+                  float temp_1 = 0;
+                  #pragma unroll
+                  for (int rx = 0; rx < 3; ++rx)
+                  {
+                      temp_1 += l_input[(yy+1) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 1) * 3) + rx)];
+                  }
+                  temp_out[yy][xx] += temp_1;
+                  float temp_2 = 0;
+                  #pragma unroll
+                  for (int rx = 0; rx < 3; ++rx)
+                  {
+                      temp_2 += l_input[(yy+2) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 2) * 3) + rx)];
+                  }
+                  temp_out[yy][xx] += temp_2;
+              }
+          }
+      }
+      #pragma loop_coalesce
+      for (int yy = 0; yy < 7; ++yy)
+      {
+          for (int xx = 0; xx < 7; ++xx)
+          {
+              temp_out[yy][xx] += input_bias[ff];
+              temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
+              write_channel_intel(conv2_2_5b_out_b1_channel, temp_out[yy][xx]);
+          }
+      }
+  }
 }
+
+
 
 __kernel void Mixed_5b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, constant float *restrict input2)
 {
     float input0[832 * 7 * 7];
-    #pragma unroll
+    
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
         input0[i] = read_channel_intel(maxpool_5a_out_channel3);
     }
     //Local memory for Biases:
     __local  float input_bias[32];
-    #pragma unroll
+  
     for(int b = 0; b < 32; b++){
         input_bias[b] = input2[b];
     }
@@ -418,108 +426,113 @@ __kernel void Padding_Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D()
     }
 }
 __kernel void Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D(__global float *restrict input1,
-                                                     constant float *restrict input2)
+                                                   constant float *restrict input2)
 {
-    float input0[2592];
-    for (int i = 0; i < 2592; i++)
-    {
-        input0[i] = read_channel_intel(padding_5b_out_b2_channel);
-    }
-    __local  float input_bias[128];
-#pragma unroll 32
-    for(int b = 0; b < 128; b++){
-        input_bias[b] = input2[b];
-    } 
-    float l_input[7*7];
-    for (int ff = 0; ff < 123; ++ff)
-    {
-        float input_weights[32*3*3];
- 	for (int k = 0; k < 32*3*3; k++){
-            l_input[k] = input1[((ff * 32*3*3) + k)];
-	}
-     float temp_out[7][7];
-        #pragma loop_coalesce
-        for (int l = 0; l < 7; l++ ){
-            for (int j = 0; j < 7; j++){
-                temp_out[l][j] = 0.0;
-            }
-        }
-        for (int rc = 0; rc < 32; ++rc)
-        {
-            for (int i = 0; i < 7*7; i++){
-                l_input[i] = input0[7*7*rc+i];
-		}
-                #pragma unroll 4
-            for (int yy = 0; yy < 7; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 7; ++xx)
-                {
-                    float temp_0 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_0 += l_input[(yy+0) * 30 + xx + rx] * input_weights[(((((rc) * 3) + 0) * 3) + rx)];
-                    }
-                    temp_out[yy][xx] += temp_0;
-                    
+  float input0[2592];
+ 
+  for (int i = 0; i < 2592; i++)
+  {
+      input0[i] = read_channel_intel(padding_5b_out_b2_channel);
+  }
+  __local  float input_bias[128];
 
-                    float temp_1 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_1 += l_input[(yy+1) * 30 + xx + rx] * input_weights[(((((rc) * 3) + 1) * 3) + rx)];
-                    }
-                    temp_out[yy][xx] += temp_1;
-
-                    float temp_2 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_2 += l_input[(yy+2) * 30 + xx + rx] * input_weights[(((((rc) * 3) + 2) * 3) + rx)];
-                    } 
-                    temp_out[yy][xx] += temp_2;                                    
-                }
-            }
-        }
-        #pragma loop_coalesce
-        for (int yy = 0; yy < 7; ++yy)
-        {
-            for (int xx = 0; xx < 7; ++xx)
-            {
-                temp_out[yy][xx] += input_bias[ff];
-                temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                write_channel_intel(conv3_2_5b_out_b2_channel, temp_out[yy][xx]);
-            }
-        }
-    }
+  for(int b = 0; b < 128; b++){
+      input_bias[b] = input2[b];
+  }
+  float l_input[9*9];
+  for (int ff = 0; ff < 128; ++ff)
+  {
+      float input_weights[3*3*32];
+    #pragma unroll 8
+    for (int k = 0; k < 3*3*32; k++){
+          input_weights[k] = input1[((ff *3*3*32) + k)];
+   }
+   float temp_out[7][7];
+      #pragma loop_coalesce
+      for (int l = 0; l < 7; l++ ){
+          for (int j = 0; j < 7; j++){
+              temp_out[l][j] = 0.0;
+          }
+      }
+      for (int rc = 0; rc < 32; ++rc)
+      {
+          for (int i = 0; i < 9*9; i++){
+              l_input[i] = input0[9*9*rc+i];
+       }
+              #pragma unroll 4
+          for (int yy = 0; yy < 7; ++yy)
+          {
+              #pragma unroll
+              for (int xx = 0; xx < 7; ++xx)
+              {
+                  float temp_0 = 0;
+                  #pragma unroll
+                  for (int rx = 0; rx < 3; ++rx)
+                  {
+                      temp_0 += l_input[(yy+0) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 0) * 3) + rx)];
+                  }
+                  temp_out[yy][xx] += temp_0;
+                  float temp_1 = 0;
+                  #pragma unroll
+                  for (int rx = 0; rx < 3; ++rx)
+                  {
+                      temp_1 += l_input[(yy+1) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 1) * 3) + rx)];
+                  }
+                  temp_out[yy][xx] += temp_1;
+                  float temp_2 = 0;
+                  #pragma unroll
+                  for (int rx = 0; rx < 3; ++rx)
+                  {
+                      temp_2 += l_input[(yy+2) * 9 + xx + rx] * input_weights[(((((rc) * 3) + 2) * 3) + rx)];
+                  }
+                  temp_out[yy][xx] += temp_2;
+              }
+          }
+      }
+      #pragma loop_coalesce
+      for (int yy = 0; yy < 7; ++yy)
+      {
+          for (int xx = 0; xx < 7; ++xx)
+          {
+              temp_out[yy][xx] += input_bias[ff];
+              temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
+              write_channel_intel(conv3_2_5b_out_b2_channel, temp_out[yy][xx]);
+          }
+      }
+  }
 }
 
 __kernel void Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
-    for (int ax1 = 0; ax1 < 832; ++ax1)
-    {
-   
-       float maxInput[832 * 7 * 7];
+    float input0[832 * 7 * 7];
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
-        maxInput[i] = read_channel_intel(maxpool_5a_out_channel4);
+        input0[i] = read_channel_intel(maxpool_5a_out_channel4);
     }
-
-
+#pragma loop_coalesce
+    for (int ax1 = 0; ax1 < 832; ++ax1)
+    {
         for (int ax2 = 0; ax2 < 7; ++ax2)
         {
             for (int ax3 = 0; ax3 < 7; ++ax3)
             {
-
                 float tensor = -3.402823e+38f;
-
+#pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
+                    
+                    float temp_rv1[3];
+#pragma unroll
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (8 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (8 - rv1))) ? maxInput[(((((ax2 + rv) * 7) + ax3) + rv1) + -8)] : -3.402823e+38f));
+                        temp_rv1[rv1] = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (8 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (8 - rv1))) ? input0[(((((((ax1 * 7) + ax2) + rv) * 7) + ax3) + rv1) + -8)] : -3.402823e+38f));
                     }
+#pragma unroll
+                    for (int rv1 = 0; rv1 < 3; ++rv1)
+                    {
+                        tensor = max(tensor, temp_rv1[rv1]);
+                    }
+                    
                 }
                 write_channel_intel(maxpool_5b_out_b3_channel, tensor);
             }
@@ -527,17 +540,17 @@ __kernel void Mixed_5b_Branch_3_MaxPool_0a_3x3_MaxPool()
     }
 }
 
+
 __kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict input1, constant float *restrict input2)
 {
     float input0[832 * 7 * 7];
-    #pragma unroll
     for (int i = 0; i < 832 * 7 * 7; i++)
     {
         input0[i] = read_channel_intel(maxpool_5b_out_b3_channel);
     }
     //Local memory for Biases:
     __local  float input_bias[128];
-    #pragma unroll
+    #pragma unroll 8
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
@@ -589,6 +602,7 @@ __kernel void Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
         }
     }
 }
+
 __kernel void Mixed_5b_concat(unsigned int route_to)
 {
     //struct to store 256 bits of data
