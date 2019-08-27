@@ -452,10 +452,8 @@ __kernel void Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
     for (int ax1 = 0; ax1 < 256; ++ax1)
     {
-
-        //Store 1 slice of data
-        float maxInput[56 * 56];
-        for (int i = 0; i < 56 * 56/8; i++)
+        float maxInput[28 * 28];
+        for (int i = 0; i < 28 * 28/8; i++)
         {
             struct concat_3b_buffer in;
             in = read_channel_intel(concat_3c_in_b3_channel);
