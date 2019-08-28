@@ -222,8 +222,8 @@ __kernel void Mixed_5b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         
         float temp_out[7][7];
         #pragma loop_coalesce
-        for (int l = 0; l < 14; l++ ){
-            for (int j = 0; j < 14; j++){
+        for (int l = 0; l < 7; l++ ){
+            for (int j = 0; j < 7; j++){
                 temp_out[l][j] = 0.0;
             }
         }
