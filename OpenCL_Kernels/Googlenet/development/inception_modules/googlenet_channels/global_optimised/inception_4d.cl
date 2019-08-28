@@ -5,7 +5,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
 {
    //Local memory for Biases:
     __local  float input_bias[128];
-	#pragma unroll 128
+	#pragma unroll 8
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
@@ -15,7 +15,7 @@ __kernel void Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
 	for (int ff = 0; ff < 128; ++ff)
     {
         float input_weights[512];
-		#pragma unroll 64
+		#pragma unroll 8
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -60,7 +60,6 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict co
 {
    //Local memory for Biases:
     __local  float input_bias[128];
-	#pragma unroll 128
     for(int b = 0; b < 128; b++){
         input_bias[b] = input2[b];
     }
@@ -70,7 +69,6 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict co
     {
          //Local weights 
         float input_weights[512];
-		#pragma unroll 64
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -120,7 +118,6 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
 {
    	//Local memory for Biases:
     __local  float input_bias[256];
-	#pragma unroll 64
     for(int b = 0; b < 256; b++){
         input_bias[b] = input2[b];
     }
@@ -131,7 +128,6 @@ __kernel void Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     {
         //Local weights 
         float input_weights[3*3*128];
-		#pragma unroll 64
         for(int m = 0 ; m < 3*3*128 ; m++){
             input_weights[m] = input1[((ff * 3*3*128) + m)];
         }
@@ -199,7 +195,6 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
 {
     //Local memory for Biases:
     __local  float input_bias[24];
-	#pragma unroll 16
     for(int b = 0; b < 24; b++){
         input_bias[b] = input2[b];
     }
@@ -210,7 +205,6 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
     {
         //Local weights 
         float input_weights[512];
-		#pragma unroll 64
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -263,7 +257,6 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
 {
     //Local memory for Biases:
     __local  float input_bias[64];
-	#pragma unroll
     for(int b = 0; b < 64; b++){
         input_bias[b] = input2[b];
     }
@@ -273,7 +266,6 @@ __kernel void Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
     {
          //Local weights 
         float input_weights[3*3*24];
-		#pragma unroll 32
         for(int m = 0 ; m < 3*3*24 ; m++){
             input_weights[m] = input1[((ff * 3*3*24) + m)];
         }
@@ -370,7 +362,6 @@ __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
 {
    //Local memory for Biases:
     __local  float input_bias[64];
-	#pragma unroll 64
     for(int b = 0; b < 64; b++){
         input_bias[b] = input2[b];
     }
@@ -380,7 +371,6 @@ __kernel void Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
     {
         //Local weights 
         float input_weights[512];
-		#pragma unroll 64
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
