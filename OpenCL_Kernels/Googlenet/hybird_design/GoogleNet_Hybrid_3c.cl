@@ -28,23 +28,23 @@ channel concat_3b_struct concat_3c_in_b3_channel __attribute__((depth(32))); // 
 
 //internal channels from 3b to 3c
 //branch 0
-channel float conv1_3c_out_b0_channel __attribute__((depth(32)));
+//channel float conv1_3c_out_b0_channel __attribute__((depth(32)));
 //branch 1
 channel float conv2_1_3c_out_b1_channel __attribute__((depth(32)));
 channel float padding_3c_out_b1_channel __attribute__((depth(32)));
-channel float conv2_2_3c_out_b1_channel __attribute__((depth(32)));
+//channel float conv2_2_3c_out_b1_channel __attribute__((depth(32)));
 //branch 2
 channel float conv3_1_3c_out_b2_channel __attribute__((depth(32)));
 channel float padding_3c_out_b2_channel __attribute__((depth(32)));
-channel float conv3_2_3c_out_b2_channel __attribute__((depth(32)));
+//channel float conv3_2_3c_out_b2_channel __attribute__((depth(32)));
 //branch 3
 channel float maxpool_3c_out_b3_channel __attribute__((depth(32)));
-channel float conv3_1_3c_out_b3_channel __attribute__((depth(32)));
+//channel float conv3_1_3c_out_b3_channel __attribute__((depth(32)));
 
 //Feeder kernels to read data from IO and feed it into internal channnels
 __kernel void feeder_3c(unsigned int route_from)
 {
-
+    printf("Kernel Started feeder_3c \n");
     for (int i = 0; i < 25088; i++)
     {
         struct concat_3b_buffer input;
@@ -70,10 +70,12 @@ __kernel void feeder_3c(unsigned int route_from)
         write_channel_intel(concat_3c_in_b2_channel, input);
         write_channel_intel(concat_3c_in_b3_channel, input);
     }
+    printf("Kernel fnshd feeder_3c \n");
 }
 
-__kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
+__kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2, __global float *restrict output)
 {
+    printf("Kernel started 3c_0_1x1 \n");
     //Read Input from IO channel
     float convInput[200704];
     // 200704/8 = 25088
@@ -89,52 +91,49 @@ __kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
 
-    float l_input[784];
     for (int ff = 0; ff < 128; ++ff)
     {
+
         float local_input1[256];
         for (int k = 0; k < 256; k++){
             local_input1[k] = input1[((ff * 256) + k)];
         }
 
-        float temp_out[28][28];
-        for (int l = 0; l < 28; l++ ){
-            for (int j = 0; j < 28; j++){
-                temp_out[l][j] = 0;
-            }
-        }
-        for (int rc = 0; rc < 256; rc++)
-        {
-            for (int i = 0; i < 28*28; i++){
-                l_input[i] = convInput[28*28*rc+i];
-            }
-
-            #pragma unroll 4
-            for (int yy = 0; yy < 28; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 28; ++xx)
-                {
-                    temp_out[yy][xx] += (l_input[yy * 28 + xx] * local_input1[rc]);
-                }
-
-            }
-        }
-
+        #pragma loop_coalesce
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                temp_out[yy][xx] += input2[ff];
-                temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                write_channel_intel(conv1_3c_out_b0_channel, temp_out[yy][xx]);
+
+                float temp_0 = input2[ff];
+                float temp_rc[256];
+                #pragma unroll 4
+                for (int rc = 0; rc < 256; rc++)
+                {
+                    temp_rc[rc] = (convInput[((((rc * 28) + yy) * 28) + xx)] * local_input1[rc]);
+                }
+                
+
+                float temp_1 = 0.0;
+                // #pragma unroll 2
+                for (int rc = 0; rc < 256; rc++){
+                    temp_1 += temp_rc[rc];
+                }
+                temp_0 += temp_1;
+
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
+               // write_channel_intel(conv1_3c_out_b0_channel, temp_0);
+               output[((((ff * 28) + yy) * 28) + xx)] = temp_0;
             }
         }
     }
+    printf("Kernel fnshd 3c_0_1x1 \n");
 }
 
 __kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
+
 {
+     printf("Kernel started 3c_1_1x1 \n");
     //Read Input from IO channel
     float convInput[200704];
     for (int i = 0; i < 25088; i++)
@@ -150,52 +149,45 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     }
 
 
-    float l_input[784];
     for (int ff = 0; ff < 128; ++ff)
     {
+        
         float local_input1[256];
         for (int k = 0; k < 256; k++){
             local_input1[k] = input1[((ff * 256) + k)];
         }
 
-        float temp_out[28][28];
-        for (int l = 0; l < 28; l++ ){
-            for (int j = 0; j < 28; j++){
-                temp_out[l][j] = 0;
-            }
-        }
-        for (int rc = 0; rc < 256; rc++)
-        {
-            for (int i = 0; i < 28*28; i++){
-                l_input[i] = convInput[28*28*rc+i];
-            }
-
-            #pragma unroll 4
-            for (int yy = 0; yy < 28; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 28; ++xx)
-                {
-                    temp_out[yy][xx] += (l_input[yy * 28 + xx] * local_input1[rc]);
-                }
-
-            }
-        }
-
+        #pragma loop_coalesce
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                temp_out[yy][xx] += input2[ff];
-                temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                write_channel_intel(conv2_1_3c_out_b1_channel, temp_out[yy][xx]);
+                float temp_0 = input2[ff];
+                float temp_rc[256];
+                #pragma unroll 4
+                for (int rc = 0; rc < 256; rc++)
+                {
+                    temp_rc[rc] = (convInput[((((rc * 28) + yy) * 28) + xx)] * local_input1[rc]);
+                }
+                
+
+                float temp_1 = 0.0;
+                // #pragma unroll 2
+                for (int rc = 0; rc < 256; rc++){
+                    temp_1 += temp_rc[rc];
+                }
+                temp_0 += temp_1;
+
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
+                write_channel_intel(conv2_1_3c_out_b1_channel, temp_0);
             }
         }
     }
+     printf("Kernel fnshd 3c_1_1x1 \n");
 }
 __kernel void Padding_Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D()
 {
-
+    printf("Kernel started pad3c_1_3x3 \n");
     float input0[128 * 28 * 28];
     for (int i = 0; i < 128 * 28 * 28; i++)
     {
@@ -205,105 +197,70 @@ __kernel void Padding_Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D()
     {
         write_channel_intel(padding_3c_out_b1_channel, (float)(((((30 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) < 870)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30) < 29)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 900) * 28) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) / 30)) * 28) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30)) + -29)] : 0.000000e+00f));
     }
+    printf("Kernel fnshd pad3c_1_3x3 \n");
 }
 
-__kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict input1, __global float *restrict input2)
+__kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict input1, __global float *restrict input2,  __global float *restrict output)
 {
-
+    printf("Kernel started 3c_1_3x3 \n");
     float input0[115200];
     for (int i = 0; i < 115200; i++)
     {
         input0[i] = read_channel_intel(padding_3c_out_b1_channel);
     }
 
-    float l_input[30*30];
     for (int ff = 0; ff < 192; ++ff)
     {
-
         float local_input1[3*3*128];
         for (int k = 0; k < 3*3*128; k++){
             local_input1[k] = input1[((ff * 3*3*128) + k)];
         }
 
-        float temp_out[28][28];
-        for (int l = 0; l < 28; l++ ){
-            for (int j = 0; j < 28; j++){
-                temp_out[l][j] = 0;
-            }
-        }
-
-        for (int rc = 0; rc < 128; ++rc)
-        {
-            for (int i = 0; i < 30*30; i++){
-                l_input[i] = input0[30*30*rc+i];
-            }
-
-            #pragma unroll 4
-            for (int yy = 0; yy < 28; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 28; ++xx)
-                {
-                    float temp_0 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_0 += l_input[(yy+0) * 30 + xx + rx] * local_input1[(((((rc) * 3) + 0) * 3) + rx)];
-                    }
-                    temp_out[yy][xx] += temp_0;
-                    
-
-                    float temp_1 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_1 += l_input[(yy+1) * 30 + xx + rx] * local_input1[(((((rc) * 3) + 1) * 3) + rx)];
-                    }
-                    temp_out[yy][xx] += temp_1;
-
-                    float temp_2 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_2 += l_input[(yy+2) * 30 + xx + rx] * local_input1[(((((rc) * 3) + 2) * 3) + rx)];
-                    } 
-                    temp_out[yy][xx] += temp_2;
-
-                    // for (int ry = 0; ry < 3; ++ry)
-                    // {
-                    //     for (int rx = 0; rx < 3; ++rx)
-                    //     {
-                    //         temp_out[yy][xx] += l_input[(yy+ry) * 30 + xx + rx] * local_input1[(((((rc) * 3) + 2) * 3) + rx)];
-                    //     }
-                    // }                   
-                }
-            }
-        }
+        #pragma loop_coalesce
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                temp_out[yy][xx] += input2[ff];
-                temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                write_channel_intel(conv2_2_3c_out_b1_channel, temp_out[yy][xx]);
+                float temp_0 = input2[ff];
+                float temp_3 = 0.0;
+                for (int rc = 0; rc < 128; ++rc)
+                {
+                    float temp_2 = 0.0;
+                    // #pragma unroll
+                    for (int ry = 0; ry < 3; ++ry)
+                    {
+                        float temp_1 = 0.0;
+                        #pragma unroll
+                        for (int rx = 0; rx < 3; ++rx)
+                        {
+                            temp_1 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * local_input1[(((((rc) * 3) + ry) * 3) + rx)]);
+                        }
+                        temp_2 += temp_1;
+                    }
+                    temp_3 += temp_2;
+                }
+                temp_0 += temp_3;
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.0;
+               // write_channel_intel(conv2_2_3c_out_b1_channel, temp_0);
+               output[((((ff * 28) + yy) * 28) + xx)] = temp_0 ;
             }
         }
     }
+     printf("Kernel fnshd 3c_1_3x3 \n");
 }
-
-
 
 __kernel void Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict input1,
                                                      __global float *restrict input2)
 {
-//Read Input from IO channel
+    printf("Kernel started 3c_2_1x1 \n");
+    //Read Input from IO channel
     float convInput[200704];
-    // 200704/8 = 25088
     for (int i = 0; i < 25088; i++)
     {
         //struct to store 256 bits of data
         struct concat_3b_buffer in;
         in = read_channel_intel(concat_3c_in_b2_channel);
+
 #pragma unroll
         for (int k = 0; k < 8; k++)
         {
@@ -311,53 +268,47 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
 
-    float l_input[784];
     for (int ff = 0; ff < 32; ++ff)
     {
-
+        
         float local_input1[256];
         for (int k = 0; k < 256; k++){
             local_input1[k] = input1[((ff * 256) + k)];
         }
 
-        float temp_out[28][28];
-        for (int l = 0; l < 28; l++ ){
-            for (int j = 0; j < 28; j++){
-                temp_out[l][j] = 0;
-            }
-        }
-        for (int rc = 0; rc < 256; rc++)
-        {
-            for (int i = 0; i < 28*28; i++){
-                l_input[i] = convInput[28*28*rc+i];
-            }
-
-            #pragma unroll 4
-            for (int yy = 0; yy < 28; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 28; ++xx)
-                {
-                    temp_out[yy][xx] += (l_input[yy * 28 + xx] * local_input1[rc]);
-                }
-
-            }
-        }
-
+        #pragma loop_coalesce
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                temp_out[yy][xx] += input2[ff];
-                temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                write_channel_intel(conv3_1_3c_out_b2_channel, temp_out[yy][xx]);
+
+                float temp_0 = input2[ff];
+                float temp_rc[256];
+                #pragma unroll 4
+                for (int rc = 0; rc < 256; rc++)
+                {
+                    temp_rc[rc] = (convInput[((((rc * 28) + yy) * 28) + xx)] * local_input1[rc]);
+                }
+                
+
+                float temp_1 = 0.0;
+                // #pragma unroll 2
+                for (int rc = 0; rc < 256; rc++){
+                    temp_1 += temp_rc[rc];
+                }
+                temp_0 += temp_1;
+
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
+                write_channel_intel(conv3_1_3c_out_b2_channel, temp_0);
             }
         }
     }
+    printf("Kernel fnshd 3c_2_1x1 \n");
 }
 
 __kernel void Padding_Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D()
 {
+    printf("Kernel started pad3c_2_3x3 \n");
     float input0[32 * 28 * 28];
     for (int i = 0; i < 32 * 28 * 28; i++)
     {
@@ -367,18 +318,18 @@ __kernel void Padding_Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D()
     {
         write_channel_intel(padding_3c_out_b2_channel, (float)(((((30 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) < 870)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30) < 29)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 900) * 28) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) / 30)) * 28) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30)) + -29)] : 0.000000e+00f));
     }
+     printf("Kernel fnshd pad3c_2_3x3 \n");
 }
 
-__kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict input1,
-                                                     __global float *restrict input2)
+__kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict input1, __global float *restrict input2,__global float *restrict output)
 {
+     printf("Kernel started 3c_2_3x3 \n");
     float input0[28800];
     for (int i = 0; i < 28800; i++)
     {
         input0[i] = read_channel_intel(padding_3c_out_b2_channel);
     }
 
-    float l_input[30*30];
     for (int ff = 0; ff < 96; ++ff)
     {
 
@@ -387,165 +338,140 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
             local_input1[k] = input1[((ff * 3*3*32) + k)];
         }
 
-        float temp_out[28][28];
-        for (int l = 0; l < 28; l++ ){
-            for (int j = 0; j < 28; j++){
-                temp_out[l][j] = 0;
-            }
-        }
-        for (int rc = 0; rc < 32; ++rc)
-        {
-
-            for (int i = 0; i < 30*30; i++){
-                l_input[i] = input0[30*30*rc+i];
-            }
-
-
-            #pragma unroll 4
-            for (int yy = 0; yy < 28; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 28; ++xx)
-                {
-                    float temp_0 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_0 += l_input[(yy+0) * 30 + xx + rx] * local_input1[(((((rc) * 3) + 0) * 3) + rx)];
-                    }
-                    temp_out[yy][xx] += temp_0;
-                    
-
-                    float temp_1 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_1 += l_input[(yy+1) * 30 + xx + rx] * local_input1[(((((rc) * 3) + 1) * 3) + rx)];
-                    }
-                    temp_out[yy][xx] += temp_1;
-
-                    float temp_2 = 0;
-                    #pragma unroll
-                    for (int rx = 0; rx < 3; ++rx)
-                    {
-                        temp_2 += l_input[(yy+2) * 30 + xx + rx] * local_input1[(((((rc) * 3) + 2) * 3) + rx)];
-                    } 
-                    temp_out[yy][xx] += temp_2;
-                }
-            }
-        }
-
+        #pragma loop_coalesce
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                temp_out[yy][xx] += input2[ff];
-                temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                write_channel_intel(conv3_2_3c_out_b2_channel, temp_out[yy][xx]);
+                float temp_0 = input2[ff];
+                float temp_3 = 0.0;
+                for (int rc = 0; rc < 32; ++rc)
+                {
+
+                    float temp_2 = 0.0;
+                    // #pragma unroll
+                    for (int ry = 0; ry < 3; ++ry)
+                    {   
+                        float temp_1 = 0.0;
+                        #pragma unroll
+                        for (int rx = 0; rx < 3; ++rx)
+                        {
+                            temp_1 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * local_input1[(((((rc) * 3) + ry) * 3) + rx)]);
+                        }
+                        temp_2 += temp_1;
+                    }
+                    temp_3 += temp_2;
+                }
+                temp_0 += temp_3;
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.0;    
+               // write_channel_intel(conv3_2_3c_out_b2_channel, temp_0);
+                output[((((ff * 28) + yy) * 28) + xx)] = temp_0;
             }
         }
     }
-
+    printf("Kernel fnshd 3c_2_3x3 \n");
 }
 
 __kernel void Mixed_3c_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
+    printf("Kernel started 3c_3_pool3x3 \n");
+    //Read Input from IO channel
+    float maxInput[200704];
+    for (int i = 0; i < 25088; i++)
+    {
+        //struct to store 256 bits of data
+        struct concat_3b_buffer in;
+        in = read_channel_intel(concat_3c_in_b3_channel);
+
+#pragma unroll
+        for (int k = 0; k < 8; k++)
+        {
+            maxInput[(i * 8) + k] = in.concat_3b_out_buffer[k];
+        }
+    }
+
+    #pragma loop_coalesce
     for (int ax1 = 0; ax1 < 256; ++ax1)
     {
-        float maxInput[28 * 28];
-        for (int i = 0; i < 28 * 28/8; i++)
-        {
-            struct concat_3b_buffer in;
-            in = read_channel_intel(concat_3c_in_b3_channel);
-
-            #pragma unroll
-            for (int k = 0; k < 8; k++)
-            {
-                maxInput[i * 8 + k] = in.concat_3b_out_buffer[k];
-            }
-        }
-
-
         for (int ax2 = 0; ax2 < 28; ++ax2)
         {
             for (int ax3 = 0; ax3 < 28; ++ax3)
             {
 
                 float tensor = -3.402823e+38f;
-
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (29 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (29 - rv1))) ? maxInput[(((((ax2 + rv) * 28) + ax3) + rv1) + -29)] : -3.402823e+38f));
+                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (29 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (29 - rv1))) ? maxInput[(((((((ax1 * 28) + ax2) + rv) * 28) + ax3) + rv1) + -29)] : -3.402823e+38f));
                     }
                 }
                 write_channel_intel(maxpool_3c_out_b3_channel, tensor);
             }
         }
     }
+    printf("Kernel fnshd 3c_3_pool3x3 \n");
 }
 
-__kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict input1,
-                                                     __global float *restrict input2)
+__kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2,__global float *restrict output)
 {
+     printf("Kernel started 3c_3_1x1 \n");
+
     float input0[256 * 28 * 28];
     for (int i = 0; i < 256 * 28 * 28; i++)
     {
         input0[i] = read_channel_intel(maxpool_3c_out_b3_channel);
     }
 
-    float l_input[784];
     for (int ff = 0; ff < 64; ++ff)
     {
-
+        
         float local_input1[256];
         for (int k = 0; k < 256; k++){
             local_input1[k] = input1[((ff * 256) + k)];
         }
 
-        float temp_out[28][28];
-        for (int l = 0; l < 28; l++ ){
-            for (int j = 0; j < 28; j++){
-                temp_out[l][j] = 0;
-            }
-        }
-        for (int rc = 0; rc < 256; rc++)
-        {
-            for (int i = 0; i < 28*28; i++){
-                l_input[i] = input0[28*28*rc+i];
-            }
-
-            #pragma unroll 4
-            for (int yy = 0; yy < 28; ++yy)
-            {
-                #pragma unroll
-                for (int xx = 0; xx < 28; ++xx)
-                {
-                    temp_out[yy][xx] += (l_input[yy * 28 + xx] * local_input1[rc]);
-                }
-
-            }
-        }
-
+#pragma loop_coalesce
         for (int yy = 0; yy < 28; ++yy)
+
         {
             for (int xx = 0; xx < 28; ++xx)
+
             {
-                temp_out[yy][xx] += input2[ff];
-                temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                write_channel_intel(conv3_1_3c_out_b3_channel, temp_out[yy][xx]);
+                float temp_0 = input2[ff];
+                float temp_rc[256];
+                #pragma unroll 2
+                for (int rc = 0; rc < 256; rc++)
+                {
+                    temp_rc[rc] = (input0[((((rc * 28) + yy) * 28) + xx)] * local_input1[rc]);
+                }
+                
+
+                float temp_1 = 0.0;
+                // #pragma unroll 2
+                for (int rc = 0; rc < 256; rc++){
+                    temp_1 += temp_rc[rc];
+                }
+                temp_0 += temp_1;
+
+                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
+               // write_channel_intel(conv3_1_3c_out_b3_channel, temp_0);
+               output[((((ff * 28) + yy) * 28) + xx)] = temp_0 ;
+
             }
         }
     }
+     printf("Kernel fnshd 3c_3_1x1 \n");
 }
 
-__kernel void Mixed_3c_concat(unsigned int route_to)
+__kernel void Mixed_3c_concat(unsigned int route_to, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
+     printf("Kernel started Mixed_3c_concat \n");
     //struct to store 256 bits of data
     struct concat_3c_buffer out;
-    float input0[128 * 28 * 28];
-
+    
+    //float input0[128 * 28 * 28];
+    /*
     for (int i = 0; i < 128 * 28 * 28; i++)
     {
         input0[i] = read_channel_intel(conv1_3c_out_b0_channel);
@@ -565,7 +491,7 @@ __kernel void Mixed_3c_concat(unsigned int route_to)
     {
         input3[i] = read_channel_intel(conv3_1_3c_out_b3_channel);
     }
-
+    */
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 376320; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
     {
         float result = (float)((326144 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input3[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -326144)] : (float)((250880 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input2[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -250880)] : (float)((100352 <= ax0_ax1_fused_ax2_fused_ax3_fused_inner) ? input1[(ax0_ax1_fused_ax2_fused_ax3_fused_inner + -100352)] : input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner])));
@@ -591,4 +517,5 @@ __kernel void Mixed_3c_concat(unsigned int route_to)
             }
         }
     }
+     printf("Kernel fnshd Mixed_3c_concat \n");
 }

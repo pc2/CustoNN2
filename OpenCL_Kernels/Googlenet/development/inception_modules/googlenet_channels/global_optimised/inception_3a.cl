@@ -1,44 +1,13 @@
-//Enable the channel extension
-#pragma OPENCL EXTENSION cl_intel_channels : enable
-//256 bits io channel struct
-
-typedef struct concat_3a_buffer
+__kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
-    float concat_3a_out_buffer[8];
-} concat_3a_struct;
-// IO Channels for inception 3b to 3c
-channel concat_3a_struct concat_3a_out_channel_0 __attribute__((depth(8))) __attribute__((io("kernel_output_ch0"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_1 __attribute__((depth(8))) __attribute__((io("kernel_output_ch1"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_2 __attribute__((depth(8))) __attribute__((io("kernel_output_ch2"))); // Channel Tx
-channel concat_3a_struct concat_3a_out_channel_3 __attribute__((depth(8))) __attribute__((io("kernel_output_ch3"))); // Channel Tx
-
-//branch 1a
-channel float padding_1a_out_channel __attribute__((depth(32)));
-channel float conv1_1a_out_channel __attribute__((depth(32)));
-//branch 2a
-channel float maxpool_2a_out_channel __attribute__((depth(32)));
-//branch 2b
-channel float conv1_2b_out_channel __attribute__((depth(32)));
-//branch 2c
-channel float padding_2c_out_channel __attribute__((depth(32)));
-channel float conv1_2c_out_channel __attribute__((depth(32)));
-
-__kernel void Padding_Conv2d_1a_7x7_Conv2D(__global float *restrict input0)
-{
-
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 157323; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
     {
-        write_channel_intel(padding_1a_out_channel, (float)(((((458 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441) < 51754)) && (2 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229) < 226)) ? input0[(((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441) / 229) * 224) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229)) * 3) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 52441)) + -1350)] : 0.000000e+00f));
+        T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((458 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441) < 51754)) && (2 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229) < 226)) ? input0[(((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 52441) / 229) * 224) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 229)) * 3) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner / 52441)) + -1350)] : 0.000000e+00f);
     }
 }
 
-__kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global float *restrict input2)
+__kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
 {
-    float input0[157323];
-    for (int i = 0; i < 157323; i++)
-    {
-        input0[i] = read_channel_intel(padding_1a_out_channel);
-    }
     //Local memory for Biases:
     __local  float input_bias[64];
     #pragma unroll
@@ -66,24 +35,14 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global flo
         for (int rc = 0; rc < 3; ++rc)
         {
             //Store 1 slice of input image
-            /* float image_slice[229][229];
-            for (int in = 0; in < 229; in++){
-                for(int in1 = 0 ; in1 < 229 ; in1++){
-                    image_slice[in][in1] = input0[(229*229*rc)+in];
-                }
-            } */
+             float image_slice[229*229];
+             #pragma unroll 32
+            for (int in = 0; in < 229*229; in++){
+                    image_slice[in]= input0[(229*229*rc)+in];
+            }
             for (int yy = 0; yy < 112; ++yy)
             {
-                //Store 228*7 of input image
-                float image_slice1[7][229];
-                //#pragma loop_coalesce
-                for (int in = 0; in < 7; in++){
-                    #pragma unroll 2
-                    for(int in1 = 0 ; in1 < 229 ; in1++){
-                        image_slice1[in][in1] = input0[(229*229*rc)+(yy*2*229)+(in*229)+in1]; // image_slice[in+(yy*2)][in1];
-                    }
-                }
-                #pragma unroll 56
+                #pragma unroll 16
                 for (int xx = 0; xx < 112; ++xx)
                 {
                     float temp_0 = 0;
@@ -95,8 +54,7 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global flo
                             #pragma unroll
                             for (int rx = 0; rx < 7; ++rx)
                             {   
-                                //temp_1 +=  (image_slice[(yy * 458) + (ry * 229) + (xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
-                                temp_1 +=  (image_slice1[(ry * 1)][(xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
+                                temp_1 +=  (image_slice[(yy * 458) + (ry * 229) + (xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
                             }
                             temp_2 +=temp_1;
                         }
@@ -114,55 +72,47 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global flo
                     temp_out[yy][xx] += input_bias[ff];
                     //RELU
                     temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f; 
-                    write_channel_intel(conv1_1a_out_channel, temp_out[yy][xx]);
+                    compute[((((ff * 112) + yy) * 112) + xx)] = temp_out[yy][xx];
                 }
             }
     }
-
 }
 
-__kernel void MaxPool_2a_3x3_MaxPool()
+__kernel void MaxPool_2a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
-
-    
+     
 
     for (int ax1 = 0; ax1 < 64; ++ax1)
     {
         //Store 1 slice of data
-        float input0[112 * 112];
+        float input0_l[112 * 112];
+        #pragma unroll 112
         for (int i = 0; i < 112 * 112; i++)
         {
-            input0[i] = read_channel_intel(conv1_1a_out_channel);
+            input0_l[i] = input0[(ax1*112*112) + i];
         }
         for (int ax2 = 0; ax2 < 56; ++ax2)
         {
             for (int ax3 = 0; ax3 < 56; ++ax3)
             {
-                float tensor = -3.402823e+38f;
-           //     #pragma unroll
+                float tensor2 = -3.402823e+38f;
+                #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((ax2 * 2) < (112 - rv)) && ((ax3 * 2) < (112 - rv1))) ? input0[(((((((ax2) * 2) + rv) * 56) + ax3) * 2) + rv1)] : -3.402823e+38f));
+                        tensor2 = max(tensor2, (float)((((ax2 * 2) < (112 - rv)) && ((ax3 * 2) < (112 - rv1))) ? input0_l[(((((((ax2) * 2) + rv) * 56) + ax3) * 2) + rv1)] : -3.402823e+38f));
                     }
                 }
-                write_channel_intel(maxpool_2a_out_channel, tensor);
+                tensor[((((ax1 * 56) + ax2) * 56) + ax3)] = tensor2 ;
             }
         }
     }
 }
 
-__kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
+__kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
 {
-
-    float input0[64 * 56 * 56];
-    for (int i = 0; i < 64 * 56 * 56; i++)
-    {
-        input0[i] = read_channel_intel(maxpool_2a_out_channel);
-    }
-    
     //Local memory for Biases:
     __local  float input_bias[64];
     #pragma unroll
@@ -191,6 +141,7 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
         {
             //Store 1 slice of input image
             float image_slice[56*56];
+            #pragma unroll 56
             for (int in = 0; in < 56*56; in++){
                 image_slice[in] = input0[(56*56*rc)+in];
             }
@@ -213,36 +164,23 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
                     temp_out[yy][xx] += input_bias[ff];
                     //Relu
                     temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
-                    write_channel_intel(conv1_2b_out_channel, temp_out[yy][xx]);
+                    compute[((((ff * 56) + yy) * 56) + xx)] =  temp_out[yy][xx];
                 }
         }
     }
 }
 
-__kernel void Padding_Conv2d_2c_3x3_Conv2D()
+__kernel void Padding_Conv2d_2c_3x3_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
-
-    float input0[64 * 56 * 56];
-    for (int i = 0; i < 64 * 56 * 56; i++)
-    {
-        input0[i] = read_channel_intel(conv1_2b_out_channel);
-    }
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 215296; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner)
     {
-        float result = (float)(((((58 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) < 3306)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58) < 57)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3364) * 56) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) / 58)) * 56) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58)) + -57)] : 0.000000e+00f);
-        write_channel_intel(padding_2c_out_channel, result);
+        T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((58 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) < 3306)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58) < 57)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 3364) * 56) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 3364) / 58)) * 56) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 58)) + -57)] : 0.000000e+00f);
     }
 }
 
-__kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global float *restrict input2)
+__kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict compute, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2)
 {
-       float input0[215296];
-    for (int i = 0; i < 215296; i++)
-    {
-        input0[i] = read_channel_intel(padding_2c_out_channel);
-    }
-
-     //Local memory for Biases:
+    //Local memory for Biases:
     __local  float input_bias[192];
     #pragma unroll
     for(int b = 0; b < 192; b++){
@@ -270,11 +208,14 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global flo
         {
             //Store 1 slice of input image
             float image_slice[58*58];
+            #pragma unroll 58
             for (int in = 0; in < 58*58; in++){
                 image_slice[in] = input0[(58*58*rc)+in];
             }
+            #pragma unroll 2
             for (int yy = 0; yy < 56; ++yy)
             {
+                #pragma unroll 
                 for (int xx = 0; xx < 56; ++xx)
                 {
                     float temp_0 = 0;
@@ -305,65 +246,39 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global flo
                     temp_out[yy][xx] += input_bias[ff];
                     //RELU
                     temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f; 
-                    write_channel_intel(conv1_2c_out_channel, temp_out[yy][xx]);
+                   compute[((((ff * 56) + yy) * 56) + xx)] = temp_out[yy][xx];
                 }
             }
     }
 }
 
-//last kernel to be launched in FPGA needs to route data out of FPGA according to routing logic
-//determined in plugin
-__kernel void MaxPool_3a_3x3_MaxPool(unsigned int route_to)
+__kernel void MaxPool_3a_3x3_MaxPool(__global float *restrict tensor, __global float *restrict input0)
 {
-
-    
-    //struct to store 256 bits of data
-    struct concat_3a_buffer out;
-
-    for (int ax1 = 0; ax1 < 192; ++ax1)
+  for (int ax1 = 0; ax1 < 192; ++ax1)
     {
-        float input0[56 * 56];
+        float inputl[56 * 56];
+        #pragma unroll 32
         for (int i = 0; i < 56 * 56; i++)
         {
-            input0[i] = read_channel_intel(conv1_2c_out_channel);
+            inputl[i] = input0[(ax1*56*56)+i];
         }
         for (int ax2 = 0; ax2 < 28; ++ax2)
         {
             for (int ax3 = 0; ax3 < 28; ++ax3)
             {
-                float tensor = -3.402823e+38f;
- //               #pragma unroll
+                float tensor1 = -3.402823e+38f;
+                #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((ax2 * 2) < (56 - rv)) && ((ax3 * 2) < (56 - rv1))) ? input0[((((((( ax2) * 2) + rv) * 28) + ax3) * 2) + rv1)] : -3.402823e+38f));
+                        tensor1 = max(tensor1, (float)((((ax2 * 2) < (56 - rv)) && ((ax3 * 2) < (56 - rv1))) ? inputl[((((((( ax2) * 2) + rv) * 28) + ax3) * 2) + rv1)] : -3.402823e+38f));
                     }
                 }
-                out.concat_3a_out_buffer[((((ax1 * 28) + ax2) * 28) + ax3) % 8] = tensor;
-                //After accumlating 256 bits, send the data through IO channel.
-                if (((((ax1 * 28) + ax2) * 28) + ax3) % 8 == 7)
-                {
-                    //route to different IO channels depending on topology determined in plugin
-                    if (route_to == 0)
-                    {
-                        write_channel_intel(concat_3a_out_channel_0, out);
-                    }
-                    else if (route_to == 1)
-                    {
-                        write_channel_intel(concat_3a_out_channel_1, out);
-                    }
-                    else if (route_to == 2)
-                    {
-                        write_channel_intel(concat_3a_out_channel_2, out);
-                    }
-                    else if (route_to == 3)
-                    {
-                        write_channel_intel(concat_3a_out_channel_3, out);
-                    }                    
-                }
+                tensor[((((ax1 * 28) + ax2) * 28) + ax3)] = tensor1;
             }
         }
     }
 }
+
