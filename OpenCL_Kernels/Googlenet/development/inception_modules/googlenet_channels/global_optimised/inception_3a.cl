@@ -10,7 +10,6 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global fl
 {
     //Local memory for Biases:
     __local  float input_bias[64];
-    #pragma unroll
     for(int b = 0; b < 64; b++){
         input_bias[b] = input2[b];
     }
@@ -19,7 +18,6 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global fl
     {
         //Local weights 
         float  local_weight[7*7*3];
-        #pragma unroll 7*7
         for(int m = 0 ; m < 7*7*3 ;m++){
             local_weight[m] = input1[((ff * 7*7*3) + m)];
         }
@@ -86,7 +84,7 @@ __kernel void MaxPool_2a_3x3_MaxPool(__global float *restrict tensor, __global f
     {
         //Store 1 slice of data
         float input0_l[112 * 112];
-        #pragma unroll 112
+        //#pragma unroll 112
         for (int i = 0; i < 112 * 112; i++)
         {
             input0_l[i] = input0[(ax1*112*112) + i];
@@ -96,7 +94,7 @@ __kernel void MaxPool_2a_3x3_MaxPool(__global float *restrict tensor, __global f
             for (int ax3 = 0; ax3 < 56; ++ax3)
             {
                 float tensor2 = -3.402823e+38f;
-                #pragma unroll
+                //#pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
@@ -115,7 +113,6 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict compute, __global fl
 {
     //Local memory for Biases:
     __local  float input_bias[64];
-    #pragma unroll
     for(int b = 0; b < 64; b++){
         input_bias[b] = input2[b];
     }
@@ -124,7 +121,6 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict compute, __global fl
     {
         //Local weights 
         float input_weights[64];
-        #pragma unroll
         for(int m = 0 ; m < 64 ;m++){
             input_weights[m] = input1[((ff * 64) + m)];
         }
@@ -141,7 +137,6 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict compute, __global fl
         {
             //Store 1 slice of input image
             float image_slice[56*56];
-            #pragma unroll 56
             for (int in = 0; in < 56*56; in++){
                 image_slice[in] = input0[(56*56*rc)+in];
             }
@@ -182,7 +177,6 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict compute, __global fl
 {
     //Local memory for Biases:
     __local  float input_bias[192];
-    #pragma unroll
     for(int b = 0; b < 192; b++){
         input_bias[b] = input2[b];
     }
@@ -191,7 +185,6 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict compute, __global fl
     {
         //Local weights 
         float local_weight[3*3*64];
-        #pragma unroll 64
         for(int m = 0 ; m < 3*3*64 ; m++){
             local_weight[m] = input1[((ff * 3*3*64) + m)];
         }
@@ -208,7 +201,7 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict compute, __global fl
         {
             //Store 1 slice of input image
             float image_slice[58*58];
-            #pragma unroll 58
+            #pragma unroll 29
             for (int in = 0; in < 58*58; in++){
                 image_slice[in] = input0[(58*58*rc)+in];
             }
@@ -257,7 +250,6 @@ __kernel void MaxPool_3a_3x3_MaxPool(__global float *restrict tensor, __global f
   for (int ax1 = 0; ax1 < 192; ++ax1)
     {
         float inputl[56 * 56];
-        #pragma unroll 32
         for (int i = 0; i < 56 * 56; i++)
         {
             inputl[i] = input0[(ax1*56*56)+i];
@@ -267,7 +259,6 @@ __kernel void MaxPool_3a_3x3_MaxPool(__global float *restrict tensor, __global f
             for (int ax3 = 0; ax3 < 28; ++ax3)
             {
                 float tensor1 = -3.402823e+38f;
-                #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
