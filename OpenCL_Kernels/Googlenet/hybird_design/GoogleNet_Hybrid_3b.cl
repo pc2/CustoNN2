@@ -104,7 +104,7 @@ __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 }
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 //write_channel_intel(conv1_3b_out_b0_channel, temp_0);
-                output[((((ff * 28) + yy) * 28) + xx] = temp_0;
+                output[((((ff * 28) + yy) * 28) + xx)] = temp_0;
             }
         }
     }
@@ -193,7 +193,7 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 }
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.0;
                 //write_channel_intel(conv2_2_3b_out_b1_channel, temp_0);
-                output[((((ff * 28) + yy) * 28) + xx] = temp_0;
+                output[((((ff * 28) + yy) * 28) + xx)] = temp_0;
             }
         }
     }
@@ -347,7 +347,7 @@ __kernel void Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
                 }
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 //write_channel_intel(conv3_1_3b_out_b3_channel, temp_0);
-                output[(((ff * 28) + yy) * 28) + xx)] = temp_0;
+                output[((((ff * 28) + yy) * 28) + xx)] = temp_0;
             }
         }
     }
@@ -403,5 +403,5 @@ __kernel void Mixed_3b_concat(unsigned int route_to, __global float *restrict in
             }
         }
     }
-     printf("Kernel fnshd  3b_concat \n");
+    printf("Kernel fnshd  3b_concat \n");
 }
