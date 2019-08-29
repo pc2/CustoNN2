@@ -32,7 +32,7 @@ __kernel void  block3_unit_4_bt_v2_conv1_Conv2D(__global float* restrict compute
 
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
      #pragma unroll
      for (int xx = 0; xx < 14; ++xx){
@@ -94,7 +94,7 @@ __kernel void  block3_unit_4_bt_v2_conv2_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
       #pragma unroll
       for (int xx = 0; xx < 14; ++xx){
@@ -134,7 +134,7 @@ __kernel void  block3_unit_4_bt_v2_conv3_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
      #pragma unroll
      for (int xx = 0; xx < 14; ++xx){
@@ -186,7 +186,7 @@ __kernel void  block3_unit_5_bt_v2_conv1_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
      #pragma unroll
      for (int xx = 0; xx < 14; ++xx){
@@ -248,7 +248,7 @@ __kernel void  block3_unit_5_bt_v2_conv2_Conv2D(__global float* restrict compute
 
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
       #pragma unroll
       for (int xx = 0; xx < 14; ++xx){
@@ -288,7 +288,7 @@ __kernel void  block3_unit_5_bt_v2_conv3_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
      #pragma unroll
      for (int xx = 0; xx < 14; ++xx){
@@ -358,7 +358,7 @@ __kernel void  block3_unit_6_bt_v2_conv1_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
      #pragma unroll
      for (int xx = 0; xx < 14; ++xx){
@@ -423,7 +423,7 @@ __kernel void  block3_unit_6_bt_v2_conv2_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 7; ++yy){
       #pragma unroll
       for (int xx = 0; xx < 7; ++xx){
@@ -464,7 +464,7 @@ __kernel void  block3_unit_6_bt_v2_conv3_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 7; ++yy){
      #pragma unroll
      for (int xx = 0; xx < 7; ++xx){

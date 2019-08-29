@@ -32,9 +32,9 @@ __kernel void  block3_unit_1_bt_v2_shortcut_Conv2D(__global float* restrict comp
           }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-      #pragma unroll
+      #pragma unroll 4
       for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         compute[((((ff * 14) + yy) * 14) + xx)] = temp_out[yy][xx];
@@ -69,9 +69,9 @@ __kernel void  block3_unit_1_bt_v2_conv1_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-     #pragma unroll
+     #pragma unroll 4
      for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
@@ -133,9 +133,9 @@ __kernel void  block3_unit_1_bt_v2_conv2_Conv2D(__global float* restrict compute
 
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-      #pragma unroll
+      #pragma unroll 4
       for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
@@ -172,9 +172,9 @@ __kernel void  block3_unit_1_bt_v2_conv3_Conv2D(__global float* restrict compute
         }
       }
     }
-   #pragma unroll
+   #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-     #pragma unroll 
+     #pragma unroll 4
      for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         compute[((((ff * 14) + yy) * 14) + xx)] = temp_out[yy][xx];
@@ -225,9 +225,9 @@ __kernel void  block3_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-      #pragma unroll
+      #pragma unroll 4
       for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
@@ -292,9 +292,9 @@ __kernel void  block3_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-      #pragma unroll
+      #pragma unroll 4
       for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
@@ -331,9 +331,9 @@ __kernel void  block3_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-      #pragma unroll
+      #pragma unroll 4
       for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         compute[((((ff * 14) + yy) * 14) + xx)] = temp_out[yy][xx];
@@ -385,9 +385,9 @@ __kernel void  block3_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
           }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-      #pragma unroll
+      #pragma unroll 4
       for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
@@ -450,9 +450,9 @@ __kernel void  block3_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-      #pragma unroll
+      #pragma unroll 4
       for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
@@ -490,9 +490,9 @@ __kernel void  block3_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
+    #pragma unroll 2
     for (int yy = 0; yy < 14; ++yy){
-      #pragma unroll
+      #pragma unroll 4
       for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input2[ff];
         compute[((((ff * 14) + yy) * 14) + xx)] = temp_out[yy][xx];
