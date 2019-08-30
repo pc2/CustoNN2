@@ -829,7 +829,7 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 
 	// std::cout << err << "\n";
 
-	if ((model_name == "googlenet" && (2 * rank + 1 != 9)) || (model_name == "resnet" && (2 * rank + 1 != 5)))
+	if (model_name == "googlenet" || (model_name == "resnet" && (2 * rank + 1 != 5)))
 	{
 		std::ifstream aocx_stream2(f2, std::ios::in | std::ios::binary);
 		//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
@@ -851,7 +851,7 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 	std::vector<std::string> first_kernels = xml_parser1(f1_xml); //kernels from first aocx
 
 	std::vector<std::string> second_kernels;
-	if ((model_name == "googlenet" && (2 * rank + 1 != 9)) || (model_name == "resnet" && (2 * rank + 1 != 5)))
+	if (model_name == "googlenet" || (model_name == "resnet" && (2 * rank + 1 != 5)))
 	{
 		char f2_xml[file2_xml.length()];
 		strcpy(f2_xml, file2_xml.c_str());
