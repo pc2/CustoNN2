@@ -106,8 +106,7 @@ __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
         //Local weights 
         float input_weights[832];
-		//#pragma unroll 64
-        for(int m = 0 ; m < 832 ;m++){
+	      for(int m = 0 ; m < 832 ;m++){
             input_weights[m] = input1[((ff * 832) + m)];
         }
         
