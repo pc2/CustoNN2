@@ -83,7 +83,6 @@ __kernel void MaxPool_5a_2x2_MaxPool()
 {
     //Read Input from IO channel
     float maxInput[163072];
-    // 163072/8 = 20384
       for (int i = 0; i < 20384; i++)
     {
         //struct to store 256 bits of data
