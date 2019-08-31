@@ -117,13 +117,14 @@ __kernel void Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0.0;
             }
         }
+        //#pragma unroll 2
         for (int rc = 0; rc < 832; rc++)
         {
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
             
-#pragma unroll 2
+#pragma unroll 
             for (int yy = 0; yy < 7; ++yy)
             {
 #pragma unroll
@@ -189,13 +190,14 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0.0;
             }
         }
+        //#pragma unroll 2
         for (int rc = 0; rc < 832; rc++)
         {
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
             
-#pragma unroll 2
+#pragma unroll 
             for (int yy = 0; yy < 7; ++yy)
             {
 #pragma unroll
@@ -261,7 +263,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0;
             }
         }
-		//#pragma unroll 
+		#pragma unroll 2
 		for (int rc = 0; rc < 192; ++rc)
         {
             for (int i = 0; i < 9*9; i++){
@@ -300,6 +302,7 @@ __kernel void Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 				}
 			}
 		}
+        #pragma loop_coalesce
 		for (int yy = 0; yy < 7; ++yy)
         {
             for (int xx = 0; xx < 7; ++xx)
@@ -353,13 +356,14 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0.0;
             }
         }
+        //#pragma unroll 2
         for (int rc = 0; rc < 832; rc++)
         {
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
             
-#pragma unroll 2
+#pragma unroll 
             for (int yy = 0; yy < 7; ++yy)
             {
 #pragma unroll
@@ -426,7 +430,7 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0;
             }
         }
-		//#pragma unroll 
+		#pragma unroll 2
 		for (int rc = 0; rc < 48; ++rc)
         {
             for (int i = 0; i < 9*9; i++){
@@ -465,6 +469,7 @@ __kernel void Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 				}
 			}
 		}
+        #pragma loop_coalesce
 		for (int yy = 0; yy < 7; ++yy)
         {
             for (int xx = 0; xx < 7; ++xx)
@@ -551,13 +556,14 @@ __kernel void Mixed_5c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0.0;
             }
         }
+        //#pragma unroll 2
         for (int rc = 0; rc < 832; rc++)
         {
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
             
-#pragma unroll 2
+#pragma unroll 
             for (int yy = 0; yy < 7; ++yy)
             {
 #pragma unroll
@@ -640,7 +646,7 @@ __kernel void Conv2d_0c_1x1_Conv2D(__global float *restrict input1, __global flo
         input0[i] = read_channel_intel(avgpool_out_channel);
     }
 __local  float input_bias[1001];
-    //#pragma unroll 32
+    #pragma unroll 32
     for(int b = 0; b < 1001; b++){
         input_bias[b] = input2[b];
     }
@@ -653,8 +659,7 @@ __local  float input_bias[1001];
     	}
 	
         compute[ff] = input_bias[ff];
-	    float temp_1 = 0.0;
-        #pragma unroll  32
+	    float temp_1 = 0.0;  
         for (int rc = 0; rc < 1024; ++rc)
         {
             temp_1 += (input0[rc] * input_weights[rc]);
@@ -663,3 +668,4 @@ __local  float input_bias[1001];
         compute[ff] = (compute[ff] > 0) ? compute[ff] : 0.0;
     }
 }
+
