@@ -466,8 +466,7 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(
 
 __kernel void Mixed_4e_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
-for (int ax1 = 0; ax1 < 512; ++ax1)
-    {
+
     //Read Input from IO channel
     float maxInput[100352];
     // 100352/8 = 12544
@@ -482,8 +481,9 @@ for (int ax1 = 0; ax1 < 512; ++ax1)
             maxInput[(i * 8) + k] = in.concat_4d_out_buffer[k];
         }
     }
-
-    
+		
+		for (int ax1 = 0; ax1 < 512; ++ax1)
+		{
         for (int ax2 = 0; ax2 < 14; ++ax2)
         {
             for (int ax3 = 0; ax3 < 14; ++ax3)
@@ -493,7 +493,7 @@ for (int ax1 = 0; ax1 < 512; ++ax1)
                 {
                     for (int rv1 = 0; rv1 < 3; ++rv1)
                     {
-                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? maxInput[((((( ax2 + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
+                        tensor = max(tensor, (float)((((((1 - rv) <= ax2) && (ax2 < (15 - rv))) && ((1 - rv1) <= ax3)) && (ax3 < (15 - rv1))) ? maxInput[((((((ax1 * 14) +ax2 + rv) * 14) + ax3) + rv1) + -15)] : -3.402823e+38f));
                     }
                 }
                 write_channel_intel(maxpool_4e_out_b3_channel, tensor);
