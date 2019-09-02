@@ -40,7 +40,7 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global fl
             }
             for (int yy = 0; yy < 112; ++yy)
             {
-                #pragma unroll 16
+                #pragma unroll 4
                 for (int xx = 0; xx < 112; ++xx)
                 {
                     float temp_0 = 0;
@@ -140,7 +140,7 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict compute, __global fl
             for (int in = 0; in < 56*56; in++){
                 image_slice[in] = input0[(56*56*rc)+in];
             }
-            #pragma unroll 4
+            //#pragma unroll 4
             for (int yy = 0; yy < 56; ++yy)
             {
                 #pragma unroll
@@ -205,7 +205,7 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict compute, __global fl
             for (int in = 0; in < 58*58; in++){
                 image_slice[in] = input0[(58*58*rc)+in];
             }
-            #pragma unroll 2
+            //#pragma unroll 2
             for (int yy = 0; yy < 56; ++yy)
             {
                 #pragma unroll 
