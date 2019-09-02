@@ -136,12 +136,13 @@ __kernel void Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
             input_weight[m] = input1[((ff * 3*3*160) + m)];
         }
         float temp_out[14][14];
+		#pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
             }
         }
-#pragma unroll 4
+		#pragma unroll 2
         for (int rc = 0; rc < 160; ++rc)
         {
             for (int i = 0; i < 16*16; i++){
@@ -274,12 +275,13 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
             input_weight[m] = input1[((ff * 3*3*32) + m)];
         }
         float temp_out[14][14];
+		#pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
             }
         }
-#pragma unroll 4
+		#pragma unroll 2
         for (int rc = 0; rc < 32; ++rc)
         {
             for (int i = 0; i < 16*16; i++){
@@ -374,6 +376,7 @@ __kernel void Mixed_4f_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
             input_weight[m] = input1[((ff * 528) + m)];
         }
         float temp_out[14][14];
+		#pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
@@ -396,7 +399,7 @@ __kernel void Mixed_4f_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
                 
             }
         }
-        
+        #pragma loop_coalesce
         for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
