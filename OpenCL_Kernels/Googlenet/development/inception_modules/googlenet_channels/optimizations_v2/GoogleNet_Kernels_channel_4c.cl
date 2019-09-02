@@ -255,13 +255,13 @@ __kernel void Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0;
             }
         }
-#pragma unroll 4
+//#pragma unroll 4
         for (int rc = 0; rc < 112; ++rc)
         {
             for (int i = 0; i < 16*16; i++){
                 l_input[i] = input0[16*16*rc+i];
             }
-#pragma unroll 2
+#pragma unroll 4
         for (int yy = 0; yy < 14; ++yy)
         {
 #pragma unroll
@@ -414,7 +414,7 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 temp_out[l][j] = 0;
             }
         }
-#pragma unroll 4
+//#pragma unroll 4
         for (int rc = 0; rc < 24; ++rc)
         {
             
@@ -422,7 +422,7 @@ __kernel void Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
                 l_input[i] = input0[16*16*rc+i];
             }
             
-#pragma unroll 2
+#pragma unroll 4
             for (int yy = 0; yy < 14; ++yy)
             {
 #pragma unroll
