@@ -270,7 +270,7 @@ __kernel void  block4_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
-#pragma unroll
+
             for (int yy = 0; yy < 7; ++yy)
             {
 #pragma unroll
@@ -281,10 +281,9 @@ __kernel void  block4_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute
                 
             }
         }
-#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
-		#pragma unroll
+		
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -323,10 +322,10 @@ __kernel void  block4_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
             for (int i = 0; i < 9*9; i++){
                 l_input[i] = input0[9*9*rc+i];
             }
-			#pragma unroll 
+			 
             for (int yy = 0; yy < 7; ++yy)
             {
-				#pragma unroll
+			
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     float temp_0 = 0;
@@ -357,10 +356,10 @@ __kernel void  block4_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
                 }
             }
         }
-#pragma unroll
+
         for (int yy = 0; yy < 7; ++yy)
         { 
-#pragma unroll
+
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -393,7 +392,6 @@ __kernel void  block4_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
-#pragma unroll
             for (int yy = 0; yy < 7; ++yy)
             {
 #pragma unroll
@@ -404,10 +402,10 @@ __kernel void  block4_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute
                 
             }
         }
-#pragma unroll
+//#p
         for (int yy = 0; yy < 7; ++yy)
         {
-		#pragma unroll 
+		//#pragma unroll 
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -450,7 +448,7 @@ __kernel void  block4_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
-#pragma unroll
+
             for (int yy = 0; yy < 7; ++yy)
             {
 #pragma unroll
@@ -461,10 +459,10 @@ __kernel void  block4_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
                 
             }
         }
-#pragma unroll
+//#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
-		#pragma unroll
+		//#pragma unroll
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -505,10 +503,10 @@ __kernel void  block4_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute
             for (int i = 0; i < 9*9; i++){
                 l_input[i] = input0[9*9*rc+i];
             }
-			#pragma unroll 
+			
             for (int yy = 0; yy < 7; ++yy)
             {
-				#pragma unroll
+				
                 for (int xx = 0; xx < 7; ++xx)
                 {
                     float temp_0 = 0;
@@ -539,10 +537,10 @@ __kernel void  block4_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute
                 }
             }
         }
-#pragma unroll
+//#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
-#pragma unroll
+//#pragma unroll
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];
@@ -578,7 +576,7 @@ __kernel void  block4_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
             for (int i = 0; i < 7*7; i++){
                 l_input[i] = input0[7*7*rc+i];
             }
-#pragma unroll
+
             for (int yy = 0; yy < 7; ++yy)
             {
 #pragma unroll
@@ -589,10 +587,10 @@ __kernel void  block4_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
                 
             }
         }
-#pragma unroll
+//#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
-		#pragma unroll
+		//#pragma unroll
             for (int xx = 0; xx < 7; ++xx)
             {
                 temp_out[yy][xx] += input2[ff];

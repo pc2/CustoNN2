@@ -105,11 +105,11 @@ __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
 		//Local weights 
         float input_weights[512];
-        #pragma unroll 8
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
 		float temp_out[14][14];
+		#pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
@@ -130,6 +130,7 @@ __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 }
 			}
 		}
+		#pragma loop_coalesce
          for (int yy = 0; yy < 14; ++yy)
 		{
             for (int xx = 0; xx < 14; ++xx)
@@ -170,11 +171,11 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
 	 //Local weights 
         float input_weights[512];
-        #pragma unroll 8
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
 		}
 		float temp_out[14][14];
+		#pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
@@ -196,6 +197,7 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 }
 			}
 		}
+		#pragma loop_coalesce
 		for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
@@ -239,23 +241,22 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
     {
 	 //Local weights 
         float input_weights[3*3*144];
-        #pragma unroll 16
         for(int m = 0 ; m < 3*3*144 ; m++){
             input_weights[m] = input1[((ff * 3*3*144) + m)];
         }
 		float temp_out[14][14];
+		#pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
             }
         }
-		#pragma unroll 4
 		for (int rc = 0; rc < 144; ++rc)
         {
             for (int i = 0; i < 16*16; i++){
                 l_input[i] = input0[16*16*rc+i];
             }
-			#pragma unroll 2
+			#pragma unroll 4
 			for (int yy = 0; yy < 14; ++yy)
 			{
 			#pragma unroll
@@ -288,6 +289,7 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
 				}
 			}
 		}
+		#pragma loop_coalesce
 		for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
@@ -328,7 +330,6 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
     {
 	//Local weights 
         float input_weights[512];
-        #pragma unroll 16
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
@@ -355,7 +356,7 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict in
                 }
 			}
 		}
-		
+		#pragma loop_coalesce
 		for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
@@ -401,24 +402,23 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(
     {
 		//Local weights 
         float input_weights[3*3*32];
-        #pragma unroll 16
         for(int m = 0 ; m < 3*3*32 ; m++){
             input_weights[m] = input1[((ff * 3*3*32) + m)];
         }
 		
 		float temp_out[14][14];
+		#pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
             }
         }
-		#pragma unroll 4
 		for (int rc = 0; rc < 32; ++rc)
         {
 			for (int i = 0; i < 16*16; i++){
                 l_input[i] = input0[16*16*rc+i];
             }
-			#pragma unroll 2
+			#pragma unroll 4
 			for (int yy = 0; yy < 14; ++yy)
 			{
 				#pragma unroll
@@ -452,6 +452,7 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D(
                 }
             }
         }
+		#pragma loop_coalesce
 		for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
@@ -523,11 +524,11 @@ __kernel void Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(
     {
 		//Local weights 
         float input_weights[512];
-        #pragma unroll 8
         for(int m = 0 ; m < 512 ;m++){
             input_weights[m] = input1[((ff * 512) + m)];
         }
 		float temp_out[14][14];
+		#pragma loop_coalesce
         for (int l = 0; l < 14; l++ ){
             for (int j = 0; j < 14; j++){
                 temp_out[l][j] = 0;
@@ -551,6 +552,7 @@ __kernel void Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(
 			
             }
         }
+		#pragma loop_coalesce
 		for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)

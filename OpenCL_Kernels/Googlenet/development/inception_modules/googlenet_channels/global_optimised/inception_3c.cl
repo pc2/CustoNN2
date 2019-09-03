@@ -322,7 +322,7 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                 image_slice[in] = input0[(30*30*rc)+in];
             }
 
-            #pragma unroll 4
+            #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
