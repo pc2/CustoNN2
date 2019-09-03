@@ -142,7 +142,6 @@ __kernel void Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                 temp_out[l][j] = 0;
             }
         }
-		#pragma unroll 2
         for (int rc = 0; rc < 160; ++rc)
         {
             for (int i = 0; i < 16*16; i++){
@@ -223,7 +222,7 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             for (int i = 0; i < 14*14; i++){
                 l_input[i] = input0[14*14*rc+i];
             }
-#pragma unroll 2
+#pragma unroll
         for (int yy = 0; yy < 14; ++yy)
         {
 #pragma unroll
@@ -234,9 +233,9 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             
         }
         }
-#pragma loop_coalesce
         for (int yy = 0; yy < 14; ++yy)
         {
+			#pragma unroll
             for (int xx = 0; xx < 14; ++xx)
             {
                 temp_out[yy][xx] += input_bias[ff];
@@ -281,7 +280,6 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                 temp_out[l][j] = 0;
             }
         }
-		#pragma unroll 2
         for (int rc = 0; rc < 32; ++rc)
         {
             for (int i = 0; i < 16*16; i++){
@@ -322,7 +320,6 @@ __kernel void Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                 }
             }
         }
-#pragma loop_coalesce
         for (int yy = 0; yy < 14; ++yy)
         {
             for (int xx = 0; xx < 14; ++xx)
