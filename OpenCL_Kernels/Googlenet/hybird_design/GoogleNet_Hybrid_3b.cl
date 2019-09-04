@@ -46,7 +46,6 @@ channel float maxpool_3b_out_b3_channel __attribute__((depth(32)));
 //Added an argument to decide from which channel to read
 __kernel void feeder_3b(unsigned int route_from)
 {
-    printf("Kernel Started feeder_3b \n");
     for (int i = 0; i < 18816; i++)
     {
         struct concat_3a_buffer input;
@@ -72,48 +71,61 @@ __kernel void feeder_3b(unsigned int route_from)
         write_channel_intel(concat_3b_in_b2_channel, input);
         write_channel_intel(concat_3b_in_b3_channel, input);
     }
-    printf("Kernel fnshd feeder_3b \n");
 }
 
 __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2, __global float *restrict output)
 {
-    printf("Kernel started 3b_0_1x1 \n");
 
     float input0[192 * 28 * 28];
     for (int i = 0; i < 18816; i++)
     {
         struct concat_3a_buffer in;
         in = read_channel_intel(concat_3b_in_b0_channel);
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
             input0[(i * 8) + k] = in.concat_3a_out_buffer[k];
         }
     }
 
+    //Local memory for Biases:
+    __local  float input_bias[64];
+    #pragma unroll 32
+    for(int b = 0; b < 64; b++){
+        input_bias[b] = input2[b];
+    }
+
     for (int ff = 0; ff < 64; ++ff)
     {
+        //Local weights 
+        float input_weights[192];
+        #pragma unroll 32
+        for(int m = 0 ; m < 192 ;m++){
+            input_weights[m] = input1[((ff * 192) + m)];
+        }
+
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                float temp_0 = input2[ff];
+                float temp_0 = input_bias[ff];
+                float temp_1 = 0;
+                //#pragma unroll 4
                 for (int rc = 0; rc < 192; ++rc)
                 {
-                    temp_0 += (input0[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 192) + rc)]);
+                    temp_1 += (input0[((((rc * 28) + yy) * 28) + xx)] * input_weights[(rc)]);
                 }
+                temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 //write_channel_intel(conv1_3b_out_b0_channel, temp_0);
                 output[((((ff * 28) + yy) * 28) + xx)] = temp_0;
             }
         }
     }
-    printf("Kernel fnshd 3b_0_1x1 \n");
 }
 
 __kernel void Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
-    printf("Kernel started 3b_1_1x1 \n");
 
     float input0[192 * 28 * 28];
     for (int i = 0; i < 18816; i++)
@@ -127,28 +139,43 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict in
         }
     }
 
+     //Local memory for Biases:
+    __local  float input_bias[96];
+    #pragma unroll 32
+    for(int b = 0; b < 96; b++){
+        input_bias[b] = input2[b];
+    }
+
     for (int ff = 0; ff < 96; ++ff)
     {
+        //Local weights 
+        float input_weights[192];
+        #pragma unroll 32
+        for(int m = 0 ; m < 192 ;m++){
+            input_weights[m] = input1[((ff * 192) + m)];
+        }
+
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                float temp_0 = input2[ff];
+                float temp_0 = input_bias[ff];
+                float temp_1 = 0.0;
+                //#pragma unroll 4
                 for (int rc = 0; rc < 192; ++rc)
                 {
-                    temp_0 += (input0[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 192) + rc)]);
+                    temp_1 += (input0[((((rc * 28) + yy) * 28) + xx)] * input_weights[(rc)]);
                 }
+                temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv2_1_3b_out_b1_channel, temp_0);
             }
         }
     }
-    printf("Kernel fnshd 3b_1_1x1 \n");
 }
 
 __kernel void Padding_Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D()
 {
-    printf("Kernel started pad3b_1_3x3 \n");
 
     float input0[96 * 28 * 28];
     for (int i = 0; i < 96 * 28 * 28; i++)
@@ -161,12 +188,10 @@ __kernel void Padding_Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D()
         float result = (float)(((((30 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) < 870)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30) < 29)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 900) * 28) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) / 30)) * 28) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30)) + -29)] : 0.000000e+00f);
         write_channel_intel(padding_3b_out_b1_channel, result);
     }
-    printf("Kernel fnshd pad3b_1_3x3 \n");
 }
 
 __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict input1, __global float *restrict input2, __global float *restrict output)
 {
-    printf("Kernel started  3b_1_3x3 \n");
 
     float input0[86400];
     for (int i = 0; i < 86400; i++)
@@ -174,70 +199,106 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_3b_out_b1_channel);
     }
 
+    //Local memory for Biases:
+    __local  float input_bias[128];
+    #pragma unroll 32
+    for(int b = 0; b < 128; b++){
+        input_bias[b] = input2[b];
+    }
+
     for (int ff = 0; ff < 128; ++ff)
     {
+        //Local weights 
+        float input_weights[3*3*96];
+        #pragma unroll 32
+        for(int m = 0 ; m < 3*3*96 ; m++){
+            input_weights[m] = input1[((ff * 3*3*96) + m)];
+        }
+
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                float temp_0 = input2[ff];
+                float temp_0 = input_bias[ff];
+                float temp_3 = 0.0;
                 for (int rc = 0; rc < 96; ++rc)
                 {
+                    float temp_2 = 0.0;
+                    #pragma unroll
                     for (int ry = 0; ry < 3; ++ry)
                     {
+                        float temp_1 = 0.0;
+                        #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_0 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input1[((((((ff * 96) + rc) * 3) + ry) * 3) + rx)]);
+                            temp_1 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
+                        temp_2 += temp_1;
                     }
+                    temp_3 += temp_2;
                 }
+                temp_0 += temp_3;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.0;
                 //write_channel_intel(conv2_2_3b_out_b1_channel, temp_0);
                 output[((((ff * 28) + yy) * 28) + xx)] = temp_0;
             }
         }
     }
-    printf("Kernel fnshd  3b_1_3x3 \n");
 }
 
 __kernel void Mixed_3b_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
-    printf("Kernel started  3b_2_1x1 \n");
 
     float input0[192 * 28 * 28];
     for (int i = 0; i < 18816; i++)
     {
         struct concat_3a_buffer in;
         in = read_channel_intel(concat_3b_in_b2_channel);
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
             input0[(i * 8) + k] = in.concat_3a_out_buffer[k];
         }
     }
 
+    
+     //Local memory for Biases:
+    __local  float input_bias[16];
+    #pragma unroll
+    for(int b = 0; b < 16; b++){
+        input_bias[b] = input2[b];
+    }
+
     for (int ff = 0; ff < 16; ++ff)
     {
+        //Local weights 
+        float input_weights[192];
+        #pragma unroll 64
+        for(int m = 0 ; m < 192 ;m++){
+            input_weights[m] = input1[((ff * 192) + m)];
+        }
+
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                float temp_0 = input2[ff];
+                float temp_0 = input_bias[ff];
+                float temp_1 = 0.0;
+                //#pragma unroll 4
                 for (int rc = 0; rc < 192; ++rc)
                 {
-                    temp_0 += (input0[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 192) + rc)]);
+                    temp_1 += (input0[((((rc * 28) + yy) * 28) + xx)] * input_weights[(rc)]);
                 }
+                temp_0 += temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 write_channel_intel(conv3_1_3b_out_b2_channel, temp_0);
             }
         }
     }
-    printf("Kernel fnshd  3b_2_1x1 \n");
 }
 
 __kernel void Padding_Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D()
 {
-    printf("Kernel started  pad3b_2_3x3 \n");
 
     float input0[16 * 28 * 28];
     for (int i = 0; i < 16 * 28 * 28; i++)
@@ -250,12 +311,10 @@ __kernel void Padding_Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D()
         float result = (float)(((((30 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) < 870)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30) < 29)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 900) * 28) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) / 30)) * 28) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30)) + -29)] : 0.000000e+00f);
         write_channel_intel(padding_3b_out_b2_channel, result);
     }
-    printf("Kernel fnshd  pad3b_2_3x3 \n");
 }
 
 __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict input1, __global float *restrict input2, __global float *restrict output)
 {
-    printf("Kernel started  3b_2_3x3 \n");
 
     float input0[14400];
     for (int i = 0; i < 14400; i++)
@@ -263,42 +322,62 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict in
         input0[i] = read_channel_intel(padding_3b_out_b2_channel);
     }
 
+     //Local memory for Biases:
+    __local  float input_bias[32];
+    #pragma unroll
+    for(int b = 0; b < 32; b++){
+        input_bias[b] = input2[b];
+    }
+
     for (int ff = 0; ff < 32; ++ff)
     {
+        //Local weights 
+        float input_weights[3*3*16];
+        #pragma unroll 64
+        for(int m = 0 ; m < 3*3*16 ; m++){
+            input_weights[m] = input1[((ff * 3*3*16) + m)];
+        }
+
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                float temp_0 = input2[ff];
+                float temp_0 = input_bias[ff];
+                float temp_3 = 0.0;
                 for (int rc = 0; rc < 16; ++rc)
-                {
+                {   
+                    float temp_2 = 0.0;
+                    #pragma unroll
                     for (int ry = 0; ry < 3; ++ry)
                     {
+                        float temp_1 = 0.0;
+                        #pragma unroll
                         for (int rx = 0; rx < 3; ++rx)
                         {
-                            temp_0 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input1[((((((ff * 16) + rc) * 3) + ry) * 3) + rx)]);
+                            temp_1 += (input0[((((((rc * 30) + yy) + ry) * 30) + xx) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
                         }
+                        temp_2 += temp_1;
                     }
+                    temp_3 += temp_2;    
                 }
+                temp_0 +=temp_3;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.0;
                 //write_channel_intel(conv3_2_3b_out_b2_channel, temp_0);
                 output[(((ff * 28) + yy) * 28) + xx] = temp_0;
             }
         }
     }
-    printf("Kernel fnshd  3b_2_3x3 \n");
 }
 
 __kernel void Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool()
 {
-    printf("Kernel started  3b_3_pool3x3 \n");
 
     float input0[192 * 28 * 28];
     for (int i = 0; i < 18816; i++)
     {
         struct concat_3a_buffer in;
         in = read_channel_intel(concat_3b_in_b3_channel);
-#pragma unroll
+        #pragma unroll
         for (int k = 0; k < 8; k++)
         {
             input0[(i * 8) + k] = in.concat_3a_out_buffer[k];
@@ -323,41 +402,55 @@ __kernel void Mixed_3b_Branch_3_MaxPool_0a_3x3_MaxPool()
             }
         }
     }
-    printf("Kernel fnshd  3b_3_pool3x3 \n");
 }
 __kernel void Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict input1, __global float *restrict input2, __global float *restrict output)
 {
-    printf("Kernel started  3b_3_1x1 \n");
+
     float input0[192 * 28 * 28];
     for (int i = 0; i < 192 * 28 * 28; i++)
     {
         input0[i] = read_channel_intel(maxpool_3b_out_b3_channel);
     }
 
+    //Local memory for Biases:
+    __local  float input_bias[32];
+    #pragma unroll
+    for(int b = 0; b < 32; b++){
+        input_bias[b] = input2[b];
+    }
+
+
     for (int ff = 0; ff < 32; ++ff)
     {
+        //Local weights 
+        float input_weights[192];
+        #pragma unroll 64
+        for(int m = 0 ; m < 192 ;m++){
+            input_weights[m] = input1[((ff * 192) + m)];
+        }
         for (int yy = 0; yy < 28; ++yy)
         {
             for (int xx = 0; xx < 28; ++xx)
             {
-                float temp_0 = input2[ff];
+                float temp_0 = input_bias[ff];
+                float  temp_1 = 0.0;
+                //#pragma unroll 4
                 for (int rc = 0; rc < 192; ++rc)
                 {
-                    temp_0 += (input0[((((rc * 28) + yy) * 28) + xx)] * input1[((ff * 192) + rc)]);
+                    temp_1 += (input0[((((rc * 28) + yy) * 28) + xx)] * input_weights[(rc)]);
                 }
+                temp_0 +=temp_1;
                 temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
                 //write_channel_intel(conv3_1_3b_out_b3_channel, temp_0);
                 output[((((ff * 28) + yy) * 28) + xx)] = temp_0;
             }
         }
     }
-    printf("Kernel fnshd  3b_3_1x1 \n");
 }
 
 __kernel void Mixed_3b_concat(unsigned int route_to, __global float *restrict input0, __global float *restrict input1, __global float *restrict input2, __global float *restrict input3)
 {
 
-    printf("Kernel started  3b_concat \n");
     //struct to store 256 bits of data
     struct concat_3b_buffer out;
     /*
@@ -403,5 +496,4 @@ __kernel void Mixed_3b_concat(unsigned int route_to, __global float *restrict in
             }
         }
     }
-    printf("Kernel fnshd  3b_concat \n");
 }
