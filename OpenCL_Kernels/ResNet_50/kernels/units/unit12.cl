@@ -23,6 +23,11 @@ __kernel void  Mul1_1844_Fused_Mul__FusedScaleShift(__global float* restrict T_p
 
 __kernel void  block3_unit_6_bt_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1,__global float* restrict input2) {
   float l_input[14*14];
+    __local float input_bias[256];
+    
+    for( int j = 0; j < 256; ++j){
+        input_bias[j] = input2[j];
+    }
   for (int ff = 0; ff < 256; ++ff) {
     float input_weights[1024];
     for(int w = 0 ; w < 1024 ;w++){
@@ -53,7 +58,7 @@ __kernel void  block3_unit_6_bt_v2_conv1_Conv2D(__global float* restrict compute
     for (int yy = 0; yy < 14; ++yy){
      #pragma unroll
      for (int xx = 0; xx < 14; ++xx){
-        temp_out[yy][xx] += input2[ff];
+        temp_out[yy][xx] += input_bias[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
         compute[((((ff * 14) + yy) * 14) + xx)] = temp_out[yy][xx];
       }
@@ -73,6 +78,11 @@ __kernel void P_block3_unit_6_bt_v2_conv2_Conv2D(__global float *restrict T_pad,
 
 __kernel void  block3_unit_6_bt_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   float l_input[9*9];
+    __local float input_bias[256];
+    
+    for( int j = 0; j < 256; ++j){
+        input_bias[j] = input2[j];
+    }
   for (int ff = 0; ff < 256; ++ff) {
     float input_weights[256*3*3];
     for(int w = 0 ; w < 256*3*3 ;w++){
@@ -122,7 +132,7 @@ __kernel void  block3_unit_6_bt_v2_conv2_Conv2D(__global float* restrict compute
     for (int yy = 0; yy < 7; ++yy){
       #pragma unroll
       for (int xx = 0; xx < 7; ++xx){
-        temp_out[yy][xx] += input2[ff];
+        temp_out[yy][xx] += input_bias[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
         compute[((((ff * 7) + yy) * 7) + xx)] = temp_out[yy][xx];
       }
@@ -135,6 +145,11 @@ __kernel void  block3_unit_6_bt_v2_conv2_Conv2D(__global float* restrict compute
 
 __kernel void  block3_unit_6_bt_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   float l_input[7*7];
+    __local float input_bias[1024];
+    
+    for( int j = 0; j < 1024; ++j){
+        input_bias[j] = input2[j];
+    }
   for (int ff = 0; ff < 1024; ++ff) {
     float input_weights[256];
     for(int w = 0 ; w < 256 ;w++){
@@ -166,7 +181,7 @@ __kernel void  block3_unit_6_bt_v2_conv3_Conv2D(__global float* restrict compute
     for (int yy = 0; yy < 7; ++yy){
      #pragma unroll
      for (int xx = 0; xx < 7; ++xx){
-        temp_out[yy][xx] += input2[ff];
+        temp_out[yy][xx] += input_bias[ff];
         compute[((((ff * 7) + yy) * 7) + xx)] = temp_out[yy][xx];
       }
     }
