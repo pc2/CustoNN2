@@ -11,6 +11,7 @@ Kernel wise analysis :
 
 |              |                  |              |           |                 |           |                     |          |          |
 |--------------|------------------|--------------|-----------|-----------------|-----------|---------------------|----------|----------| 
-| Kernel   | No.of Operations | Global Mem (r) | Global Mem (w)      | Exe time(measured)| Ops/cycle (measured) |Ops/cycle (estimated) |Channel Read|Channel Write | Ops/byte | 
-| Padding_Conv2d_1a_7x7_Conv2D | 0       |  588KB      | 0     |  1.04ms   |0       | 0  |0 | 614KB     | 0 |
+| Kernel                       | No.of Operations| Fraction of total Ops | Global Mem (r) | Global Mem (w)      | Exe time(measured)| Ops/cycle (measured) |Ops/cycle (estimated) |Channel Read|Channel Write | Ops/byte | 
+| Padding_Conv2d_1a_7x7_Conv2D | 0               |0                      |  588KB      | 0|  1.04ms   |0       | 0  |0 | 614KB     | 0 |
+| Conv2d_1a_7x7_Conv2D         | 256M |0.23      |  65KB                 | 0|  79.6ms   |14       | 14  |614KB | 3.21MB     | 3.93K |
 
