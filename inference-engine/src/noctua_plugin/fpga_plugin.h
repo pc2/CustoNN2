@@ -88,8 +88,10 @@ void printDevices(std::vector<cl::Device> DeviceList1);
 /**
  * OPENVINO FPGA NOCTUA PLUGIN is implemented in this function  
  */
-std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name, std::string bitstream_dir);
-
+std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name, int rank, int TOP_N, std::string bitstream_dir, std::string opencl_design, std::string route_xml_path);
+/**
+ *  Launcher function for OpenCL Global mem design
+ */
 std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 		std::vector<cl::Device> DeviceList2, int kernel_index, cl_int err,
 		int buffer_index, int rank, int com_sz, struct layersDetails* root,
@@ -98,6 +100,24 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 		cl::Buffer* buffers[500] , std::vector<std::string> first_kernels,std::vector<std::string> second_kernels, int TOP_N, std::string model_name);
 
 /**
+ *  Launcher function for OpenCL Channels design
+ */
+std::vector<int> launcher_channel(int kernel_index,
+								  int buffer_index, int TOP_N, std::map<std::string, unsigned int> route_map,
+								  std::vector<cl::Device> DeviceList1, std::vector<cl::Device> DeviceList2,
+								  struct layersDetails *root, cl::Kernel *kernels[250],
+								  cl::Program *programs[2], cl::Buffer *buffers[500],
+								  cl::Context *contexts[2], cl::CommandQueue *cmd_queues[500],
+								  cl::CommandQueue *pad_queues[500], int rank, std::vector<std::string> first_kernels, std::vector<std::string> second_kernels);
+
+
+/**
  * Function to get Top 10 labels
  */
 std::vector<int> getTopNResults(float final_labels[],int topN);
+
+/**
+ * Topology of FPGAs
+ * To be built using xml parser. This is just a dummy placeholder
+ */
+std::map<std::string, unsigned int> build_topo_map(std::string xmlpath);

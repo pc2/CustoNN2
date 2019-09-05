@@ -52,7 +52,7 @@ bool ParseAndCheckCommandLine(int argc, char *argv[])
         showUsage();
         throw std::logic_error("Parameter -bitstream is not set");
     }
-    if(FLAGS_bitstream.empty()){
+    if(FLAGS_model.empty()){
         showUsage();
         throw std::logic_error("Parameter -model is not set");
     }
@@ -159,7 +159,33 @@ int main(int argc, char *argv[])
         const int model_name_str = cnn_modelArg.length();
         char *cnn_model = new char[model_name_str + 1];
         strcpy(cnn_model, cnn_modelArg.c_str());
-        //int num_devices = FLAGS_num_devices;
+        // Warn message when design parameter is not set.
+        if (FLAGS_design.empty())
+        {
+            slog::warn << " -design argument is empty. Hence, global memory design will be executed."<<slog::endl;
+        }
+        // Default design = global
+        std::string opencl_design= "global";
+        // Routing configs
+        std::string route_xml = "";
+
+        if (!FLAGS_design.empty())
+        {
+            opencl_design = FLAGS_design;
+        }
+
+        if(opencl_design == "channel"){
+            if (FLAGS_route.empty()) {
+                showUsage();
+                throw std::logic_error("Parameter -route is not set. route argument is mandatory when the design is channel.");
+            }else{
+                route_xml=FLAGS_route;
+            }
+        }
+        if(!(opencl_design=="global" || opencl_design=="channel")){
+            showUsage();
+            throw std::logic_error("Provided design is not supported.");
+        }
 
         // Bitstream directory
         std::string bitstream = FLAGS_bitstream;
@@ -211,7 +237,7 @@ int main(int argc, char *argv[])
         auto t0 = Time::now();
         int rank;
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-        std::vector<int> classificaitons = fpga_launcher(network, inputModel, imageNames, cnn_model, rank,TOP_N,bitstream);
+        std::vector<int> classificaitons = fpga_launcher(network, inputModel, imageNames, cnn_model, rank, TOP_N, bitstream, opencl_design, route_xml);
         if (classificaitons.size() == 0)
         {
             slog::info << " No classification results in this node " << imageNames.at(0) << slog::endl;

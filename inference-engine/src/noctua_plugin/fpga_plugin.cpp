@@ -8,6 +8,7 @@
 #include "fpga_plugin.h"
 #include <format_reader_ptr.h>
 #include <chrono>
+#include <ctime>
 #include <thread>
 #include <assert.h>
 #include <ie_builders.hpp>
@@ -15,6 +16,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <mpi.h>
+#include <map>
 #include <inference_engine.hpp>
 #include <opencv2/opencv.hpp>
 #include <boost/property_tree/xml_parser.hpp>
@@ -724,14 +726,18 @@ int get_program_num(std::string layerName, std::vector<std::string> first_kernel
 /**
  * OPENVINO FPGA NOCTUA PLUGIN is implemented in this function
  */
-std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name, int rank, int TOP_N, std::string bitstream_dir)
+std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_path, std::vector<std::string> imageNames, std::string model_name, int rank, int TOP_N, std::string bitstream_dir, std::string opencl_design, std::string route_xml_path)
 {
 	std::cout << "In FPGA Launcher" << std::endl;
 	std::cout << "Rank: " << rank << "\n";
 	std::vector<int> classification_result;
 	parse_images(imageNames, network);
 	G_BITSTREAM_DIR = bitstream_dir;
-
+	//build a map mapping routing(concat and feeder) kernels to channels
+	std::map<std::string, unsigned int> route_map;
+	if(opencl_design=="channel") {
+		route_map = build_topo_map(route_xml_path);
+	}
 	cl_int err;
 
 	std::vector<cl::Platform> PlatformList; //Platforms
@@ -754,13 +760,14 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 
 	DeviceList2.push_back(DeviceList_Master[1]);
 	//Printing the Devices
+	printDevices(DeviceList_Master);
 
 	cl::Context *contexts[2];
 	contexts[0] = new cl::Context(DeviceList1);
 	contexts[1] = new cl::Context(DeviceList2);
 
 	cl::CommandQueue *cmd_queues[250]; // To be dynamically allocated at kernel launch, one per kernel. the index  of cmd queue array is Layer ID.
-
+	cl::CommandQueue *pad_queues[250];
 	Builder::Network originalNetwork(network);
 
 	// This map is to store LayerName <-> LayerID pair
@@ -817,47 +824,100 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 	char f2[file2.length()];
 	strcpy(f2, file2.c_str());
 
-	// std::cout << "path1: " << f1 << "\n";
-	// std::cout << "path2: " << f2 << "\n";
-
-	std::ifstream aocx_stream(f1, std::ios::in | std::ios::binary);
-	//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
-	std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
-	cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
-	programs[0] = new cl::Program(*contexts[0], DeviceList1, mybinaries);
-	err = programs[0]->build(DeviceList1);
-
-	// std::cout << err << "\n";
-
-	if (model_name == "googlenet" || (model_name == "resnet" && (2 * rank + 1 != 5)))
-	{
-		std::ifstream aocx_stream2(f2, std::ios::in | std::ios::binary);
-		//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
-		std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
-		cl::Program::Binaries mybinaries2(1, std::make_pair(prog2.c_str(), prog2.length() + 1));
-		programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries2);
-		err = programs[1]->build(DeviceList2);
-	}
-	// std::cout << err << "\n";
-
 	std::string file1_xml = G_BITSTREAM_DIR + aocx_name + std::to_string(2 * rank) + ".xml";
 	std::string file2_xml = G_BITSTREAM_DIR + aocx_name + std::to_string(2 * rank + 1) + ".xml";
+	std::vector<std::string> first_kernels, second_kernels;
+	// std::cout << "path1: " << f1 << "\n";
+	// std::cout << "path2: " << f2 << "\n";
+	if(opencl_design=="global"){
+		std::ifstream aocx_stream(f1, std::ios::in | std::ios::binary);
+		//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
+		std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+		cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
+		programs[0] = new cl::Program(*contexts[0], DeviceList1, mybinaries);
+		err = programs[0]->build(DeviceList1);
+		std::cout <<rank <<" Error code after build 0" <<err << "\n";
 
-	// std::cout << "xml_path: " <<  file1_xml<< "\n";
+		if (model_name == "googlenet" || (model_name == "resnet" && (2 * rank + 1 != 5)))
+		{
+			std::ifstream aocx_stream2(f2, std::ios::in | std::ios::binary);
+			//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
+			std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
+			cl::Program::Binaries mybinaries2(1, std::make_pair(prog2.c_str(), prog2.length() + 1));
+			programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries2);
+			err = programs[1]->build(DeviceList2);
+			std::cout <<rank <<" Error code after build 1" <<err << "\n";
+		}
 
-	char f1_xml[file1_xml.length()];
-	strcpy(f1_xml, file1_xml.c_str());
-	// std::cout << "xml_path1: " << f1_xml << "\n";
-	std::vector<std::string> first_kernels = xml_parser1(f1_xml); //kernels from first aocx
+		char f1_xml[file1_xml.length()];
+		strcpy(f1_xml, file1_xml.c_str());
+		// std::cout << "xml_path1: " << f1_xml << "\n";
+		first_kernels = xml_parser1(f1_xml); //kernels from first aocx
 
-	std::vector<std::string> second_kernels;
-	if (model_name == "googlenet" || (model_name == "resnet" && (2 * rank + 1 != 5)))
-	{
+		if (model_name == "googlenet" || (model_name == "resnet" && (2 * rank + 1 != 5)))
+		{
+			char f2_xml[file2_xml.length()];
+			strcpy(f2_xml, file2_xml.c_str());
+			// std::cout << "xml_path2: " << f2_xml << "\n";
+			second_kernels = xml_parser1(f2_xml); //kernels from second aocx
+		}
+	}else if(opencl_design=="channel"){
+		char f1_xml[file1_xml.length()];
+		strcpy(f1_xml, file1_xml.c_str());
+
 		char f2_xml[file2_xml.length()];
 		strcpy(f2_xml, file2_xml.c_str());
-		// std::cout << "xml_path2: " << f2_xml << "\n";
-		second_kernels = xml_parser1(f2_xml); //kernels from second aocx
+
+		std::cout << rank << " Flashing aocx" << std::endl;
+		if (rank % 2 == 0)
+		{
+
+			std::cout << rank << " Even Rank , 1st device - " << f1 << "  ,2nd device -" << f2 << std::endl;
+			std::ifstream aocx_stream(f1, std::ios::in | std::ios::binary);
+			//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
+			std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+			cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
+			programs[0] = new cl::Program(*contexts[0], DeviceList1, mybinaries);
+			err = programs[0]->build(DeviceList1);
+
+			std::ifstream aocx_stream2(f2, std::ios::in | std::ios::binary);
+			//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
+			std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
+			cl::Program::Binaries mybinaries2(1, std::make_pair(prog2.c_str(), prog2.length() + 1));
+			programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries2);
+			err = programs[1]->build(DeviceList2);
+
+			first_kernels = xml_parser1(f1_xml);  //kernels from first aocx
+			second_kernels = xml_parser1(f2_xml); //kernels from second aocx
+		}
+		else
+		{
+
+			std::cout << rank << " Odd Rank , 1st device - " << f2 << "  ,2nd device -" << f1 << std::endl;
+			std::ifstream aocx_stream(f2, std::ios::in | std::ios::binary);
+			//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionalNeuralNetwork.aocx");
+			std::string prog(std::istreambuf_iterator<char>(aocx_stream), (std::istreambuf_iterator<char>()));
+			cl::Program::Binaries mybinaries(1, std::make_pair(prog.c_str(), prog.length() + 1));
+			programs[0] = new cl::Program(*contexts[0], DeviceList1, mybinaries);
+			err = programs[0]->build(DeviceList1);
+
+			std::ifstream aocx_stream2(f1, std::ios::in | std::ios::binary);
+			//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
+			std::string prog2(std::istreambuf_iterator<char>(aocx_stream2), (std::istreambuf_iterator<char>()));
+			cl::Program::Binaries mybinaries2(1, std::make_pair(prog2.c_str(), prog2.length() + 1));
+			programs[1] = new cl::Program(*contexts[1], DeviceList2, mybinaries2);
+			err = programs[1]->build(DeviceList2);
+
+			first_kernels = xml_parser1(f2_xml);  //kernels from first aocx
+			second_kernels = xml_parser1(f1_xml); //kernels from second aocx
+		}
 	}
+	std::cout << "MPI_Barrier is here" << std::endl;
+	MPI_Barrier(MPI_COMM_WORLD);
+	//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+
+	std::cout << rank << " : Flashing aocx done" << std::endl;
+	std::cout << rank << " : XMLs read" << std::endl;
 
 	cl::Kernel *kernels[250];
 	int kernel_index = 0;
@@ -920,8 +980,8 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 			transpose_image[(i * 3) + j] = normalized_image[(j * 224 * 224) + i];
 		}
 	}
-
-	if (rank != 0)
+	std::cout << rank << ":Normalized the image" << std::endl;
+	if (opencl_design=="global" && rank != 0)
 	{
 		char layer_name[50];
 		MPI_Recv(layer_name, 50, MPI_CHAR, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -945,14 +1005,26 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 	{
 
 		buffers[buffer_index] = new cl::Buffer(*contexts[0], CL_MEM_READ_ONLY, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images);
-		cmd_queues[0] = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
-		err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images, transpose_image); //images buffer
-		assert(err == CL_SUCCESS);
-		err = cmd_queues[0]->finish();
+		if(opencl_design=="global"){
+			cmd_queues[0] = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
+			err = cmd_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images, transpose_image); //images buffer
+			assert(err == CL_SUCCESS);
+			err = cmd_queues[0]->finish();
+		}
+		else{
+			pad_queues[0] = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
+			err = pad_queues[0]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * dim_x * dim_y * dim_depth * num_images, transpose_image); //images buffer
+			assert(err == CL_SUCCESS);
+			err = pad_queues[0]->finish();
+			assert(err == CL_SUCCESS);
+		}
+		
 		buffer_index++;
 		//std::cout << " Error code after image transfer:" << kernel_index << " is ===>" << err << std::endl;
 		assert(err == CL_SUCCESS);
 	}
+	
+	std::cout << rank << ":Launching kernels" << std::endl;
 
 	int num_filters = 0;
 	int num_classes = 0;
@@ -963,9 +1035,16 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 	root->parentOutBufferIndex.push_back(0);
 
 	// Launching the kernels, the first one with images as input.
-	classification_result = launcher_global(DeviceList1, DeviceList2, kernel_index, err, buffer_index,
+	if(opencl_design=="global"){
+		classification_result = launcher_global(DeviceList1, DeviceList2, kernel_index, err, buffer_index,
 											rank, com_sz, root, cmd_queues, contexts, kernels, programs,
 											buffers, first_kernels, second_kernels, TOP_N, model_name);
+	
+	}else if(opencl_design=="channel"){
+		classification_result = launcher_channel(kernel_index,
+											  buffer_index, TOP_N, route_map, DeviceList1, DeviceList2,
+											  root, kernels, programs, buffers, contexts, cmd_queues, pad_queues, rank, first_kernels, second_kernels);
+	}											
 
 	return classification_result;
 }
@@ -1605,6 +1684,758 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 	return results;
 }
 
+std::vector<int> launcher_channel(int kernel_index,
+								  int buffer_index, int TOP_N, std::map<std::string, unsigned int> route_map,
+								  std::vector<cl::Device> DeviceList1, std::vector<cl::Device> DeviceList2,
+								  struct layersDetails *root, cl::Kernel *kernels[250],
+								  cl::Program *programs[2], cl::Buffer *buffers[500],
+								  cl::Context *contexts[2], cl::CommandQueue *cmd_queues[500],
+								  cl::CommandQueue *pad_queues[500], int rank, std::vector<std::string> first_kernels, std::vector<std::string> second_kernels)
+{
+	std::cout << "In launcher_channel" << std::endl;
+	std::vector<int> results;
+	cl_int err;
+	auto end = std::chrono::system_clock::now();
+	std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+	//Declaration of kernels and command queues for feeder kernels:
+	cl::Kernel *kernel_feeder_3b, *kernel_feeder_3c, *kernel_feeder_4a, *kernel_feeder_4c, *kernel_feeder_4d, *kernel_feeder_4e, *kernel_feeder_4f, *kernel_feeder_5a, *kernel_feeder_5c;
+	cl::CommandQueue *queuefeeder_3b, *queuefeeder_3c, *queuefeeder_4a, *queuefeeder_4b, *queuefeeder_4c, *queuefeeder_4d, *queuefeeder_4e, *queuefeeder_4f, *queuefeeder_5a, *queuefeeder_5c;
+	unsigned int router_temp;
+	std::cout << rank << "Launching feeder kernels" << std::endl;
+	//Feeding kernels and Create Command queue for feeders for every node, there are different feeder kernels
+	if (rank == 0)
+	{
+		//std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		kernel_feeder_3b = new cl::Kernel(*programs[1], "feeder_3b", &err);
+		assert(err == CL_SUCCESS);
+
+		queuefeeder_3b = new cl::CommandQueue(*contexts[1], DeviceList2[0]);
+		assert(err == CL_SUCCESS);
+
+		router_temp = route_map["3b_input"];
+		kernel_feeder_3b->setArg(0, router_temp);
+		err = queuefeeder_3b->enqueueTask(*kernel_feeder_3b);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	}
+	else if (rank == 1)
+	{
+
+		kernel_feeder_3c = new cl::Kernel(*programs[1], "feeder_3c", &err);
+		assert(err == CL_SUCCESS);
+		queuefeeder_3c = new cl::CommandQueue(*contexts[1], DeviceList2[0]);
+		assert(err == CL_SUCCESS);
+
+		kernel_feeder_4a = new cl::Kernel(*programs[0], "feeder_4a", &err);
+		assert(err == CL_SUCCESS);
+		queuefeeder_4a = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
+		assert(err == CL_SUCCESS);
+
+		router_temp = route_map["3c_input"];
+		kernel_feeder_3c->setArg(0, router_temp);
+		err = queuefeeder_3c->enqueueTask(*kernel_feeder_3c);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+
+		router_temp = route_map["4b_input"];
+		kernel_feeder_4a->setArg(0, router_temp);
+		err = queuefeeder_4a->enqueueTask(*kernel_feeder_4a);
+		std::cout << rank << " is the rank. 4b_input is coming from " << router_temp << std::endl;
+		//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+	}
+	else if (rank == 2)
+	{
+
+		kernel_feeder_4c = new cl::Kernel(*programs[0], "feeder_4c", &err);
+		assert(err == CL_SUCCESS);
+		kernel_feeder_4d = new cl::Kernel(*programs[1], "feeder_4d", &err);
+		assert(err == CL_SUCCESS);
+
+		queuefeeder_4c = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
+		assert(err == CL_SUCCESS);
+		queuefeeder_4d = new cl::CommandQueue(*contexts[1], DeviceList2[0]);
+		assert(err == CL_SUCCESS);
+
+		router_temp = route_map["4c_input"];
+		kernel_feeder_4c->setArg(0, router_temp);
+		err = queuefeeder_4c->enqueueTask(*kernel_feeder_4c);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+
+		router_temp = route_map["4d_input"];
+		kernel_feeder_4d->setArg(0, router_temp);
+		err = queuefeeder_4d->enqueueTask(*kernel_feeder_4d);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+	}
+	else if (rank == 3)
+	{
+
+		kernel_feeder_4e = new cl::Kernel(*programs[1], "feeder_4e", &err);
+		assert(err == CL_SUCCESS);
+
+		kernel_feeder_4f = new cl::Kernel(*programs[0], "feeder_4f", &err);
+		assert(err == CL_SUCCESS);
+
+		queuefeeder_4e = new cl::CommandQueue(*contexts[1], DeviceList2[0]);
+		assert(err == CL_SUCCESS);
+		queuefeeder_4f = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
+		assert(err == CL_SUCCESS);
+
+		router_temp = route_map["4e_input"];
+		kernel_feeder_4e->setArg(0, router_temp);
+		std::cout << "4e_input is coming from " << route_map["4e_input"] << std::endl;
+		err = queuefeeder_4e->enqueueTask(*kernel_feeder_4e);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+
+		router_temp = route_map["4f_input"];
+		kernel_feeder_4f->setArg(0, router_temp);
+		err = queuefeeder_4f->enqueueTask(*kernel_feeder_4f);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+	}
+	else
+	{
+
+		kernel_feeder_5a = new cl::Kernel(*programs[0], "feeder_5a", &err);
+		assert(err == CL_SUCCESS);
+		kernel_feeder_5c = new cl::Kernel(*programs[1], "feeder_5c", &err);
+		assert(err == CL_SUCCESS);
+
+		queuefeeder_5a = new cl::CommandQueue(*contexts[0], DeviceList1[0]);
+		assert(err == CL_SUCCESS);
+		queuefeeder_5c = new cl::CommandQueue(*contexts[1], DeviceList2[0]);
+		assert(err == CL_SUCCESS);
+
+		router_temp = route_map["5a_input"];
+		kernel_feeder_5a->setArg(0, router_temp);
+		err = queuefeeder_5a->enqueueTask(*kernel_feeder_5a);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+
+		router_temp = route_map["5c_input"];
+		kernel_feeder_5c->setArg(0, router_temp);
+		err = queuefeeder_5c->enqueueTask(*kernel_feeder_5c);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+	}
+	std::cout << rank << "Feeder kernels launched" << std::endl;
+	// Launching the kernels, the first one with images as input.
+	if (root == NULL)
+	{
+		std::cout << "Tree construction error\n";
+		exit(-1);
+	}
+	else
+	{
+		std::cout << rank << "Launching from the tree" << std::endl;
+		std::queue<struct layersDetails *> q;
+		q.push(root);
+		while (!q.empty())
+		{
+			int n = q.size();
+			while (n > 0)
+			{
+				struct layersDetails *p = q.front();
+				q.pop();
+
+				while (p != NULL and p->layerName == "dummy")
+				{
+					std::cout << rank << "Q popped :" << p->layerName << std::endl;
+					p = q.front();
+					q.pop();
+					n--;
+				}
+				//Get the program number
+				int program_number = get_program_num(p->layerName, first_kernels, second_kernels);
+				std::cout << rank << " Program number for layer:" << p->layerID << ":" << p->layerName << " On Device : " << program_number << std::endl;
+				if (p != NULL and program_number != 0)
+				{
+					const char *layerName = p->layerName.c_str();
+					std::cout << rank << " Launching Layer:" << p->layerID << ":" << layerName << " On Device : " << program_number - 1 << std::endl;
+					std::cout << rank << " Program number :" << get_program_num(p->layerName, first_kernels, second_kernels) << std::endl;
+
+					int flag_parents = 0;
+					for (struct layersDetails *ch : p->parents)
+					{
+						if (ch->visited == 1 or get_program_num(ch->layerName, first_kernels, second_kernels) == 0)
+						{
+							flag_parents++;
+						}
+					}
+					if (!p->visited && flag_parents == p->parents.size())
+					{
+						if (program_number == 1)
+						{
+							cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number - 1], DeviceList1[0]);
+							pad_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number - 1], DeviceList1[0]);
+						}
+						else
+						{
+							cmd_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number - 1], DeviceList2[0]);
+							pad_queues[p->layerID] = new cl::CommandQueue(*contexts[program_number - 1], DeviceList2[0]);
+						}
+					}
+					//code to launch kernels
+					if (p->layerType == "Convolution" && program_number != 0)
+					{
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if (ch->visited == 1 or get_program_num(ch->layerName, first_kernels, second_kernels) == 0)
+							{
+								flag_parents++;
+							}
+						}
+						if (!p->visited && flag_parents == p->parents.size())
+						{
+							//For zero padding conv layer
+							if (p->params["pads_begin"].at(0) == '0' && p->params["pads_begin"].at(2) == '0' && p->params["pads_end"].at(0) == '0' && p->params["pads_end"].at(2) == '0')
+							{
+								int pad_out_index = 0;
+								//std::cout<<"\t Kernel Index:"<<kernel_index<<std::endl;
+								kernels[kernel_index] = new cl::Kernel(*programs[program_number - 1], layerName, &err);
+								assert(err == CL_SUCCESS);
+
+								//weights
+								buffers[buffer_index] = new cl::Buffer(*contexts[program_number - 1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+								err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
+								err = cmd_queues[p->layerID]->finish();
+								//std::cout << "\t Error code after weights transfer:" << kernel_index << " is ===>" << err << std::endl;
+								assert(err == CL_SUCCESS);
+								err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]);
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+								//Bias
+								buffers[buffer_index] = new cl::Buffer(*contexts[program_number - 1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+								err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
+								err = cmd_queues[p->layerID]->finish();
+								//std::cout << "\t Error code after bias transfer:" << kernel_index << " is ===>" << err << std::endl;
+								assert(err == CL_SUCCESS);
+								err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]);
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+								//std::cout << "\tbiases passed\n";
+								//Argument for getting convolution scores
+								// Parents of concat kernels
+								if (p->layerName == "Conv2d_0c_1x1_Conv2D" ||
+									p->layerName == "Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_3b_Branch_3_Conv2d_0b_1x1_Conv2D" ||
+									p->layerName == "Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D" ||
+									p->layerName == "Mixed_4b_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_4b_Branch_3_Conv2d_0b_1x1_Conv2D" ||
+									p->layerName == "Mixed_4c_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_4c_Branch_3_Conv2d_0b_1x1_Conv2D" ||
+									p->layerName == "Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_4d_Branch_3_Conv2d_0b_1x1_Conv2D" ||
+									p->layerName == "Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D" ||
+									p->layerName == "Mixed_4f_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_4f_Branch_3_Conv2d_0b_1x1_Conv2D" ||
+									p->layerName == "Mixed_5b_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_5b_Branch_3_Conv2d_0b_1x1_Conv2D" ||
+									p->layerName == "Mixed_5c_Branch_0_Conv2d_0a_1x1_Conv2D" || p->layerName == "Mixed_5c_Branch_3_Conv2d_0b_1x1_Conv2D")
+
+								{
+
+									std::cout << "Global memory transfer for :" << p->layerName << std::endl;
+									buffers[buffer_index] = new cl::Buffer(*contexts[program_number - 1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+									err = kernels[kernel_index]->setArg(2, *buffers[buffer_index]); //output of conv
+									assert(err == CL_SUCCESS);
+									p->layerOutBufferIndex = buffer_index;
+									for (struct layersDetails *ch : p->children)
+									{
+										ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
+									}
+
+									if (p->layerName != "Conv2d_0c_1x1_Conv2D")
+									{
+										buffer_index++;
+									}
+								}
+
+								err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+								//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+
+								assert(err == CL_SUCCESS);
+								kernel_index++;
+
+								p->visited = 1;
+							}
+							else
+							{
+								std::cout << "Conv with padding" << std::endl;
+								int inputIndex = 0;
+								if (root->parents.size() == 0)
+								{
+									inputIndex = 0;
+								}
+								else
+								{
+									inputIndex = p->parentOutBufferIndex.at(0);
+								}
+								//Pad kernel launching code
+								std::string pad_kernel_name = "Padding_" + p->layerName;
+								const char *pad_name = pad_kernel_name.c_str();
+								std::cout << "\t Kernel Index:" << kernel_index << std::endl;
+								kernels[kernel_index] = new cl::Kernel(*programs[program_number - 1], pad_name, &err);
+								assert(err == CL_SUCCESS);
+								int pad_x = p->params["pads_begin"].at(0) - '0';
+								int pad_y = p->params["pads_end"].at(0) - '0';
+								int dim1 = 0, dim2 = 0, dim3 = 0;
+								//Padding kernel output dimension calculation
+								if (p->layerName == "Conv2d_1a_7x7_Conv2D")
+								{
+									//Set the dimensions for input layer
+									dim1 = dim_x + pad_x + pad_y;
+									dim2 = dim_y + pad_x + pad_y;
+									dim3 = dim_depth;
+								}
+								else
+								{
+									//Output dimension of the parent layer
+									dim1 = p->parents.at(0)->outH + pad_x + pad_y; // Add padding dimension
+									dim2 = p->parents.at(0)->outW + pad_x + pad_y; // Add padding dimension
+									dim3 = p->parents.at(0)->outDepth;			   //Depth remains same after padding
+								}
+								buffers[buffer_index] = new cl::Buffer(*contexts[program_number - 1], CL_MEM_READ_WRITE, sizeof(cl_float) * dim1 * dim2 * dim3);
+								int pad_out_index = buffer_index;
+								//Argument only for 1st kernel.
+								if (p->layerName == "Conv2d_1a_7x7_Conv2D")
+								{
+									std::cout << rank << " padding kernel argument" << std::endl;
+									err = kernels[kernel_index]->setArg(0, *buffers[0]);
+									assert(err == CL_SUCCESS);
+								}
+
+								std::cout << rank << " padding kernel launch" << std::endl;
+								err = pad_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+								//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+
+								assert(err == CL_SUCCESS);
+								std::cout << rank << " padding kernel launched" << std::endl;
+
+								kernel_index++;
+								// Pad kernel launching code ends
+								std::cout << rank << "\t Kernel Index:" << kernel_index << std::endl;
+								kernels[kernel_index] = new cl::Kernel(*programs[program_number - 1], layerName, &err);
+								std::cout << rank << "\t Kernel Created " << std::endl;
+								assert(err == CL_SUCCESS);
+
+								buffer_index++;
+
+								//weights
+								buffers[buffer_index] = new cl::Buffer(*contexts[program_number - 1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_weights);
+								err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_weights, p->layerWeights); //weights
+								err = cmd_queues[p->layerID]->finish();
+								std::cout << rank << "\t Error code after weights transfer:" << kernel_index << " is ===>" << err << std::endl;
+								assert(err == CL_SUCCESS);
+								err = kernels[kernel_index]->setArg(0, *buffers[buffer_index]);
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								//Bias
+								buffers[buffer_index] = new cl::Buffer(*contexts[program_number - 1], CL_MEM_READ_ONLY, sizeof(cl_float) * p->num_biases);
+								err = cmd_queues[p->layerID]->enqueueWriteBuffer(*buffers[buffer_index], CL_FALSE, 0, sizeof(cl_float) * p->num_biases, p->layerBias); //biases
+								err = cmd_queues[p->layerID]->finish();
+								std::cout << rank << "\t Error code after bias transfer:" << kernel_index << " is ===>" << err << std::endl;
+								assert(err == CL_SUCCESS);
+								err = kernels[kernel_index]->setArg(1, *buffers[buffer_index]);
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								//parents of concat kernels
+								if (p->layerName == "Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_4b_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_4b_Branch_1_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_4c_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_4c_Branch_1_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_5b_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D")
+								{
+									std::cout << "Global memory transfer for :" << p->layerName << std::endl;
+									buffers[buffer_index] = new cl::Buffer(*contexts[program_number - 1], CL_MEM_READ_WRITE, sizeof(cl_float) * p->outH * p->outW * p->outDepth);
+									err = kernels[kernel_index]->setArg(2, *buffers[buffer_index]); //output of conv
+									assert(err == CL_SUCCESS);
+									p->layerOutBufferIndex = buffer_index;
+									for (struct layersDetails *ch : p->children)
+									{
+										ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
+									}
+									buffer_index++;
+								}
+
+								std::cout << rank << " conv kernel launch" << std::endl;
+								err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+								std::cout << rank << " conv kernel launched" << std::endl;
+								//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+								//std::cout << rank << " Waited for " << waitTime << "ms" << std::endl;
+
+								//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+								assert(err == CL_SUCCESS);
+								std::cout << rank << "\t Error code soon after conv layer for kernel:" << p->layerName << " is ===>" << err << std::endl;
+								//err = cmd_queues[p->layerID]->finish();
+								assert(err == CL_SUCCESS);
+								kernel_index++;
+								p->visited = 1;
+							}
+							std::cout << rank << "\t Error code  after conv layer finish for kernel:" << kernel_index << " is ===>" << err << std::endl;
+							std::cout << rank << "\t Error code  after conv layer finish for kernel named " << p->layerName << " is ===>" << err << std::endl;
+
+							//Stop the execution after last conv
+							if (p->layerName == "Conv2d_0c_1x1_Conv2D")
+							{
+								err = cmd_queues[p->layerID]->finish();
+								//Read buffer from the last conv output
+								float convScores[p->outH * p->outW * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, convScores);
+								err = cmd_queues[p->layerID]->finish();
+
+								//Printing the results after getting Top N Results
+								std::cout << " TOP- " << TOP_N << " Classification scores" << std::endl;
+								std::cout << " --------------------------------" << std::endl;
+								results = getTopNResults(convScores, TOP_N);
+								std::cout << " --------------------------------" << std::endl;
+								////std::cout << " Please match the above labels with the \"Labels.txt\" of the model to see the classification results." << std::endl;
+								//Stop Condition.
+								return results;
+							}
+						}
+						if (p->visited == 0)
+							q.push(p);
+					}
+					else if (p->layerType == "Pooling" && program_number != 0)
+					{
+						// To check on which device this  layer is mapped to.
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if (ch->visited == 1 or get_program_num(ch->layerName, first_kernels, second_kernels) == 0)
+							{
+								flag_parents++;
+							}
+						}
+						if (!p->visited && flag_parents == p->parents.size())
+						{
+							//std::cout << "\t kernel:"<<layerName<<std::endl;
+							kernels[kernel_index] = new cl::Kernel(*programs[program_number - 1], layerName, &err);
+							assert(err == CL_SUCCESS);
+
+							p->layerOutBufferIndex = buffer_index;
+							for (struct layersDetails *ch : p->children)
+							{
+								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
+							}
+							buffer_index++;
+							unsigned int router_temp;
+							if (p->layerName == "MaxPool_3a_3x3_MaxPool")
+							{
+								router_temp = route_map["3a_output"];
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+
+							err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+							std::cout << rank << "\t P layer ID is " << p->layerID << std::endl;
+							std::cout << rank << "\t Error code  after Pooling layer kernel:" << kernel_index << " is ===>" << err << std::endl;
+							assert(err == CL_SUCCESS);
+
+							kernel_index++;
+							p->visited = 1;
+						}
+						if (p->visited == 0)
+							q.push(p);
+					}
+					else if (p->layerType == "Concat" && program_number != 0)
+					{
+						//std::cout << " \tLaunching concat\n";
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if (ch->visited == 1 or get_program_num(ch->layerName, first_kernels, second_kernels) == 0)
+							{
+								flag_parents++;
+							}
+						}
+						if (!p->visited && flag_parents == p->parents.size())
+						{
+
+							kernels[kernel_index] = new cl::Kernel(*programs[program_number - 1], layerName, &err);
+							assert(err == CL_SUCCESS);
+
+							unsigned int router_temp;
+
+							if (p->layerName == "Mixed_3b_concat")
+							{
+								router_temp = route_map["3b_output"];
+								std::cout << "\t Check 3b_output is :" << router_temp << std::endl;
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+							if (p->layerName == "Mixed_3c_concat")
+							{
+								router_temp = route_map["3c_output"];
+								std::cout << rank << " is the rank. 3c_output concat routes to  " << router_temp << std::endl;
+
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+							if (p->layerName == "Mixed_4b_concat")
+							{
+								router_temp = route_map["4b_output"];
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+							if (p->layerName == "Mixed_4c_concat")
+							{
+								router_temp = route_map["4c_output"];
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+							if (p->layerName == "Mixed_4d_concat")
+							{
+								router_temp = route_map["4d_output"];
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+							if (p->layerName == "Mixed_4e_concat")
+							{
+								router_temp = route_map["4e_output"];
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+							if (p->layerName == "Mixed_4f_concat")
+							{
+								router_temp = route_map["4f_output"];
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+							if (p->layerName == "Mixed_5b_concat")
+							{
+								router_temp = route_map["5b_output"];
+								kernels[kernel_index]->setArg(0, router_temp);
+							}
+							if (p->layerName == "Mixed_5c_concat")
+							{
+								err = kernels[kernel_index]->setArg(0, *buffers[p->parents.at(0)->layerOutBufferIndex]); //conv 1
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								//std::cout << "\tconv2\n";
+								err = kernels[kernel_index]->setArg(1, *buffers[p->parents.at(1)->layerOutBufferIndex]); //conv 2
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								//std::cout << "\tconv3\n";
+								err = kernels[kernel_index]->setArg(2, *buffers[p->parents.at(2)->layerOutBufferIndex]); //conv 3
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								//std::cout << "\tconv4\n";
+								err = kernels[kernel_index]->setArg(3, *buffers[p->parents.at(3)->layerOutBufferIndex]); //conv 4
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								cmd_queues[p->parents.at(0)->layerID]->finish();
+								cmd_queues[p->parents.at(1)->layerID]->finish();
+								cmd_queues[p->parents.at(2)->layerID]->finish();
+								cmd_queues[p->parents.at(3)->layerID]->finish();
+								err = cmd_queues[p->parents.at(2)->layerID]->enqueueTask(*kernels[kernel_index]);
+								std::cout << rank << " is the rank. " << p->layerName << " launched on parent : " << p->parents.at(0)->layerName << " of ID : " << p->parents.at(0)->layerID << std::endl;
+								//	cmd_queues[p->parents.at(2)->layerID]->finish();
+							}
+							else
+							{
+								err = kernels[kernel_index]->setArg(1, *buffers[p->parents.at(0)->layerOutBufferIndex]); //conv 1
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								//std::cout << "\tconv2\n";
+								err = kernels[kernel_index]->setArg(2, *buffers[p->parents.at(1)->layerOutBufferIndex]); //conv 2
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								//std::cout << "\tconv3\n";
+								err = kernels[kernel_index]->setArg(3, *buffers[p->parents.at(2)->layerOutBufferIndex]); //conv 3
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+
+								//std::cout << "\tconv4\n";
+								err = kernels[kernel_index]->setArg(4, *buffers[p->parents.at(3)->layerOutBufferIndex]); //conv 4
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+								cmd_queues[p->parents.at(0)->layerID]->finish();
+								cmd_queues[p->parents.at(1)->layerID]->finish();
+								cmd_queues[p->parents.at(2)->layerID]->finish();
+								cmd_queues[p->parents.at(3)->layerID]->finish();
+								err = cmd_queues[p->parents.at(2)->layerID]->enqueueTask(*kernels[kernel_index]);
+								std::cout << rank << " is the rank. " << p->layerName << " launched on parent : " << p->parents.at(0)->layerName << " of ID : " << p->parents.at(0)->layerID << std::endl;
+								 
+							}
+
+							//err = cmd_queues[p->layerID]->enqueueTask(*kernels[kernel_index]);//moved inside for launching on parent`s queue
+							std::cout << rank << "\t Error code  after Concat layer kernel:" << kernel_index << " is ===>" << err << std::endl;
+							std::cout << rank << "\t Error code  after Concat layer named :" << p->layerName << " is ===>" << err << std::endl;
+							//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+							//std::cout << rank << "is the rank. \t waited for :" << waitTime << " milliseconds " << std::endl;
+							assert(err == CL_SUCCESS);
+
+							//cmd_queues[p->layerID]->finish();
+
+							kernel_index++;
+							p->visited = 1;
+							for (struct layersDetails *ch : p->children)
+							{
+								ch->parentOutBufferIndex.push_back(p->layerOutBufferIndex);
+							}
+							assert(err == CL_SUCCESS);
+						}
+						if (p->visited == 0)
+							q.push(p);
+					}
+					else if (p->layerType == "SoftMax" && program_number != 0)
+					{
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if (ch->visited == 1 or get_program_num(ch->layerName, first_kernels, second_kernels) == 0)
+							{
+								flag_parents++;
+							}
+						}
+						if (!p->visited && flag_parents == p->parents.size())
+						{
+							std::cout << "\t Input buffer index:"
+									  << p->parentOutBufferIndex.at(0)
+									  << std::endl;
+							std::cout << " outH, OutW, outDepth:" << p->outH
+									  << "," << p->outW << "," << p->outDepth
+									  << std::endl;
+							kernels[kernel_index] = new cl::Kernel(
+								*programs[program_number - 1], layerName, &err);
+							assert(err == CL_SUCCESS);
+							buffers[buffer_index] = new cl::Buffer(
+								*contexts[program_number - 1], CL_MEM_READ_WRITE,
+								sizeof(cl_float) * p->outDepth);
+							err = kernels[kernel_index]->setArg(1,
+																*buffers[buffer_index]); //softmax output
+							assert(err == CL_SUCCESS);
+							p->layerOutBufferIndex = buffer_index;
+							for (struct layersDetails *ch : p->children)
+							{
+								ch->parentOutBufferIndex.push_back(
+									p->layerOutBufferIndex);
+							}
+							buffer_index++;
+							//input
+							err = kernels[kernel_index]->setArg(0,
+																*buffers[p->parentOutBufferIndex.at(0)]); //reshape input1
+							assert(err == CL_SUCCESS);
+							buffer_index++;
+							err = cmd_queues[p->layerID]->enqueueTask(
+								*kernels[kernel_index]);
+							//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+							//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+							assert(err == CL_SUCCESS);
+							kernel_index++;
+							p->visited = 1;
+							cmd_queues[p->layerID]->finish();
+							kernel_index++;
+							std::cout << "\t Output buffer index:"
+									  << p->layerOutBufferIndex << std::endl;
+							//Stop execution after softmax
+							if (p->layerName == "Predictions_Softmax")
+								exit(0);
+						}
+						if (p->visited == 0)
+							q.push(p);
+					}
+					else if (p->layerType == "Reshape" && program_number != 0)
+					{
+						int flag_parents = 0;
+						for (struct layersDetails *ch : p->parents)
+						{
+							if (ch->visited == 1 or get_program_num(ch->layerName, first_kernels, second_kernels) == 0)
+							{
+								flag_parents++;
+							}
+						}
+						if (!p->visited && flag_parents == p->parents.size())
+						{
+							kernels[kernel_index] = new cl::Kernel(
+								*programs[program_number - 1], layerName, &err);
+							assert(err == CL_SUCCESS);
+							if (p->layerName == "Predictions_Reshape")
+							{
+								std::cout << "\t Input buffer index:"
+										  << p->parentOutBufferIndex.at(0)
+										  << std::endl;
+								std::cout << " outH, OutW, outDepth:" << p->outH
+										  << "," << p->outW << "," << p->outDepth
+										  << std::endl;
+								buffers[buffer_index] = new cl::Buffer(
+									*contexts[program_number - 1],
+									CL_MEM_READ_WRITE,
+									sizeof(cl_float) * p->outH * p->outDepth);
+								err = kernels[kernel_index]->setArg(0,
+																	*buffers[buffer_index]); //reshape output
+								assert(err == CL_SUCCESS);
+								p->layerOutBufferIndex = buffer_index;
+								if (p->children.size() > 0)
+								{
+									for (struct layersDetails *ch : p->children)
+									{
+										ch->parentOutBufferIndex.push_back(
+											p->layerOutBufferIndex);
+									}
+								}
+								buffer_index++;
+								std::cout << "No of parents: "
+										  << p->parents.size() << std::endl;
+								;
+								//input
+								err =
+									kernels[kernel_index]->setArg(1,
+																  *buffers[p->parents.at(0)->layerOutBufferIndex]); //conv input1
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+								err =
+									kernels[kernel_index]->setArg(2,
+																  *buffers[p->parents.at(1)->layerOutBufferIndex]); //conv input2
+								assert(err == CL_SUCCESS);
+								buffer_index++;
+								err = cmd_queues[p->layerID]->enqueueTask(
+									*kernels[kernel_index]);
+								//std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
+								//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+								assert(err == CL_SUCCESS);
+								kernel_index++;
+								p->visited = 1;
+								cmd_queues[p->layerID]->finish();
+								std::cout << "\t Output buffer index:"
+										  << p->layerOutBufferIndex << std::endl;
+								float final_labels[p->outH * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(
+									*buffers[p->layerOutBufferIndex],
+									CL_TRUE, 0,
+									sizeof(cl_float) * p->outH * p->outDepth, final_labels);
+								std::cout << "\tLabels top 10" << std::endl;
+								for (int i = 0; i < 10; i++)
+									std::cout << final_labels[i] << std::endl;
+							}
+							else
+							{
+								std::cout << "\t No supporting Reshape layer"
+										  << std::endl;
+							}
+						}
+						if (p->visited == 0)
+							q.push(p);
+					}
+				}
+				// Enqueue all children of the dequeued item
+				if (p->visited == 1 || program_number == 0)
+				{
+					for (std::vector<struct layersDetails *>::iterator it =
+							 p->children.begin();
+						 it != p->children.end();
+						 ++it)
+					{
+						if (*it != NULL)
+							q.push(*it);
+					}
+					//std::cout << "\tsize of queue: " << q.size() << "\n";
+					n--;
+				}
+			}
+		}
+	}
+
+	return results;
+}
+
 std::vector<int> getTopNResults(float final_labels[], int topN)
 {
 	std::vector<int> results;
@@ -1629,4 +2460,39 @@ std::vector<int> getTopNResults(float final_labels[], int topN)
 		N++;
 	}
 	return results;
+}
+
+/**
+ * Topology of FPGAs
+ * To be built using xml parser. This is just a dummy placeholder
+ */
+std::map<std::string, unsigned int> build_topo_map(std::string xmlpath)
+{
+	std::cout << "Parsing routing xml :" << xmlpath << std::endl;
+	const char *filename = xmlpath.c_str();
+	std::map<std::string, unsigned int> route_map;
+	ptree tree;
+	read_xml(filename, tree);
+	BOOST_FOREACH (ptree::value_type const &v, tree.get_child("googlenet"))
+	{
+		if (v.first == "inception")
+		{
+			std::string module = v.second.get<std::string>("module");
+			unsigned int input = v.second.get<unsigned int>("input");
+			unsigned int output = v.second.get<unsigned int>("output");
+			//Channel directions can be only between 0 - 3, else stop the execution
+			if (input >= 4 || output >= 4 || input < 0 || output < 0)
+			{
+				std::cout << "ERROR : invalid input/output channel direction for the inception:" << module << ". Please check the routing XML" << std::endl;
+				exit(-1);
+			}
+			std::cout << module + "_input"
+					  << ":" << input << ", " << module + "_output"
+					  << ":" << output << std::endl;
+			route_map.insert(std::pair<std::string, int>(module + "_input", input));
+			route_map.insert(std::pair<std::string, int>(module + "_output", output));
+		}
+	}
+	std::cout << "Topology map has been created" << std::endl;
+	return route_map;
 }
