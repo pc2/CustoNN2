@@ -2450,7 +2450,6 @@ std::vector<int> getTopNResults(float final_labels[], int topN)
         {
             tensor = std::max(tensor, final_labels[k1]);
         }
-		std::cout << "tensor "<<tensor<<std::endl;
         tensor1 = 0.000000e+00f;
         for (int k2 = 0; k2 < 1001; ++k2)
         {
