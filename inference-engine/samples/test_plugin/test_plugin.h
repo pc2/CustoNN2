@@ -53,16 +53,19 @@ static const char custom_cpu_library_message[] = "Required for MKLDNN (CPU)-targ
 static const char plugin_message[] = "Enables messages from a plugin";
 
 // @brief message for CNN Model name argument.
-static const char cnn_model[] = "Required. Input CNN Model name. Supported models : googlenet, resnet ";
+static const char cnn_model[] = "Required. Input CNN Model name. Supported models : googlenet/resnet ";
 
 // @brief message for Route XML argument.
-static const char route_xml_message[] = "Required. Path to an .xml file with a routing configurations. ";
+static const char route_xml_message[] = "Required when the design=channel . Path to an .xml file with a routing configurations. ";
 
 // @brief message for Labels file.
 static const char label_message[] = "Path to the labels.txt file of the model with label indicies and names  ";
 
 // @brief message for Labels file.
 static const char bitstream_message[] = "Required. Path to the bitstreams directory ";
+
+// @brief message for Labels file.
+static const char design_message[] = " Type of CNN OpenCL architecture design. supported design : global/channel. Default : global";
 
 /// @brief Define flag for showing help message <br>
 DEFINE_bool(h, false, help_message);
@@ -113,6 +116,9 @@ DEFINE_string(label, "", label_message);
 /// @brief Absolute path to the Directory of Bitstreams
 DEFINE_string(bitstream, "", bitstream_message);
 
+/// @brief Type of CNN OpenCL architecture design
+DEFINE_string(design, "", design_message);
+
 
 /**
 * @brief This function show a help message
@@ -133,5 +139,6 @@ static void showUsage() {
     std::cout << "    -route                  " << route_xml_message << std::endl;
     std::cout << "    -label                  " << label_message << std::endl;
     std::cout << "    -bitstream                  " << bitstream_message << std::endl;
+    std::cout << "    -design                  " << design_message << std::endl;
 
 }
