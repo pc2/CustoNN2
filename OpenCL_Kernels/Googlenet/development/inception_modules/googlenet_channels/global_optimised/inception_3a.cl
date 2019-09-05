@@ -143,7 +143,7 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict compute, __global fl
             //#pragma unroll 4
             for (int yy = 0; yy < 56; ++yy)
             {
-                #pragma unroll
+                //#pragma unroll
                 for (int xx = 0; xx < 56; ++xx)
                 {
                     temp_out[yy][xx] += (image_slice[(yy * 56) + xx] * input_weights[rc]);
