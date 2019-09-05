@@ -2441,6 +2441,24 @@ std::vector<int> getTopNResults(float final_labels[], int topN)
 	std::vector<int> results;
 	std::multimap<float, int, std::greater<float>> sorted_map;
 	int N = 0;
+	float tensor = 0, tensor1 = 0;
+	float tensor2[1001];
+    for (int ax1 = 0; ax1 < 1001; ++ax1)
+    {
+        tensor = -3.402823e+38f;
+        for (int k1 = 0; k1 < 1001; ++k1)
+        {
+            tensor = std::max(tensor, final_labels[k1]);
+        }
+		std::cout << "tensor "<<tensor<<std::endl;
+        tensor1 = 0.000000e+00f;
+        for (int k2 = 0; k2 < 1001; ++k2)
+        {
+            tensor1 = (tensor1 + std::exp((final_labels[k2] - tensor)));
+        }
+        tensor2[ax1] = (std::exp((final_labels[ax1] - tensor)) / tensor1);
+    }
+
 	for (int i = 0; i < 1001; i++)
 	{
 		//convScores.insert(i,final_labels[i]);
@@ -2451,7 +2469,7 @@ std::vector<int> getTopNResults(float final_labels[], int topN)
 		if (N < topN)
 		{
 			results.push_back(entry.second);
-			std::cout << "Label Number: " << entry.second << " - Score " << entry.first << std::endl;
+			std::cout << "Label Number: " << entry.second << " - Score " << entry.first << " - Softmax (in % ) :"<<tensor2[entry.second]*100<< std::endl;
 		}
 		else
 		{
