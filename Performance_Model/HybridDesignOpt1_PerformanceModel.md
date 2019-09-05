@@ -1,9 +1,8 @@
-
 ### File wise analysis :  
 |              |                  |              |           |                 |           |                     |          |          |
 |--------------|------------------|--------------|-----------|-----------------|-----------|---------------------|----------|----------| 
 | File name   | Total Operations | Total Cycles | Fmax (in Hz)      | Total Exec Time(measured)| Ops/cycle (measured) |Ops/cycle (estimated) |Global Memory (r/w) | Ops/byte | 
-| inception0 | 1.13G        | 136M       | 220.8M     | 620.4 ms    | 8.25       | 8  | 1MB| 1.1K     | 
+| inception0 | 1.13G        | 136M       | 220.8M     | 620.4 ms    | 8.25       | 8  | x| 1.1K     | 
 
 
 
