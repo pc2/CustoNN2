@@ -448,42 +448,5 @@ __kernel void Conv2d_0c_1x1_Conv2D(__global float *restrict compute, __global fl
     }
 }
 
-// TODO InceptionV1/Logits/Conv2d_0c_1x1/Conv2D/Permute_
 
-__kernel void Predictions_Reshape(__global float *restrict tensor, __global float *restrict input0, __global float *restrict input1)
-{
-    
-    for (int ax0_ax1_fused_inner = 0; ax0_ax1_fused_inner < 1001; ++ax0_ax1_fused_inner)
-    {
-        tensor[ax0_ax1_fused_inner] = (input0[ax0_ax1_fused_inner] + input1[ax0_ax1_fused_inner]);
-    }
-}
-
-__kernel void Predictions_Softmax(__global float *restrict input0,
-                                  __global float *restrict tensor2)
-{
-    float tensor, tensor1;
-    for (int ax1 = 0; ax1 < 1001; ++ax1)
-    {
-        tensor = -3.402823e+38f;
-        for (int k1 = 0; k1 < 1001; ++k1)
-        {
-            tensor = max(tensor, input0[k1]);
-        }
-        tensor = 0.000000e+00f;
-        for (int k2 = 0; k2 < 1001; ++k2)
-        {
-            tensor1 = (tensor1 + exp((input0[k2] - tensor)));
-        }
-        tensor2[ax1] =(exp((input0[ax1] - tensor)) / tensor1);
-    }
-}
-
-__kernel void Predictions_Reshape_1(__global float *restrict T_reshape, __global float *restrict input0)
-{
-    for (int ax0_ax1_fused_inner = 0; ax0_ax1_fused_inner < 1001; ++ax0_ax1_fused_inner)
-    {
-        T_reshape[ax0_ax1_fused_inner] = input0[ax0_ax1_fused_inner];
-    }
-}
 
