@@ -30,10 +30,10 @@ __kernel void Mixed_4e_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             for (int i = 0; i < 14*14; i++){
                 l_input[i] = input0[14*14*rc+i];
             }
-			#pragma unroll 4
+			//#pragma unroll 4
 			for (int yy = 0; yy < 14; ++yy)
 			{
-				#pragma unroll
+				//#pragma unroll
 				for (int xx = 0; xx < 14; ++xx)
 				{
                     temp_out[yy][xx] += (l_input[ yy * 14 + xx] * input_weights[rc]);
@@ -85,10 +85,10 @@ __kernel void Mixed_4e_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             for (int i = 0; i < 14*14; i++){
                 l_input[i] = input0[14*14*rc+i];
             }	
-			#pragma unroll 4
+			//#pragma unroll 4
 			for (int yy = 0; yy < 14; ++yy)
 			{
-				#pragma unroll
+				//#pragma unroll
 				for (int xx = 0; xx < 14; ++xx)
 				{
                     temp_out[yy][xx] += (l_input[ yy * 14 + xx] * input_weights[(rc)]);
@@ -223,10 +223,10 @@ __kernel void Mixed_4e_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             for (int i = 0; i < 14*14; i++){
                 l_input[i] = input0[14*14*rc+i];
             }
-			#pragma unroll 4
+			//#pragma unroll 4
 			for (int yy = 0; yy < 14; ++yy)
 			{
-				#pragma unroll
+				//#pragma unroll
 				for (int xx = 0; xx < 14; ++xx)
 				{
                 temp_out[yy][xx] += (l_input[yy * 14 + xx] * input_weights[rc]);
@@ -390,10 +390,10 @@ __kernel void Mixed_4e_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
             for (int i = 0; i < 14*14; i++){
                 l_input[i] = input0[14*14*rc+i];
             }
-			#pragma unroll 4
+			//#pragma unroll 4
 			for (int yy = 0; yy < 14; ++yy)
 			{
-				#pragma unroll
+				//#pragma unroll
 				for (int xx = 0; xx < 14; ++xx)
 				{
                  
