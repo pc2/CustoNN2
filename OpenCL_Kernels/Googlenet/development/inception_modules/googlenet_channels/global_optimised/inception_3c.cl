@@ -36,7 +36,7 @@ __kernel void Mixed_3c_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             }
 
 
-            #pragma unroll 4
+            #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
@@ -99,7 +99,7 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                 image_slice[in] = input0[(28*28*rc)+in];
             }
 
-            #pragma unroll 4
+            #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
@@ -169,7 +169,7 @@ __kernel void Mixed_3c_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                 image_slice[in] = input0[(30*30*rc)+in];
             }
 
-            #pragma unroll 4
+            #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
@@ -250,7 +250,7 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0a_1x1_Conv2D(__global float *restrict co
                 image_slice[in] = input0[(28*28*rc)+in];
             }
 
-            #pragma unroll 4
+            // #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
@@ -322,10 +322,10 @@ __kernel void Mixed_3c_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
                 image_slice[in] = input0[(30*30*rc)+in];
             }
 
-            #pragma unroll 2
+            // #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
-                #pragma unroll
+                #pragma unroll 8
                 for (int xx = 0; xx < 28; ++xx)
                 {
 
@@ -440,7 +440,7 @@ __kernel void Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D(__global float *restrict co
                 image_slice[in] = input0[(28*28*rc)+in];
             }
 
-            #pragma unroll 4
+            #pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
                 #pragma unroll
