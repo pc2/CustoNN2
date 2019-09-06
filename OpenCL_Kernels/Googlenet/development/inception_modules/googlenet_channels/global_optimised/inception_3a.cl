@@ -34,22 +34,21 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict compute, __global fl
         {
             //Store 1 slice of input image
              float image_slice[229*229];
-             #pragma unroll 32
             for (int in = 0; in < 229*229; in++){
                     image_slice[in]= input0[(229*229*rc)+in];
             }
             for (int yy = 0; yy < 112; ++yy)
             {
-                #pragma unroll 4
+                //#pragma unroll 4
                 for (int xx = 0; xx < 112; ++xx)
                 {
                     float temp_0 = 0;
                     float temp_2 = 0;
-                        #pragma unroll
+                        //#pragma unroll
                         for (int ry = 0; ry < 7; ++ry)
                         {
                             float temp_1 = 0;
-                            #pragma unroll
+                            //#pragma unroll
                             for (int rx = 0; rx < 7; ++rx)
                             {   
                                 temp_1 +=  (image_slice[(yy * 458) + (ry * 229) + (xx * 2) + rx] * local_weight[(((((rc) * 7) + ry) * 7) + rx)]);
@@ -201,14 +200,14 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict compute, __global fl
         {
             //Store 1 slice of input image
             float image_slice[58*58];
-            #pragma unroll 29
+            //#pragma unroll 29
             for (int in = 0; in < 58*58; in++){
                 image_slice[in] = input0[(58*58*rc)+in];
             }
             //#pragma unroll 2
             for (int yy = 0; yy < 56; ++yy)
             {
-                #pragma unroll 
+                #pragma unroll 32
                 for (int xx = 0; xx < 56; ++xx)
                 {
                     float temp_0 = 0;
