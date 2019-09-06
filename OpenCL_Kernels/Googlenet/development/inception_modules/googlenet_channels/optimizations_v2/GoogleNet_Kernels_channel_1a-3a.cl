@@ -83,7 +83,7 @@ __kernel void Conv2d_1a_7x7_Conv2D(__global float *restrict input1, __global flo
                         image_slice1[in][in1] = input0[(229*229*rc)+(yy*2*229)+(in*229)+in1]; // image_slice[in+(yy*2)][in1];
                     }
                 }
-                #pragma unroll 56
+                #pragma unroll 2
                 for (int xx = 0; xx < 112; ++xx)
                 {
                     float temp_0 = 0;
@@ -139,7 +139,7 @@ __kernel void MaxPool_2a_3x3_MaxPool()
             for (int ax3 = 0; ax3 < 56; ++ax3)
             {
                 float tensor = -3.402823e+38f;
-           //     #pragma unroll
+                #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
@@ -194,7 +194,7 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
             for (int in = 0; in < 56*56; in++){
                 image_slice[in] = input0[(56*56*rc)+in];
             }
-            #pragma unroll 4
+            
             for (int yy = 0; yy < 56; ++yy)
             {
                 #pragma unroll
@@ -273,8 +273,10 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global flo
             for (int in = 0; in < 58*58; in++){
                 image_slice[in] = input0[(58*58*rc)+in];
             }
+	   // #pragma unroll 2
             for (int yy = 0; yy < 56; ++yy)
             {
+		#pragma unroll 28 
                 for (int xx = 0; xx < 56; ++xx)
                 {
                     float temp_0 = 0;
@@ -332,7 +334,7 @@ __kernel void MaxPool_3a_3x3_MaxPool(unsigned int route_to)
             for (int ax3 = 0; ax3 < 28; ++ax3)
             {
                 float tensor = -3.402823e+38f;
- //               #pragma unroll
+                #pragma unroll
                 for (int rv = 0; rv < 3; ++rv)
                 {
                     #pragma unroll
