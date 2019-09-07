@@ -34,7 +34,7 @@ __kernel void Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             //#pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
-                #pragma unroll
+                //#pragma unroll
                 for (int xx = 0; xx < 28; ++xx)
                 {
                     temp_out[yy][xx] += (image_slice[(yy * 28) + xx] * input_weights[rc]);
@@ -93,7 +93,7 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0a_1x1_Conv2D(__global float *restrict co
             //#pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
-                #pragma unroll
+                //#pragma unroll
                 for (int xx = 0; xx < 28; ++xx)
                 {
                     temp_out[yy][xx] += (image_slice[(yy * 28) + xx] * input_weights[rc]);
@@ -309,7 +309,7 @@ __kernel void Mixed_3b_Branch_2_Conv2d_0b_3x3_Conv2D(__global float *restrict co
             
             for (int yy = 0; yy < 28; ++yy)
             {
-                #pragma unroll
+                #pragma unroll 4
                 for (int xx = 0; xx < 28; ++xx)
                 {
                     float temp_0 = 0;
