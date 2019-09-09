@@ -128,8 +128,8 @@ __kernel void Conv2d_2b_1x1_Conv2D(__global float *restrict input1, __global flo
 
                 float temp_0 = input2[ff];
                 float temp_1 = 0;
-#pragma unroll 4
-                for (int rc = 0; rc < 64; ++rc)
+#pragma unroll 2
+                for (int rc = 0; rc < 64; ++rc) //brought down unroll factor by 2 to make the design fit 
                 {
                     //temp_1 += (input0[((((rc * 56) + yy) * 56) + xx)] * input1[((ff * 64) + rc)]);
                     float temp = temp_copies[SR - 1] + (input0[((((rc * 56) + yy) * 56) + xx)] * input1[((ff * 64) + rc)]);
@@ -167,6 +167,8 @@ __kernel void Padding_Conv2d_2c_3x3_Conv2D()
     }
 }
 
+
+//Hybrid Optimization. This kernel has been modified . This kernel was identified as a bottleneck. 
 __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global float *restrict input2)
 {
     float input0[215296];
@@ -213,7 +215,7 @@ __kernel void Conv2d_2c_3x3_Conv2D(__global float *restrict input1, __global flo
             //#pragma unroll 2
             for (int yy = 0; yy < 56; ++yy)
             {
-#pragma unroll 32
+//#pragma unroll 4
                 for (int xx = 0; xx < 56; ++xx)
                 {
                     float temp_0 = 0;
