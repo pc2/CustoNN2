@@ -2039,7 +2039,7 @@ std::vector<int> launcher_channel(int kernel_index,
 									p->layerName == "Mixed_4d_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_4d_Branch_1_Conv2d_0b_3x3_Conv2D" ||
 									p->layerName == "Mixed_4e_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_4e_Branch_1_Conv2d_0b_3x3_Conv2D" ||
 									p->layerName == "Mixed_4f_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_4f_Branch_1_Conv2d_0b_3x3_Conv2D" ||
-									p->layerName == "Mixed_5b_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D" ||
+									p->layerName == "Mixed_5b_Branch_2_Conv2d_0a_3x3_Conv2D" || p->layerName == "Mixed_5b_Branch_1_Conv2d_0b_3x3_Conv2D" ||
 									p->layerName == "Mixed_5c_Branch_2_Conv2d_0b_3x3_Conv2D" || p->layerName == "Mixed_5c_Branch_1_Conv2d_0b_3x3_Conv2D")
 								{
 									std::cout << "Global memory transfer for :" << p->layerName << std::endl;
