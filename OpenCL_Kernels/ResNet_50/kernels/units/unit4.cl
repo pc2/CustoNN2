@@ -39,7 +39,7 @@ __kernel void  block2_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute
                 l_input[i] = input0[28*28*rc+i];
             }
             
-#pragma unroll 4
+#pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
 #pragma unroll 
@@ -50,10 +50,8 @@ __kernel void  block2_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute
                 
             }
         }
-        #pragma unroll 4
         for (int yy = 0; yy < 28; ++yy)
         {
-#pragma unroll 
             for (int xx = 0; xx < 28; ++xx)
             {
                 temp_out[yy][xx] += input_bias[ff];
@@ -105,9 +103,6 @@ __kernel void  block2_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
             for (int i = 0; i < 30*30; i++){
                 l_input[i] = input0[30*30*rc+i];
             }
-            
-            
-#pragma unroll 4
             for (int yy = 0; yy < 28; ++yy)
             {
 #pragma unroll 
@@ -139,11 +134,10 @@ __kernel void  block2_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
                     temp_out[yy][xx] += temp_2;
                 }
             }
-        }
- #pragma unroll 4       
+        }       
         for (int yy = 0; yy < 28; ++yy)
         {
-#pragma unroll 
+ 
             for (int xx = 0; xx < 28; ++xx)
             {
                 temp_out[yy][xx] += input_bias[ff];
@@ -186,7 +180,7 @@ __kernel void  block2_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute
                 l_input[i] = input0[28*28*rc+i];
             }
             
-#pragma unroll 4
+#pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
 #pragma unroll 
@@ -197,10 +191,8 @@ __kernel void  block2_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute
                 
             }
         }
-        #pragma unroll 4
         for (int yy = 0; yy < 28; ++yy)
-        {
-#pragma unroll 
+        { 
             for (int xx = 0; xx < 28; ++xx)
             {
                 temp_out[yy][xx] += input_bias[ff];

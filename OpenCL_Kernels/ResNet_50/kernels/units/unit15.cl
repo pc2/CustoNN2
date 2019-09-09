@@ -42,7 +42,6 @@ __kernel void  block4_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
                 
             }
         }
-#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
 		#pragma unroll
@@ -88,7 +87,6 @@ __kernel void  block4_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute
                 temp_out[l][j] = 0;
             }
         }
-#pragma unroll 2 
         for (int rc = 0; rc < 512; ++rc)
         {
             for (int i = 0; i < 9*9; i++){
@@ -186,7 +184,6 @@ __kernel void  block4_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
                 
             }
         }
-#pragma unroll
         for (int yy = 0; yy < 7; ++yy)
         {
 		#pragma unroll

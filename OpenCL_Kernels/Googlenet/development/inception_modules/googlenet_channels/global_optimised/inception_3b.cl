@@ -165,7 +165,7 @@ __kernel void Mixed_3b_Branch_1_Conv2d_0b_3x3_Conv2D(__global float *restrict co
              
             for (int yy = 0; yy < 28; ++yy)
             {
-                #pragma unroll 
+                #pragma unroll 4 
                 for (int xx = 0; xx < 28; ++xx)
                 {
                         float temp_0 = 0;

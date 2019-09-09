@@ -42,7 +42,7 @@ __kernel void  block2_unit_1_bt_v2_shortcut_Conv2D(__global float* restrict comp
                 l_input[i] = input0[28*28*rc+i];
             }
             
-#pragma unroll 4
+#pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
 #pragma unroll 
@@ -53,10 +53,8 @@ __kernel void  block2_unit_1_bt_v2_shortcut_Conv2D(__global float* restrict comp
                 
             }
         }
-#pragma unroll 4 
         for (int yy = 0; yy < 28; ++yy)
-        {
-#pragma unroll 
+        { 
             for (int xx = 0; xx < 28; ++xx)
             {
                 temp_out[yy][xx] += input_bias[ff];
@@ -100,7 +98,7 @@ __kernel void  block2_unit_1_bt_v2_conv1_Conv2D(__global float* restrict compute
                 l_input[i] = input0[28*28*rc+i];
             }
             
-#pragma unroll 4
+#pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
 #pragma unroll 
@@ -111,10 +109,8 @@ __kernel void  block2_unit_1_bt_v2_conv1_Conv2D(__global float* restrict compute
                 
             }
         }
-#pragma unroll 4 
         for (int yy = 0; yy < 28; ++yy)
         {
-#pragma unroll 
             for (int xx = 0; xx < 28; ++xx)
             {
                 temp_out[yy][xx] += input_bias[ff];
@@ -201,10 +197,8 @@ __kernel void  block2_unit_1_bt_v2_conv2_Conv2D(__global float* restrict compute
                 }
             }
         }
-#pragma unroll 4 
         for (int yy = 0; yy < 28; ++yy)
-        {
-#pragma unroll 
+        { 
             for (int xx = 0; xx < 28; ++xx)
             {
                 temp_out[yy][xx] += input_bias[ff];
@@ -250,7 +244,7 @@ __kernel void  block2_unit_1_bt_v2_conv3_Conv2D(__global float* restrict compute
                 l_input[i] = input0[28*28*rc+i];
             }
             
-#pragma unroll 4
+#pragma unroll 2
             for (int yy = 0; yy < 28; ++yy)
             {
 #pragma unroll 
@@ -260,11 +254,9 @@ __kernel void  block2_unit_1_bt_v2_conv3_Conv2D(__global float* restrict compute
                 }
                 
             }
-        }
-#pragma unroll 4       
+        }      
         for (int yy = 0; yy < 28; ++yy)
         {
-#pragma unroll 
             for (int xx = 0; xx < 28; ++xx)
             {
                 temp_out[yy][xx] += input_bias[ff];
