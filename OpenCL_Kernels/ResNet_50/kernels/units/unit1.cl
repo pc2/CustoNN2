@@ -28,7 +28,7 @@ __kernel void  block1_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute
       for (int i = 0; i < 56*56; i++){
         l_input[i] = input0[56*56*rc+i];
       }
-#pragma unroll 4
+#pragma unroll 2
       for (int yy = 0; yy < 56; ++yy) {
 #pragma unroll 
         for (int xx = 0; xx < 56; ++xx) {
@@ -81,7 +81,7 @@ __kernel void  block1_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute
       for (int i = 0; i < 58*58; i++){
         l_input[i] = input0[58*58*rc+i];
       }
-      #pragma unroll 4
+      #pragma unroll 2
       for (int yy = 0; yy < 56; ++yy) {
         #pragma unroll 
         for (int xx = 0; xx < 56; ++xx) {
@@ -142,7 +142,7 @@ __kernel void  block1_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute
       for (int i = 0; i < 56*56; i++){
         l_input[i] = input0[56*56*rc+i];
       }
-#pragma unroll 4
+#pragma unroll 2
       for (int yy = 0; yy < 56; ++yy) {
 #pragma unroll 
         for (int xx = 0; xx < 56; ++xx) {

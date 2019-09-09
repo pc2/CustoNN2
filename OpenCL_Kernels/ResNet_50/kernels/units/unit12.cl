@@ -54,9 +54,7 @@ __kernel void  block3_unit_6_bt_v2_conv1_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll 
     for (int yy = 0; yy < 14; ++yy){
-     #pragma unroll
      for (int xx = 0; xx < 14; ++xx){
         temp_out[yy][xx] += input_bias[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
@@ -128,9 +126,7 @@ __kernel void  block3_unit_6_bt_v2_conv2_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
     for (int yy = 0; yy < 7; ++yy){
-      #pragma unroll
       for (int xx = 0; xx < 7; ++xx){
         temp_out[yy][xx] += input_bias[ff];
         temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
@@ -177,9 +173,7 @@ __kernel void  block3_unit_6_bt_v2_conv3_Conv2D(__global float* restrict compute
         }
       }
     }
-    #pragma unroll
     for (int yy = 0; yy < 7; ++yy){
-     #pragma unroll
      for (int xx = 0; xx < 7; ++xx){
         temp_out[yy][xx] += input_bias[ff];
         compute[((((ff * 7) + yy) * 7) + xx)] = temp_out[yy][xx];
