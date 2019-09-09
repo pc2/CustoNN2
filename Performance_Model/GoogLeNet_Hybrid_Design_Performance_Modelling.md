@@ -164,3 +164,11 @@
 | AvgPool_0a_7x7_AvgPool                         | 0                              | 0                       | 0                       | 0                       | 2                         | 0                                   | 0                      | 0                      | 0.171               | 0.01                  | 0           | 0                   | 0                 |
 | Conv2d_0c_1x1_Conv2D                           | 2                              |                         | 1.955                   | 0.003                   | 5                         | 0.4                                 | 1.86                   | 2                      | 0.01                | 0                     | 1.02145046  | 391.6               | 1.82094           |
 | Total                                          | 149.38                         | 1                       | 5.138                   | 0.174                   | 212.14                    | 0.704157632                         | 3.274332988            | 4.0279061              | 2.194               | 0.763                 | 28.12123494 | 25.04006788         | 0.116436316       |
+
+
+
+
+Rough,back of the envelope calulations for overall performance :
+| No.of Operations(in Millions) |  Global Mem  (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  |  Ops/byte  |  Global mem/second (MB/s) |
+|-------------------------------|----------------------|---------------------------|-------------------------------------|------------------------|------------------------|------------|---------------------|
+| 3298.24                       | 1971                 | 1770                      | 1.86                                | 8.66                   | 10                     | 1.67       | 1.1                 |
