@@ -168,7 +168,8 @@
 
 
 
-Rough,back of the envelope calulations for overall performance :
-| No.of Operations(in Millions) |  Global Mem  (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  |  Ops/byte  |  Global mem/second (MB/s) |
+### Rough,back of the envelope calulations for overall performance :
+
+| No.of Operations(in Millions) |  Global Mem  (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  |  Ops/byte  |  Global mem/second(MB/s)  |
 |-------------------------------|----------------------|---------------------------|-------------------------------------|------------------------|------------------------|------------|---------------------|
 | 3298.24                       | 1971                 | 1770                      | 1.86                                | 8.66                   | 10                     | 1.67       | 1.1                 |
