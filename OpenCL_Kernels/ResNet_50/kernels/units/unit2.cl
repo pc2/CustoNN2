@@ -36,9 +36,8 @@ __kernel void  block1_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
       input_weights[w] = input1[((ff * 256) + w)];
     }
     float temp_out[56][56];
-
-    for (int l = 0; l < 56; l++ ){
-
+	#pragma loop_coalesce
+    for (int l = 0; l < 56; l++ ){	
       for (int j = 0; j < 56; j++){
         temp_out[l][j] = 0;
       }
@@ -47,7 +46,6 @@ __kernel void  block1_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
       for (int i = 0; i < 56*56; i++){
         l_input[i] = input0[56*56*rc+i];
       }
- #pragma unroll 4
       for (int yy = 0; yy < 56; ++yy) {
 #pragma unroll 
         for (int xx = 0; xx < 56; ++xx) {
@@ -56,7 +54,7 @@ __kernel void  block1_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
 
       }
     }
-
+	#pragma loop_coalesce
     for (int yy = 0; yy < 56; ++yy){
      for (int xx = 0; xx < 56; ++xx){
         temp_out[yy][xx] += input_bias[ff];
@@ -161,9 +159,8 @@ __kernel void  block1_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
       input_weights[w] = input1[((ff * 64) + w)];
     }
     float temp_out[28][28];
-
+	#pragma loop_coalesce
     for (int l = 0; l < 28; l++ ){
-
       for (int j = 0; j < 28; j++){
         temp_out[l][j] = 0;
       }
@@ -172,7 +169,6 @@ __kernel void  block1_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
       for (int i = 0; i < 28*28; i++){
         l_input[i] = input0[28*28*rc+i];
       }
-#pragma unroll 2
       for (int yy = 0; yy < 28; ++yy) {
         #pragma unroll 
         for (int xx = 0; xx < 28; ++xx) {
@@ -181,6 +177,7 @@ __kernel void  block1_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
         }
       }
     }
+	#pragma loop_coalesce
     for (int yy = 0; yy < 28; ++yy){
      for (int xx = 0; xx < 28; ++xx){
         temp_out[yy][xx] += input_bias[ff];
