@@ -4,7 +4,7 @@ __kernel void Mul1_1601_Fused_Mul__FusedScaleShift(__global float* restrict T_pa
  }
 }
 
-__kernel void  block2_unit_1_bottleneck_v2_shortcut_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_1_bt_v2_shortcut_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 512; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -18,7 +18,7 @@ __kernel void  block2_unit_1_bottleneck_v2_shortcut_Conv2D(__global float* restr
 }
 
 
-__kernel void  block2_unit_1_bottleneck_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_1_bt_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -33,14 +33,14 @@ __kernel void  block2_unit_1_bottleneck_v2_conv1_Conv2D(__global float* restrict
 }
 
 
-__kernel void Padding_block2_unit_1_bottleneck_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
+__kernel void P_block2_unit_1_bt_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 115200; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((30 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) < 870)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30) < 29)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 900) * 28) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) / 30)) * 28) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30)) + -29)] : 0.000000e+00f);
   }
 }
 
-__kernel void  block2_unit_1_bottleneck_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_1_bt_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -60,7 +60,7 @@ __kernel void  block2_unit_1_bottleneck_v2_conv2_Conv2D(__global float* restrict
 
 
 
-__kernel void  block2_unit_1_bottleneck_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_1_bt_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 512; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -74,7 +74,7 @@ __kernel void  block2_unit_1_bottleneck_v2_conv3_Conv2D(__global float* restrict
 }
 
 
-__kernel void  block2_unit_1_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
+__kernel void  block2_unit_1_bt_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
@@ -90,7 +90,7 @@ __kernel void Mul1_1628_Fused_Mul__FusedScaleShift(__global float* restrict T_pa
 
 
 
-__kernel void  block2_unit_2_bottleneck_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_2_bt_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -105,7 +105,7 @@ __kernel void  block2_unit_2_bottleneck_v2_conv1_Conv2D(__global float* restrict
 }
 
 
-__kernel void Padding_block2_unit_2_bottleneck_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
+__kernel void P_block2_unit_2_bt_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 115200; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((30 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) < 870)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30) < 29)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 900) * 28) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) / 30)) * 28) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30)) + -29)] : 0.000000e+00f);
@@ -113,7 +113,7 @@ __kernel void Padding_block2_unit_2_bottleneck_v2_conv2_Conv2D(__global float *r
 }
 
 
-__kernel void  block2_unit_2_bottleneck_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_2_bt_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -132,7 +132,7 @@ __kernel void  block2_unit_2_bottleneck_v2_conv2_Conv2D(__global float* restrict
 }
 
 
-__kernel void  block2_unit_2_bottleneck_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_2_bt_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 512; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -146,7 +146,7 @@ __kernel void  block2_unit_2_bottleneck_v2_conv3_Conv2D(__global float* restrict
 }
 
 
-__kernel void block2_unit_2_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
+__kernel void block2_unit_2_bt_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner ] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
@@ -162,7 +162,7 @@ __kernel void Mul1_1655_Fused_Mul__FusedScaleShift(__global float* restrict T_pa
 
 
 
-__kernel void  block2_unit_3_bottleneck_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -177,7 +177,7 @@ __kernel void  block2_unit_3_bottleneck_v2_conv1_Conv2D(__global float* restrict
 }
 
 
-__kernel void Padding_block2_unit_3_bottleneck_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
+__kernel void P_block2_unit_3_bt_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 115200; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((30 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) < 870)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30) < 29)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 900) * 28) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) / 30)) * 28) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30)) + -29)] : 0.000000e+00f);
@@ -185,7 +185,7 @@ __kernel void Padding_block2_unit_3_bottleneck_v2_conv2_Conv2D(__global float *r
 }
 
 
-__kernel void  block2_unit_3_bottleneck_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -204,7 +204,7 @@ __kernel void  block2_unit_3_bottleneck_v2_conv2_Conv2D(__global float* restrict
 }
 
 
-__kernel void  block2_unit_3_bottleneck_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 512; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -218,14 +218,14 @@ __kernel void  block2_unit_3_bottleneck_v2_conv3_Conv2D(__global float* restrict
 }
 
 
-__kernel void  block2_unit_3_bottleneck_v2_add(__global float* restrict T_add,  __global float* restrict input0, __global float* restrict input1) {
+__kernel void  block2_unit_3_bt_v2_add(__global float* restrict T_add,  __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 401408; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
 }
 
 
-__kernel void  block2_unit_4_bottleneck_v2_shortcut_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
+__kernel void  block2_unit_4_bt_v2_shortcut_MaxPool(__global float* restrict tensor, __global float* restrict input0) {
   for (int ax1 = 0; ax1 < 512; ++ax1) {
     for (int ax2 = 0; ax2 < 14; ++ax2) {
       for (int ax3 = 0; ax3 < 14; ++ax3) {
@@ -245,7 +245,7 @@ __kernel void Mul1_1682_Fused_Mul__FusedScaleShift(__global float* restrict T_pa
  }
 }
 
-__kernel void  block2_unit_4_bottleneck_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_4_bt_v2_conv1_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 28; ++yy) {
       for (int xx = 0; xx < 28; ++xx) {
@@ -260,7 +260,7 @@ __kernel void  block2_unit_4_bottleneck_v2_conv1_Conv2D(__global float* restrict
 }
 
 
-__kernel void Padding_block2_unit_4_bottleneck_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
+__kernel void P_block2_unit_4_bt_v2_conv2_Conv2D(__global float *restrict T_pad, __global float *restrict input0)
 {
     for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 115200; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_pad[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = (float)(((((30 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900)) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) < 870)) && (1 <= (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30))) && ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30) < 29)) ? input0[((((((ax0_ax1_fused_ax2_fused_ax3_fused_inner / 900) * 28) + ((ax0_ax1_fused_ax2_fused_ax3_fused_inner % 900) / 30)) * 28) + (ax0_ax1_fused_ax2_fused_ax3_fused_inner % 30)) + -29)] : 0.000000e+00f);
@@ -268,7 +268,7 @@ __kernel void Padding_block2_unit_4_bottleneck_v2_conv2_Conv2D(__global float *r
 }
 
 
-__kernel void  block2_unit_4_bottleneck_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_4_bt_v2_conv2_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 128; ++ff) {
     for (int yy = 0; yy < 14; ++yy) {
       for (int xx = 0; xx < 14; ++xx) {
@@ -288,7 +288,7 @@ __kernel void  block2_unit_4_bottleneck_v2_conv2_Conv2D(__global float* restrict
 
 
 
-__kernel void  block2_unit_4_bottleneck_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block2_unit_4_bt_v2_conv3_Conv2D(__global float* restrict compute, __global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
   for (int ff = 0; ff < 512; ++ff) {
     for (int yy = 0; yy < 14; ++yy) {
       for (int xx = 0; xx < 14; ++xx) {
@@ -303,7 +303,7 @@ __kernel void  block2_unit_4_bottleneck_v2_conv3_Conv2D(__global float* restrict
 
 
 
-__kernel void block2_unit_4_bottleneck_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
+__kernel void block2_unit_4_bt_v2_add(__global float* restrict T_add, __global float* restrict input0, __global float* restrict input1) {
   for (int ax0_ax1_fused_ax2_fused_ax3_fused_inner = 0; ax0_ax1_fused_ax2_fused_ax3_fused_inner < 100352; ++ax0_ax1_fused_ax2_fused_ax3_fused_inner) {
     T_add[ax0_ax1_fused_ax2_fused_ax3_fused_inner] = input0[ax0_ax1_fused_ax2_fused_ax3_fused_inner ] + input1[ax0_ax1_fused_ax2_fused_ax3_fused_inner];
   }
