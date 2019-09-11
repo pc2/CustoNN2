@@ -1445,7 +1445,7 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, elt_out);
 								MPI_Send(elt_out, p->outH * p->outW * p->outDepth, MPI_FLOAT, rank + 1, 0, MPI_COMM_WORLD);
 							}
-							else if (model_name == "resnet16" && program_number == 2 )
+							else if (model_name == "resnet16" && program_number == 2 && p->layerName != "block4_unit_3_bt_v2_add" )
 							{
 								std::string elt_layer_name = p->layerName;
 								//std::cout << "we are here\n";
