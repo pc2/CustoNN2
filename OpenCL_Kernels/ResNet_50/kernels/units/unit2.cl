@@ -47,7 +47,7 @@ __kernel void  block1_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
       for (int i = 0; i < 56*56; i++){
         l_input[i] = input0[56*56*rc+i];
       }
- #pragma unroll 16  
+ #pragma unroll 4
       for (int yy = 0; yy < 56; ++yy) {
 #pragma unroll 
         for (int xx = 0; xx < 56; ++xx) {
@@ -76,47 +76,74 @@ __kernel void P_block1_unit_3_bt_v2_conv2_Conv2D(__global float *restrict T_pad,
     }
 
 }
-
-__kernel void  block1_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute,__global float* restrict input0, __global float* restrict input1, __global float* restrict input2) {
+__kernel void  block1_unit_3_bt_v2_conv2_Conv2D(__global float* restrict compute,__global float* restrict input0, __global float* restrict input1, __global float* restrict input2)
+{
     //local memory for biases
-    __local float input_bias[64];
-
-    for( int j = 0; j < 64; ++j){
-        input_bias[j] = input2[j];
-    }
-    for (int ff = 0; ff < 64; ++ff) {
-        //local memory for weights
-        float input_weights[3*3*64];
-
-        for( int k = 0; k < 3*3*64; ++k){
-            input_weights[k] = input1[((ff * 3*3*64) + k)];
-        }
-        
-        for (int yy = 0; yy < 28; ++yy) {
-            for (int xx = 0; xx < 28; ++xx) {
-                float temp_0 = input_bias[ff];
-                float temp_3 = 0.0;
-                for (int rc = 0; rc < 64; ++rc) {
-                    float temp_2 = 0.0;
-#pragma unroll
-                    for (int ry = 0; ry < 3; ++ry) {
-                        float temp_1 = 0.0;
-#pragma unroll
-                        for (int rx = 0; rx < 3; ++rx) {
-                            temp_1 += (input0[((((((((rc * 29) + yy) * 2) + ry) * 29) + xx) * 2) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
-                        }
-                        temp_2 += temp_1;
-                    }
-                    temp_3 += temp_2;
-                }
-                temp_0 += temp_3;
-                temp_0 = (temp_0 > 0) ? temp_0 : 0.000000e+00f;
-                compute[((((ff * 28) + yy) * 28) + xx)] = temp_0;
-            }
-        }
-    }
+   __local float input_bias[64];
+   for( int j = 0; j < 64; ++j){
+       input_bias[j] = input2[j];
+   }
+   for (int ff = 0; ff < 64; ++ff) {
+       //local memory for weights
+       float input_weights[3*3*64];
+       for( int k = 0; k < 3*3*64; ++k){
+           input_weights[k] = input1[((ff * 3*3*64) + k)];
+       }
+    //2D array to store Temporary results of 1 slice.
+       float temp_out[28][28];
+       //Initialize values with 0
+       #pragma loop_coalesce
+       for (int l = 0; l < 28; l++ ){
+           for (int j = 0; j < 28; j++){
+               temp_out[l][j] = 0.0;
+           }
+       }
+       for (int rc = 0; rc < 64; ++rc)
+       {
+           //Store 1 slice of input image
+           float image_slice[58*58];
+           #pragma unroll 30
+           for (int in = 0; in < 58*58; in++){
+               image_slice[in] = input0[(58*58*rc)+in];
+           }
+            //Convultion 3*3
+           for (int yy = 0; yy < 28; ++yy)
+           {
+               #pragma unroll 4
+               for (int xx = 0; xx < 28; ++xx)
+               {
+                       float temp_0 = 0;
+                       float temp_2 = 0;
+                       #pragma unroll
+                       for (int ry = 0; ry < 3; ++ry)
+                       {
+                           float temp_1 = 0;
+                           #pragma unroll
+                           for (int rx = 0; rx < 3; ++rx)
+                           {
+                               temp_1 +=  (image_slice[(((((((yy) * 2) + ry) * 29) + xx) * 2) + rx)] * input_weights[(((((rc) * 3) + ry) * 3) + rx)]);
+                           }
+                           temp_2 +=temp_1;
+                       }
+                       temp_0 += temp_2;
+                       temp_out[yy][xx] += temp_0;
+               }
+           }
+       }
+           //Summarize the results depthwise.
+            #pragma loop_coalesce
+           for (int yy = 0; yy < 28; ++yy)
+           {
+               for (int xx = 0; xx < 28; ++xx)
+               {
+                   temp_out[yy][xx] += input_bias[ff];
+                   //RELU
+                   temp_out[yy][xx] = (temp_out[yy][xx] > 0) ? temp_out[yy][xx] : 0.000000e+00f;
+                    compute[((((ff * 28) + yy) * 28) + xx)]  = temp_out[yy][xx];
+               }
+           }
+   }
 }
-
 
 
 
@@ -145,7 +172,7 @@ __kernel void  block1_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
       for (int i = 0; i < 28*28; i++){
         l_input[i] = input0[28*28*rc+i];
       }
-#pragma unroll 8
+#pragma unroll 2
       for (int yy = 0; yy < 28; ++yy) {
         #pragma unroll 
         for (int xx = 0; xx < 28; ++xx) {
