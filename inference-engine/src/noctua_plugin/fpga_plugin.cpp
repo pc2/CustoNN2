@@ -136,7 +136,7 @@ std::string rename_node_name(std::string strToSplit, char delimiter, std::string
 			nodeName += splittedStrings[pos] + "_";
 		}
 	}
-	else if (model_name == "resnet")
+	else if (model_name == "resnet" || model_name == "resnet16")
 	{
 		for (std::size_t i = 0; i < splittedStrings.size(); ++i)
 		{
@@ -815,6 +815,10 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 	{
 		aocx_name = "block";
 	}
+	else if (model_name == "resnet16")
+	{
+		aocx_name = "unit";
+	}
 
 	std::string file1 = G_BITSTREAM_DIR + aocx_name + std::to_string(2 * rank) + ".aocx";	 //first aocx
 	std::string file2 = G_BITSTREAM_DIR + aocx_name + std::to_string(2 * rank + 1) + ".aocx"; //second aocx
@@ -838,7 +842,7 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 		err = programs[0]->build(DeviceList1);
 		std::cout <<rank <<" Error code after build 0" <<err << "\n";
 
-		if (model_name == "googlenet" || (model_name == "resnet" && (2 * rank + 1 != 5)))
+		if (model_name == "googlenet" || model_name == "resnet16" || (model_name == "resnet" && (2 * rank + 1 != 5)))
 		{
 			std::ifstream aocx_stream2(f2, std::ios::in | std::ios::binary);
 			//checkErr(aocx_stream.is_open() ? CL_SUCCESS : -1, "Simple_ConvolutionNeuralNetwork.aocx");
@@ -854,7 +858,7 @@ std::vector<int> fpga_launcher(InferenceEngine::CNNNetwork network, char *model_
 		// std::cout << "xml_path1: " << f1_xml << "\n";
 		first_kernels = xml_parser1(f1_xml); //kernels from first aocx
 
-		if (model_name == "googlenet" || (model_name == "resnet" && (2 * rank + 1 != 5)))
+		if (model_name == "googlenet" || model_name == "resnet16" || (model_name == "resnet" && (2 * rank + 1 != 5)))
 		{
 			char f2_xml[file2_xml.length()];
 			strcpy(f2_xml, file2_xml.c_str());
@@ -1174,7 +1178,7 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 								}
 								//Pad kernel launching code
 								std::string pad_kernel_name = "Padding_" + p->layerName;
-								if (model_name == "resnet")
+								if (model_name == "resnet" || model_name == "resnet16")
 								{
 									pad_kernel_name = "P_" + p->layerName;
 								}
@@ -1189,7 +1193,7 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 								int dim2 = 0;
 								int dim3 = 0;
 								//Padding kernel output dimension calculation
-								if ((model_name == "resnet" && p->layerName == "conv1_Conv2D") || (model_name == "googlenet" && p->layerName == "Conv2d_1a_7x7_Conv2D"))
+								if ((model_name == "resnet" && p->layerName == "conv1_Conv2D") || (model_name == "resnet16" && p->layerName == "conv1_Conv2D") || (model_name == "googlenet" && p->layerName == "Conv2d_1a_7x7_Conv2D"))
 								{
 									//Set the dimensions for input layer
 									dim1 = dim_x + pad_x + pad_y;
@@ -1271,7 +1275,7 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 							}
 
 							//Stop the execution after last conv
-							if ((model_name == "googlenet" && p->layerName == "Conv2d_0c_1x1_Conv2D") || (model_name == "resnet" && p->layerName == "logits_Conv2D"))
+							if ((model_name == "googlenet" && p->layerName == "Conv2d_0c_1x1_Conv2D") || (model_name == "resnet" && p->layerName == "logits_Conv2D") || (model_name == "resnet16" && p->layerName == "logits_Conv2D"))
 							{
 								//Read buffer from the last conv output
 								float convScores[p->outH * p->outW * p->outDepth];
@@ -1431,6 +1435,17 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 							kernel_index++;
 							p->visited = 1;
 							if (program_number == 2 && (p->layerName == "block2_unit_4_bt_v2_add" || p->layerName == "block3_unit_6_bt_v2_add"))
+							{
+								std::string elt_layer_name = p->layerName;
+								//std::cout << "we are here\n";
+								MPI_Send(elt_layer_name.c_str(), elt_layer_name.size(), MPI_CHAR, rank + 1, 0, MPI_COMM_WORLD);
+								int dims1 = p->outH * p->outW * p->outDepth;
+								MPI_Send(&dims1, 1, MPI_INT, rank + 1, 0, MPI_COMM_WORLD);
+								float elt_out[p->outH * p->outW * p->outDepth];
+								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, elt_out);
+								MPI_Send(elt_out, p->outH * p->outW * p->outDepth, MPI_FLOAT, rank + 1, 0, MPI_COMM_WORLD);
+							}
+							else if (model_name == "resnet16" && program_number == 2 && p->layerName != "block4_unit_3_bt_v2_add" )
 							{
 								std::string elt_layer_name = p->layerName;
 								//std::cout << "we are here\n";

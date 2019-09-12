@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
         // input_imagePath.push_back(input_image_path.c_str());
 
         std::string cnn_modelArg = FLAGS_model;
-        if(!(cnn_modelArg=="googlenet" || cnn_modelArg=="resnet")){
+        if(!(cnn_modelArg=="googlenet" || cnn_modelArg=="resnet"|| cnn_modelArg=="resnet16")){
             showUsage();
             slog::err<<" Provided model is not supported."<<slog::endl;
         }
