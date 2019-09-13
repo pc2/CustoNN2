@@ -38,7 +38,6 @@ __kernel void  block1_unit_3_bt_v2_conv1_Conv2D(__global float* restrict compute
             for (int xx = 0; xx < 56; ++xx) {
                 float temp_0 = input_bias[ff];
                 float temp_1 = 0.0;
-				#pragma unroll
                 for (int rc = 0; rc < 256; ++rc) {
                     temp_1 += (input0[((((rc * 56) + yy) * 56) + xx)] * input_weight[(rc)]);
                 }
@@ -117,6 +116,7 @@ __kernel void  block1_unit_3_bt_v2_conv3_Conv2D(__global float* restrict compute
             for (int xx = 0; xx < 28; ++xx) {
                 float temp_0 = input_bias[ff];
                 float temp_1 = 0.0;
+				
 				#pragma unroll
                 for (int rc = 0; rc < 64; ++rc) {
                     temp_1 += (input0[((((rc * 28) + yy) * 28) + xx)] * input_weight[(rc)]);
