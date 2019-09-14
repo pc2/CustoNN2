@@ -1,5 +1,6 @@
+### Design : inception0 
+ Fmax : 221.9MHz    
 
-Fmax : 221.9MHz
 | Kernel (inception0)                       |  No.of Operations(in Millions) |  Fraction of total Ops  |  Global Mem (r) (in MB) |  Global Mem (w) (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  |  Ops/byte   |  Global mem/second(MBps)  | Global mem/cycle (MB per clock)  |
 |-------------------------------------------|--------------------------------|-------------------------|-------------------------|-------------------------|---------------------------|-------------------------------------|------------------------|------------------------|-------------|---------------------------|----------------------------------|
 | Padding_Conv2d_1a_7x7_Conv2D              | 0                              | 0                       | 0.6                     | 0.6                     | 1                         | 0                                   | 0                      | 0                      | 0           | 1200                      | 5.40784137                       |
@@ -14,7 +15,10 @@ Fmax : 221.9MHz
 
 
 
-Fmax : 198.3MHz
+### Design : inception1 
+ Fmax : 198.3MHz   
+
+
 | Kernel (inception1)                            |  No.of Operations(in Millions) |  Fraction of total Ops  |  Global Mem (r) (in MB) |  Global Mem (w) (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  |  Ops/byte   |  Global mem/second(MBps)  | Global mem/cycle (MB per clock)  |
 |------------------------------------------------|--------------------------------|-------------------------|-------------------------|-------------------------|---------------------------|-------------------------------------|------------------------|------------------------|-------------|---------------------------|----------------------------------|
 | Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D         | 19.26                          | 0.083311705             | 73.5                    | 38.53                   | 48.96                     | 0.393382353                         | 1.983773842            | 2                      | 0.171918236 | 2288.194444               | 11.53905418                      |
