@@ -1434,7 +1434,7 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 									  << err << "\n";
 							kernel_index++;
 							p->visited = 1;
-							if (program_number == 2 && (p->layerName == "block2_unit_4_bt_v2_add" || p->layerName == "block3_unit_6_bt_v2_add"))
+							if ((model_name == "resnet" && program_number == 2 && (p->layerName == "block2_unit_4_bt_v2_add" || p->layerName == "block3_unit_6_bt_v2_add")) || (model_name == "resnet16" && program_number == 2 && p->layerName != "block4_unit_3_bt_v2_add" ))
 							{
 								std::string elt_layer_name = p->layerName;
 								//std::cout << "we are here\n";
@@ -1445,17 +1445,7 @@ std::vector<int> launcher_global(std::vector<cl::Device> DeviceList1,
 								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, elt_out);
 								MPI_Send(elt_out, p->outH * p->outW * p->outDepth, MPI_FLOAT, rank + 1, 0, MPI_COMM_WORLD);
 							}
-							else if (model_name == "resnet16" && program_number == 2 && p->layerName != "block4_unit_3_bt_v2_add" )
-							{
-								std::string elt_layer_name = p->layerName;
-								//std::cout << "we are here\n";
-								MPI_Send(elt_layer_name.c_str(), elt_layer_name.size(), MPI_CHAR, rank + 1, 0, MPI_COMM_WORLD);
-								int dims1 = p->outH * p->outW * p->outDepth;
-								MPI_Send(&dims1, 1, MPI_INT, rank + 1, 0, MPI_COMM_WORLD);
-								float elt_out[p->outH * p->outW * p->outDepth];
-								cmd_queues[p->layerID]->enqueueReadBuffer(*buffers[p->layerOutBufferIndex], CL_TRUE, 0, sizeof(cl_float) * p->outH * p->outW * p->outDepth, elt_out);
-								MPI_Send(elt_out, p->outH * p->outW * p->outDepth, MPI_FLOAT, rank + 1, 0, MPI_COMM_WORLD);
-							}
+							
 						}
 						if (p->visited == 0)
 							q.push(p);
