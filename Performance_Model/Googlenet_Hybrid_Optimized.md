@@ -30,3 +30,27 @@ Fmax : 285MHz
 | Mixed_3c_Branch_3_Conv2d_0b_1x1_Conv2D         | 25.75                           | 0.04                    | 0.25                     | 0.19                         | 57                        | 0.451754386                            | 1.585103109            | 2                      | 0.194               | 0                     | 58.5       | 4.385964912                  | 0.888888889              |
 | Mixed_3c_concat                                | 0                               | 0                       | 1.42                     | 0                            | 1.87                      | 0                                      | 0                      | 0                      | 0                   | 1.43                  | 0          | 0                            | 0                        |
 | Total                                          | 617                             | 1                       | 2.84                     | 1.42                         | 512                       | 1.205078125                            | 4.228344298            | 4.97                   | x                   | x                     | 217        | 5.546875                     | 9.97464364               |
+
+
+
+### Overall 
+Fmax avg : 230MHz
+
+| No.of Operations(in Millions) |  Global Mem  (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  |  Ops/byte  |  Global mem/second (GBps) |
+|-------------------------------|----------------------|---------------------------|-------------------------------------|------------------------|------------|---------------------------|
+|                               |                      |                           |                                     |                        |            |                           |
+| 3298.24                       | 1971                 | 1180                      | 2.79                                | 12.15                  | 1.67       | 1.5                       |
+
+
+
+
+## Improvement over unoptimized hybrid design :
+
+Execution speed up = (1770ms/1180ms) = 1.5    
+Throughput improvement = 2.79GOPS - 1.86GOPS = 0.93GOPS  
+Latency improvement = 1770ms - 1180ms = 590ms  
+Accuracy : Unchanged
+
+
+
+
