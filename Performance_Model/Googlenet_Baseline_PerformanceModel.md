@@ -92,9 +92,10 @@
 
 
 
-### Design : inception5 
- Fmax : 211.1MHz   
-| Kernel (inception5)                            |  No.of Operations(in Millions) |  Fraction of total Ops  |  Global Mem (r) (in MB) |  Global Mem (w) (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  |  Ops/byte   |  Global mem/second(MBps)  | Global mem/cycle (Bytes per clock)  |
+### Design : inception5   
+ Fmax : 211.1MHz    
+ 
+| Kernel (inception4)                            |  No.of Operations(in Millions) |  Fraction of total Ops  |  Global Mem (r) (in MB) |  Global Mem (w) (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  |  Ops/byte   |  Global mem/second(MBps)  | Global mem/cycle (Bytes per clock)  |
 |------------------------------------------------|--------------------------------|-------------------------|-------------------------|-------------------------|---------------------------|-------------------------------------|------------------------|------------------------|-------------|---------------------------|-------------------------------------|
 | Mixed_4d_Branch_0_Conv2d_0a_1x1_Conv2D         | 25.69                          | 0.13515362              | 98                      | 49                      | 60.99                     | 0.421216593                         | 1.995341511            | 2                      | 0.174761905 | 2410.231185               | 11.41748548                         |
 | Mixed_4d_Branch_1_Conv2d_0a_1x1_Conv2D         | 25.69                          | 0.13515362              | 98                      | 49                      | 60.99                     | 0.421216593                         | 1.995341511            | 2                      | 0.174761905 | 2410.231185               | 11.41748548                         |
