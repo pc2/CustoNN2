@@ -17,7 +17,7 @@
 - 
 ##### Research/Individual Task Updates: Task Updates
 -  Execution time for GoogLeNet global memory optimised version changed from 5,639 sec to 4,640 sec according to profile.mon files.
--  Inference time for ReNet global memory optimised version is 12.03 seconds.
+-  Inference time for ResNet global memory optimised version is 12.03 seconds.
 
 ##### Project decisions
 -
