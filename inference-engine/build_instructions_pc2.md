@@ -28,3 +28,6 @@ command : `make -j16`
 ### Running the plugin on fpgas:
 Please refer to this work instruction:
 https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018/blob/master/workflows/workflow_OpenVINO_Inference.md
+
+# Build Inference Engine Project on Noctua Nodes
+The documentation for building the plugin on Noctua nodes are given in the README files of kernels: https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018/tree/tvm/OpenCL_Kernels/Googlenet/baseline_architecture
