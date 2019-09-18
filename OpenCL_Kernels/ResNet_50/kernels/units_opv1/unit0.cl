@@ -27,13 +27,13 @@ __kernel void  conv1_Conv2D(__global float* restrict compute,__global float* res
             for (int xx = 0; xx < 112; ++xx) {
                 float temp_0 = input_bias[ff];
                 float temp_3 = 0.0;
-//#pragma unroll
+                //#pragma unroll
                 for (int rc = 0; rc < 3; ++rc) {
                     float temp_2 = 0.0;
-#pragma unroll
+                    #pragma unroll
                     for (int ry = 0; ry < 7; ++ry) {
                         float temp_1 = 0.0;
-#pragma unroll
+                        #pragma unroll
                         for (int rx = 0; rx < 7; ++rx) {
                             temp_1 += (input0[((((((((rc * 115) + yy) * 2) + ry) * 115) + xx) * 2) + rx)] * input_weight[(((((rc) * 7) + ry) * 7) + rx)]);
                         }
