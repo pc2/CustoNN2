@@ -1,0 +1,314 @@
+Graph(%input,
+      %transpose1,
+      %resnet_v2_50/conv1/biases,
+      %resnet_v2_50/block1/unit_1/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_1/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose6,
+      %resnet_v2_50/block1/unit_1/bottleneck_v2/shortcut/biases,
+      %transpose9,
+      %resnet_v2_50/block1/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose12,
+      %resnet_v2_50/block1/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose15,
+      %resnet_v2_50/block1/unit_1/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block1/unit_2/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_2/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose18,
+      %resnet_v2_50/block1/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose21,
+      %resnet_v2_50/block1/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose24,
+      %resnet_v2_50/block1/unit_2/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block1/unit_3/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_3/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose29,
+      %resnet_v2_50/block1/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose32,
+      %resnet_v2_50/block1/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block1/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose35,
+      %resnet_v2_50/block1/unit_3/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block2/unit_1/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_1/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose38,
+      %resnet_v2_50/block2/unit_1/bottleneck_v2/shortcut/biases,
+      %transpose41,
+      %resnet_v2_50/block2/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose44,
+      %resnet_v2_50/block2/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose47,
+      %resnet_v2_50/block2/unit_1/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block2/unit_2/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_2/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose50,
+      %resnet_v2_50/block2/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose53,
+      %resnet_v2_50/block2/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose56,
+      %resnet_v2_50/block2/unit_2/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block2/unit_3/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_3/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose59,
+      %resnet_v2_50/block2/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose62,
+      %resnet_v2_50/block2/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose65,
+      %resnet_v2_50/block2/unit_3/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block2/unit_4/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_4/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose70,
+      %resnet_v2_50/block2/unit_4/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_4/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose73,
+      %resnet_v2_50/block2/unit_4/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block2/unit_4/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose76,
+      %resnet_v2_50/block2/unit_4/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block3/unit_1/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_1/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose79,
+      %resnet_v2_50/block3/unit_1/bottleneck_v2/shortcut/biases,
+      %transpose82,
+      %resnet_v2_50/block3/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose85,
+      %resnet_v2_50/block3/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose88,
+      %resnet_v2_50/block3/unit_1/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block3/unit_2/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_2/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose91,
+      %resnet_v2_50/block3/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose94,
+      %resnet_v2_50/block3/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose97,
+      %resnet_v2_50/block3/unit_2/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block3/unit_3/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_3/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose100,
+      %resnet_v2_50/block3/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose103,
+      %resnet_v2_50/block3/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose106,
+      %resnet_v2_50/block3/unit_3/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block3/unit_4/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_4/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose109,
+      %resnet_v2_50/block3/unit_4/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_4/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose112,
+      %resnet_v2_50/block3/unit_4/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_4/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose115,
+      %resnet_v2_50/block3/unit_4/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block3/unit_5/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_5/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose118,
+      %resnet_v2_50/block3/unit_5/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_5/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose121,
+      %resnet_v2_50/block3/unit_5/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_5/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose124,
+      %resnet_v2_50/block3/unit_5/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block3/unit_6/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_6/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose129,
+      %resnet_v2_50/block3/unit_6/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_6/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose132,
+      %resnet_v2_50/block3/unit_6/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block3/unit_6/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose135,
+      %resnet_v2_50/block3/unit_6/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block4/unit_1/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_1/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose138,
+      %resnet_v2_50/block4/unit_1/bottleneck_v2/shortcut/biases,
+      %transpose141,
+      %resnet_v2_50/block4/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose144,
+      %resnet_v2_50/block4/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose147,
+      %resnet_v2_50/block4/unit_1/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block4/unit_2/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_2/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose150,
+      %resnet_v2_50/block4/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose153,
+      %resnet_v2_50/block4/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose156,
+      %resnet_v2_50/block4/unit_2/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/block4/unit_3/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_3/bottleneck_v2/preact/FusedBatchNorm_add_beta,
+      %transpose159,
+      %resnet_v2_50/block4/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose162,
+      %resnet_v2_50/block4/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/block4/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta,
+      %transpose165,
+      %resnet_v2_50/block4/unit_3/bottleneck_v2/conv3/biases,
+      %resnet_v2_50/postnorm/FusedBatchNorm_gamma_mul_div,
+      %resnet_v2_50/postnorm/FusedBatchNorm_add_beta,
+      %transpose168,
+      %resnet_v2_50/logits/biases) {
+  %1 = tvm_op(%input, num_outputs='1', num_inputs='1', func_name='fuse_pad_transpose', flatten_data='0')
+  %3 = tvm_op(%1, %transpose1, num_outputs='1', num_inputs='2', func_name='fuse_conv2d', flatten_data='0')
+  %5 = tvm_op(%3, %resnet_v2_50/conv1/biases, num_outputs='1', num_inputs='2', func_name='fuse_transpose_broadcast_add_transpose', flatten_data='0')
+  %6 = tvm_op(%5, num_outputs='1', num_inputs='1', func_name='fuse_max_pool2d', flatten_data='0')
+  %9 = tvm_op(%6, %resnet_v2_50/block1/unit_1/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_1/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu', flatten_data='0')
+  %10 = tvm_op(%9, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad', flatten_data='0')
+  %12 = tvm_op(%10, %transpose6, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_1', flatten_data='0')
+  %14 = tvm_op(%9, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad', flatten_data='0')
+  %16 = tvm_op(%14, %transpose9, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_2', flatten_data='0')
+  %19 = tvm_op(%16, %resnet_v2_50/block1/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad', flatten_data='0')
+  %21 = tvm_op(%19, %transpose12, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_3', flatten_data='0')
+  %24 = tvm_op(%21, %resnet_v2_50/block1/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_1', flatten_data='0')
+  %26 = tvm_op(%24, %transpose15, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_1', flatten_data='0')
+  %28 = tvm_op(%12, %resnet_v2_50/block1/unit_1/bottleneck_v2/shortcut/biases, %26, %resnet_v2_50/block1/unit_1/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='4', func_name='fuse_transpose_broadcast_add_transpose_broadcast_add_broadcast_add', flatten_data='0')
+  %31 = tvm_op(%28, %resnet_v2_50/block1/unit_2/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_2/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad', flatten_data='0')
+  %33 = tvm_op(%31, %transpose18, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_4', flatten_data='0')
+  %36 = tvm_op(%33, %resnet_v2_50/block1/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad', flatten_data='0')
+  %38 = tvm_op(%36, %transpose21, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_3', flatten_data='0')
+  %41 = tvm_op(%38, %resnet_v2_50/block1/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_1', flatten_data='0')
+  %43 = tvm_op(%41, %transpose24, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_1', flatten_data='0')
+  %45 = tvm_op(%28, %43, %resnet_v2_50/block1/unit_2/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_add_broadcast_add', flatten_data='0')
+  %46 = tvm_op(%45, num_outputs='1', num_inputs='1', func_name='fuse_transpose_21', flatten_data='0')
+  %47 = tvm_op(%46, num_outputs='1', num_inputs='1', func_name='fuse_max_pool2d_1', flatten_data='0')
+  %50 = tvm_op(%45, %resnet_v2_50/block1/unit_3/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_3/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad', flatten_data='0')
+  %52 = tvm_op(%50, %transpose29, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_4', flatten_data='0')
+  %55 = tvm_op(%52, %resnet_v2_50/block1/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_pad_transpose', flatten_data='0')
+  %57 = tvm_op(%55, %transpose32, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_5', flatten_data='0')
+  %60 = tvm_op(%57, %resnet_v2_50/block1/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block1/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_2', flatten_data='0')
+  %62 = tvm_op(%60, %transpose35, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_6', flatten_data='0')
+  %66 = tvm_op(%47, %62, %resnet_v2_50/block1/unit_3/bottleneck_v2/conv3/biases, %resnet_v2_50/block2/unit_1/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_1/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='5', func_name='fuse_transpose_transpose_broadcast_add_broadcast_add_broadcast_mul_broadcast_add_relu', flatten_data='0')
+  %67 = tvm_op(%66, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad_1', flatten_data='0')
+  %69 = tvm_op(%67, %transpose38, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_7', flatten_data='0')
+  %71 = tvm_op(%66, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad_1', flatten_data='0')
+  %73 = tvm_op(%71, %transpose41, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_8', flatten_data='0')
+  %76 = tvm_op(%73, %resnet_v2_50/block2/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_3', flatten_data='0')
+  %78 = tvm_op(%76, %transpose44, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_9', flatten_data='0')
+  %81 = tvm_op(%78, %resnet_v2_50/block2/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_4', flatten_data='0')
+  %83 = tvm_op(%81, %transpose47, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_10', flatten_data='0')
+  %85 = tvm_op(%69, %resnet_v2_50/block2/unit_1/bottleneck_v2/shortcut/biases, %83, %resnet_v2_50/block2/unit_1/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='4', func_name='fuse_transpose_broadcast_add_transpose_broadcast_add_broadcast_add_1', flatten_data='0')
+  %88 = tvm_op(%85, %resnet_v2_50/block2/unit_2/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_2/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_1', flatten_data='0')
+  %90 = tvm_op(%88, %transpose50, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_11', flatten_data='0')
+  %93 = tvm_op(%90, %resnet_v2_50/block2/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_3', flatten_data='0')
+  %95 = tvm_op(%93, %transpose53, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_9', flatten_data='0')
+  %98 = tvm_op(%95, %resnet_v2_50/block2/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_4', flatten_data='0')
+  %100 = tvm_op(%98, %transpose56, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_10', flatten_data='0')
+  %102 = tvm_op(%85, %100, %resnet_v2_50/block2/unit_2/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_add_broadcast_add_1', flatten_data='0')
+  %105 = tvm_op(%102, %resnet_v2_50/block2/unit_3/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_3/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_1', flatten_data='0')
+  %107 = tvm_op(%105, %transpose59, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_11', flatten_data='0')
+  %110 = tvm_op(%107, %resnet_v2_50/block2/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_3', flatten_data='0')
+  %112 = tvm_op(%110, %transpose62, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_9', flatten_data='0')
+  %115 = tvm_op(%112, %resnet_v2_50/block2/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_4', flatten_data='0')
+  %117 = tvm_op(%115, %transpose65, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_10', flatten_data='0')
+  %119 = tvm_op(%102, %117, %resnet_v2_50/block2/unit_3/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_add_broadcast_add_1', flatten_data='0')
+  %120 = tvm_op(%119, num_outputs='1', num_inputs='1', func_name='fuse_transpose_22', flatten_data='0')
+  %121 = tvm_op(%120, num_outputs='1', num_inputs='1', func_name='fuse_max_pool2d_2', flatten_data='0')
+  %124 = tvm_op(%119, %resnet_v2_50/block2/unit_4/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_4/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_1', flatten_data='0')
+  %126 = tvm_op(%124, %transpose70, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_11', flatten_data='0')
+  %129 = tvm_op(%126, %resnet_v2_50/block2/unit_4/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_4/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_pad_transpose_1', flatten_data='0')
+  %131 = tvm_op(%129, %transpose73, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_12', flatten_data='0')
+  %134 = tvm_op(%131, %resnet_v2_50/block2/unit_4/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block2/unit_4/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_5', flatten_data='0')
+  %136 = tvm_op(%134, %transpose76, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_13', flatten_data='0')
+  %140 = tvm_op(%121, %136, %resnet_v2_50/block2/unit_4/bottleneck_v2/conv3/biases, %resnet_v2_50/block3/unit_1/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_1/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='5', func_name='fuse_transpose_transpose_broadcast_add_broadcast_add_broadcast_mul_broadcast_add_relu_1', flatten_data='0')
+  %141 = tvm_op(%140, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad_2', flatten_data='0')
+  %143 = tvm_op(%141, %transpose79, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_14', flatten_data='0')
+  %145 = tvm_op(%140, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad_2', flatten_data='0')
+  %147 = tvm_op(%145, %transpose82, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_15', flatten_data='0')
+  %150 = tvm_op(%147, %resnet_v2_50/block3/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_6', flatten_data='0')
+  %152 = tvm_op(%150, %transpose85, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_16', flatten_data='0')
+  %155 = tvm_op(%152, %resnet_v2_50/block3/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_7', flatten_data='0')
+  %157 = tvm_op(%155, %transpose88, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_17', flatten_data='0')
+  %159 = tvm_op(%143, %resnet_v2_50/block3/unit_1/bottleneck_v2/shortcut/biases, %157, %resnet_v2_50/block3/unit_1/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='4', func_name='fuse_transpose_broadcast_add_transpose_broadcast_add_broadcast_add_2', flatten_data='0')
+  %162 = tvm_op(%159, %resnet_v2_50/block3/unit_2/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_2/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_2', flatten_data='0')
+  %164 = tvm_op(%162, %transpose91, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_18', flatten_data='0')
+  %167 = tvm_op(%164, %resnet_v2_50/block3/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_6', flatten_data='0')
+  %169 = tvm_op(%167, %transpose94, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_16', flatten_data='0')
+  %172 = tvm_op(%169, %resnet_v2_50/block3/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_7', flatten_data='0')
+  %174 = tvm_op(%172, %transpose97, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_17', flatten_data='0')
+  %176 = tvm_op(%159, %174, %resnet_v2_50/block3/unit_2/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_add_broadcast_add_2', flatten_data='0')
+  %179 = tvm_op(%176, %resnet_v2_50/block3/unit_3/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_3/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_2', flatten_data='0')
+  %181 = tvm_op(%179, %transpose100, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_18', flatten_data='0')
+  %184 = tvm_op(%181, %resnet_v2_50/block3/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_6', flatten_data='0')
+  %186 = tvm_op(%184, %transpose103, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_16', flatten_data='0')
+  %189 = tvm_op(%186, %resnet_v2_50/block3/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_7', flatten_data='0')
+  %191 = tvm_op(%189, %transpose106, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_17', flatten_data='0')
+  %193 = tvm_op(%176, %191, %resnet_v2_50/block3/unit_3/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_add_broadcast_add_2', flatten_data='0')
+  %196 = tvm_op(%193, %resnet_v2_50/block3/unit_4/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_4/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_2', flatten_data='0')
+  %198 = tvm_op(%196, %transpose109, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_18', flatten_data='0')
+  %201 = tvm_op(%198, %resnet_v2_50/block3/unit_4/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_4/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_6', flatten_data='0')
+  %203 = tvm_op(%201, %transpose112, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_16', flatten_data='0')
+  %206 = tvm_op(%203, %resnet_v2_50/block3/unit_4/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_4/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_7', flatten_data='0')
+  %208 = tvm_op(%206, %transpose115, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_17', flatten_data='0')
+  %210 = tvm_op(%193, %208, %resnet_v2_50/block3/unit_4/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_add_broadcast_add_2', flatten_data='0')
+  %213 = tvm_op(%210, %resnet_v2_50/block3/unit_5/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_5/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_2', flatten_data='0')
+  %215 = tvm_op(%213, %transpose118, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_18', flatten_data='0')
+  %218 = tvm_op(%215, %resnet_v2_50/block3/unit_5/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_5/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_6', flatten_data='0')
+  %220 = tvm_op(%218, %transpose121, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_16', flatten_data='0')
+  %223 = tvm_op(%220, %resnet_v2_50/block3/unit_5/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_5/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_7', flatten_data='0')
+  %225 = tvm_op(%223, %transpose124, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_17', flatten_data='0')
+  %227 = tvm_op(%210, %225, %resnet_v2_50/block3/unit_5/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_add_broadcast_add_2', flatten_data='0')
+  %228 = tvm_op(%227, num_outputs='1', num_inputs='1', func_name='fuse_transpose_23', flatten_data='0')
+  %229 = tvm_op(%228, num_outputs='1', num_inputs='1', func_name='fuse_max_pool2d_3', flatten_data='0')
+  %232 = tvm_op(%227, %resnet_v2_50/block3/unit_6/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_6/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_2', flatten_data='0')
+  %234 = tvm_op(%232, %transpose129, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_18', flatten_data='0')
+  %237 = tvm_op(%234, %resnet_v2_50/block3/unit_6/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_6/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_pad_transpose_2', flatten_data='0')
+  %239 = tvm_op(%237, %transpose132, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_19', flatten_data='0')
+  %242 = tvm_op(%239, %resnet_v2_50/block3/unit_6/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block3/unit_6/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_8', flatten_data='0')
+  %244 = tvm_op(%242, %transpose135, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_20', flatten_data='0')
+  %248 = tvm_op(%229, %244, %resnet_v2_50/block3/unit_6/bottleneck_v2/conv3/biases, %resnet_v2_50/block4/unit_1/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_1/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='5', func_name='fuse_transpose_transpose_broadcast_add_broadcast_add_broadcast_mul_broadcast_add_relu_2', flatten_data='0')
+  %249 = tvm_op(%248, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad_3', flatten_data='0')
+  %251 = tvm_op(%249, %transpose138, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_21', flatten_data='0')
+  %253 = tvm_op(%248, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad_3', flatten_data='0')
+  %255 = tvm_op(%253, %transpose141, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_22', flatten_data='0')
+  %258 = tvm_op(%255, %resnet_v2_50/block4/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_1/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_9', flatten_data='0')
+  %260 = tvm_op(%258, %transpose144, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_23', flatten_data='0')
+  %263 = tvm_op(%260, %resnet_v2_50/block4/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_1/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_10', flatten_data='0')
+  %265 = tvm_op(%263, %transpose147, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_24', flatten_data='0')
+  %267 = tvm_op(%251, %resnet_v2_50/block4/unit_1/bottleneck_v2/shortcut/biases, %265, %resnet_v2_50/block4/unit_1/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='4', func_name='fuse_transpose_broadcast_add_transpose_broadcast_add_broadcast_add_3', flatten_data='0')
+  %270 = tvm_op(%267, %resnet_v2_50/block4/unit_2/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_2/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_3', flatten_data='0')
+  %272 = tvm_op(%270, %transpose150, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_25', flatten_data='0')
+  %275 = tvm_op(%272, %resnet_v2_50/block4/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_2/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_9', flatten_data='0')
+  %277 = tvm_op(%275, %transpose153, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_23', flatten_data='0')
+  %280 = tvm_op(%277, %resnet_v2_50/block4/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_2/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_10', flatten_data='0')
+  %282 = tvm_op(%280, %transpose156, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_24', flatten_data='0')
+  %284 = tvm_op(%267, %282, %resnet_v2_50/block4/unit_2/bottleneck_v2/conv3/biases, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_add_broadcast_add_3', flatten_data='0')
+  %287 = tvm_op(%284, %resnet_v2_50/block4/unit_3/bottleneck_v2/preact/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_3/bottleneck_v2/preact/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_broadcast_mul_broadcast_add_relu_transpose_pad_3', flatten_data='0')
+  %289 = tvm_op(%287, %transpose159, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_25', flatten_data='0')
+  %292 = tvm_op(%289, %resnet_v2_50/block4/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_3/bottleneck_v2/conv1/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_9', flatten_data='0')
+  %294 = tvm_op(%292, %transpose162, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_23', flatten_data='0')
+  %297 = tvm_op(%294, %resnet_v2_50/block4/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/block4/unit_3/bottleneck_v2/conv2/BatchNorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='3', func_name='fuse_transpose_broadcast_mul_broadcast_add_relu_transpose_pad_10', flatten_data='0')
+  %299 = tvm_op(%297, %transpose165, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_24', flatten_data='0')
+  %303 = tvm_op(%284, %299, %resnet_v2_50/block4/unit_3/bottleneck_v2/conv3/biases, %resnet_v2_50/postnorm/FusedBatchNorm_gamma_mul_div, %resnet_v2_50/postnorm/FusedBatchNorm_add_beta, num_outputs='1', num_inputs='5', func_name='fuse_transpose_broadcast_add_broadcast_add_broadcast_mul_broadcast_add_relu_mean', flatten_data='0')
+  %304 = tvm_op(%303, num_outputs='1', num_inputs='1', func_name='fuse_transpose_pad_4', flatten_data='0')
+  %306 = tvm_op(%304, %transpose168, num_outputs='1', num_inputs='2', func_name='fuse_conv2d_26', flatten_data='0')
+  %308 = tvm_op(%306, %resnet_v2_50/logits/biases, num_outputs='1', num_inputs='2', func_name='fuse_transpose_broadcast_add_squeeze_reshape_flatten', flatten_data='0')
+  %309 = tvm_op(%308, num_outputs='1', num_inputs='1', func_name='fuse_softmax', flatten_data='0')
+  %310 = tvm_op(%309, num_outputs='1', num_inputs='1', func_name='fuse_reshape', flatten_data='0')
+  ret %310
+}
+graph_attr_keys = [storage_id, dltype, dtype, shape]

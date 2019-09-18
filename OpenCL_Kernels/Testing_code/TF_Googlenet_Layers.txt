@@ -1,0 +1,1460 @@
+Operation Name : input
+Tensor Stats : (<tf.Tensor 'input:0' shape=(?, 224, 224, 3) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_1a_7x7/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_1a_7x7/weights:0' shape=(7, 7, 3, 64) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_1a_7x7/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_1a_7x7/weights/read:0' shape=(7, 7, 3, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_1a_7x7/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_1a_7x7/Conv2D:0' shape=(?, 112, 112, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_1a_7x7/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_1a_7x7/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_1a_7x7/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_1a_7x7/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_1a_7x7/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_1a_7x7/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_1a_7x7/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_1a_7x7/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_1a_7x7/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_1a_7x7/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_1a_7x7/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_1a_7x7/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_1a_7x7/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_1a_7x7/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_1a_7x7/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_1a_7x7/BatchNorm/FusedBatchNorm:0' shape=(?, 112, 112, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_1a_7x7/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_1a_7x7/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_1a_7x7/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_1a_7x7/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Conv2d_1a_7x7/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_1a_7x7/Relu:0' shape=(?, 112, 112, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/MaxPool_2a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/MaxPool_2a_3x3/MaxPool:0' shape=(?, 56, 56, 64) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2b_1x1/weights:0' shape=(1, 1, 64, 64) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2b_1x1/weights/read:0' shape=(1, 1, 64, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_2b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2b_1x1/Conv2D:0' shape=(?, 56, 56, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_2b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2b_1x1/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2b_1x1/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2b_1x1/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2b_1x1/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2b_1x1/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2b_1x1/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2b_1x1/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_2b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 56, 56, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2b_1x1/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2b_1x1/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2b_1x1/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2b_1x1/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Conv2d_2b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2b_1x1/Relu:0' shape=(?, 56, 56, 64) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2c_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2c_3x3/weights:0' shape=(3, 3, 64, 192) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2c_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2c_3x3/weights/read:0' shape=(3, 3, 64, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_2c_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2c_3x3/Conv2D:0' shape=(?, 56, 56, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_2c_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2c_3x3/BatchNorm/Const:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2c_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2c_3x3/BatchNorm/beta:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2c_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2c_3x3/BatchNorm/beta/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2c_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2c_3x3/BatchNorm/moving_mean:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2c_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2c_3x3/BatchNorm/moving_mean/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2c_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2c_3x3/BatchNorm/moving_variance:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Conv2d_2c_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Conv2d_2c_3x3/BatchNorm/moving_variance/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Conv2d_2c_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2c_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 56, 56, 192) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2c_3x3/BatchNorm/FusedBatchNorm:1' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2c_3x3/BatchNorm/FusedBatchNorm:2' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2c_3x3/BatchNorm/FusedBatchNorm:3' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2c_3x3/BatchNorm/FusedBatchNorm:4' shape=(192,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Conv2d_2c_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Conv2d_2c_3x3/Relu:0' shape=(?, 56, 56, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/MaxPool_3a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/MaxPool_3a_3x3/MaxPool:0' shape=(?, 28, 28, 192) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 192, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 192, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 28, 28, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 28, 28, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 192, 96) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 192, 96) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 28, 28, 96) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 96) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(96,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 28, 28, 96) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 96, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 96, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 28, 28, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 28, 28, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 192, 16) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 192, 16) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 28, 28, 16) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 16) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(16,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(16,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(16,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(16,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 28, 28, 16) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/weights:0' shape=(3, 3, 16, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 16, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/Conv2D:0' shape=(?, 28, 28, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 32) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(32,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_2/Conv2d_0b_3x3/Relu:0' shape=(?, 28, 28, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 28, 28, 192) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 192, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 192, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 28, 28, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 32) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(32,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 28, 28, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3b/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3b/concat:0' shape=(?, 28, 28, 256) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 256, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 256, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 28, 28, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 28, 28, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 256, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 256, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 28, 28, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 28, 28, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 128, 192) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 128, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 28, 28, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 192) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(192,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 28, 28, 192) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 256, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 256, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 28, 28, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 32) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(32,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 28, 28, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/weights:0' shape=(3, 3, 32, 96) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 32, 96) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/Conv2D:0' shape=(?, 28, 28, 96) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 96) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(96,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_2/Conv2d_0b_3x3/Relu:0' shape=(?, 28, 28, 96) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 28, 28, 256) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 256, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 256, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 28, 28, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 28, 28, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 28, 28, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_3c/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_3c/concat:0' shape=(?, 28, 28, 480) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/MaxPool_4a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/MaxPool_4a_3x3/MaxPool:0' shape=(?, 14, 14, 480) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 480, 192) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 480, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 192) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(192,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 192) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 480, 96) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 480, 96) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 96) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(96,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 96) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(96,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(96,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 96) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 96, 208) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 96, 208) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 208) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(208,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(208,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(208,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(208,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(208,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(208,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(208,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 208) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(208,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(208,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(208,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(208,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 208) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 480, 16) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 480, 16) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 16) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(16,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 16) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(16,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(16,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(16,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(16,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 16) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/weights:0' shape=(3, 3, 16, 48) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 16, 48) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 48) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 48) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(48,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(48,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(48,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(48,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_2/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 48) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 14, 14, 480) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 480, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 480, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4b/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4b/concat:0' shape=(?, 14, 14, 512) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 160) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 160) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 160) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 160) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(160,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 160) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 112) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 112) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 112) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 112) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(112,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(112,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(112,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(112,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 112) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 112, 224) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 112, 224) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 224) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(224,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(224,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(224,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(224,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(224,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(224,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(224,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 224) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(224,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(224,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(224,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(224,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 224) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 24) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 24) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 24) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 24) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(24,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(24,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(24,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(24,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 24) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/weights:0' shape=(3, 3, 24, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 24, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_2/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 14, 14, 512) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 512, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 512, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4c/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4c/concat:0' shape=(?, 14, 14, 512) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 128, 256) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 128, 256) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 256) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 256) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(256,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 256) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 24) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 24) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 24) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(24,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 24) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(24,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(24,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(24,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(24,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 24) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/weights:0' shape=(3, 3, 24, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 24, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_2/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 14, 14, 512) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 512, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 512, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4d/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4d/concat:0' shape=(?, 14, 14, 512) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 112) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 112) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 112) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(112,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 112) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(112,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(112,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(112,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(112,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 112) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 144) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 144) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 144) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(144,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(144,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(144,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(144,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(144,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(144,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(144,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 144) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(144,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(144,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(144,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(144,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 144) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 144, 288) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 144, 288) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 288) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(288,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(288,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(288,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(288,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(288,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(288,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(288,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 288) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(288,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(288,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(288,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(288,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 288) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 512, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 512, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 32) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(32,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/weights:0' shape=(3, 3, 32, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 32, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_2/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 14, 14, 512) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 512, 64) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 512, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(64,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 64) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(64,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(64,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 14, 14, 64) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4e/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4e/concat:0' shape=(?, 14, 14, 528) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 528, 256) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 528, 256) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 256) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 256) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(256,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 256) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 528, 160) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 528, 160) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 160) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 160) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(160,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 160) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 160, 320) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 160, 320) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 320) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 320) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(320,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(320,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(320,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(320,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 320) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 528, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 528, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 14, 14, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 32) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(32,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 14, 14, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/weights:0' shape=(3, 3, 32, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 32, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/Conv2D:0' shape=(?, 14, 14, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_2/Conv2d_0b_3x3/Relu:0' shape=(?, 14, 14, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 14, 14, 528) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 528, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 528, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 14, 14, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 14, 14, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 14, 14, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_4f/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_4f/concat:0' shape=(?, 14, 14, 832) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/MaxPool_5a_2x2/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/MaxPool_5a_2x2/MaxPool:0' shape=(?, 7, 7, 832) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 832, 256) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 832, 256) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 7, 7, 256) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(256,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 256) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(256,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(256,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 7, 7, 256) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 832, 160) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 832, 160) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 7, 7, 160) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(160,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 160) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(160,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(160,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 7, 7, 160) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 160, 320) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 160, 320) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 7, 7, 320) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(320,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 320) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(320,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(320,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(320,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(320,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 7, 7, 320) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 832, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 832, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 7, 7, 32) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(32,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 32) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(32,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(32,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 7, 7, 32) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/weights:0' shape=(3, 3, 32, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/weights/read:0' shape=(3, 3, 32, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/Conv2D:0' shape=(?, 7, 7, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_2/Conv2d_0a_3x3/Relu:0' shape=(?, 7, 7, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 7, 7, 832) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 832, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 832, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 7, 7, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 7, 7, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5b/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5b/concat:0' shape=(?, 7, 7, 832) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/weights:0' shape=(1, 1, 832, 384) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 832, 384) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/Conv2D:0' shape=(?, 7, 7, 384) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 384) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(384,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(384,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(384,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(384,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_0/Conv2d_0a_1x1/Relu:0' shape=(?, 7, 7, 384) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/weights:0' shape=(1, 1, 832, 192) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 832, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/Conv2D:0' shape=(?, 7, 7, 192) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(192,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 192) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(192,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(192,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0a_1x1/Relu:0' shape=(?, 7, 7, 192) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/weights:0' shape=(3, 3, 192, 384) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 192, 384) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/Conv2D:0' shape=(?, 7, 7, 384) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(384,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 384) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(384,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(384,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(384,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(384,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_1/Conv2d_0b_3x3/Relu:0' shape=(?, 7, 7, 384) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/weights:0' shape=(1, 1, 832, 48) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/weights/read:0' shape=(1, 1, 832, 48) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/Conv2D:0' shape=(?, 7, 7, 48) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/Const:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/beta/read:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_mean/read:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/moving_variance/read:0' shape=(48,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 48) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:1' shape=(48,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:2' shape=(48,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:3' shape=(48,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/BatchNorm/FusedBatchNorm:4' shape=(48,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0a_1x1/Relu:0' shape=(?, 7, 7, 48) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/weights:0' shape=(3, 3, 48, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/weights/read:0' shape=(3, 3, 48, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/Conv2D:0' shape=(?, 7, 7, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_2/Conv2d_0b_3x3/Relu:0' shape=(?, 7, 7, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_3/MaxPool_0a_3x3/MaxPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/MaxPool_0a_3x3/MaxPool:0' shape=(?, 7, 7, 832) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/weights:0' shape=(1, 1, 832, 128) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/weights/read:0' shape=(1, 1, 832, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/Conv2D:0' shape=(?, 7, 7, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/Const
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/Const:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/beta/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_mean/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/moving_variance/read:0' shape=(128,) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:0' shape=(?, 7, 7, 128) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:1' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:2' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:3' shape=(128,) dtype=float32>, <tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/BatchNorm/FusedBatchNorm:4' shape=(128,) dtype=float32>)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/Relu
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/Branch_3/Conv2d_0b_1x1/Relu:0' shape=(?, 7, 7, 128) dtype=float32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/concat/axis
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/concat/axis:0' shape=() dtype=int32>,)
+Operation Name : InceptionV1/InceptionV1/Mixed_5c/concat
+Tensor Stats : (<tf.Tensor 'InceptionV1/InceptionV1/Mixed_5c/concat:0' shape=(?, 7, 7, 1024) dtype=float32>,)
+Operation Name : InceptionV1/Logits/AvgPool_0a_7x7/AvgPool
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/AvgPool_0a_7x7/AvgPool:0' shape=(?, 1, 1, 1024) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Dropout_0b/Identity
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Dropout_0b/Identity:0' shape=(?, 1, 1, 1024) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Conv2d_0c_1x1/weights
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Conv2d_0c_1x1/weights:0' shape=(1, 1, 1024, 1001) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Conv2d_0c_1x1/weights/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Conv2d_0c_1x1/weights/read:0' shape=(1, 1, 1024, 1001) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Conv2d_0c_1x1/biases
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Conv2d_0c_1x1/biases:0' shape=(1001,) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Conv2d_0c_1x1/biases/read
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Conv2d_0c_1x1/biases/read:0' shape=(1001,) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Conv2d_0c_1x1/Conv2D
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Conv2d_0c_1x1/Conv2D:0' shape=(?, 1, 1, 1001) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Conv2d_0c_1x1/BiasAdd
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Conv2d_0c_1x1/BiasAdd:0' shape=(?, 1, 1, 1001) dtype=float32>,)
+Operation Name : InceptionV1/Logits/SpatialSqueeze
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/SpatialSqueeze:0' shape=(?, 1001) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Predictions/Reshape/shape
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Predictions/Reshape/shape:0' shape=(2,) dtype=int32>,)
+Operation Name : InceptionV1/Logits/Predictions/Reshape
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Predictions/Reshape:0' shape=(?, 1001) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Predictions/Softmax
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Predictions/Softmax:0' shape=(?, 1001) dtype=float32>,)
+Operation Name : InceptionV1/Logits/Predictions/Shape
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Predictions/Shape:0' shape=(2,) dtype=int32>,)
+Operation Name : InceptionV1/Logits/Predictions/Reshape_1
+Tensor Stats : (<tf.Tensor 'InceptionV1/Logits/Predictions/Reshape_1:0' shape=(?, 1001) dtype=float32>,)
