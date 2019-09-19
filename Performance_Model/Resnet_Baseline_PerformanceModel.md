@@ -33,6 +33,8 @@
 
 ### Design : block4 
  Fmax : 211MHz  
+ 
+ 
  | Kernel \(block4\)                         | No\.of Operations\(in Millions\) | Global Mem \(r\) \(in MB\) | Global Mem \(w\) \(in MB\) | Exe time\(measured in ms\) | Operations/second \(measured\) \(GOPS\) | Ops/cycle \(measured\) | Ops/cycle \(estimated\) | Ops/byte | Global mem/second\(MBps\) | Global mem/cycle \(MB per clock\) |
 |-------------------------------------------|----------------------------------|----------------------------|----------------------------|----------------------------|-----------------------------------------|------------------------|-------------------------|----------|---------------------------|-----------------------------------|
 | Mul1\_1871\_Fused\_Mul\_\_FusedScaleShift | 0                                | 0\.57                      | 0\.91                      | 1                          | 0                                       | 0                      | 0                       | 0        | 765                       | 4                                 |
