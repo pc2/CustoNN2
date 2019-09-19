@@ -94,7 +94,7 @@
 | Total                                     | 1464\.33                         | 8391\.59                   | 2797\.18                   | 25347\.13                  |
 						
 
-### Design : block3_1 
+### Design : block3_2 
  Fmax : 195MHz 
  
 | Kernel \(block3\_2\)                       | No\.of Operations\(in Millions\) | Global Mem \(r\) \(in MB\) | Global Mem \(w\) \(in MB\) | Exe time\(measured in ms\) | Operations/second \(measured\) \(GOPS\) | Ops/cycle \(measured\) | Ops/cycle \(estimated\) | Ops/byte | Global mem/second\(MBps\) | Global mem/cycle \(MB per clock\) |
