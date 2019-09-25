@@ -7,7 +7,8 @@ We had to choose this design style because the design with pure channels was sta
 
 Inception 1a-3a does not need hybrid design as we did not face any stalls while running it. Every other kernel file has been modified to support global memory transfers between parents of Concat and Concat kernels.
 
-
+Hybrid Design has been implemented as :  
+![Hybrid Design](hybrid_design.png)
 
 The bitstreams have been generated and kept at :
 - Bitstream location : `/upb/scratch/departments/pc2/groups/pc2-cc-user/custonn2/designs/debug_concat_bitstream`
