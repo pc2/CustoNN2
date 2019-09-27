@@ -1,0 +1,32 @@
+\chapter{Designs and Performance Modeling}
+
+Two CNN models - GoogLeNet (inception V1) and Resnet-50 - were implemented on FPGAs in the project. The choices were made based on :  
+\begin{itemize}
+  \item complexity of CNN models
+  \item relevance in the industry
+  \item accuracy of the models
+  \item availability of pre-trained weights and biases
+\end{itemize}  
+We wanted to implement CNN models complex enough to require scaling over multiple FPGAs. This requirement was a direct consequence of our initial objective of wanting to scale over multiple FPGA devices. Here, the complexity of the model refers the number of hidden layers present in the model. GoogLeNet - with  xyz\todo{Add layer count} layers - and Resnet - with abc \todo{Add layer count} layers- are deep enough to warrant using multiple devices for implementing them.
+
+As the winners of Imagenet Large Scale Visual Recognition Challenge(ILSVR) 2014 and 2015 respectively, GoogLeNet and Reset are quite well known in the industry. With an inference accuracy nearing human capability - GoogLeNet or exceeding human capability -Resnet-152, these models are very popular in the machine learning community. 
+
+Since our objective was to implement an inference engine and not training an inference engine , it was imperative to work with models for which weights and biases were readily available. The popularity of GoogLeNet and Resnet in the machine learning community meant that the weights and biases were available freely in the form of frozen models \todo{Explain frozen models?}.
+
+In the next few sections, we explain in detail how we implemented different FPGA designs of GoogLeNet and Resnet-50.
+
+
+
+\section{GoogLeNet}
+
+The first CNN model we implemented was GoogLeNet. 
+\subsection{GoogLeNet Baseline}
+\subsection{GoogLeNet Opt V1}
+\subsection{GoogLeNet Opt V2}
+
+\section{ResNet}
+\subsection{ResNet Baseline}
+\subsection{ResNet Opt-V1}
+\subsection{ResNet Opt-V2}
+\subsection{ResNet Opt-V3}
+%End of the chapter
