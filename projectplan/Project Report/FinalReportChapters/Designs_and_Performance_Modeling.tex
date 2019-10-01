@@ -163,7 +163,7 @@ Though the estimated DSP blocks usage is 23\% in Figure \ref{fig:Report_Baseline
 
 Furthermore, the profiling data for baseline also indicated that the occupancy of  parts of the code where the MAC operations take place were extremely low - in the neighbourhood of 0.1\%. 
 
-Since none of the loops were unrolled, and because of loop carried dependencies (compiler would not unroll automatically), we could estimate that only two operations would take place in one cycle (the inner most loop has two operations - one multiply and one addition). If the loops were unrolled , then the design could have utilized more number of DSP blocks in a single clock cycle thereby executing more number of operations per cycle.   
+Since none of the loops were unrolled, and because of loop carried dependencies (compiler would not unroll automatically), we could estimate that only two operations would take place in one cycle (the inner most loop has two operations - one multiply and one addition). If the loops were unrolled , then the design could have utilized more number of DSP blocks in a single clock cycle thereby executing more number of operations per cycle. In reality (from measurements), we saw that the real operations/cycle was 0.216 (as opposed to an estimated 2 ops/cycle). This indicated that even the resources (DSP blocks specifically) which were assigned were underused.   
 
 Additionally, the low utilization of DSP blocks indicates the biggest problem with this design - lack of parallel execution of operations.  
 
@@ -180,6 +180,52 @@ Thus, the reasons for baseline version of GoogLeNet performing so badly were man
 To speed this design up, we decided to solve the problem of low DSP usage. This leads us to our next section - GoogLeNet DSP Usage Optimized.
 
 \subsection{GoogLeNet DSP Usage Optimized}
+The biggest problem with the baseline implementation of GoogLeNet, according to us, was the very low utilization of DSP blocks (or just DSPs). With an estimated two operations per one clock cycle, it is easy to see that such a design is doomed to have very bad performance (given the clock frequencies are in hundreds of MHz range).
+ 
+Keeping this in mind, we decided to increase the number of operations our design could perform in one clock cycle. As was noted in the previous section, an increase in number of DSPs could result in more number of operations getting executed in one clock cycle. If the inner most loops are unrolled, then the compiler allocates an increased number of resources to carry out all these unrolled operations in parallel (given that these operations have an II of 1 - no dependencies between operations). 
+ 
+ Thus, in order to have an increased allocation of DSPs to our design, we made use of interrelated  optimization techniques like : 
+ \begin{itemize}
+     \item Loop Unrolling
+     \item Loop Pipelining
+     \item Using Shift Registers
+     \item Using Local Memory
+\end{itemize}
+
+When these optimization techniques were applied on the baseline design, we were able to increase the total DSPs by a margin of just 1\%. Which was quite disappointing. The problem lay in the fact that we were limited by the amount of unrolls we could perform. After unrolling by a few factors, we noticed that the other resources` usage would go beyond what was available on Stratix 10 boards.  
+
+This problem was intrinsic to the convolution logic the design had. We observed that the operations were happening depth wise first and then along the spatial dimension. This convolution logic is depicted in Figure \ref{fig:GoogLeNet_Conv_logic}. This logic works by first operating on pixels along the red arrow first (depth wise). Then it moves to the next pixel in the spatial dimension and then again continues working with the pixels depth wise in that spatial dimension and so on.
+
+Unrolling the loop which works with the above logic results in replicating the big image-data multiple times. After just a few unrolls, we start to reach the limits of Stratix 10 board. Thus, the idea of simply unrolling the inner most loop just would not work with the logic present in this design,
+
+\begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/GoogLeNet_Conv_logic.png}
+  \caption{Example of Convolution Logic}
+  \label{fig:GoogLeNet_Conv_logic}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
