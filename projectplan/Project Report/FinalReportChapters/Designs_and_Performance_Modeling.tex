@@ -135,12 +135,12 @@ The next two steps of performance modeling - determining execution time and cloc
     \begin{tabular}{|c|c|}
     \multicolumn{2}{c}{\textbf{GoogLeNet Baseline : Performance Model}} \\ \hline
 
-     No.of Operations    &   2.9B \\ \hline
+     No.of Operations    &   2.9 Billion \\ \hline
       Global Mem transfers &   20.9 GB            \\ \hline          
-      Exe time    &  67470ms    \\ \hline
+      Exe time    &  67470 ms    \\ \hline
       Operations/second   &   0.04 GOPS \\ \hline
-      Ops/cycle &   0.216             \\ \hline
-      Ops/byte       &   0.143     \\ \hline
+      Operations/cycle &   0.216             \\ \hline
+      Operations/byte       &   0.143     \\ \hline
       Global mem/second & 311 MBps  \\ \hline
 
     \end{tabular}
@@ -149,6 +149,7 @@ The next two steps of performance modeling - determining execution time and cloc
 
 \end{table}  
 
+Throughput, as defined in Chapter \ref{chp:Metrics}, for this design is 0.014 images classified per second. Since accuracy of the model is same as the one given in the literature (93.33\%), the only factor that could change when calculating Rate Correct Score is the latency. And for this case , Rate Correct Score is calculated as the ratio between accuracy from literature and the latency of our implementation of GoogLeNet. This comes to be  1.38/second.
 
 The HTML reports revealed that the initiation intervals of most of the loops were much bigger than 1. And some of the loops were not pipelined.There were loop-carried dependencies as well. We also observed from initial reports that the DSP usage of Baseline was quite abysmal. Baseline design was using only about 1\% of the total DSPs available on Stratix 10 board. This is shown in Figure \ref{fig:Report_Baseline}   
 
@@ -163,18 +164,23 @@ Though the estimated DSP blocks usage is 23\% in Figure \ref{fig:Report_Baseline
 
 Furthermore, the profiling data for baseline also indicated that the occupancy of  parts of the code where the MAC operations take place were extremely low - in the neighbourhood of 0.1\%. 
 
-Since none of the loops were unrolled, and because of loop carried dependencies (compiler would not unroll automatically), we could estimate that only two operations would take place in one cycle (the inner most loop has two operations - one multiply and one addition). If the loops were unrolled , then the design could have utilized more number of DSP blocks in a single clock cycle thereby executing more number of operations per cycle. In reality (from measurements), we saw that the real operations/cycle was 0.216 (as opposed to an estimated 2 ops/cycle). This indicated that even the resources (DSP blocks specifically) which were assigned were underused.   
+Since none of the loops were unrolled, and because of loop carried dependencies (compiler would not unroll automatically), we could estimate that only two operations would take place in one cycle (the inner most loop has two operations - one multiply and one addition). If the loops were unrolled , then the design could have utilized more number of DSP blocks in a single clock cycle thereby executing more number of operations per cycle. In reality (from measurements), we saw that the real operations/cycle was 0.216 (as opposed to an estimated 2 ops/cycle). This indicated that even the resources (DSP blocks specifically) which were assigned were underused.Additionally, the low utilization of DSP blocks indicates the biggest problem with this design - lack of parallel execution of operations.  
 
-Additionally, the low utilization of DSP blocks indicates the biggest problem with this design - lack of parallel execution of operations.  
+As shown in Figure \ref{fig:GoogLeNetBaseline_Runtime_Graph} , we notice that the slowest kernel was at the top of the design - a 3x3 convolution kernel. It took about 18s to get executed. "Inception0" has the most number of operations in the design and it is not surprising that it took the lion`s share of the total time to get executed to completion. Every other 3x3 convolution kernel also took significant amounts of time to get executed. Other kernels - like padding and concatenation kernels were relatively fast. The graph in Figure \ref{fig:GoogLeNetBaseline_Runtime_Graph} helps us visualize the execution sequence of the design. Once execution on the first FPGA is over, the execution takes place in the second one. And once the image is processed in the second FPGA, it moves on to the thrid FPGA and so on. Most of the times the FPGAs remain idle as can be seen from the empty regions in the time axis in the graph. The total execution time, as mentioned above, was 67.47 seconds.
 
-The slowest kernel was at the top of the design - a 3x3 convolution kernel. It took about 18s to get executed. And every other 3x3 convolution kernel took significant amounts of time.
+\begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/GoogLeNetBaseline_Runtime_Graph.png}
+  \caption{Execution time - GoogLeNet Baseline Design}
+  \label{fig:GoogLeNetBaseline_Runtime_Graph}
+\end{figure}
 
-Thus, the reasons for baseline version of GoogLeNet performing so badly were many. To sum it up, the main reasons for slow performance were:
+In conclusion, the reasons for baseline version of GoogLeNet performing so badly are :
 \begin{itemize}
     \item low DSP blocks usage
     \item initiation intervals greater than 1
     \item loop carried dependencies 
     \item global memory transfers
+    \item FPGAs remain idle most of the time
 \end{itemize}
 
 To speed this design up, we decided to solve the problem of low DSP usage. This leads us to our next section - GoogLeNet DSP Usage Optimized.
@@ -194,9 +200,7 @@ Keeping this in mind, we decided to increase the number of operations our design
 
 When these optimization techniques were applied on the baseline design, we were able to increase the total DSPs by a margin of just 1\%. Which was quite disappointing. The problem lay in the fact that we were limited by the amount of unrolls we could perform. After unrolling by a few factors, we noticed that the other resources` usage would go beyond what was available on Stratix 10 boards.  
 
-This problem was intrinsic to the convolution logic the design had. We observed that the operations were happening depth wise first and then along the spatial dimension. This convolution logic is depicted in Figure \ref{fig:GoogLeNet_Conv_logic}. This logic works by first operating on pixels along the red arrow first (depth wise). Then it moves to the next pixel in the spatial dimension and then again continues working with the pixels depth wise in that spatial dimension and so on.
-
-Unrolling the loop which works with the above logic results in replicating the big image-data multiple times. After just a few unrolls, we start to reach the limits of Stratix 10 board. Thus, the idea of simply unrolling the inner most loop just would not work with the logic present in this design,
+This problem was intrinsic to the convolution logic the design had. We observed that the operations were happening depth wise first and then along the spatial dimension. This convolution logic is depicted in Figure \ref{fig:GoogLeNet_Conv_logic}.This logic works by first operating on pixels along the red arrow first (depth wise). Then it moves to the next pixel in the spatial dimension and continues working with the pixels depth wise 
 
 \begin{figure}[!htb]
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/GoogLeNet_Conv_logic.png}
@@ -204,36 +208,145 @@ Unrolling the loop which works with the above logic results in replicating the b
   \label{fig:GoogLeNet_Conv_logic}
 \end{figure}
 
+Unrolling the loops which work with the above logic results in replicating the big image-data (as shown in Figure \ref{fig:GoogLeNet_Conv_logic}, dimensions vary from kernel to kernel) multiple times. After just a few unrolls, we start to reach the limits of resources available Stratix 10 board. Thus, the idea of simply unrolling the inner most loop just would not work with the logic present in this design,
+
+To overcome this problem, we decided to change the order of the loops such that the calculations happen on the spatial plane first. Once the convolutions happen on spatial "slice" of image-data, the operations are performed on the next slice of image-data. From Figure \ref{fig:GoogLeNet_Conv_logic}, this logic would appear as operations happening along the black arrow first , and then once the pixels in the spatial plane are done being operated, the operations are repeated on the next spatial plane, one channel deeper. This continues until all the pixels are operated upon.  
+
+With this new logic, when the inner most loop is unrolled, only a slice of image-data needs to get replicated. When we applied this logic to all the kernels of GoogLeNet, we saw a remarkable improvement in the usage of DSP blocks. The reports generated after modifying the logic of convolutions indicated that the estimated resource usage of DSP blocks increased by a margin of 47\% for most of the files ! This was achieved keeping all the other resources well within the limits imposed by the board. 
+
+But alas, the synthesis of these modified files did not succeed. The compiler/synthesis tool threw errors regarding placement and routing. It looked as if the synthesis tool just could not fit any of the designs with a high usage of DSP blocks.   
+One of the solutions proposed to solve this problem was reducing the unroll factors in our kernels so as to decrease the need for a high number of DSP blocks. This process entailed reducing the unroll factors, keeping the designs for synthesis on Noctua Compute nodes, waiting for anywhere between 6 hours to 24 hours for the synthesis tool to inform us whether the synthesis succeed or not . We had to reduce the usage of resource(specifically DSP blocks) severely times to finally get designs  which would get synthesized. In other words, we used trial and error method on all the ten files to eventually get bitstreams for our designs,  
+
+The resulting designs made use of more DSP blocks than the baseline version of GoogLeNet, but less than what we could have achieved if the synthesis tool had succeeded in synthesizing the designs in which we had heavily unrolled the inner most loops. Nevertheless, we decided to call this design - GoogLeNet DSP Usage Optimized.This design of GoogLeNet, on average across all the ten files, made use of about 10\% of DSP blocks available in the boards.
+
+From the tutorials, the team had learnt that just increasing DPS block usage in itself is not enough to extract better performance from a design. We made sure that all the initiation intervals of the loops were 1 or just about 1. And we also ensured that all the loops were pipelined. The latencies of the loops were not given much thought because the pipelined nature of the loops and the extremely large number of clock cycles to execute the designs dwarf over the values of latencies present in our design.   
+
+To achieve all of the improvements to our design mentioned above, we had to introduce temporary variables and  also do extra operations. This can be seen from Figure \ref{fig:GoogLeNetDSPOpt_Runtime_Graph}. When compared to Figure \ref{fig:GoogLeNetBaseline_Runtime_Graph} , we see that the operations in each inception block has gone up. For example, in baseline design , there were 954.71 Million operations present in "inception0". But in case of DSP usage optimized design, there are 1200 Million operations in "inception0". 
+
+\begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/GoogLeNetDSPOpt_Runtime_Graph.png}
+  \caption{Execution time - GoogLeNet DSP Usage Optimized Design}
+  \label{fig:GoogLeNetDSPOpt_Runtime_Graph}
+\end{figure}
 
 
+When the DSP usage optimized design was executed on all the 10 FPGAs, the design got executed in 4.41 seconds ! This was a noteworthy improvement in performance compared to the baseline design. 
+
+The performance modeling for this design was not performed using the Antlr4 based tool. We were not able to extend the tool to account for the numerous changes that is present between the baseline design and the DSP usage optimized design.
 
 
+\begin{table}[!htb]                          
+ \centering
+    \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{\textbf{GoogLeNet DSP Usage Optimized : Performance Model}} \\ \hline
+
+     No.of Operations    &   4.8 Billion \\ \hline
+      Global Mem transfers &   20.9 GB            \\ \hline          
+      Exe time    &  4410 ms    \\ \hline
+      Operations/second   &   1.1 GOPS \\ \hline
+      Operations/cycle &   8.66             \\ \hline
+      Operations/byte       &   0.24 \\ \hline
+      Global mem/second & 4.2 GBps  \\ \hline
+
+    \end{tabular}
+    \caption{GoogLeNet DSP Usage Optimized Performance Model}
+    \label{tab:GoogLeNetDSPPerfModel}                            
+
+\end{table} 
+
+The performance modeling for the DSP usage optimized design is tabulated in Table \ref{tab:GoogLeNetDSPPerfModel}. Throughput, as defined in Chapter \ref{chp:Metrics}, for this design is 0.23 images classified per second. Since accuracy of the model is same as the one given in the literature (93.33\%), the only factor that could change when calculating Rate Correct Score is the latency. Similar to GoogLeNet baseline design, Rate Correct Score is calculated as the ratio between accuracy from literature and the latency of our implementation of GoogLeNet. For this design it is 21.16/s. 
+
+We noticed two major problems from profiling data - stalling problem and memory dependency. In convolution kernels, the part where we were reading slices of data from global memory had stalls reaching 50\%. Since the  the part where the computations were taking place were directly dependent on these slices of data, the computations themselves had a disappointing occupancy of just 6.0\%. 
+
+At this stage, we had the choice of thinking of ways to improve the design by sticking to the ongoing design paradigm or to think of a new approach. To show that further improvements could be done on the current design, we proceeded to implement extra optimizations on one single file. We picked a file (in this case inception9 file), completely unrolled the section of the code where slices of image-data were read, completely unrolled the section of the code where computations took place. When we synthesized this design and ran the resulting bitstream on the FPGAs (in conjunction with the previously used bitstreams), we saw a remarkable improvement in the run time of the convolution kernel on which we had applied the extra optimizations. Previously, this convolution kernel had taken about 79.06ms to get executed. But with the extra unrollings, this convolution kernel got executed in 1.75ms! The profiling data for this kernel execution showed that the resulting stall for the part of the code where slice of image-data was read was just 0.91\% and the part of the code where the computations were happening had an occupancy of 96.3\%.  
+
+This proved that with some simple unrolls to the loops responsible for reading the slices of image-data and to the loops where computations were being done, we could achieve significant amounts of performance gain. As they say, there are no free lunches in the world of FPGA accelerators. All these unrolling demands resources and we were already running out of resources.
 
 
+Even though the run time for DSP usage optimized design is about 15 times faster than the baseline version of GoogLeNet, there is a lot of room for improvement. Because of the problems related to synthesis of heavily unrolled designs discussed in the beginning of this subsection , we could not bank upon further unrolling of inner loops to gain performance improvements. Thus, we had to look elsewhere to improve the performance of our design.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+This search for a better way to run GoogLeNet on multiple FPGAs resulted in our next design - GoogLeNet Hybrid Design.
 
 \subsection{GoogLeNet Hybrid Design}
+Designs which rely on global memory for data transfers tend to be slower than designs which make use of channels to transfer data from one kernel to another. This can be ascribed to the fact that global memory data transfers are slower than data transfers made using channels.  
+
+Designs which are completely based on global memory data transfers need the host to take care of data transfers. When the amount of data to be transferred is large, this ends up being a significant overhead. Another problem with designs based on global memory is that the kernels have to be launched sequentially. Otherwise, the kernels end up working on garbage data. The host code is responsible for launching the kernels at the right time and to control the access to global memory. Because of sequential launching of kernels, a designer cannot exploit concurrent sections of a design in a straightforward manner. 
+
+Considering the above points, we decided to implement GoogLeNet using channels. There are two types of channels available in Intel FPGA SDK for OpenCL - internal and external.
+
+Internal channels are used to transfer data between kernels present in the same device. External channels , in our case, are direct point-to-point connections between two devices that are abstracted in the OpenCL environment as Serial Channels. External channels make it possible to send data from kernels present in one device to kernels present in another device. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{ResNet}
+The next CNN model we implemented was ResNet50. While there are more deeper versions of ResNet present the sheer workload of executing them was too much. ResNet50 was deep enough to achieve the objective of scaling as stated in the project goals. During the implementation of GoogleNet we came across some unforeseen roadblocks which took time to be resolved. However, the team was quick to rectify the mistakes from the lessons learned during previous implementation. This enabled the team to execute several versions of ResNet ranging from the baseline architecture to a more optimised and faster version of the model at a faster pace than before.
+We were able to implement four versions for ResNet50:
+\begin{itemize}
+    \item ResNet Baseline
+    \item ResNet Opt-V1
+    \item ResNet Opt-V2
+    \item ResNet Opt-V3
+\end{itemize}
+
 \subsection{ResNet Baseline}
-\subsection{ResNet Opt-V1}
-\subsection{ResNet Opt-V2}
-\subsection{ResNet Opt-V3}
+The method to implement ResNet50 was very similar to that of GoogleNet baseline architecture. We first generated all the kernel files that were needed to execute the ResNet50 architecture. After the generation of the kernel files we observed that the number of kernels generated by TVM was less than what our OpenVINO IR was expecting. The reason for this is that in the ResNet50 architecture there are many of the kernel files whose dimensions are exactly the same. So TVM do not generate the duplicate kernels and only generates the kernel which are not same. This behaviour was opposite to what we saw in GoogleNet where TVM generated more kernels than what was expected. This warranted some extra efforts apart from some pre-optimization tasks that were done to execute the baseline version.
+Some of the mandatory modifications done were:
+\begin{itemize}
+    \item renaming kernel names to match with OpenVINO IR
+    \item merging ReLUs with convolutions
+    \item removing transpose kernels
+    \item duplicating the required kernels not generated by TVM
+\end{itemize}
+ After the completion of these pre-execution steps the modified code was complied to run on FPGA emulator for Intel Stratix 10 using the latest toolchain19 of the Board Support Package. Again the functional correctness was checked by comparing the output of our design with that of the output from TensorFlow implementation. Our modified ResNet50 code was functionally correct and gave us the right score and label for the image we fed to it. The next obvious step for us then was to implement this baseline on actual Intel Stratix 10 FPGAs.
+ \newline
+ In doing so we first looked into the initial report of the entire ResNet50 architecture which was just a single file. The report as shown in Fig  indicated that it is impossible to execute the baseline version on just a single FPGA since our design surpassed the available resources present on the board. This was expected and warranted us to divide the entire architecture into smaller executable parts.
+ \begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/ResNet_baseline.png}
+  \caption{Resource Summary - ResNet50 Baseline Architecture}
+  \label{fig:ResNet50_baseline}
+\end{figure}
+We made use of inherent logical division present in the ResNet50 architecture in form of blocks. The entire topology was divided into 5 namely from block1 - block4 blocks with each block consisting of 3 units. End of each unit was marked by a eltwise kernel which was used as a separation criterion. So at the end of every $3^{rd}$ unit a block was formed. We planned on scaling it to 5 FPGAs with each FPGA been allocated a single block. 
+After the division of the entire topology into 5 blocks we did not exceed resource utilization criteria and were able to generate the bitstreams and execute it on FPGAs. Since the flashing logic was developed during GoogleNet implementation phase, we adopted the same logic and code with changes in the parity calculations as we were flashing only 5 bitstreams and not 10. 
+Global memory was used for intra-node communication and MPI was used to transfer data from one node to another. Here the MPI\_Send() was called at the last of block2 and block3\_2 eltwise kernel except for the last block. MPI\_Recv() was called at the beginning of block3\_1 and and block4.
+\begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/ResNet_division.png}
+  \caption{Division of ResNet50 Baseline Architecture}
+  \label{fig:ResNet50_baseline_division}
+\end{figure}
+\newline
+One thing to note here is that the baseline version does not contain any kind of optimizations. Practically it is a good practice to pipeline all the loops and bring all II to 1, we chose to execute this out-of-the-box design to gain insights on its performance measure.
+As expected the baseline was slow and took 117.34 seconds to classify a single image. This is a very slow design and needs to be optimised. However, this design served as a reference point for future comparison on the performance gains which will achieved with optimised designs
+\begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/ResNet_baseline_execution.png}
+  \caption{Execution time - ResNet50 Baseline Architecture}
+  \label{fig:ResNet50_baseline_time}
+\end{figure}
+What we learned is that most of the execution time was being spent in 3x3 convolution kernels. Optimising these kernels was a priority. Also due to large II and loop carried dependencies the number of clock cycles needed to execute these kernels was very high.  
 %End of the chapter
