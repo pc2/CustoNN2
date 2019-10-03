@@ -339,11 +339,54 @@ The introduction of internal and external channels in our design can be visualiz
 
 Once all the files were converted to comply with channel-based design paradigm, we made the necessary modifications to the plug-in code. Before going for synthesis of the files, we made sure to test all the files on emulator. When the emulation was successful, we went ahead with synthesizing all the files into bitstreams.
 
-When the bitstreams became available, we tried to run this new design on ten FPGAs. But to our dismay, the design just did not finish running on the FPGAs. 
+When the bitstreams became available, we tried to run this new design on ten FPGAs. But to our dismay, this design just could not finish running on the FPGAs. It was stalling.
+
+To find out why the design was not getting executed to completion, we went back to the kernel files, inserted "printf" statements to see the point until which the design was running successfully. When we did this, we found out that the design was stalling at the kernels which were feeding data to the Concatenation Kernel in inception1(3b) file. Since the team was working against time to get a fast design, we took a pragmatic approach towards solving this problem.
+
+We replaced all the internal channels between Concatenation kernels (or Concat kernels) and the kernels feeding data to Concat kernels with global memory transfers. Since now we were making use of internal channels, external channels as well as global memory for transferring data, we decided to call this design as GoogLeNet Hybrid Design. Figure \ref{fig:GoogLeNet_Hybrid} depicts the hybrid design. 
+
+\begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/GoogLeNet_Hybrid.PNG}
+  \caption{GoogLeNet Hybrid Design}
+  \label{fig:GoogLeNet_Hybrid}
+\end{figure}
+
+ Figure \ref{fig:GoogLeNet_Hybrid} shows how the internal channels between kernels of the 4 branches and Concat kernel was replaced with global memory. By doing this, we were able to get rid of the stalling problem which we faced in the "pure channels" version of the design.
+ 
+ The global memory access between Concat and the kernels feeding to it required us to modify our plug-in code to launch Concat kernel in one of the four command queues of its feeders. We chose to launch Concat kernels on the same command queue as the 3x3 convolution of branch1. We had to call "clFinish()" for the command queues on which the terminal kernels of each branches were being launched before launching Concat kernel. This way we ensured that the Concat kernel worked on valid data from all the four branches.
+ 
+ Having removed the stalling problem, we trained our sights on executing this design on ten FPGAs. This version of the design took 1.85 seconds to get executed ! The run time of this design is shown graphically in Figure \ref{fig:GoogLeNetHybrid_Runtime_Graph}.
+ 
+ \begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/GoogLeNetHybrid_Runtime_Graph.png}
+  \caption{Execution time - GoogLeNet Hybrid Design Version 1}
+  \label{fig:GoogLeNetHybrid_Runtime_Graph}
+\end{figure}
+
+Figure \ref{fig:GoogLeNetHybrid_Runtime_Graph} also indicates that the number of operations in this design in every kernel file is between the number of operations in baseline and DSP usage optimized designs. This is because a lot more optimizations were applied in DSP usage optimized design when compared to hybrid design. In terms of optimizations applied, hybrid falls in between DSP usage optimized and baseline designs.
+
+By analyzing the profile.mon files, we realised that the design could have run faster if not for the bottleneck kernel files of inception0, inception2 and inception5.
+
+To run our design faster, we decided to optimize inception0, inception2 and inception5 files. 
 
 
 
 
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 
 
