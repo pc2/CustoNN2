@@ -17,3 +17,24 @@ There are multiple hardware available in the market such as CPU, GPU, ASIC, FPGA
 In this project, we have used the Intel Stratix 10 with 520N scaleable FPGA network accelerator card for our CNN inference on image classification. Paderborn Center for Parallel Computing (PC2) has 32 of this FPGA and the primary focus of our task was to scale our CNN architecture using all 32 FPGAs.
 Some of the state-of-the-art topologies that have performed exceptionally well in The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) are ResNet and GoogLeNet. Hence, we chose to implement ResNet and GoogleNet and investigated how their performance could be improved through FPGA acceleration while maintaining classification accuracy.
 The workload was divided among all the 32 FPGAs and the layers were distributed to each of these FPGAs. Finally, the performance of our system was measured using some performance metrics.
+
+\chapter{Introduction to OpenCL}
+OpenCL provides a standard interface for parallel computing and achieves high performance using task and data level parallelism. With OpenCL , you can leverage CPUs, GPUs and other processors as well as DSPs to accelerate parallel computation. OpenCL standard is divided into two parts : a host and a device. Host program is written in C/C++ and runs on CPU. On the device, the language is referred to as kernel code or OpenCL and runs on FPGAs. Kernels provide data parallelism using NDRange launches and provides pipeline parallelism when compiled for an Intel FPGA.
+\section{Parallelism using OpenCL features}
+\subsection{Loop unrolling}
+The basic idea behind loop unrolling is to increase the number of operations per cycle thereby decreasing the number of iterations. At the same time, it also increases the hardware resources. OpenCL provides \#pragma unroll extension
+for unrolling loops. To enable loop unrolling specify the syntax \#pragma unroll[unroll factor].
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/Loop_unrolling.png}
+    \caption{Loop unrolling}
+    \label{Loop unrolling}
+\end{figure}
+<\newpage>
+\subsection{Pipelining}
+Pipelining enables pipeline parallelism. Basically without pipelining, each instruction is processed from start to finish before moving on to the next. But Pipelining allows the various hardware sections to each process a different instruction simultaneously.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.4]{img/Pipelining.png}
+    \caption{Pipelining}
+\end{figure}
