@@ -367,12 +367,59 @@ Figure \ref{fig:GoogLeNetHybrid_Runtime_Graph} also indicates that the number of
 
 By analyzing the profile.mon files, we realised that the design could have run faster if not for the bottleneck kernel files of inception0, inception2 and inception5.
 
-To run our design faster, we decided to optimize inception0, inception2 and inception5 files. 
+To make this design faster, we decided to optimize inception0, inception2 and inception5 files. We referred to the profiling data of these kernel files to find out the bottlenecks within these files. For example, when we analysed the profile.mon of inception2 (3c module), we observed that the slowest branch (out of the 4 branches) was causing that part of the design run slowly. This can be observed from Figure  \ref{fig:GoogLeNet_Hybrid_Before_Opt}. 
+
+ \begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/GoogLeNet_Hybrid_Before_Opt.PNG}
+  \caption{Number of clock cycles taken by kernels of different branches in inception2(3c) before resource redistribution}
+  \label{fig:GoogLeNet_Hybrid_Before_Opt}
+\end{figure}
 
 
+As can be seen from Figure  \ref{fig:GoogLeNet_Hybrid_Before_Opt}, branch1,highlighted in red, requires about 96.5 million clock cycles to get executed - about three times slower than the next slowest branch.  With this design, this part of the design operated at a clock frequency of 220MHz.
+
+We decided to make the kernels in branch1 faster by allocating more resources to it. The resources needed to make branch1 faster had to be taken away from the solitary kernel in branch0 for two reasons : 
+\begin{itemize}
+    \item the kernel in branch0 was under-performing. Even with a significant amount of resources allocated to it, it was performing relatively slow. In other words, the measured number of operation per cycle was less than the estimated number of operations.
+    \item it is the only kernel in its branch. Rearranging the resources in branch2 and branch3 could have complex side effects.
+\end{itemize}
+
+When the resources were redistributed to make branch1 run faster, we noticed that the design got synthesized to run at a higher clock frequency - 285MHz. Compared to the previous design, this was an improvement of 65MHz. When we executed this modified design on hardware, we noticed that the run time went down for this particular bitstream. The analysis of profiling data of this new kernel file revealed that we were indeed able to reduce the run time of branch1. This can be seen from Figure \ref{fig:GoogLeNet_Hybrid_After_Opt} where we have documented the number of cycles needed for all the branches to get executed after the redistribution of resources.  
+
+ \begin{figure}[!htb]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/GoogLeNet_Hybrid_After_Opt.png}
+  \caption{Number of clock cycles taken by kernels of different branches in inception2(3c) after resource redistribution}
+  \label{fig:GoogLeNet_Hybrid_After_Opt}
+\end{figure}
+
+The kernels of branch1 have been highlighted in yellow in Figure \ref{fig:GoogLeNet_Hybrid_After_Opt}. The number of clock cycles needed by branch1 to finish execution is about 45 million. This is twice as fast as the previous design. This reduction in required clock cycles and the increase in Fmax(clock frequency) meant the total run-time reduced by a fair margin.
+
+We applied the same kind of optimizations on the other kernel files and the design took 1.18 seconds to classify one image. The relevant performance modeling parameters have benn tablulated in Table 
 
 
+\begin{table}[!htb]                          
+ \centering
+    \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{\textbf{GoogLeNet Hybrid Design : Performance Model}} \\ \hline
 
+     No.of Operations    &   3.3 Billion \\ \hline
+      Global Mem transfers &   1.9 GB            \\ \hline          
+      Exe time    &  1180 ms    \\ \hline
+      Operations/second   &   2.79 GOPS \\ \hline
+      Operations/cycle &   12.15             \\ \hline
+      Operations/byte       &   1.74 \\ \hline
+      Global mem/second & 1.6 GBps  \\ \hline
+
+    \end{tabular}
+    \caption{GoogLeNet Hybrid Design Performance Model}
+    \label{tab:GoogLeNetHybridPerfModel}                            
+
+\end{table} 
+
+
+Throughput, as defined in Chapter \ref{chp:Metrics}, for this design is 0.84 images classified per second. Since accuracy of the model is same as the one given in the literature (93.33\%), the only factor that could change when calculating Rate Correct Score is the latency. Similar to the other design design, Rate Correct Score is calculated as the ratio between accuracy from literature and the latency of our implementation of GoogLeNet. For this design it is 79.09/s.
+
+In conclusion, we were able to create and execute different versions of GoogLeNet over multiple devices. We strongly believe we could have made our designs much better in terms of latency and throughput. During the last phase of the project, we were able to map out some future tasks to make our designs faster. These insights are discussed in section \todo{Link to future works}
 
 
 
