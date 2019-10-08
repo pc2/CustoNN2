@@ -13,6 +13,7 @@ Fmax : 175MHz
 
 
 Fmax : 210MHz
+
 | Kernel (inception1)                            |  No.of Operations |  Fraction of total Ops  |  Global Mem (r)  |  Global Mem (w)       |  Exe time(measured) | Operations/second (measured)  |  Ops/cycle (measured)  | Ops/cycle (estimated)  | Channel Read | Channel Write  |  Ops/byte  |  Global mem/second  | Global mem/cycle  |
 |------------------------------------------------|-------------------|-------------------------|------------------|-----------------------|---------------------|-------------------------------|------------------------|------------------------|--------------|----------------|------------|---------------------|-------------------|
 | Mixed_3b_Branch_0_Conv2d_0a_1x1_Conv2D         | 48M               | 0                       | 38.5MB           | 0.2MB                 | 99ms                | 453M                          | 2.3                    | 0                      |   0          | 0              | 1.24       | 364M                | 1.86B             |
@@ -64,6 +65,7 @@ Fmax : 131MHz
 
 
 Fmax : 179.2MHz
+
 | Kernel (inception4)                            |  No.of Operations(in Millions) |  Fraction of total Ops  |  Global Mem (r) (in MB) |  Global Mem (w) (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  | Channel Read(in MB) | Channel Write (in MB) |  Ops/byte   |  Global mem/second  | Global mem/cycle  |
 |------------------------------------------------|--------------------------------|-------------------------|-------------------------|-------------------------|---------------------------|-------------------------------------|------------------------|------------------------|---------------------|-----------------------|-------------|---------------------|-------------------|
 | Mixed_4c_Branch_0_Conv2d_0a_1x1_Conv2D         | 80.31                          | 0                       | 64.553MB                | 0.125MB                 | 94                        | 0.85G                               | 4.76                   | 0                      | 0                   | 0                     | 1.24        | 0.68GB              | 3.83B             |
