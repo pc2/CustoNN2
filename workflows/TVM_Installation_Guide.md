@@ -1,11 +1,13 @@
 # TVM Installation guide on CC Frontend
 
+Prerequisite - Follow [this](https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018/blob/master/workflows/Python_and_LLVM_installation_on_CC-frontend.md) for installing Python and LLVM on CC-frontend.
+
 Step 1. Clone tvm repository from git
 
     git clone --recursive https://github.com/dmlc/tvm
 
 
-Step 2. Create build direcotry and copy cmake/config.cmake file
+Step 2. Create a `build` directory and copy cmake/config.cmake file
 
 
     mkdir build
@@ -13,7 +15,10 @@ Step 2. Create build direcotry and copy cmake/config.cmake file
 
 
 Step 3. Change `set(USE_OPENCL OFF)` to `set(USE_OPENCL ON)`
+
 Change `set(USE_AOCL OFF)` to `set(USE_AOCL ON)`
+
+Change `set(USE_LLVM OFF)` to `set(USE_LLVM ON)`
 
 Step 4. 
 
