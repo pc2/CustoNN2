@@ -173,4 +173,4 @@ Fmax : 115.3MHz
 
 | No.of Operations(in Millions) |  Global Mem  (in MB) |  Exe time(measured in ms) | Operations/second (measured) (GOPS) |  Ops/cycle (measured)  | Ops/cycle (estimated)  |  Ops/byte  |  Global mem/second(MB/s)  |
 |-------------------------------|----------------------|---------------------------|-------------------------------------|------------------------|------------------------|------------|---------------------|
-| 4849.19                       | 20GB                 | 1972.46                   | 1.86                                | 8.66                   | 10                     | 1.67       | 1.1                 |
+| 4849.19                       | 2 GB                 | 4814.19                   | 1.007                               | 6.5                    | x                      | 2.43       | .43                 |
