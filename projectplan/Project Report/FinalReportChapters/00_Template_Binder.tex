@@ -1,0 +1,163 @@
+%Document class
+\documentclass[a4paper,12pt,bibliography=totoc,listof=totoc]{scrreprt}
+\usepackage[left= 3cm,right = 2cm, bottom = 3.5 cm, top = 2.5 cm]{geometry}
+\usepackage[onehalfspacing]{setspace}
+
+
+% ============= Packages =============
+\usepackage{tocloft}
+\usepackage[cache=false]{minted}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[natbib=true, style =alphabetic,backend=biber]{biblatex}
+\bibliography{Literature}
+\usepackage[T1]{fontenc}
+\usepackage{rotating}
+\usepackage[]{graphicx, subfig}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{wrapfig}
+\usepackage{threeparttable}
+\graphicspath{{img/}}
+\usepackage{fancyhdr}
+\usepackage{pdfpages}
+\usepackage{lmodern}
+\usepackage{subfig}
+\usepackage{eurosym}
+\usepackage{todonotes}
+\usepackage[margin=10pt,font=small,labelfont=bf]{caption}
+
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{url}
+\usepackage{acronym}
+\renewcommand*\chapterheadstartvskip{\vspace*{+ 5mm}}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\def\SymbReg{\textsuperscript{\textregistered}}
+\hyphenation{De-zi-mal-tren-nung}
+\setminted{fontsize=\small,frame=lines}
+\captionsetup[table]{justification=justified, singlelinecheck=off} 
+
+\DeclareCaptionType{code}[Code][List of Code] 
+\newcommand{\listequationsname}{List of Equations}
+\newlistof{equations}{equ}{\listequationsname}
+\newcommand{\equations}[1]{%
+	\addcontentsline{equ}{equations}{\protect\numberline{\theequation}#1}\par}
+
+% Document information
+\usepackage[
+pdftitle={},
+pdfsubject={},
+pdfauthor={},
+pdfkeywords={},
+hidelinks
+]{hyperref}
+% ============= Header and footer =============
+\pagestyle{fancy}
+%
+%Describes what is on the left side of the header 
+\lhead{} 
+%Describes what is in the center of the header 
+\chead{}
+%Describes what is on the right side of the header 
+\rhead{\footnotesize \slshape \leftmark}
+%Describes what is on the left side of the footer 
+\lfoot{}
+%Describes what is in the center of the footer 
+\cfoot{\thepage}
+%Describes what is on the right side of the footer 
+\rfoot{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ============= Dokumentbeginn =============
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{titlepage}
+	\centering
+
+	\begin{figure}%
+		\subfloat{\includegraphics[width=0.64\linewidth]{img/logo_upb.png}}%
+		\qquad
+		%\subfloat{\includegraphics[width=0.3\linewidth]{img/logo_pc2.png}}%
+		\subfloat{\includegraphics[width=0.3\linewidth]{img/pc2.png}}%
+	\end{figure}
+	{\scshape Faculty for Computer Science, Electrical Engineering and Mathematics \par}
+	{\scshape Department of High-Performance IT Systems \par}
+	
+	\vspace{1cm}
+	{\Large\bfseries CustoNN2: Customizing Neural Networks on FPGAs\par}
+	\vspace{1cm}
+	{\large \textbf{Project Group Report }\par}
+	\vspace{1cm}
+	{\large submitted to:}\par
+	{\large Prof. Dr. Christian Plessl } \\
+	{\large Dr. Tobias Kenter }\\
+	\vspace{1.5cm}
+	submitted by:\par
+	{\large Aayush Suresh Bansal - 6844013 } \\
+	{\large Adesh Shambhu - 6827634} \\
+	{\large Alina Egorova - 6844410} \\
+	{\large Amay Churi - 6823476} \\
+	{\large Anshul Suresh Bansal - 6843265 } \\
+	{\large Arathy Ajaya Kumar - 6827909} \\
+	{\large Chiranjeevi Hongalli Revanna - 6844178 } \\
+	{\large Nikhitha Shivaswamy - 6845674 } \\
+	{\large Rushikesh Vinay Nagle - 6843375 } \\
+	{\large Suprajith Suresh Hakathur - 6843991 } \\
+        \vspace*{\fill}
+	% Bottom of the page
+	{\today\par}
+\end{titlepage}
+
+\pagenumbering{Roman}
+\pagestyle{plain}
+\include{02_abstract}
+
+\pagestyle{fancy}
+\tableofcontents
+\chapter*{List of abbreviations}
+\begin{acronym}[Bash]
+\acro{FPGA}{Field programmable gate array}
+\acro{GPU}{Graphics processing unit}
+\acro{CNN}{Convolutional neural network}
+\acro{DNN}{Deep neural network}
+\acro{IR}{Intermediate Representation}
+\acro{TVM}{Tensor Virtual Machine}
+\acro{OpenVINO}{Open Visual Inference and Neural network Optimization}
+\end{acronym}
+\cleardoubleoddpage
+\pagestyle{fancy}
+\pagenumbering{arabic}
+\include{03_Introduction} 	%includes -tex file with the chapter "Introduction"
+\include{04_Goals}		%includes -tex file with the Goals
+\include{05_Metrics}		%includes -tex file with the Metrics
+\include{06_Datasets_and_Topologies}		%includes -tex file with the chapter "Datasets_and_Topologies"
+\include{07_Introduction_to_toolkits}		%includes -tex file with the chapter "Introduction_to_toolkits"
+\include{08_Architecture}
+\include{09_Designs_and_Performance_Modeling}
+\include{10_Related_Work}
+\include{11_Team_Organisation}
+\include{12_Conclusion}
+\include{13_Appendix}
+%\part{Bibliography, Lists and Appendix}
+%\setlength{\emergencystretch}{8em}
+
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+\addcontentsline{toc}{chapter}{\listequationsname}
+\listofequations
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+\addcontentsline{toc}{chapter}{\listcodename}
+\listofcodes
+\printbibliography
+\clearpage
+\end{document}
