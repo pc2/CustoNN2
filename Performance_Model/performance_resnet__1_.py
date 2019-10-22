@@ -24,7 +24,7 @@ if(type_flag == "conv"):
     print("Global memory W: " + str(total_bytes_written / 1048576)+" MB")
     num_cycles = float(freq) * pow(10,6) * float(time_in_ms) * pow(10,-3)
     print("Execution time: "+str(time_in_ms)+" ms")
-    print("ops per second: "+str(num_ops/((float(time_in_ms)*pow(10,-3))*pow(10,9))))
+    print("ops per second: "+str(num_ops/((float(time_in_ms)*pow(10,-3)))))
     print("ops per cycle: "+str(num_ops/num_cycles))
     print("ops per byte: "+str(num_ops/(total_bytes_read+total_bytes_written)))
     print("Global memory per second: "+str((total_bytes_read+total_bytes_written)/(float(time_in_ms)*pow(10,-3)*1048576)))
