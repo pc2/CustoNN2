@@ -120,18 +120,42 @@ struct layersDetails
  \item Scaling to multiple FPGAs, which is one of the goals of this project is non-trivial as it would require the development of overlays for external I/O channels. 
  \end{itemize}
 \section{TVM}
-There is an increasing demand for implementing machine learning on a wide variety of hardware devices. Many frameworks rely on hardware vendor-specific libraries and optimize for very specific GPUs. Deploying a machine learning model on a new platform needs a lot of trial and error manual efforts. Mapping Deep Learning (DL) models to specific hardware are complicated by diversity in hardware functionality. Various hardware such as CPU, GPU, FPGAs, and ASICs have a quite different on-chip memory architecture and compute primitive. Tensor Virtual Machine (TVM) is an open-source compiler and code generator that uses graph-level and operator-level optimizations to build and deploy deep learning models on diverse accelerators (e,g, FPGAs, ASICs).
+Due to extensive research in the field of machine learning especially in Image recognization and object detection largely due to competition such as ILSVRC (Imagenet Large scale visual recognization challenge), there is a demand and need for developing hardware specific to increased computation capabilities and caching mechanisms. Various computational superior hardware such as CPU, GPU, and accelerators such as ASICs and FPGA are been used to deploy Machine Learning (ML) models and to draw the inference. To build and deploy such ML models we use Deep learning (DL) frameworks such as Tensorflow, Caffe, MXNET, Keras, etc. There is extensive support and libraries available for CPUs and certain vendor-specific GPUs. But for accelerators, there is limited support and libraries available which makes it difficult and tedious to deploy ML models on them.  We use Tensor Virtual Machine (TVM) an open-source compiler and code generator which addresses “graph level and operator level optimizations” \cite{tvm_fig}. TVM supports a wide range of hardwares and accelerators. 
 
-DL frameworks such as Tensorflow, Caffe, and PyTorch rely on a computational graph intermediate representation to implement optimizations such as auto differentiation and dynamic memory management. TVM includes a computational graph rewriter, tensor expression language and new features for GPU accelerators. The TVM compilation stack is shown in Figure \ref{fig:tvm_fig}.
+There are two types of optimizations that can be carried out during code generation for a DL model, high-level optimizations where graph and operators of the model are optimized and low-level optimizations where low-level programs are  optimized with respect to specific hardware architecture.
+Each hardware has its own memory architecture, data operators and dataflow handling mechanism this diversity makes it difficult for efficient graph generation and machine code optimizations.
+TVM performs high-level optimizations such as operator fusion where basic operators are fused together and also perform graph optimization where DL activation functions are fused along with convolutions or other functions. It also performs machine code optimizations based on the hardware architecture and compute primitives. TVM uses a learning-based cost model for selection of operators involved in code generation. The TVM compilation stack is shown in Figure \ref{fig:tvm_fig}.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.50]{tvm_overview.png}
     \caption{System overview of TVM \cite{tvm_fig}}
     \label{fig:tvm_fig}
-\end{figure}
+\end{figure} 
 
-TVM takes a deep learning model in the form of a frozen \textit{protobuf} file and transforms it into a computational graph representation. TVM performs high-level optimizations such as dataflow rewriting to generate an optimized graph. In operator-level optimizations, various operators are fused together efficiently and are used for code generation. All the operators are specified in a declarative tensor expression language and TVM checks for possible hardware operators optimizations based on the selected target hardware accelerator. The cost model is used to find the optimized operators and the generated code is compiled together into a deployable module.
+Following Chen et al.\cite{tvm_fig} TVM performs these three steps: 
+\begin{enumerate}
+  \item DL frameworks take a model in the form of a frozen \textit{protobuf} file and transform it into a computational graph representation. This computational graph is provided to the TVM graph rewriter which performs graph level optimizations such as operator fusion, constant folding, static memory planning pass, and data layout transformation. These graph level optimizations are been discussed below.
+  \begin{itemize}
+     \item Operator Fusion - Computation graph intermediate representation (IR) stores intermediate results of certain operators before being used for further computations. TVM performs operator fusion where such operators are fused together along with its predecessor or successor operators based on the type of operator and the operations it performs to form a single kernel. TVM classifies operators into four types namely 1) injective 2) reduction 3) complex-out-fusable and 4) opaque (unfusable operators) \cite{tvm_fig}.
+     \item Constant Folding - Certain graph operators have constant values that can be pre-computed during compile time instead of runtime. Thus saving resources and time during code-generation. Constant-folding is a process of finding such operators and replacing them with a constant value. In TVM, it is performed by graph rewriter which mathematically calculates the constant value for such operators and substitutes them in the graph.
+     \item Static memory planning pass - Intermediate tensors (data) needs to be stored for further executions. During computational graph optimization, graph rewriter pre-allocates memory to store such tensors.
+     \item Data layout transformation - Each hardware has its own data-layout choices based on various factors and memory hierarchies. The computational graph needs to match the internal data layout of the selected hardware. Graph rewriter performs data layout transformation, where it first collects the constraints and ideal data layout for the operators in the selected hardware. These constraints are based on the memory hierarchy of the hardware. Then the mapping of the data layout is performed between the selected operator and the hardware.
+   \end{itemize}.
+   
+  \item TVM has developed \textit{tensor expression language} which provides compute operators with its computing rules and shapes. It supports arithmetic and mathematical operators which are used for computation in DL models. The key feature of this tensor expression is that it is hardware aware language which means based on the target hardware operators can be optimized to gain maximum benefit from the optimization. TVM implements a concept known as “schedule transformation” \cite{tvm_fig} by applying basic transformations on the tensor expressions in a periodic and incremental fashion. During this process, it also keeps additional information about the loop structures and data types which is used during low-level code generation.
+  
+  TVM implements nested parallelism using the idea of \textit{shared-nothing nested parallelism} and allowing a certain group of threads to fetch data required by them and store it in local memory for easy access. Such collaboration helps in sharing the data with its counterpart/sibling threads. For latency hiding, TVM introduces a concept called “virtual threading schedule primitive” \cite{tvm_fig} where pipeline parallelism is implemented for the target hardware by generating single instruction set from multithreaded instructions which are provided using virtual threads. The single instruction set is achieved using low-level synchronization.
+  
+  \item  TVM provides us with multiple implementations of the operators, selecting between these operators is based on performance of the operator implementation with respect to the selected hardware. TVM solves this problem by developing a concept called “automated schedule optimizer” \cite{tvm_fig}.
+Automated schedule optimizer consists of two components:
+
+\begin{itemize}
+     \item Schedule Explorer - Creates a template configuration for the selected hardware with the help of configurable options provided by the developer.
+     \item ML-Based Cost model - For the selected operator configuration, the ML model predicts the runtime of the lowered loop program from the configuration. The model training is carried out based on the runtime data collected from various configurations. As more and more configurations are provided the cost model improves its accuracy.
+   \end{itemize}
+\end{enumerate}
+
 
  \begin{code}[!htb]
  \begin{minted}{Python}
@@ -176,18 +200,9 @@ with nnvm.compiler.build_config(opt_level=3):
 
 
 In Code \ref{code:TVMAPI}, we use TVM API to get OpenCL generated code for ResNet-50 model.
-After compilation we have three components variables: the optimized computational graph, generated operators for the target library and final parameters after compilation. The computational graph also provides us with intermediate representation and mapping of the code generated with its respective inputs.
+After the compilation of the program, TVM provides us with an output file with the kernels for FPGA, the optimized computation graph, the library of operators present in the graph for the target hardware (FPGA) and the parameters which contain weights and input for the model. The computational graph also provides us with intermediate representation and mapping of the code generated with its respective inputs.
 
 \pagebreak
-
-Computational graphs provide an overall view of the operators but lack specifying information about how to implement those operators. TVM performs various graph level optimizations such as:
-\begin{itemize}
- \item Operator fusion – Combiles multiple operations into a single kernel and thus helps us in reducing execution time.
- \item Constant folding – Certain graph values can be pre-computed statistically.constant folding helps us to compute those values.
- \item Static memory planning pass – Pre-allocates memory to store intermediate tensor.
- \item Data layout transformation - Helps us to convert the computational graph into internal layouts specific to the target hardware.
-
- \end{itemize}
  
  Following are the important components of TVM.
  
@@ -197,7 +212,7 @@ Computational graphs provide an overall view of the operators but lack specifyin
  
  \subsubsection{NNVM}
  
- NNVM compiler applies graph level and tensor level optimizations to generate target hardware code. NNVM provides us with pre-defined core tensor operator primitives. \textit{tennvm.top} (Tensor operator property registry) provides information about which operators can be scheduled together and is the basic building block for the optimization.
+ Neural Network Virtual Machine (NNVM) is a compiler that implements operator and graph level optimizations provided by TVM to generate target hardware code. \textit{nnvm.top} (Tensor operator property registry) provides information about which operators can be scheduled together and performs those optimizations to produce the optimized graph.
  
  NNVM has four levels of operators :
  
@@ -226,9 +241,10 @@ It is usually carried out on batch normalization tensor operators.
  \item Pass 1 \textit{OpFusion} -
 In \textit{OpFusion}, basic operators are fused together with the convolution layer along with the precomputation of tensor operators.
 \item Pass  2 \textit{PrecomputePrune} -
-In this level of optimization, tensor operators can be pre-computed statistically during compilation time and replaced with a variable value thus reducing the operations required for the kernel.
+In this level of optimization, the graph is pruned and the constant operators are precomputed and replaced with constant values. The values of such operators are mathematically precalculated and substituted with a constant value during kernel generation. The number of operations is reduced in a precomputed and pruned graph.
 \item Pass  3 \textit{FoldScaleAxis} -
-In \textit{FoldScaleAxis} algorithm, the idea is to transform expression to a tuple of value, axes, and scale, where the following holds,
+In \textit{FoldScaleAxis} algorithm, "[t]he general idea is to transform [tensor expression] to a tuple of value, axes, and scale, where the
+final result satisfies [code \ref{code:TVMFoldScaleAxis}].
 \begin{code}[!htb]
  \begin{minted}{Python}
 
@@ -236,9 +252,11 @@ In \textit{FoldScaleAxis} algorithm, the idea is to transform expression to a tu
  for i, k in enumerate(axes):
     k-th dimension of result *= i-th dimension of scale
  \end{minted}
+ \caption{TVM FoldScaleAxis \cite{FoldScaleAxis}}
+\label{code:TVMFoldScaleAxis}
 \end{code}
-This is propagated along the signal and scale is folded if necessary. To ensure all scales are accessed, backward “preparation phase” propagation checks if potential axes scale back to its input.
-We have used this optimization level during our kernel generation
+Then [compiler] can propagate this signal [tuple] along and fold the scale if necessary. [. . .] In order to make sure all the scale [compiler] sent out can be consumed eventually, [compiler runs] a backward 'preparation phase', which propagates the demand of the potential axes scaling back to its input" \cite{FoldScaleAxis}.
+We have used this optimization level during our kernel generation.
  \end{itemize}
  
   \subsubsection{Relay}
@@ -246,20 +264,20 @@ Relay is known as NNVM {$V_2$}. It is a high-level functional IR for TVM.  Relay
 
 \begin{itemize}
     \item Relay uses similar levels of optimizations as NNVM.
-    \item \textit{relay.backend}  is the python interface for relay interpreters.
+    \item \textit{relay.backend}  handles the backend request for relay interpreters. Various relay functions can be accessed through the \textit{relay.backend} interpreter.
     \item \textit{relay.frontend},  \textit{relay.build}  and \textit{relay.build\_config}  has similar functionality to its predecessor.
 \end{itemize}
 
  \subsection{TOPI}
- TVM Operator Inventory (TOPI) is the operator collection library for TVM. It contains a list of predefined operators that are used to compute operator declaration while generating computational graph. List of operators supported by TOPI are \textit{identity}, \textit{negative}, \textit{floor}, \textit{ceil}, \textit{abs}, etc.
+ For having quick access to the operators, TVM creates a library of its operators naming TVM Operator Inventory (TOPI). It contains a list of predefined operators that are used to compute operator declaration while generating computational graph. List of operators supported by TOPI are \textit{identity}, \textit{negative}, \textit{floor}, \textit{ceil}, \textit{abs}, etc.
  \begin{itemize}
-\item \textit{topi.identity(x)} Take identity of input x
-\item \textit{topi.negative(x)} Take negative of input x
-\item \textit{topi.abs(x)}  Take absolute value of the input of x, element-wise.
+\item \textit{topi.identity(x)} Returns with the identity value for the selected input.
+\item \textit{topi.negative(x)} Returns with the negative value for the selected input.
+\item \textit{topi.abs(x)}  Returns element-wise absolute value for the tensor operators.
  \end{itemize}
  
  \subsection{Codegen}
- Code generation is implemented in \path{src/codegen} subdirectory of TVM. When we execute \textit{nnvm.compiler.build} function, a C++ API call is made to codegen library which is implemented in C++. API calls are first registered python \path{/tvm/api.py} from NNVM compiler which in turn calls \path{src/api/api_lang.cc} its C++ counterpart.
+TVM maintains a subdirectory for code generation functionalities and it is placed under \path{src/codegen} and interacts with it using API calls. When we execute \textit{nnvm.compiler.build} function, a C++ API call is made to codegen library which is implemented in C++. When we execute the NNVM compiler an API call is registered under python \path{/tvm/api.py}. The functions present in \textit{api.py} are mapped to   \path{src/api/api_lang.cc} in its C++ counterpart.
  
   \begin{code}[!htb]
  \begin{minted}{c++}
@@ -270,10 +288,10 @@ Relay is known as NNVM {$V_2$}. It is a high-level functional IR for TVM.  Relay
                        args[2]);
   });
  \end{minted}
-\caption{TVM Register API for Placeholder Operation}
+\caption{TVM Register API for Placeholder Operation \cite{tvm_code}} 
 \label{code:TVMRegisterAPI}
-\end{code}
-TVM uses \textit{TVM\_REGISTER\_*} function to expose C++ functions to Python. In Code \ref{code:TVMRegisterAPI} a register call made to placeholder operation for Resnet-50 kernel generation.
+\end{code} 
+In TVM C++ functions are made accessible to Python frontend using \textit{TVM\_REGISTER\_*}. In Code \ref{code:TVMRegisterAPI} a register call made to placeholder operation for Resnet-50 kernel generation.
  
  \begin{code}[!htb]
  \begin{minted}{c++}
@@ -293,11 +311,11 @@ TVM uses \textit{TVM\_REGISTER\_*} function to expose C++ functions to Python. I
   return m;
 }
 \end{minted}
-\caption{TVM codegen Build() function}
+\caption{TVM codegen Build() function \cite{tvm_code}}
 \label{code:TVMCodegen}
 \end{code}
 
- The \textit{Build()} function looks up the code generator for the given target in the \textit{PackedFunc} registry. Code \ref{code:TVMCodegen} shows build function our target library is AOCL. A \textit{Packedfunc} implements interoperability between C++ and Python for TVM. Due to interoperability, a Python function can be easily called from C++ codebase making it a bidirectional connection. A \textit{PackedFunc} helps use make API calls type-erased, which removes the restriction for the function to be bound to specific input and return from C++ codebase. The \textit{PackedFunc} wraps the input argument to \textit{TVMArgs} and results are returned via \textit{TVMRetValue}. In Code \ref{code:TVMCodegenRegisterAPI} \textit{set\_body} is the \textit{PackedFunc} for the API. Since target hardware for our project has been set to aocl, \textit{Build()} function registers \textit{codegen.build\_aocl}.
+ The \textit{Build()} function looks up the code generator for the given target in the \textit{PackedFunc} registry. Code \ref{code:TVMCodegen} shows build function our target library is AOCL. To have a direct interaction between C++ and Python functions a \textit{PackedFunc} is implemented by TVM. Due to interoperability, a Python function can be easily called from C++ codebase making it a bidirectional connection. A \textit{PackedFunc} helps TVM make API calls type-erased, which removes the restriction for the function to be bound to specific input and return from C++ codebase. The inputs provided to the \textit{PackedFunc} are wrapped into \textit{TVMArgs} data type which is an internal data type of TVM and the function returned values are wrapped into \textit{TVMRetValue} data type. In Code \ref{code:TVMCodegenRegisterAPI} \textit{set\_body} is the \textit{PackedFunc} for the API. Since target hardware for our project has been set to aocl, \textit{Build()} function registers \textit{codegen.build\_aocl}.
  
   \begin{code}[!htb]
  \begin{minted}{c++}
@@ -306,11 +324,11 @@ TVM uses \textit{TVM\_REGISTER\_*} function to expose C++ functions to Python. I
     *rv = BuildAOCL(args[0], args[1], false);
   });
 \end{minted}
-\caption{TVM codegen register API}
+\caption{TVM codegen register API \cite{tvm_code}}
 \label{code:TVMCodegenRegisterAPI}
 \end{code}
 
-\textit{BuildAOCL()} function generates OpenCL kernels from the lowered IR using \textit{CodeGenAOCL} class. In lowered IR a high-level nest loop structure is transformed into low-level target hardware IR.
+\textit{BuildAOCL()} function generates OpenCL kernels from the lowered IR using \textit{CodeGenAOCL} class. Lowered IR provides us with target hardware IR in the form of machine code which can be used for code generation. The computational graph which is a high-level IR is converted in low-level IR during this process.
 
  \begin{code}[!htb]
  \begin{minted}{c++}
@@ -332,18 +350,18 @@ runtime::Module BuildAOCL(Array<LoweredFunc> funcs, std::string target_str,
   // Write a .cl file.
   runtime::SaveBinaryToFile("aocl.cl", code.c_str());
 \end{minted}
-\caption{BuildAOCL() kernel generation}
+\caption{BuildAOCL() kernel generation \cite{tvm_code}}
 \label{code:TVMCodegenBildAOCL}
 \end{code}
 
 \textit{BuildAOCL()} function parses through \textit{loweredFunc} and stores the code in \textit{aocl.cl} file. Fig 6.7 shows functionality of \textit{BuildAOCL()}
 
  \subsection{VTA}
- Versatile Tensor Accelerator (VTA) is a customizable deep learning accelerator with a TVM-based compiler stack. It is used for fast and efficient dense linear algebra and implements RISC-like processors for performing tensor operations.  VTA has four modules that communicate with each other using FIFO queues and local memory blocks (SRAM).  Module communication helps in establishing task-level pipeline parallelism.
+TVM has a DL accelerator for FPGAs and GPUs in the form of Versatile Tensor Accelerator (VTA). VTA is an open-source hardware and can be customized according to the needs and requirements for various DL accelerators. FPGAs support streamlined workflow models, to make deployments of such models fluent VTA provides support for streamlined architecture. Dense linear algebra is one of the important aspects of DL. VTA performs computations such as dense linear algebra using RISC processors thus reducing the execution time and increasing the efficiency at the same. VTA has four modules namely fetch, load, compute and store module. The channel of communication between these modules is through local memory blocks (SRAM) and FIFO queues. Due to the FIFO queues, task parallelism is maintained between these modules.
 \begin{itemize}
-\item \textit{Fetch Module} – Loading and decoding instruction streams from global memory blocks (DRAM) and routing them to command queues.
-\item \textit{Load Module} - Loading input and weight tensors from DRAM into data-specialized on-chip memories.
-\item \textit{Compute Module} – Performs dense linear algebra. Loads data from DRAM and micro-operation kernels into register file and micro-op cache respectively.
+\item \textit{Fetch Module} – Instruction set needs to be loaded for computation from global memory (DRAM) and also needs to be decoded for routing them to the proper command queue. Fetch module performs those operations on the instruction set.
+\item \textit{Load Module} - Once the instruction set is loaded into the module there respective input data and weights need to be loaded from DRAM and are allocated onto on-chip memory.
+\item \textit{Compute Module} – Compute module is where all the computations happen for VTA. It uses General Matrix Multiplication (GEMM) to compute dense linear algebra. VTA processors require its data into register file and micro-op kernels into the micro-op cache for further processing, compute module performs those operations of loading of data from DRAM and micro-op kernels.
 \item \textit{Store Module} – Stores results from \textit{compute module} into DRAM.
  \end{itemize}
  
