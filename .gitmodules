@@ -1,0 +1,3 @@
+[submodule "dldt"]
+	path = dldt
+	url = https://git.uni-paderborn.de/cs-hit/pg-custonn2-2018-3rd-party/dldt.git
