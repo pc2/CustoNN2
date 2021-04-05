@@ -1,4 +1,4 @@
-## CustoNN2 - Customising Neural Networks on FPGA
+## CustoNN2 - Customizing Neural Networks on FPGA
 
  - This repository contains all the necessary files for the deployment of the deep neural networks like GoogleNet [1] and ResNet-50 [2] on on multiple Intel Stratix 10 FPGAs using an custom built FPGA plugin.
  - Using a combination of two machine learning frameworks - TVM and Intel OpenVINO, CNNs are tested on the ImageNet dataset. 
